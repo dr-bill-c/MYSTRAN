@@ -1,0 +1,17 @@
+Readme.txt-2019-11-25
+
+This is the 1st incidence of the MYSTRAN repository on GitHub. Besides
+the source code, there are batch files and perl scripts that I
+(Bill Case) use to perform the compilation and linking using Lahey
+Express Fortran in a batch process. That process and the batch and perl
+scripts are on the MYSTRAN-FEA-Program ver ?.?? zip file and are 
+described in detail in the document:
+
+01-Procedure for Batch Compiling and Linking MYSTRAN in directory:
+
+MYSTRAN\BAT\Comp-and-Link
+
+after installing MYSTRAN. I have all of this stored on a D: drive and
+the batch files presume this. However, it would be a simple process
+for anyone to modify a few batch files and perl scripts to accomodate
+any other drive
