@@ -1,4 +1,4 @@
-Readme.txt-2019-11-25
+Info.txt-2019-11-25
 
 This is the 1st incidence of the MYSTRAN repository on GitHub. Besides
 the source code, there are batch files and perl scripts that I
