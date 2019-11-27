@@ -1,4 +1,4 @@
-<p style="font-size:1.7em"><b>MYSTRAN</b></p>
+<p style="font-size:150%"><b>MYSTRAN</b></p>
 
 <hr>
 
