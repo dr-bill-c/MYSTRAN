@@ -8,6 +8,6 @@ It is an independent program written in modern Fortran 95.</p>
 
 <hr>
 
-<p>MYSTRAN Homepage: <a href ="https://www.mystran.com">http://www.mystran.com</a></p>
+<p>MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a></p>
 
-<p>Developer and Discussion Forum: <a href ="https://www.structuralfea.com/forums">http://www.mystran.com/forums</a></p>
+<p>Developer and Discussion Forum: <a href ="http://www.mystran.com/forums">http://www.mystran.com/forums</a></p>
