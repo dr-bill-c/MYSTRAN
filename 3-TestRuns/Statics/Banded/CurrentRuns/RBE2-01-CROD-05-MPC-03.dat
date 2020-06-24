@@ -1,0 +1,84 @@
+ID MPC1                                                                 
+SOL 1                                                                           
+CEND                                                                            
+TITLE = 5 CROD's WITH 3 MPC'S (MPCADD SET 3) AND 1 RBE2
+MPC   = 2  
+SPC   = 221
+LOAD  = 1                                                                         
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK                                                                      
+$
+SPC1    221     1       1                                                       
+$
+GRDSET                                                  23456
+$
+GRID    6                50.    0.      0.
+GRID    1                 0.    0.      0.
+GRID    2                10.    0.      0.       
+GRID    3                20.    0.      0.
+GRID    4                30.    0.      0.
+GRID    5                40.    0.      0.
+$
+CROD    12      20      1       2  
+CROD    23      20      2       3  
+CROD    34      20      3       4  
+CROD    45      20      4       5  
+CROD    56      20      5       6  
+$
+PROD    20      10      .01
+$
+MAT1    10      1.+7            .33     .1      1.                      +MAT1   
+$
+MPCADD  2       34      45      61
+MPC     34      3       1       1.0     4       1       -1.0
+MPC     45      4       1       1.0     5       1       -1.0
+MPC     61      6       1       1.0     1       1       -1.0
+$
+RBE2    32      3       1       2  
+$
+FORCE   1       2               200.    1.0     0.0     0.0
+FORCE   1       3               300.    1.0     0.0     0.0
+FORCE   1       4               400.    1.0     0.0     0.0
+FORCE   1       5               500.    1.0     0.0     0.0
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

@@ -1,0 +1,9 @@
+For debug code, use the following Lahey switches when compiling files:
+        All files (regular plus _Interface) except those in Modules\LAPACK, use "-f95 -c -info  -chk  -pca  -stchk  -trace  -ap  -g -nco -nfix -in"
+        Files in BANDIT, Modules\ARPACK, LAPACK, use                            "-f95 -c -info  -chk  -pca  -stchk  -trace  -ap  -g -nco  -fix -in "
+                                                                                
+
+For production code, use the following Lahey switches when compiling files:
+        All files (regular plus _Interface) except those in Modules\LAPACK, use "-f95 -c -info -nchk -npca -nstchk -ntrace -nap -ng -w -ncover -o1 -nsav -nfix -in "
+        Files in BANDIT, Modules\ARPACK, LAPACK, use                            "-f95 -c -info -nchk -npca -nstchk -ntrace -nap -ng -w -ncover -o1 -nsav  -fix -in "
+                                                                                

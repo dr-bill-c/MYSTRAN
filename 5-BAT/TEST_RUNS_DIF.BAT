@@ -1,0 +1,76 @@
+ECHO OFF
+
+rem This BAT file checks all ANS files to make sure that all lines agree with those from the archive (ARC) files for MYSTRAN test runs
+rem To run this BAT file type: TEST_RUNS_DIF %1 %2 at the prompt where:
+rem      (a) %1 is the subdirectory (C or D) in MYSTRAN where the test runs to check reside
+rem      (b) %2 is the subdirectory in in STATICS or EIGENS (LAPACK or SPARSE) where the DAT files reside
+
+CD \MYSTRAN\%1\RUNS\TestRuns\STATICS\%2
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   ALL-ELEM-TEST                           rem 01
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   AQ3U2S004                               rem 02
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-10-BUCKLING-CF-LOAD-LAN             rem 03
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-10-BUCKLING-CF-LOAD-LAN-3D          rem 04
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-AUTOSPC-CHECK                       rem 05
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-GRAV                                rem 06
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-I12                                 rem 07
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-OFFSET                              rem 08
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-PINFLAG                             rem 09
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-RFORCE-OFFSET                       rem 10
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-TE-TEST                             rem 11
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-THERM-CONSTR                        rem 12
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   BAR-THERM-FREE                          rem 13
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   CONM2A                                  rem 14
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   CORD3-0                                 rem 15
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   EXAMPLE1                                rem 16
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   GUYAN-01-FULL                           rem 17
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   GUYAN-01-SPARSE                         rem 18
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   HEXA08-02-02-020-CANT-AR1-RED-2x2x2     rem 19
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RADIAL-BARS-CYL-GLOBAL-END-LOADS        rem 20
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RADIAL-BARS-CYL-GLOBAL-RB-DISP          rem 21
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RBE2-01-CBAR-01                         rem 22
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RBE2-01-CROD-03                         rem 23
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RBE2-01-CROD-05-MPC-03                  rem 24
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RBE2-02-CBAR-03                         rem 25
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RBE3-01-CBAR-08                         rem 26
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RODDISPL-N-LOAD                         rem 27
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RODDISPL-W-LOAD                         rem 28
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   RODLOAD-MPC-FOR-SING                    rem 29
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   SOLVE_EQNS_1_BANDIT                     rem 30
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   SOLVE_EQNS_1_GRID                       rem 31
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   SOLVE_EQNS_1_SEQGP                      rem 32
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Statics\%2\Archive\   D:\MYSTRAN\%1\RUNS\TestRuns\Statics\%2\/CurrentRuns\   VD0114                                  rem 33
+
+CD \MYSTRAN\%1\RUNS\TestRuns\EIGENS\%2
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    ALL-ELEM-TEST-GIV                       rem 34
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    ALL-ELEM-TEST-INV                       rem 35
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    ALL-ELEM-TEST-LANCZOS-MODE-2-DPB        rem 36
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    ALL-ELEM-TEST-MGIV                      rem 37
+
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    AQ3U2S004-GIV                           rem 38
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    AQ3U2S004-INV                           rem 39
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    AQ3U2S004-LANCZOS-MODE-2-DPB            rem 40
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    AQ3U2S004-MGIV                          rem 41
+
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-GIV                              rem 42
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-INV                              rem 43
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-LANCZOS-MODE-2-DGB               rem 44
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-LANCZOS-MODE-2-DPB               rem 45
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-LANCZOS-MODE-3-DGB               rem 46
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-LANCZOS-MODE-3-DPB               rem 47
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-CC-MGIV                             rem 48
+
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-GIV                              rem 49
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-INV                              rem 50
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-LANCZOS-MODE-2-DGB               rem 51
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-LANCZOS-MODE-2-DPB               rem 52
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-LANCZOS-MODE-3-DGB               rem 53
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    BAR-FF-LANCZOS-MODE-3-DPB               rem 54
+
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    CB-EXAMPLE-12                           rem 55
+
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    GUYAN-03-GIV                            rem 56
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    GUYAN-03-INV                            rem 57
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    GUYAN-03-LANCZOS                        rem 58
+D:\perl\bin\perl D:\MYSTRAN\Perl_scripts\Check_test_run_answers\Check_test_run_answers.perl   D:\MYSTRAN\%1\Runs\TestRuns\Eigens\%2\Archive\    D:\MYSTRAN\%1\RUNS\TestRuns\Eigens\%2\/CurrentRuns\    GUYAN-03-MGIV                           rem 59
+
+ECHO ON

@@ -1,0 +1,75 @@
+ID RBE2                                                                  
+SOL 1                                                                           
+CEND                                                                            
+TITLE = 3 CBAR's AND 2 RBE2'S  (TO MAKE 2 OUTBOARD CBARS RIGID). LENGTH = 120"
+SUBT  = RBE2'S SPECIFIED SUCH THAT RMM IS NOT DIAGONAL
+LABEL = SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                    
+SPC = 123                                                                         
+LOAD = 1                                                                       
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK                                                                      
+$
+SPC1    123     126     101                                                     
+$
+GRDSET                                                  345
+$
+GRID    101               0.    0.      0.
+GRID    102              10.    0.      0.       
+GRID    103              20.    0.      0.
+GRID    113             120.    0.      0.
+$
+CBAR    20102   20      101     102     0.      1.      0.
+CBAR    20203   20      102     103     0.      1.      0.
+CBAR    20313   20      103     113     0.      1.      0.
+$
+PBAR    20      10      .01     .1      .1      .1
+$
+MAT1    10      1.+7            .33     .1      1.                      +MAT1   
+$
+RBE2    30203   103     126     102
+RBE2    30713   103     126     113
+
+FORCE   1       113             3.      0.      1.      0.
+FORCE   1       113             1000.   1.      0.      0.     
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

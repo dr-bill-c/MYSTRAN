@@ -1,0 +1,1 @@
+CD \MYSTRAN\perl_scripts\BAT_Compile_file

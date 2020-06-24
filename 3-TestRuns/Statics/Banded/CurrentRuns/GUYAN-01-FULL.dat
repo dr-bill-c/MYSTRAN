@@ -1,0 +1,73 @@
+ID GUYAN,2 CELL BEAM                                                                    
+SOL 1                                                                           
+CEND                                                                            
+TITLE = 2 CELL BEAM BENDING IN 1 PLANE. KEEP 2 DOF'S ON OUTER GRID IN A-SET
+SUBT  = CHECK GUYAN REDUCTION ALGORITHM WITH FULL MATRIX MULT/ADD ROUTINES
+LABEL = 2 LB LOAD AT G.P. 102, 3 LB LOAD AT G.P. 103
+LOAD  = 1
+SPC   = 123                                                                         
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK                                                                      
+SPC1    123     26      101                                                     
+$
+GRDSET                                                  1345
+$
+GRID    103              20.    0.      0.
+GRID    101               0.    0.      0.
+GRID    102              10.    0.      0.       
+$
+CBAR    11      10      101     102     0.      1.      0.
+CBAR    12      10      102     103     0.      1.      0.
+$
+PBAR    10      10      .01     .1      .1      .1
+$
+MAT1    10      1.+7            .33     .1      1.                      +MAT1   
+$
+FORCE   123     102             2.      0.      1.      0.     
+FORCE   123     103             3.      0.      1.      0.     
+$
+LOAD    1       1.0     1.0     123     
+$
+ASET1   26      103
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

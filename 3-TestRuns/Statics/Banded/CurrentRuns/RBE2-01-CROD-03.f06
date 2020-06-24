@@ -1,0 +1,1211 @@
+   622125136
+
+ MYSTRAN Version 11.0     Jun 16 2020 MYSTRAN developed by Dr Bill Case
+ *** Please report any problems to the author at dbcase29@gmail.com ***                                                                                                                                                                                          
+
+ >> MYSTRAN BEGIN  :  6/22/2020 at 12:51:36.975 The input file is RBE2-01-CROD-03.DAT                                                                                                                                                                                                                                             
+
+
+ >> LINK  0 BEGIN
+
+ 
+ID RBE2                                                                                                                                                                                                                                                         
+SOL 1                                                                                                                                                                                                                                                           
+CEND                                                                                                                                                                                                                                                            
+TITLE = 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                     
+LABEL = SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                 
+SPC = 123                                                                                                                                                                                                                                                       
+LOAD = 1                                                                                                                                                                                                                                                        
+ELDATA(0,PRINT) = ALL                                                                                                                                                                                                                                           
+DISP          = ALL                                                                                                                                                                                                                                             
+ECHO          = UNSORT                                                                                                                                                                                                                                          
+ELFORCE(BOTH) = ALL                                                                                                                                                                                                                                             
+GPFORCE       = ALL                                                                                                                                                                                                                                             
+MPCFORCE      = ALL                                                                                                                                                                                                                                             
+OLOAD         = ALL                                                                                                                                                                                                                                             
+SPCFORCE      = ALL                                                                                                                                                                                                                                             
+STRESS        = ALL                                                                                                                                                                                                                                             
+BEGIN BULK                                                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+SPC1    123     1       2                                                                                                                                                                                                                                       
+SPC     123     3       1       0.2                                                                                                                                                                                                                             
+$                                                                                                                                                                                                                                                               
+GRDSET                                                  23456                                                                                                                                                                                                   
+$                                                                                                                                                                                                                                                               
+GRID    2                 0.    0.      0.                                                                                                                                                                                                                      
+GRID    1                10.    0.      0.                                                                                                                                                                                                                      
+GRID    4                20.    0.      0.                                                                                                                                                                                                                      
+GRID    3                30.    0.      0.                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+CROD    21      20      2       1                                                                                                                                                                                                                               
+CROD    14      20      1       4                                                                                                                                                                                                                               
+CROD    43      20      4       3                                                                                                                                                                                                                               
+$                                                                                                                                                                                                                                                               
+PROD    20      10      .01                                                                                                                                                                                                                                     
+$                                                                                                                                                                                                                                                               
+MAT1    10      1.+7            .33     .1      1.                      +MAT1                                                                                                                                                                                   
+ *INFORMATION: MAT1 ENTRY       10 HAD FIELD FOR G  BLANK. MYSTRAN CALCULATED G  =  3.759398E+06
+$                                                                                                                                                                                                                                                               
+RBE2    34      3       1       4                                                                                                                                                                                                                               
+$                                                                                                                                                                                                                                                               
+FORCE   1       1               200.    1.0     0.0     0.0                                                                                                                                                                                                     
+FORCE   1       3               100.    1.0     0.0     0.0                                                                                                                                                                                                     
+FORCE   1       4               300.    1.0     0.0     0.0                                                                                                                                                                                                     
+$                                                                                                                                                                                                                                                               
+PARAM   SOLLIB   LAPACK                                                                                                                                                                                                                                         
+PARAM   SPARSTOR NONSYM                                                                                                                                                                                                                                         
+PARAM   EQCHECK  0      3       3                               -1.E10  Y                                                                                                                                                                                       
+PARAM   GRDPNT   0                                                                                                                                                                                                                                              
+PARAM   POST     -1                                                                                                                                                                                                                                             
+PARAM   RCONDK   Y                                                                                                                                                                                                                                              
+PARAM   PRTBASIC 1                                                                                                                                                                                                                                              
+PARAM   PRTCGLTM 1                                                                                                                                                                                                                                              
+PARAM   PRTCORD  2                                                                                                                                                                                                                                              
+PARAM   PRTDLR   1                                                                                                                                                                                                                                              
+PARAM   PRTDOF   2                                                                                                                                                                                                                                              
+PARAM   PRTFOR   1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTGMN   1                                                                                                                                                                                                                                              
+PARAM   PRTGOA   1                                                                                                                                                                                                                                              
+PARAM   PRTHMN   1                                                                                                                                                                                                                                              
+PARAM   PRTIFLTM 1                                                                                                                                                                                                                                              
+PARAM   PRTKXX   1                                                                                                                                                                                                                                              
+PARAM   PRTMASS  1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTMXX   1                                                                                                                                                                                                                                              
+PARAM   PRTPHIXA 1                                                                                                                                                                                                                                              
+PARAM   PRTPHIZL 1                                                                                                                                                                                                                                              
+PARAM   PRTQSYS  1                                                                                                                                                                                                                                              
+PARAM   PRTRMG   3                                                                                                                                                                                                                                              
+PARAM   PRTSCP   1                                                                                                                                                                                                                                              
+PARAM   PRTTSET  1                                                                                                                                                                                                                                              
+PARAM   PRTSTIFD 1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTSTIFF 1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTUO0   1                                                                                                                                                                                                                                              
+PARAM   PRTYS    1                                                                                                                                                                                                                                              
+$                                                                                                                                                                                                                                                               
+DEBUG   192     2                                                       GPFO summary                                                                                                                                                                            
+DEBUG   200     1                                                       ANS                                                                                                                                                                                     
+$                                                                                                                                                                                                                                                               
+ENDDATA                                                                                                                                                                                                                                                         
+ 
+ 
+
+
+                                                GRID POINT COORDINATES IN BASIC COORDINATE SYSTEM
+
+                                    GRID ID           X                 Y                 Z
+                                          1      1.000000E+01      0.000000E+00      0.000000E+00
+                                          2      0.000000E+00      0.000000E+00      0.000000E+00
+                                          3      3.000000E+01      0.000000E+00      0.000000E+00
+                                          4      2.000000E+01      0.000000E+00      0.000000E+00
+ 
+ 
+ ___________________________________________________________________________________________________________________________________
+
+ ::::::::::::::::::::::::::::::::::::::START PARAM PRTSCP OUTPUT FROM SUBROUTINE SUBCASE_PROC:::::::::::::::::::::::::::::::::::::::
+
+ ***********************************************************************************************************************************
+                                CASE CONTROL GRID POINT OUTPUT REQUESTS
+
+                                                                            D  F  S  M  G  A
+                                                                            I  O  P  P  P  C
+                                                                            S  R  C  C  F  C
+                                                                            P  C  F  F  O  E
+
+           Grid   point        1 output requests for subcase        1 are:  Y  Y  Y  Y  Y  -
+           Grid   point        2 output requests for subcase        1 are:  Y  Y  Y  Y  Y  -
+           Grid   point        3 output requests for subcase        1 are:  Y  Y  Y  Y  Y  -
+           Grid   point        4 output requests for subcase        1 are:  Y  Y  Y  Y  Y  -
+ 
+
+ DISP indicates grid point displacement output requests
+ FORC indicates grid point applied load output requests
+ SPCF indicates grid point forces of single point constraint output requests
+ MPCF indicates grid point forces of multi  point constraint output requests
+ GPFO indicates grid point force balance output requests
+ ACCE indicates grid point acceleration output requests
+
+ ***********************************************************************************************************************************
+                        CASE CONTROL ELEMENT OUTPUT REQUESTS
+
+                                                                            E  E  S  S  
+                                                                            L  L  T  T  
+                                                                            F  F  R  R  
+                                                                            N  E  E  N
+
+ Element       14,type ROD     , output requests for subcase        1 are:  Y  Y  Y  -
+ Element       21,type ROD     , output requests for subcase        1 are:  Y  Y  Y  -
+ Element       43,type ROD     , output requests for subcase        1 are:  Y  Y  Y  -
+ 
+
+ ELFN indicates element nodal load output requests
+ ELFE indicates element engineering force output requests
+ STRE indicates element stress output requests
+ STRN indicates element strain output requests
+
+ ***********************************************************************************************************************************
+                                                                                  CASE CONTROL ELDATA OUTPUT REQUESTS
+
+                                                                                        B I T   P O S I T I O N
+                                                                             0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+
+ ELEMENT       14,TYPE ROD     , ELDATA OUTPUT REQUESTS (ALL SUBCASES) ARE:  Y  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+ ELEMENT       21,TYPE ROD     , ELDATA OUTPUT REQUESTS (ALL SUBCASES) ARE:  Y  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+ ELEMENT       43,TYPE ROD     , ELDATA OUTPUT REQUESTS (ALL SUBCASES) ARE:  Y  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+ 
+
+ Bit position  0 is for printed output of element grid geometric data
+ Bit position  1 is for printed output of element property, material and other data
+ Bit position  2 is for printed output of element nodal mass.
+ Bit position  3 is for printed output of element thermal and pressure loads in local element coords.
+ Bit position  4 is for printed output of element stiffness matrix in local element coords.
+ Bit position  5 is for printed output of element stress recovery matrices in local element coords.
+ Bit position  6 is for printed output of element displacements and nodal loads.
+ Bit position  7 is for printed output of elem shape fcns and Jacobian matrices from subrs SHPxyz, JAC2D etc.
+ Bit position  8 is for printed output of strain-displacement matrices in subroutines BMQMEM, etc.
+ Bit position  9 is for printed output of elem rigid body and constant strain checks (subroutine BCHECK).
+ Bit position 10 is for unformatted file output of element mass.
+ Bit position 11 is for unformatted file output of element thermal and pressure loads.
+ Bit position 12 is for unformatted file output of element stiffness matrix.
+ Bit position 13 is for unformatted file output of element stress recovery matrices.
+ Bit position 14 is for unformatted file output of element displs and loads.
+ Bit position 15 is not used.
+ 
+ :::::::::::::::::::::::::::::::::::::::END PARAM PRTSCP OUTPUT FROM SUBROUTINE SUBCASE_PROC::::::::::::::::::::::::::::::::::::::::
+ ___________________________________________________________________________________________________________________________________
+
+ 
+                                                      DEGREE OF FREEDOM SET TABLE (TSET)
+
+                            GRID    GRID_SEQ   INV_GRID_SEQ*      T1       T2       T3       R1       R2       R3
+
+                               1           2              2       L        SG       SG       SG       SG       SG
+                               2           1              1       SB       SG       SG       SG       SG       SG
+                               3           3              3       SE       SG       SG       SG       SG       SG
+                               4           4              4       M        SG       SG       SG       SG       SG
+
+                             * INV_GRID_SEQ = J meams that the J-th entry under GRID is sequenced GRID_SEQ(J)
+
+
+                                               DEGREE OF FREEDOM TABLE SORTED ON DOF NUMBER (TDOFI)
+                                                              (Before any AUTOSPC)                                                         
+
+ EXTERNAL  INTERNAL                                     DOF NUMBER FOR DISPLACEMENT SET:
+ GRD-COMP  GRD-COMP ----------------------------------------------------------------------------------------------------------------
+ NUMBER    NUMBER          G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+       2-1       1-1       1       0       1       0       1       0       1       0       1       0       0       0       0       0
+        -2        -2       2       0       2       0       0       1       2       0       2       0       0       0       0       0
+        -3        -3       3       0       3       0       0       2       3       0       3       0       0       0       0       0
+        -4        -4       4       0       4       0       0       3       4       0       4       0       0       0       0       0
+        -5        -5       5       0       5       0       0       4       5       0       5       0       0       0       0       0
+        -6        -6       6       0       6       0       0       5       6       0       6       0       0       0       0       0
+ 
+       1-1       2-1       7       0       7       0       0       0       0       0       0       1       0       1       0       1
+        -2        -2       8       0       8       0       0       6       7       0       7       0       0       0       0       0
+        -3        -3       9       0       9       0       0       7       8       0       8       0       0       0       0       0
+        -4        -4      10       0      10       0       0       8       9       0       9       0       0       0       0       0
+        -5        -5      11       0      11       0       0       9      10       0      10       0       0       0       0       0
+        -6        -6      12       0      12       0       0      10      11       0      11       0       0       0       0       0
+ 
+       3-1       3-1      13       0      13       0       0       0       0       1      12       0       0       0       0       0
+        -2        -2      14       0      14       0       0      11      12       0      13       0       0       0       0       0
+        -3        -3      15       0      15       0       0      12      13       0      14       0       0       0       0       0
+        -4        -4      16       0      16       0       0      13      14       0      15       0       0       0       0       0
+        -5        -5      17       0      17       0       0      14      15       0      16       0       0       0       0       0
+        -6        -6      18       0      18       0       0      15      16       0      17       0       0       0       0       0
+ 
+       4-1       4-1      19       1       0       0       0       0       0       0       0       0       0       0       0       0
+        -2        -2      20       0      19       0       0      16      17       0      18       0       0       0       0       0
+        -3        -3      21       0      20       0       0      17      18       0      19       0       0       0       0       0
+        -4        -4      22       0      21       0       0      18      19       0      20       0       0       0       0       0
+        -5        -5      23       0      22       0       0      19      20       0      21       0       0       0       0       0
+        -6        -6      24       0      23       0       0      20      21       0      22       0       0       0       0       0
+ 
+                     ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
+TOTAL NUMBER OF DOF:      24       1      23       0       1      20      21       1      22       1       0       1       0       1
+
+                           G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+
+
+
+
+       O U T P U T   F R O M   T H E   G R I D   P O I N T   W E I G H T   G E N E R A T O R   F O R   O V E R A L L   M O D E L
+                                             (reference point is basic coord system origin)
+
+                                                      Total mass =  3.000000E-02
+
+                                                             X             Y             Z
+                                       C.G. location :  1.500000E+01  0.000000E+00  0.000000E+00
+                                        (relative to reference point in basic coordinate system)
+
+
+                             6x6 Rigid body mass matrix - about reference point in basic coordinate system
+                      ***                                                                                     ***
+                      *  3.000000E-02  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  3.000000E-02  0.000000E+00  *  0.000000E+00  0.000000E+00  4.500000E-01  *
+                      *  0.000000E+00  0.000000E+00  3.000000E-02  *  0.000000E+00 -4.500000E-01  0.000000E+00  *
+                      *  ************  ************  ************  *  ************  ************  ************  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  9.500000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  9.500000E+00  *
+                      ***                                                                                     ***
+ 
+ 
+                                    M.O.I. matrix - about reference point in basic coordinate system
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  9.500000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  9.500000E+00  *
+                                             ***                                        ***
+ 
+ 
+                                  M.O.I. matrix - about above c.g. location in basic coordinate system
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  2.750000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  2.750000E+00  *
+                                             ***                                        ***
+ 
+ 
+                                     M.O.I. matrix - about above c.g. location in principal directions
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  2.750000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  2.750000E+00  *
+                                             ***                                        ***
+ 
+ 
+                                     Transformation from basic coordinates to principal directions
+                                             ***                                        ***
+                                             *  1.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  1.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  1.000000E+00  *
+                                             ***                                        ***
+ 
+ 
+
+ >> LINK  0 END
+
+
+ >> LINK  1 BEGIN
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                          G-SET LOADS, MATRIX PG (with PARAM SPARSTOR = NONSYM)                                     
+                         (Matrix has       24 rows and        3 nonzeros.       21 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            1-1                    1               2.00000000000000E+02     11
+ 
+                               2            3-1                    1               1.00000000000000E+02     11
+ 
+                               3            4-1                    1               3.00000000000000E+02     11
+ 
+ 
+               DEALLOCATED  6.91E-03 MB MEMORY FROM ARRAY STF3
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KGG (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       24 rows and       10 nonzeros.       20 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-1                    2-1             1.00000000000000E+04     21
+                               2            2-1                    1-1            -1.00000000000000E+04     21
+ 
+                               3            1-1                    2-1            -1.00000000000000E+04     21
+                               4            1-1                    1-1             2.00000000000000E+04     21
+                               5            1-1                    4-1            -1.00000000000000E+04     21
+ 
+                               6            3-1                    3-1             1.00000000000000E+04     21
+                               7            3-1                    4-1            -1.00000000000000E+04     21
+ 
+                               8            4-1                    1-1            -1.00000000000000E+04     21
+                               9            4-1                    3-1            -1.00000000000000E+04     21
+                              10            4-1                    4-1             2.00000000000000E+04     21
+ 
+ 
+               DEALLOCATED  9.60E-05 MB MEMORY FROM ARRAY STFKEY
+               DEALLOCATED  6.91E-03 MB MEMORY FROM ARRAY STF3
+
+ >> LINK  1 END
+
+
+ >> LINK  2 BEGIN
+
+ 
+
+                                     OUTPUT OF DIAGONALS OF KGG  MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        2     1    1.000000E+04    5.000000E-01
+                                                  2        2     2    0.000000E+00    0.000000E+00
+                                                  3        2     3    0.000000E+00    0.000000E+00
+                                                  4        2     4    0.000000E+00    0.000000E+00
+                                                  5        2     5    0.000000E+00    0.000000E+00
+                                                  6        2     6    0.000000E+00    0.000000E+00
+ 
+                                                  7        1     1    2.000000E+04    1.000000E+00
+                                                  8        1     2    0.000000E+00    0.000000E+00
+                                                  9        1     3    0.000000E+00    0.000000E+00
+                                                 10        1     4    0.000000E+00    0.000000E+00
+                                                 11        1     5    0.000000E+00    0.000000E+00
+                                                 12        1     6    0.000000E+00    0.000000E+00
+ 
+                                                 13        3     1    1.000000E+04    5.000000E-01
+                                                 14        3     2    0.000000E+00    0.000000E+00
+                                                 15        3     3    0.000000E+00    0.000000E+00
+                                                 16        3     4    0.000000E+00    0.000000E+00
+                                                 17        3     5    0.000000E+00    0.000000E+00
+                                                 18        3     6    0.000000E+00    0.000000E+00
+ 
+                                                 19        4     1    2.000000E+04    1.000000E+00
+                                                 20        4     2    0.000000E+00    0.000000E+00
+                                                 21        4     3    0.000000E+00    0.000000E+00
+                                                 22        4     4    0.000000E+00    0.000000E+00
+                                                 23        4     5    0.000000E+00    0.000000E+00
+                                                 24        4     6    0.000000E+00    0.000000E+00
+ 
+      G SET EQUILIBRIUM CHECK: KGG*RBGLOBAL = G SET GRID POINT FORCES DUE TO RBGLOBAL RIGID BODY DISPLACEMENTS
+                                    GRID FORCES NORMALIZED TO DIAGONAL STIFFNESS
+                                              (should be all zero's)
+                          T1             T2             T3             R1             R2             R3
+ 
+        2       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        1       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        3       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        4       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+                    -------------  -------------  -------------  -------------  -------------  -------------
+       ABS MAX       0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+
+       * stiffness for row is zreo, so row was normalized to the max diagonal term =  2.000000E+04
+
+
+                                  STRAIN ENERGY DUE TO RBGLOGAL G -SET RIGID BODY DISPLACEMENTS
+                                          (max absolute value =  0.00E+00 at row 1, col 1)
+                          T1             T2             T3             R1             R2             R3
+
+               T1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                          CONSTRAINT MATRIX RMG (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        2 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    4-1             1.00000000000000E+00     21
+                               2            4-1                    3-1            -1.00000000000000E+00     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                         CONSTRAINT PARTITION RMN (with PARAM SPARSTOR = NONSYM)                                    
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    3-1            -1.00000000000000E+00     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                         CONSTRAINT PARTITION RMM (with PARAM SPARSTOR = NONSYM)                                    
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    4-1             1.00000000000000E+00     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                          CONSTRAINT MATRIX GMN (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    3-1             1.00000000000000E+00     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KNN (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       23 rows and        7 nonzeros.       20 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-1                    2-1             1.00000000000000E+04     21
+                               2            2-1                    1-1            -1.00000000000000E+04     21
+ 
+                               3            1-1                    2-1            -1.00000000000000E+04     21
+                               4            1-1                    1-1             2.00000000000000E+04     21
+                               5            1-1                    3-1            -1.00000000000000E+04     21
+ 
+                               6            3-1                    1-1            -1.00000000000000E+04     21
+                               7            3-1                    3-1             1.00000000000000E+04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KNM (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       23 rows and        2 nonzeros.       21 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    4-1            -1.00000000000000E+04     21
+ 
+                               2            3-1                    4-1            -1.00000000000000E+04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KMM (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    4-1             2.00000000000000E+04     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KNN MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        2     1    1.000000E+04    5.000000E-01
+                                                  2        2     2    0.000000E+00    0.000000E+00
+                                                  3        2     3    0.000000E+00    0.000000E+00
+                                                  4        2     4    0.000000E+00    0.000000E+00
+                                                  5        2     5    0.000000E+00    0.000000E+00
+                                                  6        2     6    0.000000E+00    0.000000E+00
+ 
+                                                  7        1     1    2.000000E+04    1.000000E+00
+                                                  8        1     2    0.000000E+00    0.000000E+00
+                                                  9        1     3    0.000000E+00    0.000000E+00
+                                                 10        1     4    0.000000E+00    0.000000E+00
+                                                 11        1     5    0.000000E+00    0.000000E+00
+                                                 12        1     6    0.000000E+00    0.000000E+00
+ 
+                                                 13        3     1    1.000000E+04    5.000000E-01
+                                                 14        3     2    0.000000E+00    0.000000E+00
+                                                 15        3     3    0.000000E+00    0.000000E+00
+                                                 16        3     4    0.000000E+00    0.000000E+00
+                                                 17        3     5    0.000000E+00    0.000000E+00
+                                                 18        3     6    0.000000E+00    0.000000E+00
+ 
+                                                 19        4     2    0.000000E+00    0.000000E+00
+                                                 20        4     3    0.000000E+00    0.000000E+00
+                                                 21        4     4    0.000000E+00    0.000000E+00
+                                                 22        4     5    0.000000E+00    0.000000E+00
+                                                 23        4     6    0.000000E+00    0.000000E+00
+ 
+ Overall stats for     23 N set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        7        1     1    2.000000E+04
+ Min positive diag term & ratio to OA max:       13        3     1    1.000000E+04    5.000000E-01
+ Min (any)    diag term & ratio to OA max:       23        4     6    0.000000E+00    0.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :       20
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for     11 N set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        7        1     1    2.000000E+04    1.000000E+00
+ Min positive diag term & ratio to OA max:       13        3     1    1.000000E+04    5.000000E-01
+ Min (any)    diag term & ratio to OA max:       20        4     3    0.000000E+00    0.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        8
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for     12 N set rotation DOF's
+ -------------------------------------
+ Max positive diag term & ratio to OA max:       23        4     6    0.000000E+00    0.000000E+00
+ Min positive diag term & ratio to OA max:       23        4     6    0.000000E+00    0.000000E+00
+ Min (any)    diag term & ratio to OA max:       23        4     6    0.000000E+00    0.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :       12
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MNN (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       23 rows and       11 nonzeros.       12 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-1                    2-1             5.00000000000000E-03     21
+ 
+                               2            2-2                    2-2             5.00000000000000E-03     21
+ 
+                               3            2-3                    2-3             5.00000000000000E-03     21
+ 
+                               4            1-1                    1-1             1.00000000000000E-02     21
+ 
+                               5            1-2                    1-2             1.00000000000000E-02     21
+ 
+                               6            1-3                    1-3             1.00000000000000E-02     21
+ 
+                               7            3-1                    3-1             1.50000000000000E-02     21
+ 
+                               8            3-2                    3-2             5.00000000000000E-03     21
+ 
+                               9            3-3                    3-3             5.00000000000000E-03     21
+ 
+                              10            4-2                    4-2             1.00000000000000E-02     21
+ 
+                              11            4-3                    4-3             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MMM (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            4-1                    4-1             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PN (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       23 rows and        2 nonzeros.       21 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            1-1                    1               2.00000000000000E+02     11
+ 
+                               2            3-1                    1               4.00000000000000E+02     11
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PM (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            4-1                    1               3.00000000000000E+02     11
+ 
+ 
+      N SET EQUILIBRIUM CHECK: KNN*RBGLOBAL = N SET GRID POINT FORCES DUE TO RBGLOBAL RIGID BODY DISPLACEMENTS
+                                    GRID FORCES NORMALIZED TO DIAGONAL STIFFNESS
+                                              (should be all zero's)
+                          T1             T2             T3             R1             R2             R3
+ 
+        2       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        1       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        3       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        4       2*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       3*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       4*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       5*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       6*   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+                    -------------  -------------  -------------  -------------  -------------  -------------
+       ABS MAX       0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+
+       * stiffness for row is zreo, so row was normalized to the max diagonal term =  2.000000E+04
+
+
+                                  STRAIN ENERGY DUE TO RBGLOGAL N -SET RIGID BODY DISPLACEMENTS
+                                          (max absolute value =  0.00E+00 at row 1, col 1)
+                          T1             T2             T3             R1             R2             R3
+
+               T1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+ 
+ 
+ 
+ 
+ *INFORMATION: AUTOSPC Summary, Overall: after identification of all AUTOSPC's                                                               
+
+                                     AUTOSPC_RAT = 1.000000E-06
+
+                       Number of DOF's identified for AUTOSPC in component  1         =            0
+                       Number of DOF's identified for AUTOSPC in component  2         =            0
+                       Number of DOF's identified for AUTOSPC in component  3         =            0
+                       Number of DOF's identified for AUTOSPC in component  4         =            0
+                       Number of DOF's identified for AUTOSPC in component  5         =            0
+                       Number of DOF's identified for AUTOSPC in component  6         =            0
+                                                                                        ------------
+                       Total number of DOF's identified overall                       =            0
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KFF (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             2.00000000000000E+04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KFS (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        2 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    2-1            -1.00000000000000E+04     21
+                               2            1-1                    3-1            -1.00000000000000E+04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KSS (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       22 rows and        2 nonzeros.       20 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-1                    2-1             1.00000000000000E+04     21
+ 
+                               2            3-1                    3-1             1.00000000000000E+04     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KFF MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        1     1    2.000000E+04    1.000000E+00
+ 
+ Overall stats for      1 F set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        1        1     1    2.000000E+04
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      1 F set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      0 F set rotation DOF's
+ -------------------------------------
+ Max positive diag term (OA max)         : 
+ Min positive diag term & ratio to OA max: 
+ Min (any)    diag term & ratio to OA max: 
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MFF (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MSS (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       22 rows and       10 nonzeros.       12 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-1                    2-1             5.00000000000000E-03     21
+ 
+                               2            2-2                    2-2             5.00000000000000E-03     21
+ 
+                               3            2-3                    2-3             5.00000000000000E-03     21
+ 
+                               4            1-2                    1-2             1.00000000000000E-02     21
+ 
+                               5            1-3                    1-3             1.00000000000000E-02     21
+ 
+                               6            3-1                    3-1             1.50000000000000E-02     21
+ 
+                               7            3-2                    3-2             5.00000000000000E-03     21
+ 
+                               8            3-3                    3-3             5.00000000000000E-03     21
+ 
+                               9            4-2                    4-2             1.00000000000000E-02     21
+ 
+                              10            4-3                    4-3             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PF (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            1-1                    1               2.20000000000000E+03     11
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PS (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       22 rows and        1 nonzeros.       21 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            3-1                    1               4.00000000000000E+02     11
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KAA (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             2.00000000000000E+04     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KAA MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        1     1    2.000000E+04    1.000000E+00
+ 
+ Overall stats for      1 A set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        1        1     1    2.000000E+04
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      1 A set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      0 A set rotation DOF's
+ -------------------------------------
+ Max positive diag term (OA max)         : 
+ Min positive diag term & ratio to OA max: 
+ Min (any)    diag term & ratio to OA max: 
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MAA (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PA (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            1-1                    1               2.20000000000000E+03     11
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KLL (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             2.00000000000000E+04     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KLL MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        1     1    2.000000E+04    1.000000E+00
+ 
+ Overall stats for      1 L set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        1        1     1    2.000000E+04
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      1 L set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min positive diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Min (any)    diag term & ratio to OA max:        1        1     1    2.000000E+04    1.000000E+00
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      0 L set rotation DOF's
+ -------------------------------------
+ Max positive diag term (OA max)         : 
+ Min positive diag term & ratio to OA max: 
+ Min (any)    diag term & ratio to OA max: 
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MLL (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             1.00000000000000E-02     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                              LOAD MATRIX PL (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        1 rows and        1 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Internal subcase no)
+
+                               1            1-1                    1               2.20000000000000E+03     11
+ 
+ 
+
+ >> LINK  2 END
+
+
+ >> LINK  3 BEGIN
+
+ *INFORMATION: INFINITY NORM OF MATRIX         KLL                                    =  2.000000E+04
+
+ *INFORMATION: MAXIMUM DIAGONAL TERM IN MATRIX         KLL                            =  2.000000E+04 Occurs in row/col no.        1
+ *INFORMATION: MINIMUM DIAGONAL TERM IN MATRIX         KLL                            =  2.000000E+04 Occurs in row/col no.        1
+ *INFORMATION: RATIO OF MAX TO MIN DIAGONALS IN MATRIX         KLL                    =  1.000000E+00
+
+ *INFORMATION: THE MAXIMUM ABSOLUTE VALUE OF THE RATIO OF MATRIX DIAGONAL TO FACTOR DIAG FOR MATRIX KLL =   1.414214E+02
+               THIS IS FOR ROW AND COL IN THE MATRIX FOR GRID POINT        1 COMP   1. THE CALLING SUBR WAS: LINK3                          
+
+ 
+ *INFORMATION: FOR INTERNAL SUBCASE NUMBER        1 EPSILON ERROR ESTIMATE            = -2.067033E-16 Based on U'*(K*U - P)/(U'*P)
+
+ *INFORMATION: FOR INTERNAL SUBCASE NUMBER        1 LAPACK ERROR EST (2*OMEGAI/RCOND) =  2.067033E-16 Gen, slightly > than true err
+                                                    ................................................................................
+                                                    ... OMEGAI                        =  1.033517E-16 (RES_INORM/DEN)              .
+                                                    ... RCOND                         =  1.000000E+00 (Recriprocal of KLL cond num).
+                                                    ... DEN                           =  4.400000E+03 (K_INORM*UL_INORM + PL_INORM).
+                                                    ... RES_INORM                     =  4.547474E-13 (Inf norm of KLL*UL - PL)    .
+                                                    ... K_INORM                       =  2.000000E+04 (Infinity norm of KLL)       .
+                                                    ... UL_INORM                      =  1.100000E-01 (Infinity norm of UL displs) .
+                                                    ... PL_INORM                      =  2.200000E+03 (Infinity norm of PL loads)  .
+                                                    ... OMEGAI0 (OMEGAI upper bound)  =  1.110223E-15 (10*NDOFL*MACH_EPS)          .
+                                                    ... MACH_EPS                      =  1.110223E-16 (Machine precision)          .
+                                                    ................................................................................
+
+ 
+
+ >> LINK  3 END
+
+
+ >> LINK  5 BEGIN
+
+
+ >> LINK  5 END
+
+
+ >> LINK  9 BEGIN
+
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                                       D I S P L A C E M E N T S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  1.100000E-01  0.0           0.0           0.0           0.0           0.0         
+              2        0  0.0           0.0           0.0           0.0           0.0           0.0         
+              3        0  2.000000E-01  0.0           0.0           0.0           0.0           0.0         
+              4        0  2.000000E-01  0.0           0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    2.000000E-01  0.0           0.0           0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    2.000000E-01  0.0           0.0           0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                                     A P P L I E D    F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  2.000000E+02  0.0           0.0           0.0           0.0           0.0         
+              3        0  1.000000E+02  0.0           0.0           0.0           0.0           0.0         
+              4        0  3.000000E+02  0.0           0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    3.000000E+02  0.0           0.0           0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    3.000000E+02  0.0           0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ APPLIED FORCE TOTALS:    6.000000E+02  0.0           0.0           0.0           0.0           0.0         
+   (for output set)
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              2        0 -1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+              3        0  5.000000E+02  0.0           0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+     SPC FORCE TOTALS:   -6.000000E+02  0.0           0.0           0.0           0.0           0.0         
+     (for output set)
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                                          M P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              3        0 -6.000000E+02  0.0           0.0           0.0           0.0           0.0         
+              4        0  6.000000E+02  0.0           0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+     MPC FORCE TOTALS:    0.0           0.0           0.0           0.0           0.0           0.0         
+     (for output set)
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT        1 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            2.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        14  9.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        21 -1.100000E+03  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  4.547474E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        2 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE               -1.100000E+03  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        21  1.100000E+03  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        3 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            1.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                5.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE               -6.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        43  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        4 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            3.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                6.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        14 -9.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM        43  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  4.547474E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ Max abs force any grid:  1.100000E+03  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ as % of max abs force :      4.13E-14%                                                                      
+ Occurs at grid*       :         1             1             1             1             1             1
+ (*for output set)
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   R O D      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+             14        1 -9.000000E+02  0.0           0.0           0.0           0.0           0.0         
+                       4  9.000000E+02  0.0           0.0           0.0           0.0           0.0         
+ 
+             21        2 -1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+                       1  1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+ 
+             43        4  0.0           0.0           0.0           0.0           0.0           0.0         
+                       3  0.0           0.0           0.0           0.0           0.0           0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+ MIN (for output set):   -1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    1.100000E+03  0.0           0.0           0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+                                  E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                      F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial        Torque      Element     Axial        Torque      Element     Axial        Torque
+     ID       Force                       ID       Force                       ID       Force
+       14  9.000000E+02  0.000000E+00      21  1.100000E+03  0.000000E+00      43  0.000000E+00  0.000000E+00
+          ------------- -------------
+ MAX* :    1.100000E+03  0.000000E+00
+ MIN* :    0.000000E+00  0.000000E+00
+
+ ABS* :    1.100000E+03  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR SUBCASE        1
+ 3 CROD's AND 1 RBE2                                                                                                                                                                                                                                             
+ SPARSE MATRIX MULTIPLY AND ADD ROUTINES                                                                                                                                                                                                                         
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial       Safety     Torsional     Safety    Element    Axial       Safety     Torsional     Safety
+     ID       Stress      Margin       Stress      Margin       ID      Stress      Margin       Stress      Margin
+       14  9.000000E+04             0.000000E+00                 21  1.100000E+05             0.000000E+00             
+       43  0.000000E+00             0.000000E+00                                                                       
+          ------------- ---------  ------------- ---------
+ MAX* :    1.100000E+05  1.00E+10   0.000000E+00  1.00E+10
+ MIN* :    0.000000E+00 -1.00E+00   0.000000E+00  1.00E+10
+
+ ABS* :    1.100000E+05  1.00E+10   0.000000E+00  1.00E+10
+ *for output set
+
+ >> LINK  9 END
+ 
+    Total CPU time =  1.09E-01 seconds
+
+ >> MYSTRAN END    :  6/22/2020 at 12:51:37.284

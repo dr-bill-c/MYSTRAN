@@ -1,0 +1,70 @@
+ID PLATE,STATICS                                                                
+SOL 1                                                                           
+CEND                                                                            
+TITLE = BAR WITH END A NOT AT BASIC ORIGIN
+SUBTI = TESTS TE COORD TRANSFORMATION MATRIX
+SPC   = 123
+LOAD  = 321
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+ELDATA(0,PRINT) = ALL
+ELDATA(4,PRINT) = ALL
+BEGIN BULK                                                                      
+$
+GRID    13              100.      0.    0.   
+GRID    23              100.     50.    0.   
+GRID    33              100.    100.    0.   
+$
+BAROR                                   0.      0.      1.
+$
+CBAR    123     97      13      23
+CBAR    233     97      23      33
+$
+PBAR    97      20      1.0     2.0      1.0
+$
+MAT1    20      10.+06  4.+06   .25     .1                                 
+$
+FORCE   321     33              100.    0.      1.      3.
+$
+SPC1    123     123456  13
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

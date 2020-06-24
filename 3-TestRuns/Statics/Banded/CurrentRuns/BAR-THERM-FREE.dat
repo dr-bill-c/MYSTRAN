@@ -1,0 +1,94 @@
+ID BAR,THERMAL
+SOL 1
+CEND
+TITLE = 2 BARS WITH 4 SUBCASES (THERMAL IN 2ND S/C). GLOBAL NOT BASIC TO TEST PTE IN SUBR GP_FORCE_BALANCE
+SUBTI = ONE END OF MODEL IS FREE SO TEMP SUBCASE SHOULD BE FREE THERMAL EXPANSION (NO STRESSES)
+SPC   = 1
+SET 9 = 101 THRU 103
+DISP          = 9
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = 9
+MPCFORCE      = 9
+OLOAD         = 9
+SPCFORCE      = 9
+STRESS        = ALL
+ELDATA(0,PRINT) = ALL
+ELDATA(1,PRINT) = ALL
+ELDATA(2,PRINT) = ALL
+ELDATA(3,PRINT) = ALL
+ELDATA(4,PRINT) = ALL
+ELDATA(5,PRINT) = ALL
+SUBCASE 11
+  LABEL = AXIAL LOAD AT END GRID 103
+  LOAD = 11
+SUBCASE 21
+  LABEL = LINEAR TEMP THROUGH THICKNESS IN 2 PLANES AND ALONG LENGTH
+  TEMP  = 211
+SUBCASE 31
+  LABEL = LATERAL LOAD IN 2 PLANES AT END GRID 103
+  LOAD = 31
+BEGIN BULK
+$
+CORD2R  87              0.      0.      0.      1.      0.      0.      +CORD1
++CORD1  0.      1.      0.
+$
+GRDSET                                          87
+$
+$ GRID 100's only purpose is for specifying the BAR V vectors
+$ (so that they will be the same regardless of global coord system)
+$
+GRID    100             0.      1.      0.              123456
+GRID    101             0.      0.      0.
+GRID    102             5.      0.      0.
+GRID    103             10.     0.      0.
+$
+CBAR    12      10      101     102     100
+CBAR    23      10      102     103     100
+$
+PBAR    10      20      .4      4.      5.      1.5                     +PBAR1
++PBAR1   .2     -.3      .2      .3     -.2      .3     -.2     -.3
+$
+MAT1    20      10.+6   4.+6    .33     .1      20.-6   21.             +MAT1
+$
+SPC1    1       123456  101
+$
+FORCE   11      103             2.0     1.0     0.0     0.0
+FORCE   31      103             3.0     0.0     1.0     2.0
+TEMPRB  211     12      21.     23.     2.      2.      -4.     -4.
+TEMPRB  211     23      23.     25.     2.      2.      -4.     -4.
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

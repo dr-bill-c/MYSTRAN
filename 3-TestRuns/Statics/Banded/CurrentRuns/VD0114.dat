@@ -1,0 +1,111 @@
+ID      CSA, VERIFICATION
+TIME    5
+SOL     1
+DIAG    8,14,43,46
+CEND
+TITLE= VERIFICATION PROBLEM VD0114
+SUBTITLE = [0/45/-45/90]s GRAPHITE/EXPOXY LAMINATE
+SPC=200
+SET 1 = 101
+ELDATA(0,PRINT) = 1
+ELDATA(1,PRINT) = 1
+ELDATA(2,PRINT) = 1
+ELDATA(3,PRINT) = 1
+ELDATA(4,PRINT) = 1
+ELDATA(5,PRINT) = 1
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+STRAIN        = ALL
+SUBCASE 1
+  LABEL=ANALYSIS OF THE TENSILE RESPONSE
+  LOAD=100
+SUBCASE 2
+  LABEL=ANALYSIS OF THE THERMAL EXPANSION
+  TEMP(LOAD)=200
+BEGIN BULK
+$
+MAT8    210     2.03+7  1.49+6  .29     74.7+4  1.E+15  1.E+15  0.1     +MA1
++MA1    0.7E-6  31.2E-6 30.0    2.83+5  2.18+5  6.9+3   1.88+4  1.23+4
+$
+$MAT1    210     10.+6           0.25            2.-6    30.
+$
+PCOMP   200     -0.5            1.23+4  TSAI    30.             SYM     +PC201a
++PC201a 210     0.125     0.            210     0.125    45.            +PC201b
++PC201b 210     0.125   -45.            210     0.125    90.
+$ 
+TEMPD   200     100.
+$
+CQUAD4  101     200     10000   10001   10101   10100   0
+CQUAD4  102     200     10001   10002   10102   10101
+CQUAD4  103     200     10002   10003   10103   10102
+CQUAD4  104     200     10100   10101   10201   10200
+CQUAD4  105     200     10101   10102   10202   10201
+CQUAD4  106     200     10102   10103   10203   10202
+CQUAD4  107     200     10200   10201   10301   10300
+CQUAD4  108     200     10201   10202   10302   10301
+CQUAD4  109     200     10202   10203   10303   10302
+$
+GRID    10000           0.0     0.0     0.0             6
+GRID    10001           33.3333 0.0     0.0             6
+GRID    10002           66.6667 0.0     0.0             6
+GRID    10003           100.    0.0     0.0             6
+$
+GRID    10100           0.0     33.3333 0.0             6
+GRID    10101           33.3333 33.3333 0.0             6
+GRID    10102           66.6667 33.3333 0.0             6
+GRID    10103           100.    33.3333 0.0             6
+$
+GRID    10200           0.0     66.6667 0.0             6
+GRID    10201           33.3333 66.6667 0.0             6
+GRID    10202           66.6667 66.6667 0.0             6
+GRID    10203           100.    66.6667 0.0             6
+$
+GRID    10300           0.0     100.    0.0             6
+GRID    10301           33.3333 100.    0.0             6
+GRID    10302           66.6667 100.    0.0             6
+GRID    10303           100.    100.    0.0             6
+$
+FORCE   100     10003           10000.   1.
+FORCE   100     10103           20000.   1.
+FORCE   100     10203           20000.   1.
+FORCE   100     10303           10000.   1.
+$
+FORCE   301     10000           1.0      -1.0      0.0     0.0
+FORCE   301     10100           1.0      -2.0      0.0     0.0
+FORCE   301     10200           1.0      -2.0      0.0     0.0
+FORCE   301     10300           1.0      -1.0      0.0     0.0
+$
+FORCE   302     10003           1.0       1.0      0.0     0.0
+FORCE   302     10103           1.0       2.0      0.0     0.0
+FORCE   302     10203           1.0       2.0      0.0     0.0
+FORCE   302     10303           1.0       1.0      0.0     0.0
+$
+FORCE   303     10000           1.0       0.0     -1.0     0.0
+FORCE   303     10001           1.0       0.0     -2.0     0.0
+FORCE   303     10002           1.0       0.0     -2.0     0.0
+FORCE   303     10003           1.0       0.0     -1.0     0.0
+$
+FORCE   304     10300           1.0       0.0      1.0     0.0
+FORCE   304     10301           1.0       0.0      2.0     0.0
+FORCE   304     10302           1.0       0.0      2.0     0.0
+FORCE   304     10303           1.0       0.0      1.0     0.0
+$
+SPC1    200     1345    10100   10200   10300
+SPC1    200     12345   10000
+$
+PARAM   SOLLIB   LAPACK
+PARAM   PRTSTIFD 3      3       3       3       3
+PARAM   POST     -1
+$
+DEBUG   10      33
+DEBUG   112     1                                                       THETAM
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

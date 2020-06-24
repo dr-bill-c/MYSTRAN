@@ -1,0 +1,2324 @@
+   622125908
+
+ MYSTRAN Version 11.0     Jun 16 2020 MYSTRAN developed by Dr Bill Case
+ *** Please report any problems to the author at dbcase29@gmail.com ***                                                                                                                                                                                          
+
+ >> MYSTRAN BEGIN  :  6/22/2020 at 12:59: 8.439 The input file is BAR-CC-LANCZOS-MODE-2-DPB.DAT                                                                                                                                                                                                                                   
+
+
+ >> LINK  0 BEGIN
+
+ 
+ID BAR                                                                                                                                                                                                                                                          
+SOL 3                                                                                                                                                                                                                                                           
+CEND                                                                                                                                                                                                                                                            
+TITLE  = BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                    
+SUBT   = FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                            
+SPC    = 1                                                                                                                                                                                                                                                      
+METHOD = 1                                                                                                                                                                                                                                                      
+DISP          = ALL                                                                                                                                                                                                                                             
+ECHO          = UNSORT                                                                                                                                                                                                                                          
+ELFORCE(BOTH) = ALL                                                                                                                                                                                                                                             
+GPFORCE       = ALL                                                                                                                                                                                                                                             
+MEFFMASS      = ALL                                                                                                                                                                                                                                             
+MPCFORCE      = ALL                                                                                                                                                                                                                                             
+MPFACTOR      = ALL                                                                                                                                                                                                                                             
+SPCFORCE      = ALL                                                                                                                                                                                                                                             
+STRESS        = ALL                                                                                                                                                                                                                                             
+BEGIN BULK                                                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+EIGRL   1                       4                       -1.     MAX                                                                                                                                                                                             
+$                                                                                                                                                                                                                                                               
+GRDSET                                                  12 4 6                                                                                                                                                                                                  
+$                                                                                                                                                                                                                                                               
+GRID    1                 0.    0.      0.                                                                                                                                                                                                                      
+GRID    2                25.    0.      0.                                                                                                                                                                                                                      
+GRID    3                50.    0.      0.                                                                                                                                                                                                                      
+GRID    4                75.    0.      0.                                                                                                                                                                                                                      
+GRID    5               100.    0.      0.                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+CBAR    102     25      1       2       0.      0.      1.                                                                                                                                                                                                      
+CBAR    203     25      2       3       0.      0.      1.                                                                                                                                                                                                      
+CBAR    304     25      3       4       0.      0.      1.                                                                                                                                                                                                      
+CBAR    405     25      4       5       0.      0.      1.                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+PBAR    25      20      .1      .1      .1      .1                                                                                                                                                                                                              
+$                                                                                                                                                                                                                                                               
+MAT1    20      10.+06          .3      .1                                                                                                                                                                                                                      
+ *INFORMATION: MAT1 ENTRY       20 HAD FIELD FOR G  BLANK. MYSTRAN CALCULATED G  =  3.846154E+06
+$                                                                                                                                                                                                                                                               
+SPC1    1       35      1                                                                                                                                                                                                                                       
+$                                                                                                                                                                                                                                                               
+PARAM   SOLLIB   LAPACK                                                                                                                                                                                                                                         
+PARAM   SPARSTOR NONSYM                                                                                                                                                                                                                                         
+PARAM   EQCHECK  0      3       3                               -1.E10  Y                                                                                                                                                                                       
+PARAM   GRDPNT   0                                                                                                                                                                                                                                              
+PARAM   POST     -1                                                                                                                                                                                                                                             
+PARAM   RCONDK   Y                                                                                                                                                                                                                                              
+PARAM   WTMASS   .002591                                                                                                                                                                                                                                        
+PARAM   PRTBASIC 1                                                                                                                                                                                                                                              
+PARAM   PRTCGLTM 1                                                                                                                                                                                                                                              
+PARAM   PRTCORD  2                                                                                                                                                                                                                                              
+PARAM   PRTDLR   1                                                                                                                                                                                                                                              
+PARAM   PRTDOF   2                                                                                                                                                                                                                                              
+PARAM   PRTFOR   1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTGMN   1                                                                                                                                                                                                                                              
+PARAM   PRTGOA   1                                                                                                                                                                                                                                              
+PARAM   PRTHMN   1                                                                                                                                                                                                                                              
+PARAM   PRTIFLTM 1                                                                                                                                                                                                                                              
+PARAM   PRTKXX   1                                                                                                                                                                                                                                              
+PARAM   PRTMASS  1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTMXX   1                                                                                                                                                                                                                                              
+PARAM   PRTPHIXA 1                                                                                                                                                                                                                                              
+PARAM   PRTPHIZL 1                                                                                                                                                                                                                                              
+PARAM   PRTQSYS  1                                                                                                                                                                                                                                              
+PARAM   PRTRMG   3                                                                                                                                                                                                                                              
+PARAM   PRTSCP   1                                                                                                                                                                                                                                              
+PARAM   PRTTSET  1                                                                                                                                                                                                                                              
+PARAM   PRTSTIFD 1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTSTIFF 1      3       3       3       3                                                                                                                                                                                                               
+PARAM   PRTUO0   1                                                                                                                                                                                                                                              
+PARAM   PRTYS    1                                                                                                                                                                                                                                              
+PARAM   LANCMETH ARPACK                                                                                                                                                                                                                                         
+$                                                                                                                                                                                                                                                               
+DEBUG   185     1                                                                                                                                                                                                                                               
+DEBUG   192     2                                                       GPFO summary                                                                                                                                                                            
+DEBUG   200     1                                                       ANS                                                                                                                                                                                     
+$                                                                                                                                                                                                                                                               
+ENDDATA                                                                                                                                                                                                                                                         
+ 
+ 
+
+
+                                                GRID POINT COORDINATES IN BASIC COORDINATE SYSTEM
+
+                                    GRID ID           X                 Y                 Z
+                                          1      0.000000E+00      0.000000E+00      0.000000E+00
+                                          2      2.500000E+01      0.000000E+00      0.000000E+00
+                                          3      5.000000E+01      0.000000E+00      0.000000E+00
+                                          4      7.500000E+01      0.000000E+00      0.000000E+00
+                                          5      1.000000E+02      0.000000E+00      0.000000E+00
+ 
+ 
+ ___________________________________________________________________________________________________________________________________
+
+ ::::::::::::::::::::::::::::::::::::::START PARAM PRTSCP OUTPUT FROM SUBROUTINE SUBCASE_PROC:::::::::::::::::::::::::::::::::::::::
+
+ ***********************************************************************************************************************************
+                                CASE CONTROL GRID POINT OUTPUT REQUESTS
+
+                                                                            D  F  S  M  G  A
+                                                                            I  O  P  P  P  C
+                                                                            S  R  C  C  F  C
+                                                                            P  C  F  F  O  E
+
+           Grid   point        1 output requests for subcase        1 are:  Y  -  Y  Y  Y  -
+           Grid   point        2 output requests for subcase        1 are:  Y  -  Y  Y  Y  -
+           Grid   point        3 output requests for subcase        1 are:  Y  -  Y  Y  Y  -
+           Grid   point        4 output requests for subcase        1 are:  Y  -  Y  Y  Y  -
+           Grid   point        5 output requests for subcase        1 are:  Y  -  Y  Y  Y  -
+ 
+
+ DISP indicates grid point displacement output requests
+ FORC indicates grid point applied load output requests
+ SPCF indicates grid point forces of single point constraint output requests
+ MPCF indicates grid point forces of multi  point constraint output requests
+ GPFO indicates grid point force balance output requests
+ ACCE indicates grid point acceleration output requests
+
+ ***********************************************************************************************************************************
+                        CASE CONTROL ELEMENT OUTPUT REQUESTS
+
+                                                                            E  E  S  S  
+                                                                            L  L  T  T  
+                                                                            F  F  R  R  
+                                                                            N  E  E  N
+
+ Element      102,type BAR     , output requests for subcase        1 are:  Y  Y  Y  -
+ Element      203,type BAR     , output requests for subcase        1 are:  Y  Y  Y  -
+ Element      304,type BAR     , output requests for subcase        1 are:  Y  Y  Y  -
+ Element      405,type BAR     , output requests for subcase        1 are:  Y  Y  Y  -
+ 
+
+ ELFN indicates element nodal load output requests
+ ELFE indicates element engineering force output requests
+ STRE indicates element stress output requests
+ STRN indicates element strain output requests
+
+ 
+
+ Bit position  0 is for printed output of element grid geometric data
+ Bit position  1 is for printed output of element property, material and other data
+ Bit position  2 is for printed output of element nodal mass.
+ Bit position  3 is for printed output of element thermal and pressure loads in local element coords.
+ Bit position  4 is for printed output of element stiffness matrix in local element coords.
+ Bit position  5 is for printed output of element stress recovery matrices in local element coords.
+ Bit position  6 is for printed output of element displacements and nodal loads.
+ Bit position  7 is for printed output of elem shape fcns and Jacobian matrices from subrs SHPxyz, JAC2D etc.
+ Bit position  8 is for printed output of strain-displacement matrices in subroutines BMQMEM, etc.
+ Bit position  9 is for printed output of elem rigid body and constant strain checks (subroutine BCHECK).
+ Bit position 10 is for unformatted file output of element mass.
+ Bit position 11 is for unformatted file output of element thermal and pressure loads.
+ Bit position 12 is for unformatted file output of element stiffness matrix.
+ Bit position 13 is for unformatted file output of element stress recovery matrices.
+ Bit position 14 is for unformatted file output of element displs and loads.
+ Bit position 15 is not used.
+ 
+ :::::::::::::::::::::::::::::::::::::::END PARAM PRTSCP OUTPUT FROM SUBROUTINE SUBCASE_PROC::::::::::::::::::::::::::::::::::::::::
+ ___________________________________________________________________________________________________________________________________
+
+ 
+                                                      DEGREE OF FREEDOM SET TABLE (TSET)
+
+                            GRID    GRID_SEQ   INV_GRID_SEQ*      T1       T2       T3       R1       R2       R3
+
+                               1           1              1       SG       SG       SB       SG       SB       SG
+                               2           2              2       SG       SG       L        SG       L        SG
+                               3           3              3       SG       SG       L        SG       L        SG
+                               4           4              4       SG       SG       L        SG       L        SG
+                               5           5              5       SG       SG       L        SG       L        SG
+
+                             * INV_GRID_SEQ = J meams that the J-th entry under GRID is sequenced GRID_SEQ(J)
+
+
+                                               DEGREE OF FREEDOM TABLE SORTED ON DOF NUMBER (TDOFI)
+                                                              (Before any AUTOSPC)                                                         
+
+ EXTERNAL  INTERNAL                                     DOF NUMBER FOR DISPLACEMENT SET:
+ GRD-COMP  GRD-COMP ----------------------------------------------------------------------------------------------------------------
+ NUMBER    NUMBER          G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+       1-1       1-1       1       0       1       0       0       1       1       0       1       0       0       0       0       0
+        -2        -2       2       0       2       0       0       2       2       0       2       0       0       0       0       0
+        -3        -3       3       0       3       0       1       0       3       0       3       0       0       0       0       0
+        -4        -4       4       0       4       0       0       3       4       0       4       0       0       0       0       0
+        -5        -5       5       0       5       0       2       0       5       0       5       0       0       0       0       0
+        -6        -6       6       0       6       0       0       4       6       0       6       0       0       0       0       0
+ 
+       2-1       2-1       7       0       7       0       0       5       7       0       7       0       0       0       0       0
+        -2        -2       8       0       8       0       0       6       8       0       8       0       0       0       0       0
+        -3        -3       9       0       9       0       0       0       0       0       0       1       0       1       0       1
+        -4        -4      10       0      10       0       0       7       9       0       9       0       0       0       0       0
+        -5        -5      11       0      11       0       0       0       0       0       0       2       0       2       0       2
+        -6        -6      12       0      12       0       0       8      10       0      10       0       0       0       0       0
+ 
+       3-1       3-1      13       0      13       0       0       9      11       0      11       0       0       0       0       0
+        -2        -2      14       0      14       0       0      10      12       0      12       0       0       0       0       0
+        -3        -3      15       0      15       0       0       0       0       0       0       3       0       3       0       3
+        -4        -4      16       0      16       0       0      11      13       0      13       0       0       0       0       0
+        -5        -5      17       0      17       0       0       0       0       0       0       4       0       4       0       4
+        -6        -6      18       0      18       0       0      12      14       0      14       0       0       0       0       0
+ 
+       4-1       4-1      19       0      19       0       0      13      15       0      15       0       0       0       0       0
+        -2        -2      20       0      20       0       0      14      16       0      16       0       0       0       0       0
+        -3        -3      21       0      21       0       0       0       0       0       0       5       0       5       0       5
+        -4        -4      22       0      22       0       0      15      17       0      17       0       0       0       0       0
+        -5        -5      23       0      23       0       0       0       0       0       0       6       0       6       0       6
+        -6        -6      24       0      24       0       0      16      18       0      18       0       0       0       0       0
+ 
+       5-1       5-1      25       0      25       0       0      17      19       0      19       0       0       0       0       0
+        -2        -2      26       0      26       0       0      18      20       0      20       0       0       0       0       0
+        -3        -3      27       0      27       0       0       0       0       0       0       7       0       7       0       7
+        -4        -4      28       0      28       0       0      19      21       0      21       0       0       0       0       0
+        -5        -5      29       0      29       0       0       0       0       0       0       8       0       8       0       8
+        -6        -6      30       0      30       0       0      20      22       0      22       0       0       0       0       0
+ 
+                     ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
+TOTAL NUMBER OF DOF:      30       0      30       0       2      20      22       0      22       8       0       8       0       8
+
+                           G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+
+
+
+
+       O U T P U T   F R O M   T H E   G R I D   P O I N T   W E I G H T   G E N E R A T O R   F O R   O V E R A L L   M O D E L
+                                             (reference point is basic coord system origin)
+
+                                                      Total mass =  1.000000E+00
+
+                                                             X             Y             Z
+                                       C.G. location :  5.000000E+01  0.000000E+00  0.000000E+00
+                                        (relative to reference point in basic coordinate system)
+
+
+                             6x6 Rigid body mass matrix - about reference point in basic coordinate system
+                      ***                                                                                     ***
+                      *  1.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  1.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  5.000000E+01  *
+                      *  0.000000E+00  0.000000E+00  1.000000E+00  *  0.000000E+00 -5.000000E+01  0.000000E+00  *
+                      *  ************  ************  ************  *  ************  ************  ************  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  3.437500E+03  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  3.437500E+03  *
+                      ***                                                                                     ***
+ 
+ 
+                                    M.O.I. matrix - about reference point in basic coordinate system
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  3.437500E+03  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  3.437500E+03  *
+                                             ***                                        ***
+ 
+ 
+                                  M.O.I. matrix - about above c.g. location in basic coordinate system
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  9.375000E+02  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  9.375000E+02  *
+                                             ***                                        ***
+ 
+ 
+                                     M.O.I. matrix - about above c.g. location in principal directions
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  9.375000E+02  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  9.375000E+02  *
+                                             ***                                        ***
+ 
+ 
+                                     Transformation from basic coordinates to principal directions
+                                             ***                                        ***
+                                             *  1.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  1.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  1.000000E+00  *
+                                             ***                                        ***
+ 
+ 
+
+ >> LINK  0 END
+
+
+ >> LINK  1 BEGIN
+
+               DEALLOCATED  9.22E-03 MB MEMORY FROM ARRAY STF3
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KGG (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       30 rows and      118 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             4.00000000000000E+04     21
+                               2            1-1                    2-1            -4.00000000000000E+04     21
+ 
+                               3            1-2                    1-2             7.68000000000000E+02     21
+                               4            1-2                    1-6             9.60000000000000E+03     21
+                               5            1-2                    2-2            -7.68000000000000E+02     21
+                               6            1-2                    2-6             9.60000000000000E+03     21
+ 
+                               7            1-3                    1-3             7.68000000000000E+02     21
+                               8            1-3                    1-5            -9.60000000000000E+03     21
+                               9            1-3                    2-3            -7.68000000000000E+02     21
+                              10            1-3                    2-5            -9.60000000000000E+03     21
+ 
+                              11            1-4                    1-4             1.53846153846154E+04     21
+                              12            1-4                    2-4            -1.53846153846154E+04     21
+ 
+                              13            1-5                    1-3            -9.60000000000000E+03     21
+                              14            1-5                    1-5             1.60000000000000E+05     21
+                              15            1-5                    2-3             9.60000000000000E+03     21
+                              16            1-5                    2-5             8.00000000000000E+04     21
+ 
+                              17            1-6                    1-2             9.60000000000000E+03     21
+                              18            1-6                    1-6             1.60000000000000E+05     21
+                              19            1-6                    2-2            -9.60000000000000E+03     21
+                              20            1-6                    2-6             8.00000000000000E+04     21
+ 
+                              21            2-1                    1-1            -4.00000000000000E+04     21
+                              22            2-1                    2-1             8.00000000000000E+04     21
+                              23            2-1                    3-1            -4.00000000000000E+04     21
+ 
+                              24            2-2                    1-2            -7.68000000000000E+02     21
+                              25            2-2                    1-6            -9.60000000000000E+03     21
+                              26            2-2                    2-2             1.53600000000000E+03     21
+                              27            2-2                    3-2            -7.68000000000000E+02     21
+                              28            2-2                    3-6             9.60000000000000E+03     21
+ 
+                              29            2-3                    1-3            -7.68000000000000E+02     21
+                              30            2-3                    1-5             9.60000000000000E+03     21
+                              31            2-3                    2-3             1.53600000000000E+03     21
+                              32            2-3                    3-3            -7.68000000000000E+02     21
+                              33            2-3                    3-5            -9.60000000000000E+03     21
+ 
+                              34            2-4                    1-4            -1.53846153846154E+04     21
+                              35            2-4                    2-4             3.07692307692308E+04     21
+                              36            2-4                    3-4            -1.53846153846154E+04     21
+ 
+                              37            2-5                    1-3            -9.60000000000000E+03     21
+                              38            2-5                    1-5             8.00000000000000E+04     21
+                              39            2-5                    2-5             3.20000000000000E+05     21
+                              40            2-5                    3-3             9.60000000000000E+03     21
+                              41            2-5                    3-5             8.00000000000000E+04     21
+ 
+                              42            2-6                    1-2             9.60000000000000E+03     21
+                              43            2-6                    1-6             8.00000000000000E+04     21
+                              44            2-6                    2-6             3.20000000000000E+05     21
+                              45            2-6                    3-2            -9.60000000000000E+03     21
+                              46            2-6                    3-6             8.00000000000000E+04     21
+ 
+                              47            3-1                    2-1            -4.00000000000000E+04     21
+                              48            3-1                    3-1             8.00000000000000E+04     21
+                              49            3-1                    4-1            -4.00000000000000E+04     21
+ 
+                              50            3-2                    2-2            -7.68000000000000E+02     21
+                              51            3-2                    2-6            -9.60000000000000E+03     21
+                              52            3-2                    3-2             1.53600000000000E+03     21
+                              53            3-2                    4-2            -7.68000000000000E+02     21
+                              54            3-2                    4-6             9.60000000000000E+03     21
+ 
+                              55            3-3                    2-3            -7.68000000000000E+02     21
+                              56            3-3                    2-5             9.60000000000000E+03     21
+                              57            3-3                    3-3             1.53600000000000E+03     21
+                              58            3-3                    4-3            -7.68000000000000E+02     21
+                              59            3-3                    4-5            -9.60000000000000E+03     21
+ 
+                              60            3-4                    2-4            -1.53846153846154E+04     21
+                              61            3-4                    3-4             3.07692307692308E+04     21
+                              62            3-4                    4-4            -1.53846153846154E+04     21
+ 
+                              63            3-5                    2-3            -9.60000000000000E+03     21
+                              64            3-5                    2-5             8.00000000000000E+04     21
+                              65            3-5                    3-5             3.20000000000000E+05     21
+                              66            3-5                    4-3             9.60000000000000E+03     21
+                              67            3-5                    4-5             8.00000000000000E+04     21
+ 
+                              68            3-6                    2-2             9.60000000000000E+03     21
+                              69            3-6                    2-6             8.00000000000000E+04     21
+                              70            3-6                    3-6             3.20000000000000E+05     21
+                              71            3-6                    4-2            -9.60000000000000E+03     21
+                              72            3-6                    4-6             8.00000000000000E+04     21
+ 
+                              73            4-1                    3-1            -4.00000000000000E+04     21
+                              74            4-1                    4-1             8.00000000000000E+04     21
+                              75            4-1                    5-1            -4.00000000000000E+04     21
+ 
+                              76            4-2                    3-2            -7.68000000000000E+02     21
+                              77            4-2                    3-6            -9.60000000000000E+03     21
+                              78            4-2                    4-2             1.53600000000000E+03     21
+                              79            4-2                    5-2            -7.68000000000000E+02     21
+                              80            4-2                    5-6             9.60000000000000E+03     21
+ 
+                              81            4-3                    3-3            -7.68000000000000E+02     21
+                              82            4-3                    3-5             9.60000000000000E+03     21
+                              83            4-3                    4-3             1.53600000000000E+03     21
+                              84            4-3                    5-3            -7.68000000000000E+02     21
+                              85            4-3                    5-5            -9.60000000000000E+03     21
+ 
+                              86            4-4                    3-4            -1.53846153846154E+04     21
+                              87            4-4                    4-4             3.07692307692308E+04     21
+                              88            4-4                    5-4            -1.53846153846154E+04     21
+ 
+                              89            4-5                    3-3            -9.60000000000000E+03     21
+                              90            4-5                    3-5             8.00000000000000E+04     21
+                              91            4-5                    4-5             3.20000000000000E+05     21
+                              92            4-5                    5-3             9.60000000000000E+03     21
+                              93            4-5                    5-5             8.00000000000000E+04     21
+ 
+                              94            4-6                    3-2             9.60000000000000E+03     21
+                              95            4-6                    3-6             8.00000000000000E+04     21
+                              96            4-6                    4-6             3.20000000000000E+05     21
+                              97            4-6                    5-2            -9.60000000000000E+03     21
+                              98            4-6                    5-6             8.00000000000000E+04     21
+ 
+                              99            5-1                    4-1            -4.00000000000000E+04     21
+                             100            5-1                    5-1             4.00000000000000E+04     21
+ 
+                             101            5-2                    4-2            -7.68000000000000E+02     21
+                             102            5-2                    4-6            -9.60000000000000E+03     21
+                             103            5-2                    5-2             7.68000000000000E+02     21
+                             104            5-2                    5-6            -9.60000000000000E+03     21
+ 
+                             105            5-3                    4-3            -7.68000000000000E+02     21
+                             106            5-3                    4-5             9.60000000000000E+03     21
+                             107            5-3                    5-3             7.68000000000000E+02     21
+                             108            5-3                    5-5             9.60000000000000E+03     21
+ 
+                             109            5-4                    4-4            -1.53846153846154E+04     21
+                             110            5-4                    5-4             1.53846153846154E+04     21
+ 
+                             111            5-5                    4-3            -9.60000000000000E+03     21
+                             112            5-5                    4-5             8.00000000000000E+04     21
+                             113            5-5                    5-3             9.60000000000000E+03     21
+                             114            5-5                    5-5             1.60000000000000E+05     21
+ 
+                             115            5-6                    4-2             9.60000000000000E+03     21
+                             116            5-6                    4-6             8.00000000000000E+04     21
+                             117            5-6                    5-2            -9.60000000000000E+03     21
+                             118            5-6                    5-6             1.60000000000000E+05     21
+ 
+ 
+               DEALLOCATED  1.20E-04 MB MEMORY FROM ARRAY STFKEY
+               DEALLOCATED  9.22E-03 MB MEMORY FROM ARRAY STF3
+
+ >> LINK  1 END
+
+
+ >> LINK  2 BEGIN
+
+ 
+
+                                     OUTPUT OF DIAGONALS OF KGG  MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        1     1    4.000000E+04    1.250000E-01
+                                                  2        1     2    7.680000E+02    2.400000E-03
+                                                  3        1     3    7.680000E+02    2.400000E-03
+                                                  4        1     4    1.538462E+04    4.807692E-02
+                                                  5        1     5    1.600000E+05    5.000000E-01
+                                                  6        1     6    1.600000E+05    5.000000E-01
+ 
+                                                  7        2     1    8.000000E+04    2.500000E-01
+                                                  8        2     2    1.536000E+03    4.800000E-03
+                                                  9        2     3    1.536000E+03    4.800000E-03
+                                                 10        2     4    3.076923E+04    9.615385E-02
+                                                 11        2     5    3.200000E+05    1.000000E+00
+                                                 12        2     6    3.200000E+05    1.000000E+00
+ 
+                                                 13        3     1    8.000000E+04    2.500000E-01
+                                                 14        3     2    1.536000E+03    4.800000E-03
+                                                 15        3     3    1.536000E+03    4.800000E-03
+                                                 16        3     4    3.076923E+04    9.615385E-02
+                                                 17        3     5    3.200000E+05    1.000000E+00
+                                                 18        3     6    3.200000E+05    1.000000E+00
+ 
+                                                 19        4     1    8.000000E+04    2.500000E-01
+                                                 20        4     2    1.536000E+03    4.800000E-03
+                                                 21        4     3    1.536000E+03    4.800000E-03
+                                                 22        4     4    3.076923E+04    9.615385E-02
+                                                 23        4     5    3.200000E+05    1.000000E+00
+                                                 24        4     6    3.200000E+05    1.000000E+00
+ 
+                                                 25        5     1    4.000000E+04    1.250000E-01
+                                                 26        5     2    7.680000E+02    2.400000E-03
+                                                 27        5     3    7.680000E+02    2.400000E-03
+                                                 28        5     4    1.538462E+04    4.807692E-02
+                                                 29        5     5    1.600000E+05    5.000000E-01
+                                                 30        5     6    1.600000E+05    5.000000E-01
+ 
+      G SET EQUILIBRIUM CHECK: KGG*RBGLOBAL = G SET GRID POINT FORCES DUE TO RBGLOBAL RIGID BODY DISPLACEMENTS
+                                    GRID FORCES NORMALIZED TO DIAGONAL STIFFNESS
+                                              (should be all zero's)
+                          T1             T2             T3             R1             R2             R3
+ 
+        1       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        2       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        3       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        4       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        5       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+                    -------------  -------------  -------------  -------------  -------------  -------------
+       ABS MAX       0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+
+       * stiffness for row is zreo, so row was normalized to the max diagonal term =  3.200000E+05
+
+
+                                  STRAIN ENERGY DUE TO RBGLOGAL G -SET RIGID BODY DISPLACEMENTS
+                                          (max absolute value =  0.00E+00 at row 1, col 1)
+                          T1             T2             T3             R1             R2             R3
+
+               T1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KNN (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       30 rows and      118 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             4.00000000000000E+04     21
+                               2            1-1                    2-1            -4.00000000000000E+04     21
+ 
+                               3            1-2                    1-2             7.68000000000000E+02     21
+                               4            1-2                    1-6             9.60000000000000E+03     21
+                               5            1-2                    2-2            -7.68000000000000E+02     21
+                               6            1-2                    2-6             9.60000000000000E+03     21
+ 
+                               7            1-3                    1-3             7.68000000000000E+02     21
+                               8            1-3                    1-5            -9.60000000000000E+03     21
+                               9            1-3                    2-3            -7.68000000000000E+02     21
+                              10            1-3                    2-5            -9.60000000000000E+03     21
+ 
+                              11            1-4                    1-4             1.53846153846154E+04     21
+                              12            1-4                    2-4            -1.53846153846154E+04     21
+ 
+                              13            1-5                    1-3            -9.60000000000000E+03     21
+                              14            1-5                    1-5             1.60000000000000E+05     21
+                              15            1-5                    2-3             9.60000000000000E+03     21
+                              16            1-5                    2-5             8.00000000000000E+04     21
+ 
+                              17            1-6                    1-2             9.60000000000000E+03     21
+                              18            1-6                    1-6             1.60000000000000E+05     21
+                              19            1-6                    2-2            -9.60000000000000E+03     21
+                              20            1-6                    2-6             8.00000000000000E+04     21
+ 
+                              21            2-1                    1-1            -4.00000000000000E+04     21
+                              22            2-1                    2-1             8.00000000000000E+04     21
+                              23            2-1                    3-1            -4.00000000000000E+04     21
+ 
+                              24            2-2                    1-2            -7.68000000000000E+02     21
+                              25            2-2                    1-6            -9.60000000000000E+03     21
+                              26            2-2                    2-2             1.53600000000000E+03     21
+                              27            2-2                    3-2            -7.68000000000000E+02     21
+                              28            2-2                    3-6             9.60000000000000E+03     21
+ 
+                              29            2-3                    1-3            -7.68000000000000E+02     21
+                              30            2-3                    1-5             9.60000000000000E+03     21
+                              31            2-3                    2-3             1.53600000000000E+03     21
+                              32            2-3                    3-3            -7.68000000000000E+02     21
+                              33            2-3                    3-5            -9.60000000000000E+03     21
+ 
+                              34            2-4                    1-4            -1.53846153846154E+04     21
+                              35            2-4                    2-4             3.07692307692308E+04     21
+                              36            2-4                    3-4            -1.53846153846154E+04     21
+ 
+                              37            2-5                    1-3            -9.60000000000000E+03     21
+                              38            2-5                    1-5             8.00000000000000E+04     21
+                              39            2-5                    2-5             3.20000000000000E+05     21
+                              40            2-5                    3-3             9.60000000000000E+03     21
+                              41            2-5                    3-5             8.00000000000000E+04     21
+ 
+                              42            2-6                    1-2             9.60000000000000E+03     21
+                              43            2-6                    1-6             8.00000000000000E+04     21
+                              44            2-6                    2-6             3.20000000000000E+05     21
+                              45            2-6                    3-2            -9.60000000000000E+03     21
+                              46            2-6                    3-6             8.00000000000000E+04     21
+ 
+                              47            3-1                    2-1            -4.00000000000000E+04     21
+                              48            3-1                    3-1             8.00000000000000E+04     21
+                              49            3-1                    4-1            -4.00000000000000E+04     21
+ 
+                              50            3-2                    2-2            -7.68000000000000E+02     21
+                              51            3-2                    2-6            -9.60000000000000E+03     21
+                              52            3-2                    3-2             1.53600000000000E+03     21
+                              53            3-2                    4-2            -7.68000000000000E+02     21
+                              54            3-2                    4-6             9.60000000000000E+03     21
+ 
+                              55            3-3                    2-3            -7.68000000000000E+02     21
+                              56            3-3                    2-5             9.60000000000000E+03     21
+                              57            3-3                    3-3             1.53600000000000E+03     21
+                              58            3-3                    4-3            -7.68000000000000E+02     21
+                              59            3-3                    4-5            -9.60000000000000E+03     21
+ 
+                              60            3-4                    2-4            -1.53846153846154E+04     21
+                              61            3-4                    3-4             3.07692307692308E+04     21
+                              62            3-4                    4-4            -1.53846153846154E+04     21
+ 
+                              63            3-5                    2-3            -9.60000000000000E+03     21
+                              64            3-5                    2-5             8.00000000000000E+04     21
+                              65            3-5                    3-5             3.20000000000000E+05     21
+                              66            3-5                    4-3             9.60000000000000E+03     21
+                              67            3-5                    4-5             8.00000000000000E+04     21
+ 
+                              68            3-6                    2-2             9.60000000000000E+03     21
+                              69            3-6                    2-6             8.00000000000000E+04     21
+                              70            3-6                    3-6             3.20000000000000E+05     21
+                              71            3-6                    4-2            -9.60000000000000E+03     21
+                              72            3-6                    4-6             8.00000000000000E+04     21
+ 
+                              73            4-1                    3-1            -4.00000000000000E+04     21
+                              74            4-1                    4-1             8.00000000000000E+04     21
+                              75            4-1                    5-1            -4.00000000000000E+04     21
+ 
+                              76            4-2                    3-2            -7.68000000000000E+02     21
+                              77            4-2                    3-6            -9.60000000000000E+03     21
+                              78            4-2                    4-2             1.53600000000000E+03     21
+                              79            4-2                    5-2            -7.68000000000000E+02     21
+                              80            4-2                    5-6             9.60000000000000E+03     21
+ 
+                              81            4-3                    3-3            -7.68000000000000E+02     21
+                              82            4-3                    3-5             9.60000000000000E+03     21
+                              83            4-3                    4-3             1.53600000000000E+03     21
+                              84            4-3                    5-3            -7.68000000000000E+02     21
+                              85            4-3                    5-5            -9.60000000000000E+03     21
+ 
+                              86            4-4                    3-4            -1.53846153846154E+04     21
+                              87            4-4                    4-4             3.07692307692308E+04     21
+                              88            4-4                    5-4            -1.53846153846154E+04     21
+ 
+                              89            4-5                    3-3            -9.60000000000000E+03     21
+                              90            4-5                    3-5             8.00000000000000E+04     21
+                              91            4-5                    4-5             3.20000000000000E+05     21
+                              92            4-5                    5-3             9.60000000000000E+03     21
+                              93            4-5                    5-5             8.00000000000000E+04     21
+ 
+                              94            4-6                    3-2             9.60000000000000E+03     21
+                              95            4-6                    3-6             8.00000000000000E+04     21
+                              96            4-6                    4-6             3.20000000000000E+05     21
+                              97            4-6                    5-2            -9.60000000000000E+03     21
+                              98            4-6                    5-6             8.00000000000000E+04     21
+ 
+                              99            5-1                    4-1            -4.00000000000000E+04     21
+                             100            5-1                    5-1             4.00000000000000E+04     21
+ 
+                             101            5-2                    4-2            -7.68000000000000E+02     21
+                             102            5-2                    4-6            -9.60000000000000E+03     21
+                             103            5-2                    5-2             7.68000000000000E+02     21
+                             104            5-2                    5-6            -9.60000000000000E+03     21
+ 
+                             105            5-3                    4-3            -7.68000000000000E+02     21
+                             106            5-3                    4-5             9.60000000000000E+03     21
+                             107            5-3                    5-3             7.68000000000000E+02     21
+                             108            5-3                    5-5             9.60000000000000E+03     21
+ 
+                             109            5-4                    4-4            -1.53846153846154E+04     21
+                             110            5-4                    5-4             1.53846153846154E+04     21
+ 
+                             111            5-5                    4-3            -9.60000000000000E+03     21
+                             112            5-5                    4-5             8.00000000000000E+04     21
+                             113            5-5                    5-3             9.60000000000000E+03     21
+                             114            5-5                    5-5             1.60000000000000E+05     21
+ 
+                             115            5-6                    4-2             9.60000000000000E+03     21
+                             116            5-6                    4-6             8.00000000000000E+04     21
+                             117            5-6                    5-2            -9.60000000000000E+03     21
+                             118            5-6                    5-6             1.60000000000000E+05     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KNN MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        1     1    4.000000E+04    1.250000E-01
+                                                  2        1     2    7.680000E+02    2.400000E-03
+                                                  3        1     3    7.680000E+02    2.400000E-03
+                                                  4        1     4    1.538462E+04    4.807692E-02
+                                                  5        1     5    1.600000E+05    5.000000E-01
+                                                  6        1     6    1.600000E+05    5.000000E-01
+ 
+                                                  7        2     1    8.000000E+04    2.500000E-01
+                                                  8        2     2    1.536000E+03    4.800000E-03
+                                                  9        2     3    1.536000E+03    4.800000E-03
+                                                 10        2     4    3.076923E+04    9.615385E-02
+                                                 11        2     5    3.200000E+05    1.000000E+00
+                                                 12        2     6    3.200000E+05    1.000000E+00
+ 
+                                                 13        3     1    8.000000E+04    2.500000E-01
+                                                 14        3     2    1.536000E+03    4.800000E-03
+                                                 15        3     3    1.536000E+03    4.800000E-03
+                                                 16        3     4    3.076923E+04    9.615385E-02
+                                                 17        3     5    3.200000E+05    1.000000E+00
+                                                 18        3     6    3.200000E+05    1.000000E+00
+ 
+                                                 19        4     1    8.000000E+04    2.500000E-01
+                                                 20        4     2    1.536000E+03    4.800000E-03
+                                                 21        4     3    1.536000E+03    4.800000E-03
+                                                 22        4     4    3.076923E+04    9.615385E-02
+                                                 23        4     5    3.200000E+05    1.000000E+00
+                                                 24        4     6    3.200000E+05    1.000000E+00
+ 
+                                                 25        5     1    4.000000E+04    1.250000E-01
+                                                 26        5     2    7.680000E+02    2.400000E-03
+                                                 27        5     3    7.680000E+02    2.400000E-03
+                                                 28        5     4    1.538462E+04    4.807692E-02
+                                                 29        5     5    1.600000E+05    5.000000E-01
+                                                 30        5     6    1.600000E+05    5.000000E-01
+ 
+ Overall stats for     30 N set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :       24        2     5    3.200000E+05
+ Min positive diag term & ratio to OA max:       27        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:       27        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for     15 N set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:       19        4     1    8.000000E+04    2.500000E-01
+ Min positive diag term & ratio to OA max:       27        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:       27        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for     15 N set rotation DOF's
+ -------------------------------------
+ Max positive diag term & ratio to OA max:       24        4     6    3.200000E+05    1.000000E+00
+ Min positive diag term & ratio to OA max:       28        5     4    1.538462E+04    4.807692E-02
+ Min (any)    diag term & ratio to OA max:       28        5     4    1.538462E+04    4.807692E-02
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MNN (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       30 rows and       15 nonzeros.       15 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             3.23875000000000E-04     21
+ 
+                               2            1-2                    1-2             3.23875000000000E-04     21
+ 
+                               3            1-3                    1-3             3.23875000000000E-04     21
+ 
+                               4            2-1                    2-1             6.47750000000000E-04     21
+ 
+                               5            2-2                    2-2             6.47750000000000E-04     21
+ 
+                               6            2-3                    2-3             6.47750000000000E-04     21
+ 
+                               7            3-1                    3-1             6.47750000000000E-04     21
+ 
+                               8            3-2                    3-2             6.47750000000000E-04     21
+ 
+                               9            3-3                    3-3             6.47750000000000E-04     21
+ 
+                              10            4-1                    4-1             6.47750000000000E-04     21
+ 
+                              11            4-2                    4-2             6.47750000000000E-04     21
+ 
+                              12            4-3                    4-3             6.47750000000000E-04     21
+ 
+                              13            5-1                    5-1             3.23875000000000E-04     21
+ 
+                              14            5-2                    5-2             3.23875000000000E-04     21
+ 
+                              15            5-3                    5-3             3.23875000000000E-04     21
+ 
+ 
+      N SET EQUILIBRIUM CHECK: KNN*RBGLOBAL = N SET GRID POINT FORCES DUE TO RBGLOBAL RIGID BODY DISPLACEMENTS
+                                    GRID FORCES NORMALIZED TO DIAGONAL STIFFNESS
+                                              (should be all zero's)
+                          T1             T2             T3             R1             R2             R3
+ 
+        1       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        1       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        2       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        2       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        3       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        3       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        4       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        4       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+        5       1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       4    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       5    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+        5       6    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+                    -------------  -------------  -------------  -------------  -------------  -------------
+       ABS MAX       0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+
+       * stiffness for row is zreo, so row was normalized to the max diagonal term =  3.200000E+05
+
+
+                                  STRAIN ENERGY DUE TO RBGLOGAL N -SET RIGID BODY DISPLACEMENTS
+                                          (max absolute value =  0.00E+00 at row 1, col 1)
+                          T1             T2             T3             R1             R2             R3
+
+               T1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               T3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R1    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R2    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+               R3    0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00   0.000000E+00
+ 
+ 
+ 
+ 
+ 
+ *INFORMATION: AUTOSPC Summary, Overall: after identification of all AUTOSPC's                                                               
+
+                                     AUTOSPC_RAT = 1.000000E-06
+
+                       Number of DOF's identified for AUTOSPC in component  1         =            0
+                       Number of DOF's identified for AUTOSPC in component  2         =            0
+                       Number of DOF's identified for AUTOSPC in component  3         =            0
+                       Number of DOF's identified for AUTOSPC in component  4         =            0
+                       Number of DOF's identified for AUTOSPC in component  5         =            0
+                       Number of DOF's identified for AUTOSPC in component  6         =            0
+                                                                                        ------------
+                       Total number of DOF's identified overall                       =            0
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KFF (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        8 rows and       34 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             1.53600000000000E+03     21
+                               2            2-3                    3-3            -7.68000000000000E+02     21
+                               3            2-3                    3-5            -9.60000000000000E+03     21
+ 
+                               4            2-5                    2-5             3.20000000000000E+05     21
+                               5            2-5                    3-3             9.60000000000000E+03     21
+                               6            2-5                    3-5             8.00000000000000E+04     21
+ 
+                               7            3-3                    2-3            -7.68000000000000E+02     21
+                               8            3-3                    2-5             9.60000000000000E+03     21
+                               9            3-3                    3-3             1.53600000000000E+03     21
+                              10            3-3                    4-3            -7.68000000000000E+02     21
+                              11            3-3                    4-5            -9.60000000000000E+03     21
+ 
+                              12            3-5                    2-3            -9.60000000000000E+03     21
+                              13            3-5                    2-5             8.00000000000000E+04     21
+                              14            3-5                    3-5             3.20000000000000E+05     21
+                              15            3-5                    4-3             9.60000000000000E+03     21
+                              16            3-5                    4-5             8.00000000000000E+04     21
+ 
+                              17            4-3                    3-3            -7.68000000000000E+02     21
+                              18            4-3                    3-5             9.60000000000000E+03     21
+                              19            4-3                    4-3             1.53600000000000E+03     21
+                              20            4-3                    5-3            -7.68000000000000E+02     21
+                              21            4-3                    5-5            -9.60000000000000E+03     21
+ 
+                              22            4-5                    3-3            -9.60000000000000E+03     21
+                              23            4-5                    3-5             8.00000000000000E+04     21
+                              24            4-5                    4-5             3.20000000000000E+05     21
+                              25            4-5                    5-3             9.60000000000000E+03     21
+                              26            4-5                    5-5             8.00000000000000E+04     21
+ 
+                              27            5-3                    4-3            -7.68000000000000E+02     21
+                              28            5-3                    4-5             9.60000000000000E+03     21
+                              29            5-3                    5-3             7.68000000000000E+02     21
+                              30            5-3                    5-5             9.60000000000000E+03     21
+ 
+                              31            5-5                    4-3            -9.60000000000000E+03     21
+                              32            5-5                    4-5             8.00000000000000E+04     21
+                              33            5-5                    5-3             9.60000000000000E+03     21
+                              34            5-5                    5-5             1.60000000000000E+05     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KFS (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        8 rows and        4 nonzeros.        6 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    1-3            -7.68000000000000E+02     21
+                               2            2-3                    1-5             9.60000000000000E+03     21
+ 
+                               3            2-5                    1-3            -9.60000000000000E+03     21
+                               4            2-5                    1-5             8.00000000000000E+04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KSS (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has       22 rows and       76 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             4.00000000000000E+04     21
+                               2            1-1                    2-1            -4.00000000000000E+04     21
+ 
+                               3            1-2                    1-2             7.68000000000000E+02     21
+                               4            1-2                    1-6             9.60000000000000E+03     21
+                               5            1-2                    2-2            -7.68000000000000E+02     21
+                               6            1-2                    2-6             9.60000000000000E+03     21
+ 
+                               7            1-3                    1-3             7.68000000000000E+02     21
+                               8            1-3                    1-5            -9.60000000000000E+03     21
+ 
+                               9            1-4                    1-4             1.53846153846154E+04     21
+                              10            1-4                    2-4            -1.53846153846154E+04     21
+ 
+                              11            1-5                    1-3            -9.60000000000000E+03     21
+                              12            1-5                    1-5             1.60000000000000E+05     21
+ 
+                              13            1-6                    1-2             9.60000000000000E+03     21
+                              14            1-6                    1-6             1.60000000000000E+05     21
+                              15            1-6                    2-2            -9.60000000000000E+03     21
+                              16            1-6                    2-6             8.00000000000000E+04     21
+ 
+                              17            2-1                    1-1            -4.00000000000000E+04     21
+                              18            2-1                    2-1             8.00000000000000E+04     21
+                              19            2-1                    3-1            -4.00000000000000E+04     21
+ 
+                              20            2-2                    1-2            -7.68000000000000E+02     21
+                              21            2-2                    1-6            -9.60000000000000E+03     21
+                              22            2-2                    2-2             1.53600000000000E+03     21
+                              23            2-2                    3-2            -7.68000000000000E+02     21
+                              24            2-2                    3-6             9.60000000000000E+03     21
+ 
+                              25            2-4                    1-4            -1.53846153846154E+04     21
+                              26            2-4                    2-4             3.07692307692308E+04     21
+                              27            2-4                    3-4            -1.53846153846154E+04     21
+ 
+                              28            2-6                    1-2             9.60000000000000E+03     21
+                              29            2-6                    1-6             8.00000000000000E+04     21
+                              30            2-6                    2-6             3.20000000000000E+05     21
+                              31            2-6                    3-2            -9.60000000000000E+03     21
+                              32            2-6                    3-6             8.00000000000000E+04     21
+ 
+                              33            3-1                    2-1            -4.00000000000000E+04     21
+                              34            3-1                    3-1             8.00000000000000E+04     21
+                              35            3-1                    4-1            -4.00000000000000E+04     21
+ 
+                              36            3-2                    2-2            -7.68000000000000E+02     21
+                              37            3-2                    2-6            -9.60000000000000E+03     21
+                              38            3-2                    3-2             1.53600000000000E+03     21
+                              39            3-2                    4-2            -7.68000000000000E+02     21
+                              40            3-2                    4-6             9.60000000000000E+03     21
+ 
+                              41            3-4                    2-4            -1.53846153846154E+04     21
+                              42            3-4                    3-4             3.07692307692308E+04     21
+                              43            3-4                    4-4            -1.53846153846154E+04     21
+ 
+                              44            3-6                    2-2             9.60000000000000E+03     21
+                              45            3-6                    2-6             8.00000000000000E+04     21
+                              46            3-6                    3-6             3.20000000000000E+05     21
+                              47            3-6                    4-2            -9.60000000000000E+03     21
+                              48            3-6                    4-6             8.00000000000000E+04     21
+ 
+                              49            4-1                    3-1            -4.00000000000000E+04     21
+                              50            4-1                    4-1             8.00000000000000E+04     21
+                              51            4-1                    5-1            -4.00000000000000E+04     21
+ 
+                              52            4-2                    3-2            -7.68000000000000E+02     21
+                              53            4-2                    3-6            -9.60000000000000E+03     21
+                              54            4-2                    4-2             1.53600000000000E+03     21
+                              55            4-2                    5-2            -7.68000000000000E+02     21
+                              56            4-2                    5-6             9.60000000000000E+03     21
+ 
+                              57            4-4                    3-4            -1.53846153846154E+04     21
+                              58            4-4                    4-4             3.07692307692308E+04     21
+                              59            4-4                    5-4            -1.53846153846154E+04     21
+ 
+                              60            4-6                    3-2             9.60000000000000E+03     21
+                              61            4-6                    3-6             8.00000000000000E+04     21
+                              62            4-6                    4-6             3.20000000000000E+05     21
+                              63            4-6                    5-2            -9.60000000000000E+03     21
+                              64            4-6                    5-6             8.00000000000000E+04     21
+ 
+                              65            5-1                    4-1            -4.00000000000000E+04     21
+                              66            5-1                    5-1             4.00000000000000E+04     21
+ 
+                              67            5-2                    4-2            -7.68000000000000E+02     21
+                              68            5-2                    4-6            -9.60000000000000E+03     21
+                              69            5-2                    5-2             7.68000000000000E+02     21
+                              70            5-2                    5-6            -9.60000000000000E+03     21
+ 
+                              71            5-4                    4-4            -1.53846153846154E+04     21
+                              72            5-4                    5-4             1.53846153846154E+04     21
+ 
+                              73            5-6                    4-2             9.60000000000000E+03     21
+                              74            5-6                    4-6             8.00000000000000E+04     21
+                              75            5-6                    5-2            -9.60000000000000E+03     21
+                              76            5-6                    5-6             1.60000000000000E+05     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KFF MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        2     3    1.536000E+03    4.800000E-03
+                                                  2        2     5    3.200000E+05    1.000000E+00
+ 
+                                                  3        3     3    1.536000E+03    4.800000E-03
+                                                  4        3     5    3.200000E+05    1.000000E+00
+ 
+                                                  5        4     3    1.536000E+03    4.800000E-03
+                                                  6        4     5    3.200000E+05    1.000000E+00
+ 
+                                                  7        5     3    7.680000E+02    2.400000E-03
+                                                  8        5     5    1.600000E+05    5.000000E-01
+ 
+ Overall stats for      8 F set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        6        2     5    3.200000E+05
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 F set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        5        4     3    1.536000E+03    4.800000E-03
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 F set rotation DOF's
+ -------------------------------------
+ Max positive diag term & ratio to OA max:        6        4     5    3.200000E+05    1.000000E+00
+ Min positive diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Min (any)    diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MFF (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        8 rows and        4 nonzeros.        4 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             6.47750000000000E-04     21
+ 
+                               2            3-3                    3-3             6.47750000000000E-04     21
+ 
+                               3            4-3                    4-3             6.47750000000000E-04     21
+ 
+                               4            5-3                    5-3             3.23875000000000E-04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MSS (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has       22 rows and       11 nonzeros.       11 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            1-1                    1-1             3.23875000000000E-04     21
+ 
+                               2            1-2                    1-2             3.23875000000000E-04     21
+ 
+                               3            1-3                    1-3             3.23875000000000E-04     21
+ 
+                               4            2-1                    2-1             6.47750000000000E-04     21
+ 
+                               5            2-2                    2-2             6.47750000000000E-04     21
+ 
+                               6            3-1                    3-1             6.47750000000000E-04     21
+ 
+                               7            3-2                    3-2             6.47750000000000E-04     21
+ 
+                               8            4-1                    4-1             6.47750000000000E-04     21
+ 
+                               9            4-2                    4-2             6.47750000000000E-04     21
+ 
+                              10            5-1                    5-1             3.23875000000000E-04     21
+ 
+                              11            5-2                    5-2             3.23875000000000E-04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KAA (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        8 rows and       34 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             1.53600000000000E+03     21
+                               2            2-3                    3-3            -7.68000000000000E+02     21
+                               3            2-3                    3-5            -9.60000000000000E+03     21
+ 
+                               4            2-5                    2-5             3.20000000000000E+05     21
+                               5            2-5                    3-3             9.60000000000000E+03     21
+                               6            2-5                    3-5             8.00000000000000E+04     21
+ 
+                               7            3-3                    2-3            -7.68000000000000E+02     21
+                               8            3-3                    2-5             9.60000000000000E+03     21
+                               9            3-3                    3-3             1.53600000000000E+03     21
+                              10            3-3                    4-3            -7.68000000000000E+02     21
+                              11            3-3                    4-5            -9.60000000000000E+03     21
+ 
+                              12            3-5                    2-3            -9.60000000000000E+03     21
+                              13            3-5                    2-5             8.00000000000000E+04     21
+                              14            3-5                    3-5             3.20000000000000E+05     21
+                              15            3-5                    4-3             9.60000000000000E+03     21
+                              16            3-5                    4-5             8.00000000000000E+04     21
+ 
+                              17            4-3                    3-3            -7.68000000000000E+02     21
+                              18            4-3                    3-5             9.60000000000000E+03     21
+                              19            4-3                    4-3             1.53600000000000E+03     21
+                              20            4-3                    5-3            -7.68000000000000E+02     21
+                              21            4-3                    5-5            -9.60000000000000E+03     21
+ 
+                              22            4-5                    3-3            -9.60000000000000E+03     21
+                              23            4-5                    3-5             8.00000000000000E+04     21
+                              24            4-5                    4-5             3.20000000000000E+05     21
+                              25            4-5                    5-3             9.60000000000000E+03     21
+                              26            4-5                    5-5             8.00000000000000E+04     21
+ 
+                              27            5-3                    4-3            -7.68000000000000E+02     21
+                              28            5-3                    4-5             9.60000000000000E+03     21
+                              29            5-3                    5-3             7.68000000000000E+02     21
+                              30            5-3                    5-5             9.60000000000000E+03     21
+ 
+                              31            5-5                    4-3            -9.60000000000000E+03     21
+                              32            5-5                    4-5             8.00000000000000E+04     21
+                              33            5-5                    5-3             9.60000000000000E+03     21
+                              34            5-5                    5-5             1.60000000000000E+05     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KAA MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        2     3    1.536000E+03    4.800000E-03
+                                                  2        2     5    3.200000E+05    1.000000E+00
+ 
+                                                  3        3     3    1.536000E+03    4.800000E-03
+                                                  4        3     5    3.200000E+05    1.000000E+00
+ 
+                                                  5        4     3    1.536000E+03    4.800000E-03
+                                                  6        4     5    3.200000E+05    1.000000E+00
+ 
+                                                  7        5     3    7.680000E+02    2.400000E-03
+                                                  8        5     5    1.600000E+05    5.000000E-01
+ 
+ Overall stats for      8 A set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        6        2     5    3.200000E+05
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 A set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        5        4     3    1.536000E+03    4.800000E-03
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 A set rotation DOF's
+ -------------------------------------
+ Max positive diag term & ratio to OA max:        6        4     5    3.200000E+05    1.000000E+00
+ Min positive diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Min (any)    diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MAA (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        8 rows and        4 nonzeros.        4 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             6.47750000000000E-04     21
+ 
+                               2            3-3                    3-3             6.47750000000000E-04     21
+ 
+                               3            4-3                    4-3             6.47750000000000E-04     21
+ 
+                               4            5-3                    5-3             3.23875000000000E-04     21
+ 
+ 
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                           STIFFNESS MATRIX KLL (with PARAM SPARSTOR = NONSYM)                                      
+                         (Matrix has        8 rows and       34 nonzeros.        0 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             1.53600000000000E+03     21
+                               2            2-3                    3-3            -7.68000000000000E+02     21
+                               3            2-3                    3-5            -9.60000000000000E+03     21
+ 
+                               4            2-5                    2-5             3.20000000000000E+05     21
+                               5            2-5                    3-3             9.60000000000000E+03     21
+                               6            2-5                    3-5             8.00000000000000E+04     21
+ 
+                               7            3-3                    2-3            -7.68000000000000E+02     21
+                               8            3-3                    2-5             9.60000000000000E+03     21
+                               9            3-3                    3-3             1.53600000000000E+03     21
+                              10            3-3                    4-3            -7.68000000000000E+02     21
+                              11            3-3                    4-5            -9.60000000000000E+03     21
+ 
+                              12            3-5                    2-3            -9.60000000000000E+03     21
+                              13            3-5                    2-5             8.00000000000000E+04     21
+                              14            3-5                    3-5             3.20000000000000E+05     21
+                              15            3-5                    4-3             9.60000000000000E+03     21
+                              16            3-5                    4-5             8.00000000000000E+04     21
+ 
+                              17            4-3                    3-3            -7.68000000000000E+02     21
+                              18            4-3                    3-5             9.60000000000000E+03     21
+                              19            4-3                    4-3             1.53600000000000E+03     21
+                              20            4-3                    5-3            -7.68000000000000E+02     21
+                              21            4-3                    5-5            -9.60000000000000E+03     21
+ 
+                              22            4-5                    3-3            -9.60000000000000E+03     21
+                              23            4-5                    3-5             8.00000000000000E+04     21
+                              24            4-5                    4-5             3.20000000000000E+05     21
+                              25            4-5                    5-3             9.60000000000000E+03     21
+                              26            4-5                    5-5             8.00000000000000E+04     21
+ 
+                              27            5-3                    4-3            -7.68000000000000E+02     21
+                              28            5-3                    4-5             9.60000000000000E+03     21
+                              29            5-3                    5-3             7.68000000000000E+02     21
+                              30            5-3                    5-5             9.60000000000000E+03     21
+ 
+                              31            5-5                    4-3            -9.60000000000000E+03     21
+                              32            5-5                    4-5             8.00000000000000E+04     21
+                              33            5-5                    5-3             9.60000000000000E+03     21
+                              34            5-5                    5-5             1.60000000000000E+05     21
+ 
+ 
+ 
+
+                                     OUTPUT OF DIAGONALS OF KLL MATRIX AND THEIR RATIOS TO MAX DIAGONAL TERM
+
+                                             DOF NO     GRID  COMP      DIAGONAL      DIAG/MAXDIAG
+ 
+                                                  1        2     3    1.536000E+03    4.800000E-03
+                                                  2        2     5    3.200000E+05    1.000000E+00
+ 
+                                                  3        3     3    1.536000E+03    4.800000E-03
+                                                  4        3     5    3.200000E+05    1.000000E+00
+ 
+                                                  5        4     3    1.536000E+03    4.800000E-03
+                                                  6        4     5    3.200000E+05    1.000000E+00
+ 
+                                                  7        5     3    7.680000E+02    2.400000E-03
+                                                  8        5     5    1.600000E+05    5.000000E-01
+ 
+ Overall stats for      8 L set DOF's      -------- --------     -   -------------   -------------
+ ------------------------------------
+ Max positive diag term (OA max)         :        6        2     5    3.200000E+05
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 L set translation DOF's
+ ----------------------------------------
+ Max positive diag term & ratio to OA max:        5        4     3    1.536000E+03    4.800000E-03
+ Min positive diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Min (any)    diag term & ratio to OA max:        7        5     3    7.680000E+02    2.400000E-03
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ Stats for      4 L set rotation DOF's
+ -------------------------------------
+ Max positive diag term & ratio to OA max:        6        4     5    3.200000E+05    1.000000E+00
+ Min positive diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Min (any)    diag term & ratio to OA max:        8        5     5    1.600000E+05    5.000000E-01
+ Num of negative terms on the diagonal   :        0
+ Num of null rows                        :        0
+ Num of diag terms < 1.00E-06*(OA max)** :        0
+ 
+ ** Ratio of diag term to OA max is less than AUOTSPC_RAT =  1.000000E-06 (defined on PARAM AUTOSPC by user or as default value)
+    (excluding null rows and negative terms)
+
+
+                                    NONZERO TERMS OF SPARSE CRS (Compressed Row Storage) MATRIX:
+                                             MASS MATRIX MLL (with PARAM SPARSTOR = NONSYM)                                         
+                         (Matrix has        8 rows and        4 nonzeros.        4 null rows not written)
+                            Term           Row                    Col                     Value
+                                  (Grid-Comp or row no)  (Grid-Comp or col no)
+
+                               1            2-3                    2-3             6.47750000000000E-04     21
+ 
+                               2            3-3                    3-3             6.47750000000000E-04     21
+ 
+                               3            4-3                    4-3             6.47750000000000E-04     21
+ 
+                               4            5-3                    5-3             3.23875000000000E-04     21
+ 
+ 
+
+ >> LINK  2 END
+
+
+ >> LINK  4 BEGIN
+
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ In ARPACK_LANCZOS_EIG: type =  3
+ 
+
+ >> LINK  4 END
+
+
+ >> LINK  5 BEGIN
+
+
+                           E I G E N V A L U E   A N A L Y S I S   S U M M A R Y   (LANCZOS  Mode 2 DPB             Shift eigen = -1.00E+00)
+
+
+                                NUMBER OF EIGENVALUES EXTRACTED  . . . . . .         4
+
+                                LARGEST OFF-DIAGONAL GENERALIZED MASS TERM     5.2E-17 (Vecs renormed to 1.0 for max value)
+
+                                                                       . . .         2
+                                          MODE PAIR . . . . . . . . . .
+                                                                       . . .         1
+
+                                NUMBER OF OFF DIAGONAL GENERALIZED MASS
+                                TERMS FAILING CRITERION OF  1.0E-04. . . . .         0
+
+ 
+ 
+                                            R E A L   E I G E N V A L U E S
+    MODE  EXTRACTION      EIGENVALUE           RADIANS              CYCLES            GENERALIZED         GENERALIZED        
+   NUMBER   ORDER                                                                        MASS              STIFFNESS
+
+        1       1        4.509067E+03        6.714959E+01        1.068719E+01        6.800571E-04        3.066423E+00
+        2       2        1.557785E+05        3.946879E+02        6.281653E+01        9.499997E-04        1.479896E+02
+        3       3        1.092406E+06        1.045182E+03        1.663460E+02        1.461918E-03        1.597008E+03
+        4       4        3.318753E+06        1.821744E+03        2.899396E+02        1.590132E-03        5.277256E+03
+ 
+ 
+
+ >> LINK  5 END
+
+
+ >> LINK  9 BEGIN
+
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0           0.0           0.0           0.0           0.0         
+              2        0  0.0           0.0           9.586856E-02  0.0          -7.186983E-03  0.0         
+              3        0  0.0           0.0           3.359532E-01  0.0          -1.156646E-02  0.0         
+              4        0  0.0           0.0           6.540799E-01  0.0          -1.353256E-02  0.0         
+              5        0  0.0           0.0           1.000000E+00  0.0          -1.398892E-02  0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.000000E+00  0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0          -1.398892E-02  0.0         
+
+ ABS (for output set):    0.0           0.0           1.000000E+00  0.0           1.398892E-02  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0          -4.632020E+00  0.0           3.453796E+02  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT        1 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00 -4.632020E+00  0.000000E+00  3.453796E+02  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00  4.632020E+00  0.000000E+00 -3.453796E+02  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        2 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  2.800079E-01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00 -4.632020E+00  0.000000E+00  2.295791E+02  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00  4.352012E+00  0.000000E+00 -2.295791E+02  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -2.664535E-15  0.000000E+00 -7.958079E-13  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        3 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  9.812348E-01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00 -4.352012E+00  0.000000E+00  1.207788E+02  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00  3.370777E+00  0.000000E+00 -1.207788E+02  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  1.589839E-13  0.000000E+00 -1.136868E-12  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        4 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  1.910403E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00 -3.370777E+00  0.000000E+00  3.650935E+01  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00  1.460374E+00  0.000000E+00 -3.650935E+01  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  7.016610E-14  0.000000E+00 -1.818989E-12  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        5 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  1.460374E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00 -1.460374E+00  0.000000E+00 -9.094947E-13  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -9.126033E-14  0.000000E+00 -9.094947E-13  0.000000E+00
+ (should all be 0)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  0.000000E+00  1.589839E-13  0.000000E+00  1.818989E-12  0.000000E+00
+ Max abs force any grid:  0.000000E+00  0.000000E+00  4.632020E+00  0.000000E+00  3.453796E+02  0.000000E+00
+ as % of max abs force :                                  3.43E-12%                   5.27E-13%              
+ Occurs at grid*       :         1             1             3             1             4             1
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+            102        1  0.0           0.0          -4.632020E+00  0.0           3.453796E+02  0.0         
+                       2  0.0           0.0           4.632020E+00  0.0          -2.295791E+02  0.0         
+ 
+            203        2  0.0           0.0          -4.352012E+00  0.0           2.295791E+02  0.0         
+                       3  0.0           0.0           4.352012E+00  0.0          -1.207788E+02  0.0         
+ 
+            304        3  0.0           0.0          -3.370777E+00  0.0           1.207788E+02  0.0         
+                       4  0.0           0.0           3.370777E+00  0.0          -3.650935E+01  0.0         
+ 
+            405        4  0.0           0.0          -1.460374E+00  0.0           3.650935E+01  0.0         
+                       5  0.0           0.0           1.460374E+00  0.0           9.094947E-13  0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           4.632020E+00  0.0           3.453796E+02  0.0         
+ MIN (for output set):    0.0           0.0          -4.632020E+00  0.0          -2.295791E+02  0.0         
+
+ ABS (for output set):    0.0           0.0           4.632020E+00  0.0           3.453796E+02  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                        E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                              F O R   E L E M E N T   T Y P E   B A R      
+  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+      102  3.453796E+02  0.000000E+00  2.295791E+02  0.000000E+00  4.632020E+00  0.000000E+00  0.000000E+00  0.000000E+00
+      203  2.295791E+02  0.000000E+00  1.207788E+02  0.000000E+00  4.352012E+00  0.000000E+00  0.000000E+00  0.000000E+00
+      304  1.207788E+02  0.000000E+00  3.650935E+01  0.000000E+00  3.370777E+00  0.000000E+00  0.000000E+00  0.000000E+00
+      405  3.650935E+01  0.000000E+00 -1.193712E-12  0.000000E+00  1.460374E+00  0.000000E+00  0.000000E+00  0.000000E+00
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX* :    3.453796E+02  0.000000E+00  2.295791E+02  0.000000E+00  4.632020E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN* :    3.650935E+01  0.000000E+00 -1.193712E-12  0.000000E+00  1.460374E+00  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS* :    3.453796E+02  0.000000E+00  2.295791E+02  0.000000E+00  4.632020E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   B A R      
+  Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+     ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+      102  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      203  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      304  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      405  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0           0.0           0.0           0.0           0.0         
+              2        0  0.0           0.0          -4.544341E-01  0.0           2.526497E-02  0.0         
+              3        0  0.0           0.0          -8.281750E-01  0.0          -1.678897E-03  0.0         
+              4        0  0.0           0.0          -2.724529E-01  0.0          -4.038712E-02  0.0         
+              5        0  0.0           0.0           1.000000E+00  0.0          -5.615361E-02  0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.000000E+00  0.0           2.526497E-02  0.0         
+ MIN (for output set):    0.0           0.0          -8.281750E-01  0.0          -5.615361E-02  0.0         
+
+ ABS (for output set):    0.0           0.0           1.000000E+00  0.0           5.615361E-02  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0           1.064616E+02  0.0          -2.341369E+03  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT        1 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  1.064616E+02  0.000000E+00 -2.341369E+03  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00 -1.064616E+02  0.000000E+00  2.341369E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        2 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -4.585492E+01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00  1.064616E+02  0.000000E+00  3.201712E+02  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00 -6.060669E+01  0.000000E+00 -3.201712E+02  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  1.313794E-11  0.000000E+00  3.012701E-12  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        3 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -8.356746E+01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00  6.060669E+01  0.000000E+00  1.835339E+03  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00  2.296076E+01  0.000000E+00 -1.835339E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -2.560796E-11  0.000000E+00 -1.318767E-11  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        4 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -2.749201E+01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00 -2.296076E+01  0.000000E+00  1.261319E+03  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00  5.045278E+01  0.000000E+00 -1.261319E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -1.421085E-14  0.000000E+00 -4.001777E-11  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        5 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  5.045278E+01  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00 -5.045278E+01  0.000000E+00 -1.818989E-12  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  1.430323E-11  0.000000E+00 -1.818989E-12  0.000000E+00
+ (should all be 0)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  0.000000E+00  2.560796E-11  0.000000E+00  4.001777E-11  0.000000E+00
+ Max abs force any grid:  0.000000E+00  0.000000E+00  1.064616E+02  0.000000E+00  2.341369E+03  0.000000E+00
+ as % of max abs force :                                  2.41E-11%                   1.71E-12%              
+ Occurs at grid*       :         1             1             3             1             4             1
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+            102        1  0.0           0.0           1.064616E+02  0.0          -2.341369E+03  0.0         
+                       2  0.0           0.0          -1.064616E+02  0.0          -3.201712E+02  0.0         
+ 
+            203        2  0.0           0.0           6.060669E+01  0.0           3.201712E+02  0.0         
+                       3  0.0           0.0          -6.060669E+01  0.0          -1.835339E+03  0.0         
+ 
+            304        3  0.0           0.0          -2.296076E+01  0.0           1.835339E+03  0.0         
+                       4  0.0           0.0           2.296076E+01  0.0          -1.261319E+03  0.0         
+ 
+            405        4  0.0           0.0          -5.045278E+01  0.0           1.261319E+03  0.0         
+                       5  0.0           0.0           5.045278E+01  0.0           1.818989E-12  0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.064616E+02  0.0           1.835339E+03  0.0         
+ MIN (for output set):    0.0           0.0          -1.064616E+02  0.0          -2.341369E+03  0.0         
+
+ ABS (for output set):    0.0           0.0           1.064616E+02  0.0           2.341369E+03  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                        E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                              F O R   E L E M E N T   T Y P E   B A R      
+  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+      102 -2.341369E+03  0.000000E+00  3.201712E+02  0.000000E+00 -1.064616E+02  0.000000E+00  0.000000E+00  0.000000E+00
+      203  3.201712E+02  0.000000E+00  1.835339E+03  0.000000E+00 -6.060669E+01  0.000000E+00  0.000000E+00  0.000000E+00
+      304  1.835339E+03  0.000000E+00  1.261319E+03  0.000000E+00  2.296076E+01  0.000000E+00  0.000000E+00  0.000000E+00
+      405  1.261319E+03  0.000000E+00 -4.547474E-13  0.000000E+00  5.045278E+01  0.000000E+00  0.000000E+00  0.000000E+00
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX* :    1.835339E+03  0.000000E+00  1.835339E+03  0.000000E+00  5.045278E+01  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN* :   -2.341369E+03  0.000000E+00 -4.547474E-13  0.000000E+00 -1.064616E+02  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS* :    2.341369E+03  0.000000E+00  1.835339E+03  0.000000E+00  1.064616E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   B A R      
+  Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+     ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+      102  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      203  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      304  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      405  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0           0.0           0.0           0.0           0.0         
+              2        0  0.0           0.0           1.000000E+00  0.0          -2.414742E-02  0.0         
+              3        0  0.0           0.0           2.574662E-01  0.0           6.569372E-02  0.0         
+              4        0  0.0           0.0          -9.174270E-01  0.0          -8.536232E-03  0.0         
+              5        0  0.0           0.0           8.354109E-01  0.0          -1.009022E-01  0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.000000E+00  0.0           6.569372E-02  0.0         
+ MIN (for output set):    0.0           0.0          -9.174270E-01  0.0          -1.009022E-01  0.0         
+
+ ABS (for output set):    0.0           0.0           1.000000E+00  0.0           1.009022E-01  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0          -5.361848E+02  0.0           7.668207E+03  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT        1 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00 -5.361848E+02  0.000000E+00  7.668207E+03  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00  5.361848E+02  0.000000E+00 -7.668207E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        2 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  7.076062E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00 -5.361848E+02  0.000000E+00 -5.736413E+03  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00 -1.714214E+02  0.000000E+00  5.736413E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  5.729817E-11  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        3 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  1.821847E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00  1.714214E+02  0.000000E+00 -1.450878E+03  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00 -3.536061E+02  0.000000E+00  1.450878E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -1.143121E-10  0.000000E+00 -5.366019E-11  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        4 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -6.491771E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00  3.536061E+02  0.000000E+00  7.389274E+03  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00  2.955710E+02  0.000000E+00 -7.389274E+03  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  1.421085E-12  0.000000E+00 -9.185896E-11  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        5 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  2.955710E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00 -2.955710E+02  0.000000E+00  3.819878E-11  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  6.770051E-11  0.000000E+00  3.819878E-11  0.000000E+00
+ (should all be 0)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  0.000000E+00  1.143121E-10  0.000000E+00  9.185896E-11  0.000000E+00
+ Max abs force any grid:  0.000000E+00  0.000000E+00  7.076062E+02  0.000000E+00  7.668207E+03  0.000000E+00
+ as % of max abs force :                                  1.62E-11%                   1.20E-12%              
+ Occurs at grid*       :         1             1             3             1             4             1
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+            102        1  0.0           0.0          -5.361848E+02  0.0           7.668207E+03  0.0         
+                       2  0.0           0.0           5.361848E+02  0.0           5.736413E+03  0.0         
+ 
+            203        2  0.0           0.0           1.714214E+02  0.0          -5.736413E+03  0.0         
+                       3  0.0           0.0          -1.714214E+02  0.0           1.450878E+03  0.0         
+ 
+            304        3  0.0           0.0           3.536061E+02  0.0          -1.450878E+03  0.0         
+                       4  0.0           0.0          -3.536061E+02  0.0          -7.389274E+03  0.0         
+ 
+            405        4  0.0           0.0          -2.955710E+02  0.0           7.389274E+03  0.0         
+                       5  0.0           0.0           2.955710E+02  0.0          -3.819878E-11  0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           5.361848E+02  0.0           7.668207E+03  0.0         
+ MIN (for output set):    0.0           0.0          -5.361848E+02  0.0          -7.389274E+03  0.0         
+
+ ABS (for output set):    0.0           0.0           5.361848E+02  0.0           7.668207E+03  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                        E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                              F O R   E L E M E N T   T Y P E   B A R      
+  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+      102  7.668207E+03  0.000000E+00 -5.736413E+03  0.000000E+00  5.361848E+02  0.000000E+00  0.000000E+00  0.000000E+00
+      203 -5.736413E+03  0.000000E+00 -1.450878E+03  0.000000E+00 -1.714214E+02  0.000000E+00  0.000000E+00  0.000000E+00
+      304 -1.450878E+03  0.000000E+00  7.389274E+03  0.000000E+00 -3.536061E+02  0.000000E+00  0.000000E+00  0.000000E+00
+      405  7.389274E+03  0.000000E+00  3.637979E-11  0.000000E+00  2.955710E+02  0.000000E+00  0.000000E+00  0.000000E+00
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX* :    7.668207E+03  0.000000E+00  7.389274E+03  0.000000E+00  5.361848E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN* :   -5.736413E+03  0.000000E+00 -5.736413E+03  0.000000E+00 -3.536061E+02  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS* :    7.668207E+03  0.000000E+00  7.389274E+03  0.000000E+00  5.361848E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        3
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   B A R      
+  Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+     ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+      102  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      203  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      304  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      405  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0           0.0           0.0           0.0           0.0         
+              2        0  0.0           0.0           1.000000E+00  0.0           2.583535E-02  0.0         
+              3        0  0.0           0.0          -9.853003E-01  0.0           1.489463E-02  0.0         
+              4        0  0.0           0.0           6.440281E-01  0.0          -4.269726E-02  0.0         
+              5        0  0.0           0.0          -3.721993E-01  0.0           8.232227E-02  0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.000000E+00  0.0           8.232227E-02  0.0         
+ MIN (for output set):    0.0           0.0          -9.853003E-01  0.0          -4.269726E-02  0.0         
+
+ ABS (for output set):    0.0           0.0           1.000000E+00  0.0           8.232227E-02  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+              1        0  0.0           0.0          -1.016019E+03  0.0           1.166683E+04  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT        1 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00 -1.016019E+03  0.000000E+00  1.166683E+04  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00  1.016019E+03  0.000000E+00 -1.166683E+04  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        2 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  2.149722E+03  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       102  0.000000E+00  0.000000E+00 -1.016019E+03  0.000000E+00 -1.373366E+04  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00 -1.133703E+03  0.000000E+00  1.373366E+04  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  3.149125E-10  0.000000E+00  2.000888E-11  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        3 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -2.118122E+03  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       203  0.000000E+00  0.000000E+00  1.133703E+03  0.000000E+00  1.460891E+04  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00  9.844190E+02  0.000000E+00 -1.460891E+04  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -5.022684E-10  0.000000E+00 -4.711183E-10  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        4 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  1.384482E+03  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       304  0.000000E+00  0.000000E+00 -9.844190E+02  0.000000E+00 -1.000156E+04  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00 -4.000625E+02  0.000000E+00  1.000156E+04  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  5.832135E-11  0.000000E+00 -8.330971E-10  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT        5 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00 -4.000625E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM       405  0.000000E+00  0.000000E+00  4.000625E+02  0.000000E+00  3.583409E-10  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  4.690719E-10  0.000000E+00  3.583409E-10  0.000000E+00
+ (should all be 0)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  0.000000E+00  5.022684E-10  0.000000E+00  8.330971E-10  0.000000E+00
+ Max abs force any grid:  0.000000E+00  0.000000E+00  2.149722E+03  0.000000E+00  1.460891E+04  0.000000E+00
+ as % of max abs force :                                  2.34E-11%                   5.70E-12%              
+ Occurs at grid*       :         1             1             3             1             4             1
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+            102        1  0.0           0.0          -1.016019E+03  0.0           1.166683E+04  0.0         
+                       2  0.0           0.0           1.016019E+03  0.0           1.373366E+04  0.0         
+ 
+            203        2  0.0           0.0           1.133703E+03  0.0          -1.373366E+04  0.0         
+                       3  0.0           0.0          -1.133703E+03  0.0          -1.460891E+04  0.0         
+ 
+            304        3  0.0           0.0          -9.844190E+02  0.0           1.460891E+04  0.0         
+                       4  0.0           0.0           9.844190E+02  0.0           1.000156E+04  0.0         
+ 
+            405        4  0.0           0.0           4.000625E+02  0.0          -1.000156E+04  0.0         
+                       5  0.0           0.0          -4.000625E+02  0.0          -3.583409E-10  0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           0.0           1.133703E+03  0.0           1.460891E+04  0.0         
+ MIN (for output set):    0.0           0.0          -1.133703E+03  0.0          -1.460891E+04  0.0         
+
+ ABS (for output set):    0.0           0.0           1.133703E+03  0.0           1.460891E+04  0.0         
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+                                        E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                              F O R   E L E M E N T   T Y P E   B A R      
+  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+      102  1.166683E+04  0.000000E+00 -1.373366E+04  0.000000E+00  1.016019E+03  0.000000E+00  0.000000E+00  0.000000E+00
+      203 -1.373366E+04  0.000000E+00  1.460891E+04  0.000000E+00 -1.133703E+03  0.000000E+00  0.000000E+00  0.000000E+00
+      304  1.460891E+04  0.000000E+00 -1.000156E+04  0.000000E+00  9.844190E+02  0.000000E+00  0.000000E+00  0.000000E+00
+      405 -1.000156E+04  0.000000E+00  3.547029E-10  0.000000E+00 -4.000625E+02  0.000000E+00  0.000000E+00  0.000000E+00
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX* :    1.460891E+04  0.000000E+00  1.460891E+04  0.000000E+00  1.016019E+03  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN* :   -1.373366E+04  0.000000E+00 -1.373366E+04  0.000000E+00 -1.133703E+03  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS* :    1.460891E+04  0.000000E+00  1.460891E+04  0.000000E+00  1.133703E+03  0.000000E+00  0.000000E+00  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        4
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   B A R      
+  Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+     ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+      102  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      203  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      304  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+ 
+      405  0.0           0.0           0.0           0.0           0.0           0.0           0.0                                   
+           0.0           0.0           0.0           0.0                         0.0           0.0                                   
+          ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MAX* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ MIN* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ ABS* :    0.0           0.0           0.0           0.0           0.0           0.0           0.0           1.00E+10
+ *for output set
+ 
+------------------------------------------------------------------------------------------------------------------------------------
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                 
+ 
+                                        M O D A L   P A R T I C I P A T I O N   F A C T O R S
+                                             (dimensionless, in coordinate sys        0)
+                                        Reference point is the basic coordinate system origin
+
+             MODE     CYCLES          T1            T2            T3            R1            R2            R3
+              NUM
+                1  1.068719E+01  0.000000E+00  0.000000E+00 -1.510561E+00  0.000000E+00  1.126327E+02  0.000000E+00
+                2  6.281653E+01  0.000000E+00  0.000000E+00  7.193859E-01  0.000000E+00 -1.582118E+01  0.000000E+00
+                3  1.663460E+02  0.000000E+00  0.000000E+00 -3.357432E-01  0.000000E+00  4.801607E+00  0.000000E+00
+                4  2.899396E+02  0.000000E+00  0.000000E+00 -1.925280E-01  0.000000E+00  2.210775E+00  0.000000E+00
+ 
+------------------------------------------------------------------------------------------------------------------------------------
+ BAR WITH 4 ELEMENTS                                                                                                                                                                                                                                             
+ FIXED BASE EIGENVALUES - LANCZOS MODE 2 DPB                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                 
+ 
+                                  E F F E C T I V E   M O D A L   M A S S E S   O R   W E I G H T S
+                                                   (in coordinate system        0)
+                                     Units are same as units for mass input in the Bulk Data Deck
+                                        Reference point is the basic coordinate system origin
+
+             MODE     CYCLES          T1            T2            T3            R1            R2            R3
+              NUM
+                1  1.068719E+01  0.000000E+00  0.000000E+00  5.989004E-01  0.000000E+00  3.329715E+03  0.000000E+00
+                2  6.281653E+01  0.000000E+00  0.000000E+00  1.897492E-01  0.000000E+00  9.177695E+01  0.000000E+00
+                3  1.663460E+02  0.000000E+00  0.000000E+00  6.360191E-02  0.000000E+00  1.300855E+01  0.000000E+00
+                4  2.899396E+02  0.000000E+00  0.000000E+00  2.274854E-02  0.000000E+00  2.999543E+00  0.000000E+00
+                                 ------------  ------------  ------------  ------------  ------------  ------------
+                 Sum all modes:  0.000000E+00  0.000000E+00  8.750000E-01  0.000000E+00  3.437500E+03  0.000000E+00
+              Total model mass:  1.000000E+00  1.000000E+00  1.000000E+00  0.000000E+00  3.437500E+03  3.437500E+03
+        Modes % of total mass*:         0.00%         0.00%        87.50%                     100.00%         0.00%
+
+ *If all modes are calculated the % of total mass should be 100% of the free mass (i.e. not counting mass at constrained DOF's).
+  Percentages are only printed for components that have finite model mass.
+                                                               -----
+
+ >> LINK  9 END
+ 
+    Total CPU time =  9.38E-02 seconds
+
+ >> MYSTRAN END    :  6/22/2020 at 12:59: 8.580

@@ -1,0 +1,73 @@
+ID BAR,RFORCE LOAD
+SOL 1
+CEND
+TITLE = BAR WITH RFORCE LOAD. ANG VEL = 20 RAD/SEC, ANG ACC = 0
+SUBT  = GLOBAL IS CORD2R 25. CONM2's HAVE OFFSET DEFINED IN CORD2R 15
+LABEL = MODEL IS OFFSET FROM BASIC ORIGIN TO CHECK THAT RADIUS TO ROTATION GRID (201) WORKS
+LOAD  = 61
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK
+$
+GRID    101             -100.   -7.0    6.0     25
+GRID    201              -90.   -7.0    6.0     25      123456
+GRID    301              -80.   -7.0    6.0     25
+$
+CBAR    10      1       101     201     -1.0    0.0     0.0
+CBAR    11      1       201     301     -1.0    0.0     0.0
+$
+PBAR    1       1       1.0     1.0     1.0     1.0
+$
+MAT1    1       10.E6           0.3
+$
+RFORCE  61      201             20.0    0.0     0.0     1.0             +RF1
++RF1    00.
+$
+CONM2   91      101     15      0.1     0.0     -1.5    0.0
+CONM2   92      301     15      0.1     0.0     -1.5    0.0
+$
+CORD2R  15               0.0     0.0     0.0     1.0     0.0     0.0    +CORD15
++CORD15  0.0    -1.0     0.0
+CORD2R  25               0.0     0.0     0.0     0.0     1.0     0.0    +CORD25
++CORD25  0.0     0.0    -1.0
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

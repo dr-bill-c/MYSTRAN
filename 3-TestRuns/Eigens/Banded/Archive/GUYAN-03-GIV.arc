@@ -1,0 +1,321 @@
+   210204355
+
+ MYSTRAN Version 10.10    Feb 07 2020 MYSTRAN developed by Dr Bill Case
+ *** Please report any problems to the author at dbcase29@gmail.com ***                                                                                                                                                                                          
+
+ >> MYSTRAN BEGIN  :  2/10/2020 at 20:43:55.552 The input file is GUYAN-03-GIV.DAT                                                                                                                                                                                                                                                
+
+ 
+ 
+                                        R E A L   E I G E N V A L U E S
+          MODE    EXTRACT  EIGENVALUE     RADIANS        CYCLES      GENERALIZED   GENERALIZED        
+         NUMBER    ORDER                                                MASS        STIFFNESS
+
+              1        1  2.413794E+07  4.913037E+03  7.819342E+02  1.558715E-05  3.762417E+02
+              2        2  1.481072E+09  3.848470E+04  6.125031E+03  7.671722E-05  1.136238E+05
+ 
+ 
+ 
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+            102        0  0.000000E+00  3.187293E-01  0.000000E+00  0.000000E+00  0.000000E+00  5.687293E-02
+            103        0  0.000000E+00  1.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  7.250828E-02
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.000000E+00  1.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  7.250828E-02
+ MIN (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS (for output set):    0.000000E+00  1.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  7.250828E-02
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -7.749172E+03
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT      101 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -7.749172E+03
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        11  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  7.749172E+03
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                FORCE BALANCE FOR GRID POINT      102 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  1.993377E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        11  0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -3.625414E+03
+ BAR      ELEM        12  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  3.625414E+03
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  1.993377E+02  0.000000E+00  0.000000E+00  0.000000E+00  1.818989E-12
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                FORCE BALANCE FOR GRID POINT      103 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  3.127070E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        12  0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  4.983444E+02
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -9.966887E+01  0.000000E+00  0.000000E+00  0.000000E+00  4.983444E+02
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  1.993377E+02  0.000000E+00  0.000000E+00  0.000000E+00  4.983444E+02
+ Max abs force any grid:  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  7.749172E+03
+ as % of max abs force :                    4.83E+01%                                               6.43E+00%
+ Occurs at grid*       :       101           102           101           101           101           103
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+             11      101  0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -7.749172E+03
+                     102  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  3.625414E+03
+ 
+             12      102  0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -3.625414E+03
+                     103  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -4.983444E+02
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  3.625414E+03
+ MIN (for output set):    0.000000E+00 -4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00 -7.749172E+03
+
+ ABS (for output set):    0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00  7.749172E+03
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+                                                       E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                                            F O R   E L E M E N T   T Y P E   B A R      
+                  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+                     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+                      11  7.749172E+03  0.000000E+00  3.625414E+03  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00
+                      12  3.625414E+03  0.000000E+00 -4.983444E+02  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    7.749172E+03  0.000000E+00  3.625414E+03  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN (for output set):    3.625414E+03  0.000000E+00 -4.983444E+02  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS (for output set):    7.749172E+03  0.000000E+00  3.625414E+03  0.000000E+00  4.123758E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        1
+ 
+                             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                                          F O R   E L E M E N T   T Y P E   B A R      
+                 Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+                    ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+                      11  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                          0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ 
+                      12  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                          0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                         ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ MAX (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+
+ MIN (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ MIN (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+
+ ABS (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ ABS (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+                                                         E I G E N V E C T O R
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+            102        0  0.000000E+00 -1.568729E+00  0.000000E+00  0.000000E+00  0.000000E+00 -1.318729E-01
+            103        0  0.000000E+00  1.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  8.274917E-01
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.000000E+00  1.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  8.274917E-01
+ MIN (for output set):    0.000000E+00 -1.568729E+00  0.000000E+00  0.000000E+00  0.000000E+00 -1.318729E-01
+
+ ABS (for output set):    0.000000E+00  1.568729E+00  0.000000E+00  0.000000E+00  0.000000E+00  8.274917E-01
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  6.774917E+04
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT      101 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  6.774917E+04
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        11  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00 -6.774917E+04
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                FORCE BALANCE FOR GRID POINT      102 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00 -6.019934E+04  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        11  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00 -4.137459E+04
+ BAR      ELEM        12  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  4.137459E+04
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -6.019934E+04  0.000000E+00  0.000000E+00  0.000000E+00  2.182787E-11
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                FORCE BALANCE FOR GRID POINT      103 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ INERTIA FORCE (-Mgg*Üg)  0.000000E+00  1.918729E+04  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ BAR      ELEM        12  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00 -1.504983E+05
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  3.009967E+04  0.000000E+00  0.000000E+00  0.000000E+00 -1.504983E+05
+ (may not be zero since there were OMIT'd DOF's which can mean that the correct inertia forces at the G-set are not -Mgg*€g)
+
+
+                                      Max abs values of force imbalance totals from above grids
+
+                               T1            T2            T3            R1            R2            R3
+
+ Max abs imbal any grid:  0.000000E+00  6.019934E+04  0.000000E+00  0.000000E+00  0.000000E+00  1.504983E+05
+ Max abs force any grid:  0.000000E+00  6.019934E+04  0.000000E+00  0.000000E+00  0.000000E+00  1.504983E+05
+ as % of max abs force :                    1.00E+02%                                               1.00E+02%
+ Occurs at grid*       :       101           102           101           101           101           103
+ (*for output set)
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   B A R      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+             11      101  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  6.774917E+04
+                     102  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  4.137459E+04
+ 
+             12      102  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00 -4.137459E+04
+                     103  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  1.504983E+05
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  1.504983E+05
+ MIN (for output set):    0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00 -4.137459E+04
+
+ ABS (for output set):    0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00  1.504983E+05
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+                                                       E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                                            F O R   E L E M E N T   T Y P E   B A R      
+                  Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial         Torque
+                     ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force
+                      11 -6.774917E+04  0.000000E+00  4.137459E+04  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00
+                      12  4.137459E+04  0.000000E+00  1.504983E+05  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    4.137459E+04  0.000000E+00  1.504983E+05  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00
+ MIN (for output set):   -6.774917E+04  0.000000E+00  4.137459E+04  0.000000E+00 -1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00
+
+ ABS (for output set):    6.774917E+04  0.000000E+00  1.504983E+05  0.000000E+00  1.091238E+04  0.000000E+00  0.000000E+00  0.000000E+00
+ 
+ 
+ OUTPUT FOR EIGENVECTOR        2
+ 
+                             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                                          F O R   E L E M E N T   T Y P E   B A R      
+                 Element      SA1           SA2           SA3           SA4          Axial         SA-Max        SA-Min      M.S.-T
+                    ID        SB1           SB2           SB3           SB4          Stress        SB-Max        SB-Min      M.S.-C
+ 
+                      11  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                          0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ 
+                      12  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                          0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+                         ------------- ------------- ------------- ------------- ------------- ------------- ------------- ---------
+ MAX (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ MAX (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+
+ MIN (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ MIN (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+
+ ABS (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ ABS (for output set):    0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00      1.00E+10
+ 
+                                               M O D A L   P A R T I C I P A T I O N   F A C T O R S
+                                                    (dimensionless, in coordinate sys        0)
+                       1  7.819342E+02  0.000000E+00 -1.096040E+00  0.000000E+00  0.000000E+00  0.000000E+00 -2.059626E+01
+                       2  6.125031E+03  0.000000E+00  9.603956E-02  0.000000E+00  0.000000E+00  0.000000E+00  5.962589E-01
+ 
+ 
+                                         E F F E C T I V E   M O D A L   M A S S E S   O R   W E I G H T S
+                                                          (in coordinate system        0)
+                                            Units are same as units for mass input in the Bulk Data Deck
+                    MODE     CYCLES          T1            T2            T3            R1            R2            R3
+                     NUM
+                       1  7.819342E+02  0.000000E+00  7.226897E-03  0.000000E+00  0.000000E+00  0.000000E+00  2.551973E+00
+                       2  6.125031E+03  0.000000E+00  2.731026E-04  0.000000E+00  0.000000E+00  0.000000E+00  1.052677E-02
+                                        ------------  ------------  ------------  ------------  ------------  ------------
+          Sum all modes:                0.000000E+00  7.500000E-03  0.000000E+00  0.000000E+00  0.000000E+00  2.562500E+00
+       Total model mass:                2.000000E-02  2.000000E-02  2.000000E-02  0.000000E+00  3.000000E+00  3.000000E+00

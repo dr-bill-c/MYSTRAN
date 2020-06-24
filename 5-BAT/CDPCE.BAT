@@ -1,0 +1,1 @@
+CD \MYSTRAN\perl_scripts\Compilation_error_messages

@@ -1,0 +1,66 @@
+ID ROD SAMPLE PROBLEM FOR USERS MANUAL
+SOL 1
+CEND
+TITLE = ROD WITH AXIAL LOADS IN 2 SUBCASES
+ECHO  = UNSORT
+SPC   = 19
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+STRAIN        = ALL
+SUBCASE 35
+  SUBTITLE = 120 LB LOAD ON GRID 701
+  ELFORCE  = ALL
+  STRESS   = ALL
+  LOAD = 191
+SUBCASE 8
+  SET 98 = 2,5
+  LOAD = 26
+  ELFORCE(NODE) = 98
+  SUBTITLE = 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401
+BEGIN BULK
+$
+CORD2R  13      0       0.      0.      0.      0.      1.      0.      +CORD13
++CORD13 0.      0.      1.
+$
+GRID    701             0.      60.     0.      13      12456
+GRID    601             0.      50.     0.              13456
+GRID    501             0.      40.     0.              13456
+GRID    401             0.      30.     0.              13456
+GRID    301             0.      20.     0.              13456
+GRID    201             0.      10.     0.              13456
+GRID    101             0.      0.      0.              13456
+$
+CROD    1       16      101     201
+CROD    2       16      201     301
+CROD    3       16      301     401
+CROD    4       16      401     501
+CROD    5       16      501     601
+CROD    6       16      601     701
+$
+PROD    16      20      .6
+$
+MAT1    20      1.+7            .33     .1      1.                      +MAT1
++MAT1   10000.  10000.  10000.
+$
+SPC1    19      2       101
+$
+FORCE   191     701     13      120.    0.      0.      1.
+$
+LOAD    26      2.0     4.0     39      3.0     5       1.0     178
+FORCE   39      201     0       30.     0.      1.      0.
+FORCE   5       301     13      25.     0.      0.      1.
+FORCE   178     401     0       100.    0.      1.      0.
+$
+PARAM   GRDPNT   101
+PARAM   PRTDOF   1
+$
+DEBUG   200      1
+$
+ENDDATA
+

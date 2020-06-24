@@ -1,0 +1,227 @@
+SOL 31
+$
+OUTPUT4   CG_LTM   , DLR      , EIGEN_VAL, EIGEN_VEC, GEN_MASS //-1/22 $
+OUTPUT4   IF_LTM   , KAA      , KGG      , KLL      , KRL      //-1/22 $
+OUTPUT4   KRR      , KRRcb    , KXX      , LTM      , MCG      //-1/24 $
+OUTPUT4   MEFFMASS , MPFACTOR , MAA      , MGG      , MLL      //-1/26 $
+OUTPUT4   MRL      , MRN      , MRR      , MRRcb    , MXX      //-1/26 $
+OUTPUT4   PA       , PG       , PL       , PHIXG    , PHIZG    //-1/26 $
+OUTPUT4   RBM0     , TR6_0    , TR6_CG   ,          ,          //-1/26 $
+$
+PARTN     CG_LTM   , CGLTMC   , CGLTMR
+PARTN     DLR      , DLRC     , DLRR
+PARTN     EIGEN_VAL, EIGVALC  , EIGVALR
+PARTN     EIGEN_VEC, EIGVECC  , EIGVECR
+PARTN     GEN_MASS , GENMASC  , GENMASR
+PARTN     IF_LTM   , IFLTMC   , IFLTMR
+PARTN     KAA      , KAAC     , KAAR
+PARTN     KGG      , KGGC     , KGGR
+PARTN     KLL      , KLLC     , KLLR
+PARTN     KRL      , KRLC     , KRLR
+PARTN     KRR      , KRRC     , KRRR
+PARTN     KRRcb    , KRRCBC   , KRRCBR
+PARTN     KXX      , KXXC     , KXXR
+PARTN     LTM      , LTMC     , LTMR
+PARTN     MCG      , MCGC     , MCGR
+PARTN     MEFFMASS , MEFMASC  , MEFMASR
+PARTN     MPFACTOR , MPFACC   , MPFACR
+PARTN     MAA      , MAAC     , MAAR
+PARTN     MGG      , MGGC     , MGGR
+PARTN     MLL      , MLLC     , MLLR
+PARTN     MRL      , MRLC     , MRLR
+PARTN     MRN      , MRNC     , MRNR
+PARTN     MRR      , MRRC     , MRRR
+PARTN     MRRcb    , MRRCBC   , MRRCBR
+PARTN     MXX      , MXXC     , MXXR
+PARTN     PA       , PAC      , PAR
+PARTN     PG       , PGC      , PGR
+PARTN     PL       , PLC      , PLR
+PARTN     PHIXG    , PHIXGC   , PHIXGR
+PARTN     PHIZG    , PHIZGC   , PHIZGR
+PARTN     RBM0     , RBM0C    , RBM0R
+PARTN     TR6_0    , TR60C    , TR60R
+PARTN     TR6_CG   , TR6CGC   , TR6CGR
+$
+CEND
+TITLE  = TEST OF CRAIG-BAMPTON SOLUTION
+SUBTI  = FRAME USING CBAR's
+SPC    = 1
+METHOD = 1
+ACCE          = ALL
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MEFFMASS      = ALL
+MPCFORCE      = ALL
+MPFACTOR      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK
+$
+PARVEC  CGLTMC  13      3       11      2
+PARVEC  DLRC    13      3       11      2
+PARVEC  EIGVALC 13      3       11      2
+PARVEC  EIGVECC 11      5       21      1
+PARVEC  GENMASC 13      3       11      2
+PARVEC  IFLTMC  13      3       11      2
+PARVEC  KAAC    11      5       21      1
+PARVEC  KGGC    11      5       21      1
+PARVEC  KLLC    11      5       21      1
+PARVEC  KRLC    11      5       21      1
+PARVEC  KRRC    11      2       13      3
+PARVEC  KRRCBC  13      3       11      2
+PARVEC  KXXC    13      3       11      2
+PARVEC  LTMC    13      3       11      2
+PARVEC  MCGC    13      3       11      2
+PARVEC  MEFMASC 13      3       11      2
+PARVEC  MPFACC  13      3       11      2
+PARVEC  MAAC    11      5       21      1
+PARVEC  MGGC    11      5       21      1
+PARVEC  MLLC    11      5       21      1
+PARVEC  MRLC    11      5       21      1
+PARVEC  MRNC    13      3       11      2
+PARVEC  MRRC    13      3       11      2
+PARVEC  MRRCBC  13      3       11      2
+PARVEC  MXXC    13      3       11      2
+PARVEC  PAC     13      3       11      2
+PARVEC  PGC     13      3       11      2
+PARVEC  PLC     13      3       11      2
+PARVEC  PHIXGC  13      3       11      2
+PARVEC  PHIZGC  13      3       11      2
+PARVEC  RBM0C   13      3       11      2
+PARVEC  TR60C   13      3       11      2
+PARVEC  TR6CGC  13      3       11      2
+$
+PARVEC  CGLTMR  12      2       11      1
+PARVEC  DLRR    12      1       21      3
+PARVEC  EIGVALR 12      2       11      1
+PARVEC  EIGVECR 12      1       21      3
+PARVEC  GENMASR 12      2       11      1
+PARVEC  IFLTMR  12      2       11      1
+PARVEC  KAAR    12      1       21      3
+PARVEC  KGGR    12      1       21      3
+PARVEC  KLLR    12      1       21      3
+PARVEC  KRLR    12      2       11      1
+PARVEC  KRRR    12      2       11      1
+PARVEC  KRRCBR  12      2       11      1
+PARVEC  KXXR    12      2       11      1
+PARVEC  LTMR    12      2       11      1
+PARVEC  MCGR    12      2       11      1
+PARVEC  MEFMASR 12      2       11      1
+PARVEC  MPFACR  12      2       11      1
+PARVEC  MAAR    12      1       21      3
+PARVEC  MGGR    12      1       21      3
+PARVEC  MLLR    12      1       21      3
+PARVEC  MRLR    12      2       11      1
+PARVEC  MRNR    12      2       11      1
+PARVEC  MRRR    12      2       11      1
+PARVEC  MRRCBR  12      2       11      1
+PARVEC  MXXR    12      2       11      1
+PARVEC  PAR     12      2       11      1
+PARVEC  PGR     12      2       11      1
+PARVEC  PLR     12      2       11      1
+PARVEC  PHIXGR  12      1       21      3
+$
+PARVEC  PHIZGR  32      1       12      2       13      3
+PARVEC  PHIZGR  22      4       11      5       31      6
+PARVEC  PHIZGR  12      5       32      2       11      4
+PARVEC  PHIZGR  21      3       11      1       12      1
+$
+PARVEC  RBM0R   12      2       11      1
+PARVEC  TR60R   12      2       11      1
+PARVEC  TR6CGR  12      2       11      1
+$
+EIGRL   1                       3                       -1.     MASS
+$
+EIGR    2        MGIV                   1       24                      +E1
++E1     MASS                                                                   
+GRID    11              0.      0.      0.
+GRID    12              100.    0.      0.
+GRID    13              50.     0.      50.
+GRID    21              0.      100.    0.
+GRID    22              100.    100.    0.
+GRID    31              50.     50.     0.
+GRID    32              50.     50.     0.
+$
+RBE2    401     31      123456  32       
+$
+$ Frame support bars
+$
+CBAR    101     1       13      21      0.0     0.5     1.0             +C1
++C1      56     456
+CBAR    102     1       13      22      0.0     0.5     1.0             +C2
++C2      56     456
+$
+$ Edge bars
+$
+CBAR    201     2       11      21      0.0     0.0     1.0
+CBAR    202     2       12      22      0.0     0.0     1.0
+CBAR    203     2       11      12      0.0     0.0     1.0
+CBAR    204     2       21      22      0.0     0.0     1.0
+$
+$ Diag bars
+$
+CBAR    211     3       11      31      0.0     0.0     1.0
+CBAR    212     3       12      31      0.0     0.0     1.0
+CBAR    213     3       21      31      0.0     0.0     1.0
+CBAR    214     3       22      31      0.0     0.0     1.0
+$
+PBAR    1       1       0.36    0.09    0.09    0.18
+PBAR    2       1       0.10    10.0    10.0    20.0
+PBAR    3       1       6.0     6.0     6.0     12.0
+$
+MAT1    1       10.+6           0.3     0.1
+$
+CONM2   901     11              150.0   0.0     0.0     -5.0
+CONM2   902     12              150.0   0.0     0.0     -5.0
+CONM2   903     21              150.0   0.0     0.0     -5.0
+CONM2   904     22              150.0   0.0     0.0     -5.0
+CONM2   905     32              150.0   0.0     0.0     -5.0
+$
+$SPC1    1       6       31                                              Wrong - already RBE2'd
+SPC1    1       456     13
+$
+$ BOUNDARY DOF'S
+$
+SUPORT  11      123     12      23      13      123
+$
+PARAM   SOLLIB   LAPACK
+PARAM   MEFMLOC  CG
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   WTMASS   .002591
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA
+
+

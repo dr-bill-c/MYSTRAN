@@ -1,0 +1,151 @@
+ID PLATE,STATICS                                                                
+SOL 3                                                                           
+CEND                                                                            
+TITLE  = TEST OF ALL ELEMENTS
+SUBTI  = TRUSS SUPPORTED SHELF
+LABEL  = EIGENVALUES
+SPC    = 998
+METHOD = 4
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MEFFMASS      = ALL
+MPCFORCE      = ALL
+MPFACTOR      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK                                                                      
+$
+EIGRL   1                       4                       -1.     MASS
+$
+EIGR    2       GIV                             4                       +E1
++E1     MAX
+$
+EIGR    3       INV                     1       1                       +E1
++E1     MAX                     0.
+$
+EIGR    4       MGIV                    1       4                       +E1
++E1     MAX
+$
+GRID    1011              0.      0.      0.   
+GRID    1012             50.      0.      0.   
+GRID    1013            100.      0.      0.                            1
+$
+GRID    1021              0.     50.      0.   
+GRID    1022             50.     50.      0.   
+GRID    1023            100.     50.      0.                            1   
+$
+GRID    1031              0.    100.      0.   
+GRID    1032             50.    100.      0.   
+GRID    1033            100.    100.      0.                            1
+$
+GRID    1041              0.      0.    -50.
+GRID    1042             50.      0.    -50.
+GRID    1043            100.      0.    -50.                            1
+$
+GRID    1051             50.     50.     20.            123456
+$
+CQUAD4  11      91      1011    1012    1022    1021
+CQUAD4  12      91      1012    1013    1023    1022
+CTRIA3  21      91      1021    1022    1032
+CTRIA3  22      91      1031    1021    1032
+CTRIA3  23      91      1022    1023    1032
+CTRIA3  24      91      1033    1032    1023
+$
+PSHELL  91      20      .125    20              20                              
+$
+BAROR                                   0.      0.      1.
+$
+CBAR    1121    98      1011    1021
+CBAR    2131    98      1021    1031
+$
+CBAR    1222    98      1012    1022
+CBAR    2232    98      1022    1032
+$
+CBAR    1323    98      1013    1023
+CBAR    2333    98      1023    1033
+$
+CBAR    1112    97      1011    1012
+CBAR    1213    97      1012    1013
+$
+CBAR    2122    98      1021    1022
+CBAR    2223    98      1022    1023
+$
+CBAR    3132    97      1031    1032
+CBAR    3233    97      1032    1033
+$
+CBAR    4142    97      1041    1042
+CBAR    4243    97      1042    1043
+$
+PBAR    97      20      2.0     2.      1.      2.5                     +PB97A
++PB97A   1.0     1.0     1.0    -1.0    -1.0    -1.0    -1.0     1.0
+$
+PBAR    98      20      2.0     8.      1.      2.5                     +PB97A
++PB97A   1.0     1.0     1.0    -1.0    -1.0    -1.0    -1.0     1.0
+$
+CROD    1141    92      1011    1041
+CROD    1242    92      1012    1042
+CROD    1343    92      1013    1043
+$
+CROD    4131    92      1041    1031
+CROD    4232    92      1042    1032
+CROD    4333    92      1043    1033
+$
+PROD    92      20      1.0  
+$
+CELAS1  58      75      1022    3       1051    3
+$
+PELAS   75      1.5E+4          .75
+$
+MAT1    20      10.+06  4.+06   .25     .1                              +MAT1
++MAT1   20000.  20000.  20000.
+$
+PLOAD2  1991    -.75    11      12      21      22      23      24
+FORCE   1992    1031            1000.   0.      1.      -3.
+FORCE   1992    1032            1000.   0.      1.      -3.
+FORCE   1992    1033            1000.   0.      1.      -3.
+$
+SPC1    998     123     1011    1012    1013
+SPC1    998     12 456  1041    1042    1043     
+$
+PARAM   SOLLIB   LAPACK
+PARAM   EIGNORM2 Y
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   WTMASS   .002591
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   185     1                                                       Get modes even if no mass
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA
+
+

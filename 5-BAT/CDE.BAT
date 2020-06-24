@@ -1,0 +1,1 @@
+CD D:\MYSTRAN\%1\EMG

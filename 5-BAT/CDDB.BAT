@@ -1,0 +1,1 @@
+CD \MYSTRAN\DAT-Gens\Bars

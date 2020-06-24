@@ -1,0 +1,84 @@
+ID CASE,CORDTST
+SOL 1
+CEND
+TITLE = TEST COORDINATE SYSTEM ROUTINES
+SUBT  = 1 BAR WITH END LOADS IN ALL 3 DIRECTIONS
+LABEL = COORD SYS 0 (BASIC) IS GLOBAL
+LOAD  = 1
+SPC   = 1
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+BEGIN BULK                                                                    
+$
+SPC1    1       123456  12
+$
+FORCE   1       11              10.     1.      2.      3.
+$
+GRID    11      0       0.      25.     0.      
+GRID    12      0       0.      15.     0.      
+$
+CBAR    3       10      11      12      0.      0.      1.
+$
+PBAR    10      20      1.      2.      2.      4.                    
+$
+MAT1    20      10.+06  4.0+06          .1                              +MAT1
++MAT1   10000.
+$
+CORD2C  23      92      -16.    8.      10.     -18.    8.      10.     +CD3
++CD3    -16.    10.     10.
+$
+CORD2R  63      46      6.      0.      0.      8.      0.      0.      +CD6
++CD6    6.      90.     90.
+$
+CORD2R  92      11      11.     10.     4.      11.     10.     2.      +CD2
++CD2    11.     12.     4.
+$
+CORD2S  46      23      0.      0.      -5.     5.      90.     -5.     +CD4
++CD4    0.      0.      -10.
+$
+CORD2R  11      0       6.      6.      11.     7.      6.      11.     +CD1
++CD1    6.      8.      11.
+$
+CORD2R  59      23      0.      0.      -15.    2.      45.     -15.    +CD5
++CD5    2.      -45.    -15.
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

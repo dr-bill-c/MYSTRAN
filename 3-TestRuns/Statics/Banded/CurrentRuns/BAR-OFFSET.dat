@@ -1,0 +1,69 @@
+ID BAR,OFFSET
+SOL 1
+CEND
+TITLE = 1 BAR OFFSET WITH END LOADS
+LOAD  = 1
+DISP          = ALL
+ECHO          = UNSORT
+ELFORCE(BOTH) = ALL
+GPFORCE       = ALL
+MPCFORCE      = ALL
+OLOAD         = ALL
+SPCFORCE      = ALL
+STRESS        = ALL
+ELDATA(0,PRINT) = ALL
+ELDATA(1,PRINT) = ALL
+ELDATA(2,PRINT) = ALL
+ELDATA(3,PRINT) = ALL
+ELDATA(4,PRINT) = ALL
+ELDATA(5,PRINT) = ALL
+BEGIN BULK
+$
+GRID    101             0.      0.      0.              123456
+GRID    102             10.     0.      0.                  
+$
+CBAR    12      10      101     102     0.      1.      0.              +CBAR1
++CBAR1                   0.     2.0     0.0     0.0     2.0     0.0
+$
+PBAR    10      20      .1      .1      .1      .1                      +PBAR1
++PBAR1   1.      1.     -1.      1.     -1.     -1.      1.     -1.
+$
+MAT1    20      1.E+7   4.E+6   .33     .1      1.                      +MAT1
++MAT1   10000.  10000.  10000.
+$
+FORCE   1       102              100.   2.      3.      6.
+$
+PARAM   SOLLIB   LAPACK
+PARAM   SPARSTOR NONSYM
+PARAM   EQCHECK  0      3       3                               -1.E10  Y
+PARAM   GRDPNT   0
+PARAM   POST     -1
+PARAM   RCONDK   Y
+PARAM   PRTBASIC 1
+PARAM   PRTCGLTM 1
+PARAM   PRTCORD  2
+PARAM   PRTDLR   1
+PARAM   PRTDOF   2
+PARAM   PRTFOR   1      3       3       3       3
+PARAM   PRTGMN   1
+PARAM   PRTGOA   1
+PARAM   PRTHMN   1
+PARAM   PRTIFLTM 1
+PARAM   PRTKXX   1
+PARAM   PRTMASS  1      3       3       3       3
+PARAM   PRTMXX   1
+PARAM   PRTPHIXA 1
+PARAM   PRTPHIZL 1
+PARAM   PRTQSYS  1
+PARAM   PRTRMG   3
+PARAM   PRTSCP   1
+PARAM   PRTTSET  1
+PARAM   PRTSTIFD 1      3       3       3       3 
+PARAM   PRTSTIFF 1      3       3       3       3
+PARAM   PRTUO0   1
+PARAM   PRTYS    1
+$
+DEBUG   192     2                                                       GPFO summary
+DEBUG   200     1                                                       ANS
+$
+ENDDATA

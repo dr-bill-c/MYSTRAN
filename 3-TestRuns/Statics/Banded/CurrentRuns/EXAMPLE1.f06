@@ -1,0 +1,708 @@
+   622125129
+
+ MYSTRAN Version 11.0     Jun 16 2020 MYSTRAN developed by Dr Bill Case
+ *** Please report any problems to the author at dbcase29@gmail.com ***                                                                                                                                                                                          
+
+ >> MYSTRAN BEGIN  :  6/22/2020 at 12:51:29.291 The input file is EXAMPLE1.DAT                                                                                                                                                                                                                                                    
+
+
+ >> LINK  0 BEGIN
+
+ 
+ID ROD SAMPLE PROBLEM FOR USERS MANUAL                                                                                                                                                                                                                          
+SOL 1                                                                                                                                                                                                                                                           
+CEND                                                                                                                                                                                                                                                            
+TITLE = ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                      
+ECHO  = UNSORT                                                                                                                                                                                                                                                  
+SPC   = 19                                                                                                                                                                                                                                                      
+DISP          = ALL                                                                                                                                                                                                                                             
+ECHO          = UNSORT                                                                                                                                                                                                                                          
+ELFORCE(BOTH) = ALL                                                                                                                                                                                                                                             
+GPFORCE       = ALL                                                                                                                                                                                                                                             
+MPCFORCE      = ALL                                                                                                                                                                                                                                             
+OLOAD         = ALL                                                                                                                                                                                                                                             
+SPCFORCE      = ALL                                                                                                                                                                                                                                             
+STRESS        = ALL                                                                                                                                                                                                                                             
+STRAIN        = ALL                                                                                                                                                                                                                                             
+SUBCASE 35                                                                                                                                                                                                                                                      
+  SUBTITLE = 120 LB LOAD ON GRID 701                                                                                                                                                                                                                            
+  ELFORCE  = ALL                                                                                                                                                                                                                                                
+  STRESS   = ALL                                                                                                                                                                                                                                                
+  LOAD = 191                                                                                                                                                                                                                                                    
+SUBCASE 8                                                                                                                                                                                                                                                       
+  SET 98 = 2,5                                                                                                                                                                                                                                                  
+  LOAD = 26                                                                                                                                                                                                                                                     
+  ELFORCE(NODE) = 98                                                                                                                                                                                                                                            
+  SUBTITLE = 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                       
+BEGIN BULK                                                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+CORD2R  13      0       0.      0.      0.      0.      1.      0.      +CORD13                                                                                                                                                                                 
++CORD13 0.      0.      1.                                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+GRID    701             0.      60.     0.      13      12456                                                                                                                                                                                                   
+GRID    601             0.      50.     0.              13456                                                                                                                                                                                                   
+GRID    501             0.      40.     0.              13456                                                                                                                                                                                                   
+GRID    401             0.      30.     0.              13456                                                                                                                                                                                                   
+GRID    301             0.      20.     0.              13456                                                                                                                                                                                                   
+GRID    201             0.      10.     0.              13456                                                                                                                                                                                                   
+GRID    101             0.      0.      0.              13456                                                                                                                                                                                                   
+$                                                                                                                                                                                                                                                               
+CROD    1       16      101     201                                                                                                                                                                                                                             
+CROD    2       16      201     301                                                                                                                                                                                                                             
+CROD    3       16      301     401                                                                                                                                                                                                                             
+CROD    4       16      401     501                                                                                                                                                                                                                             
+CROD    5       16      501     601                                                                                                                                                                                                                             
+CROD    6       16      601     701                                                                                                                                                                                                                             
+$                                                                                                                                                                                                                                                               
+PROD    16      20      .6                                                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+MAT1    20      1.+7            .33     .1      1.                      +MAT1                                                                                                                                                                                   
+ *INFORMATION: MAT1 ENTRY       20 HAD FIELD FOR G  BLANK. MYSTRAN CALCULATED G  =  3.759398E+06
++MAT1   10000.  10000.  10000.                                                                                                                                                                                                                                  
+$                                                                                                                                                                                                                                                               
+SPC1    19      2       101                                                                                                                                                                                                                                     
+$                                                                                                                                                                                                                                                               
+FORCE   191     701     13      120.    0.      0.      1.                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+LOAD    26      2.0     4.0     39      3.0     5       1.0     178                                                                                                                                                                                             
+FORCE   39      201     0       30.     0.      1.      0.                                                                                                                                                                                                      
+FORCE   5       301     13      25.     0.      0.      1.                                                                                                                                                                                                      
+FORCE   178     401     0       100.    0.      1.      0.                                                                                                                                                                                                      
+$                                                                                                                                                                                                                                                               
+PARAM   GRDPNT   101                                                                                                                                                                                                                                            
+PARAM   PRTDOF   1                                                                                                                                                                                                                                              
+$                                                                                                                                                                                                                                                               
+DEBUG   200      1                                                                                                                                                                                                                                              
+$                                                                                                                                                                                                                                                               
+ENDDATA                                                                                                                                                                                                                                                         
+ 
+ 
+ 
+ 
+                                               DEGREE OF FREEDOM TABLE SORTED ON GRID POINT (TDOF) 
+                                                              (Before any AUTOSPC)                                                         
+
+ EXTERNAL  INTERNAL                                     DOF NUMBER FOR DISPLACEMENT SET:
+ GRD-COMP  GRD-COMP ----------------------------------------------------------------------------------------------------------------
+ NUMBER    NUMBER          G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+     101-1       1-1       1       0       1       0       0       1       1       0       1       0       0       0       0       0
+        -2        -2       2       0       2       0       1       0       2       0       2       0       0       0       0       0
+        -3        -3       3       0       3       0       0       2       3       0       3       0       0       0       0       0
+        -4        -4       4       0       4       0       0       3       4       0       4       0       0       0       0       0
+        -5        -5       5       0       5       0       0       4       5       0       5       0       0       0       0       0
+        -6        -6       6       0       6       0       0       5       6       0       6       0       0       0       0       0
+ 
+     201-1       2-1       7       0       7       0       0       6       7       0       7       0       0       0       0       0
+        -2        -2       8       0       8       0       0       0       0       0       0       1       0       1       0       1
+        -3        -3       9       0       9       0       0       7       8       0       8       0       0       0       0       0
+        -4        -4      10       0      10       0       0       8       9       0       9       0       0       0       0       0
+        -5        -5      11       0      11       0       0       9      10       0      10       0       0       0       0       0
+        -6        -6      12       0      12       0       0      10      11       0      11       0       0       0       0       0
+ 
+     301-1       3-1      13       0      13       0       0      11      12       0      12       0       0       0       0       0
+        -2        -2      14       0      14       0       0       0       0       0       0       2       0       2       0       2
+        -3        -3      15       0      15       0       0      12      13       0      13       0       0       0       0       0
+        -4        -4      16       0      16       0       0      13      14       0      14       0       0       0       0       0
+        -5        -5      17       0      17       0       0      14      15       0      15       0       0       0       0       0
+        -6        -6      18       0      18       0       0      15      16       0      16       0       0       0       0       0
+ 
+     401-1       4-1      19       0      19       0       0      16      17       0      17       0       0       0       0       0
+        -2        -2      20       0      20       0       0       0       0       0       0       3       0       3       0       3
+        -3        -3      21       0      21       0       0      17      18       0      18       0       0       0       0       0
+        -4        -4      22       0      22       0       0      18      19       0      19       0       0       0       0       0
+        -5        -5      23       0      23       0       0      19      20       0      20       0       0       0       0       0
+        -6        -6      24       0      24       0       0      20      21       0      21       0       0       0       0       0
+ 
+     501-1       5-1      25       0      25       0       0      21      22       0      22       0       0       0       0       0
+        -2        -2      26       0      26       0       0       0       0       0       0       4       0       4       0       4
+        -3        -3      27       0      27       0       0      22      23       0      23       0       0       0       0       0
+        -4        -4      28       0      28       0       0      23      24       0      24       0       0       0       0       0
+        -5        -5      29       0      29       0       0      24      25       0      25       0       0       0       0       0
+        -6        -6      30       0      30       0       0      25      26       0      26       0       0       0       0       0
+ 
+     601-1       6-1      31       0      31       0       0      26      27       0      27       0       0       0       0       0
+        -2        -2      32       0      32       0       0       0       0       0       0       5       0       5       0       5
+        -3        -3      33       0      33       0       0      27      28       0      28       0       0       0       0       0
+        -4        -4      34       0      34       0       0      28      29       0      29       0       0       0       0       0
+        -5        -5      35       0      35       0       0      29      30       0      30       0       0       0       0       0
+        -6        -6      36       0      36       0       0      30      31       0      31       0       0       0       0       0
+ 
+     701-1       7-1      37       0      37       0       0      31      32       0      32       0       0       0       0       0
+        -2        -2      38       0      38       0       0      32      33       0      33       0       0       0       0       0
+        -3        -3      39       0      39       0       0       0       0       0       0       6       0       6       0       6
+        -4        -4      40       0      40       0       0      33      34       0      34       0       0       0       0       0
+        -5        -5      41       0      41       0       0      34      35       0      35       0       0       0       0       0
+        -6        -6      42       0      42       0       0      35      36       0      36       0       0       0       0       0
+ 
+                     ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
+TOTAL NUMBER OF DOF:      42       0      42       0       1      35      36       0      36       6       0       6       0       6
+
+                           G       M       N      SA      SB      SG      SZ      SE       S       F       O       A       R       L
+
+
+
+
+
+       O U T P U T   F R O M   T H E   G R I D   P O I N T   W E I G H T   G E N E R A T O R   F O R   O V E R A L L   M O D E L
+                                                (reference point is grid point      101)
+
+                                                      Total mass =  3.600000E+00
+
+                                                             X             Y             Z
+                                       C.G. location :  0.000000E+00  3.000000E+01  0.000000E+00
+                                        (relative to reference point in basic coordinate system)
+
+
+                             6x6 Rigid body mass matrix - about reference point in basic coordinate system
+                      ***                                                                                     ***
+                      *  3.600000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00 -1.080000E+02  *
+                      *  0.000000E+00  3.600000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  3.600000E+00  *  1.080000E+02  0.000000E+00  0.000000E+00  *
+                      *  ************  ************  ************  *  ************  ************  ************  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  4.380000E+03  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                      *  0.000000E+00  0.000000E+00  0.000000E+00  *  0.000000E+00  0.000000E+00  4.380000E+03  *
+                      ***                                                                                     ***
+ 
+ 
+                                    M.O.I. matrix - about reference point in basic coordinate system
+                                             ***                                        ***
+                                             *  4.380000E+03  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  4.380000E+03  *
+                                             ***                                        ***
+ 
+ 
+                                  M.O.I. matrix - about above c.g. location in basic coordinate system
+                                             ***                                        ***
+                                             *  1.140000E+03  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  1.140000E+03  *
+                                             ***                                        ***
+ 
+ 
+                                     M.O.I. matrix - about above c.g. location in principal directions
+                                             ***                                        ***
+                                             *  0.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  1.140000E+03  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  1.140000E+03  *
+                                             ***                                        ***
+ 
+ 
+                                     Transformation from basic coordinates to principal directions
+                                             ***                                        ***
+                                             *  0.000000E+00  1.000000E+00  0.000000E+00  *
+                                             *  1.000000E+00  0.000000E+00  0.000000E+00  *
+                                             *  0.000000E+00  0.000000E+00  1.000000E+00  *
+                                             ***                                        ***
+ 
+ 
+
+ >> LINK  0 END
+
+
+ >> LINK  1 BEGIN
+
+               DEALLOCATED  1.38E-02 MB MEMORY FROM ARRAY STF3
+ 
+               DEALLOCATED  1.68E-04 MB MEMORY FROM ARRAY STFKEY
+               DEALLOCATED  1.38E-02 MB MEMORY FROM ARRAY STF3
+
+ >> LINK  1 END
+
+
+ >> LINK  2 BEGIN
+
+ 
+ 
+ 
+ *INFORMATION: AUTOSPC Summary, Overall: after identification of all AUTOSPC's                                                               
+
+                                     AUTOSPC_RAT = 1.000000E-06
+
+                       Number of DOF's identified for AUTOSPC in component  1         =            0
+                       Number of DOF's identified for AUTOSPC in component  2         =            0
+                       Number of DOF's identified for AUTOSPC in component  3         =            0
+                       Number of DOF's identified for AUTOSPC in component  4         =            0
+                       Number of DOF's identified for AUTOSPC in component  5         =            0
+                       Number of DOF's identified for AUTOSPC in component  6         =            0
+                                                                                        ------------
+                       Total number of DOF's identified overall                       =            0
+
+
+ >> LINK  2 END
+
+
+ >> LINK  3 BEGIN
+
+ *INFORMATION: MAXIMUM DIAGONAL TERM IN MATRIX         KLL                            =  1.200000E+06 Occurs in row/col no.        1
+ *INFORMATION: MINIMUM DIAGONAL TERM IN MATRIX         KLL                            =  6.000000E+05 Occurs in row/col no.        6
+ *INFORMATION: RATIO OF MAX TO MIN DIAGONALS IN MATRIX         KLL                    =  2.000000E+00
+
+ *INFORMATION: THE MAXIMUM ABSOLUTE VALUE OF THE RATIO OF MATRIX DIAGONAL TO FACTOR DIAG FOR MATRIX KLL =   1.095445E+03
+               THIS IS FOR ROW AND COL IN THE MATRIX FOR GRID POINT      201 COMP   2. THE CALLING SUBR WAS: LINK3                          
+
+ 
+ *INFORMATION: FOR INTERNAL SUBCASE NUMBER        1 EPSILON ERROR ESTIMATE            =  1.421085E-15 Based on U'*(K*U - P)/(U'*P)
+
+ *INFORMATION: FOR INTERNAL SUBCASE NUMBER        2 EPSILON ERROR ESTIMATE            =  1.104361E-15 Based on U'*(K*U - P)/(U'*P)
+
+ 
+
+ >> LINK  3 END
+
+
+ >> LINK  5 BEGIN
+
+
+ >> LINK  5 END
+
+
+ >> LINK  9 BEGIN
+
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+                                                       D I S P L A C E M E N T S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.0           0.0           0.0           0.0           0.0           0.0         
+            201        0  0.0           2.000000E-04  0.0           0.0           0.0           0.0         
+            301        0  0.0           4.000000E-04  0.0           0.0           0.0           0.0         
+            401        0  0.0           6.000000E-04  0.0           0.0           0.0           0.0         
+            501        0  0.0           8.000000E-04  0.0           0.0           0.0           0.0         
+            601        0  0.0           1.000000E-03  0.0           0.0           0.0           0.0         
+            701       13  0.0           0.0           1.200000E-03  0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           1.000000E-03  1.200000E-03  0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    0.0           1.000000E-03  1.200000E-03  0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+                                                     A P P L I E D    F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            701       13  0.0           0.0           1.200000E+02  0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT      101 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         1  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      201 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         1  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         2  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      301 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         2  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         3  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  4.263256E-14  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      401 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         3  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         4  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -2.842171E-14  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      501 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         4  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         5  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -1.136868E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      601 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         5  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         6  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      701 IN GLOBAL COORD SYSTEM       13
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         6  0.000000E+00  0.000000E+00 -1.200000E+02  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -1.136868E-13  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   R O D      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+              1      101  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     201  0.0           1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+              2      201  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     301  0.0           1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+              3      301  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     401  0.0           1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+              4      401  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     501  0.0           1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+              5      501  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     601  0.0           1.200000E+02  0.0           0.0           0.0           0.0         
+ 
+              6      601  0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+                     701  0.0           0.0           1.200000E+02  0.0           0.0           0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           1.200000E+02  1.200000E+02  0.0           0.0           0.0         
+ MIN (for output set):    0.0          -1.200000E+02  0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    0.0           1.200000E+02  1.200000E+02  0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+                                  E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                      F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial        Torque      Element     Axial        Torque      Element     Axial        Torque
+     ID       Force                       ID       Force                       ID       Force
+        1  1.200000E+02  0.000000E+00       2  1.200000E+02  0.000000E+00       3  1.200000E+02  0.000000E+00
+        4  1.200000E+02  0.000000E+00       5  1.200000E+02  0.000000E+00       6  1.200000E+02  0.000000E+00
+          ------------- -------------
+ MAX* :    1.200000E+02  0.000000E+00
+ MIN* :    1.200000E+02  0.000000E+00
+
+ ABS* :    1.200000E+02  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR SUBCASE       35
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 120 LB LOAD ON GRID 701                                                                                                                                                                                                                                         
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial       Safety     Torsional     Safety    Element    Axial       Safety     Torsional     Safety
+     ID       Stress      Margin       Stress      Margin       ID      Stress      Margin       Stress      Margin
+        1  2.000000E+02  4.90E+01   0.000000E+00                  2  2.000000E+02  4.90E+01   0.000000E+00             
+        3  2.000000E+02  4.90E+01   0.000000E+00                  4  2.000000E+02  4.90E+01   0.000000E+00             
+        5  2.000000E+02  4.90E+01   0.000000E+00                  6  2.000000E+02  4.90E+01   0.000000E+00             
+          ------------- ---------  ------------- ---------
+ MAX* :    2.000000E+02  4.90E+01   0.000000E+00  1.00E+10
+ MIN* :    2.000000E+02  4.90E+01   0.000000E+00  1.00E+10
+
+ ABS* :    2.000000E+02  4.90E+01   0.000000E+00  1.00E+10
+ *for output set
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+                                                       D I S P L A C E M E N T S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.0           0.0           0.0           0.0           0.0           0.0         
+            201        0  0.0           9.833333E-04  0.0           0.0           0.0           0.0         
+            301        0  0.0           1.566667E-03  0.0           0.0           0.0           0.0         
+            401        0  0.0           1.900000E-03  0.0           0.0           0.0           0.0         
+            501        0  0.0           1.900000E-03  0.0           0.0           0.0           0.0         
+            601        0  0.0           1.900000E-03  0.0           0.0           0.0           0.0         
+            701       13  0.0           0.0           1.900000E-03  0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           1.900000E-03  1.900000E-03  0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    0.0           1.900000E-03  1.900000E-03  0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+                                                     A P P L I E D    F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            201        0  0.0           2.400000E+02  0.0           0.0           0.0           0.0         
+            301        0  0.0           1.500000E+02  0.0           0.0           0.0           0.0         
+            401        0  0.0           2.000000E+02  0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           2.400000E+02  0.0           0.0           0.0           0.0         
+ MIN (for output set):    0.0           0.0           0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    0.0           2.400000E+02  0.0           0.0           0.0           0.0         
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ APPLIED FORCE TOTALS: not printed since all grids do not have the same global coordinate system
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+                                                          S P C   F O R C E S
+                                              (in global coordinate system at each grid)
+           GRID     COORD      T1            T2            T3            R1            R2            R3
+                     SYS
+            101        0  0.0          -5.900000E+02  0.0           0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+
+
+                                           G R I D   P O I N T   F O R C E   B A L A N C E
+                                             (in global coordinate system at each grid)
+
+                                FORCE BALANCE FOR GRID POINT      101 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00 -5.900000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         1  0.000000E+00  5.900000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      201 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  2.400000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         1  0.000000E+00 -5.900000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         2  0.000000E+00  3.500000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      301 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  1.500000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         2  0.000000E+00 -3.500000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         3  0.000000E+00  2.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      401 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  2.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         3  0.000000E+00 -2.000000E+02  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         4  0.000000E+00  4.547474E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      501 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         4  0.000000E+00 -4.547474E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         5  0.000000E+00  2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00 -2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      601 IN GLOBAL COORD SYSTEM        0
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         5  0.000000E+00 -2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         6  0.000000E+00  2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+                                FORCE BALANCE FOR GRID POINT      701 IN GLOBAL COORD SYSTEM       13
+
+                               T1            T2            T3            R1            R2            R3
+
+ APPLIED FORCE            0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ SPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ MPC FORCE                0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+ ROD      ELEM         6  0.000000E+00  0.000000E+00 -2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ TOTALS                :  0.000000E+00  0.000000E+00 -2.273737E-13  0.000000E+00  0.000000E+00  0.000000E+00
+ (should all be 0)
+
+
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+                                  E L E M   N O D A L   F O R C E S   I N   G L O B A L   C O O R D S
+                                               F O R   E L E M E N T   T Y P E   R O D      
+      Element     Grid         T1            T2            T3            R1            R2            R3
+         ID      Point
+              2      201  0.0          -3.500000E+02  0.0           0.0           0.0           0.0         
+                     301  0.0           3.500000E+02  0.0           0.0           0.0           0.0         
+ 
+              5      501  0.0          -2.273737E-13  0.0           0.0           0.0           0.0         
+                     601  0.0           2.273737E-13  0.0           0.0           0.0           0.0         
+ 
+                         ------------- ------------- ------------- ------------- ------------- -------------
+ MAX (for output set):    0.0           3.500000E+02  0.0           0.0           0.0           0.0         
+ MIN (for output set):    0.0          -3.500000E+02  0.0           0.0           0.0           0.0         
+
+ ABS (for output set):    0.0           3.500000E+02  0.0           0.0           0.0           0.0         
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+                                  E L E M E N T   E N G I N E E R I N G   F O R C E S
+                                      F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial        Torque      Element     Axial        Torque      Element     Axial        Torque
+     ID       Force                       ID       Force                       ID       Force
+        1  5.900000E+02  0.000000E+00       2  3.500000E+02  0.000000E+00       3  2.000000E+02  0.000000E+00
+        4  4.547474E-13  0.000000E+00       5  2.273737E-13  0.000000E+00       6  2.273737E-13  0.000000E+00
+          ------------- -------------
+ MAX* :    5.900000E+02  0.000000E+00
+ MIN* :    2.273737E-13  0.000000E+00
+
+ ABS* :    5.900000E+02  0.000000E+00
+ *for output set
+ 
+ 
+ OUTPUT FOR SUBCASE        8
+ ROD WITH AXIAL LOADS IN 2 SUBCASES                                                                                                                                                                                                                              
+ 240 LB ON GRID 201 + 150 LB ON GRID 301 + 200 LB ON GRID 401                                                                                                                                                                                                    
+ 
+             E L E M E N T   S T R E S S E S   I N   L O C A L   E L E M E N T   C O O R D I N A T E   S Y S T E M
+                                          F O R   E L E M E N T   T Y P E   R O D      
+  Element     Axial       Safety     Torsional     Safety    Element    Axial       Safety     Torsional     Safety
+     ID       Stress      Margin       Stress      Margin       ID      Stress      Margin       Stress      Margin
+        1  9.833333E+02  9.17E+00   0.000000E+00                  2  5.833333E+02  1.61E+01   0.000000E+00             
+        3  3.333333E+02  2.90E+01   0.000000E+00                  4  6.821210E-13             0.000000E+00             
+        5  4.547474E-13             0.000000E+00                  6  2.273737E-13             0.000000E+00             
+          ------------- ---------  ------------- ---------
+ MAX* :    9.833333E+02  1.00E+10   0.000000E+00  1.00E+10
+ MIN* :    2.273737E-13  9.17E+00   0.000000E+00  1.00E+10
+
+ ABS* :    9.833333E+02  1.00E+10   0.000000E+00  1.00E+10
+ *for output set
+
+ >> LINK  9 END
+ 
+    Total CPU time =  4.69E-02 seconds
+
+ >> MYSTRAN END    :  6/22/2020 at 12:51:29.551
