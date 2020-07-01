@@ -1,0 +1,1 @@
+If compiling for Linux, rename the 3 files in this directory and delete the 3 files in the "1_Windows" directory.
