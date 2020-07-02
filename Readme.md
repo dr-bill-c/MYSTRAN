@@ -11,4 +11,4 @@ It is an independent program written in modern Fortran 95.</p>
 <p>MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a></p>
 
 <p>Forums: <a href ="http://www.mystran.com/forums">http://www.mystran.com/forums</a></p>
-<p>Documentation, latest Windows executable, Test Runs, and other files are located on the MYSTRAN forum.</p>
+<p>Documentation, latest Windows executable, Test Runs, and other files are located on the MYSTRAN forum</p>
