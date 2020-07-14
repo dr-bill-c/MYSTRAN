@@ -37,6 +37,7 @@
       USE SPARSE_MATRICES, ONLY       :  I_KLL , J_KLL , KLL ,I_PL , J_PL , PL
       USE SUBR_BEGEND_LEVELS, ONLY    :  RESTART_DATA_FOR_L3_BEGEND
 
+      USE RESTART_DATA_FOR_L3_USE_IFs
 
       IMPLICIT NONE
  
@@ -93,7 +94,7 @@
       ENDIF
 
       IF (IERR > 0) THEN
-         CALL OUTA_HERE
+         CALL OUTA_HERE ( 'Y' )
       ENDIF
 
 ! **********************************************************************************************************************************
