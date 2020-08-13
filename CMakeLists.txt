@@ -61,3 +61,18 @@ file(GLOB_RECURSE UTIL_FILES "${CMAKE_SOURCE_DIR}/UTIL/*.f*")
 file(GLOB_RECURSE MAIN_FILES "${CMAKE_SOURCE_DIR}/MAIN/*.f*")
 add_executable(mystran ${MAIN_FILES} ${MODULES_ALL_FILES} ${UTIL_FILES})
 target_link_libraries(mystran SPECIFICS ${modules_names})
+set_target_properties(
+  mystran PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
+)
+
+# issue a couple messages for unix users
+if (UNIX)
+  ProcessorCount(NPROC)
+  message(STATUS "You can now compile MYSTRAN by running \"make\".")
+  if (NOT NPROC EQUAL 0)
+    message(STATUS "Compile faster by running \"make -j ${NPROC}\".")
+  endif()
+endif()
+if (WIN32)
+  message(STATUS "FIXME WIN32 STATUS")
+endif()
