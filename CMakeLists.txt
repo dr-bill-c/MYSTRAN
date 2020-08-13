@@ -14,7 +14,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_Fortran_MODULE_DIRECTORY "${PROJECT_BINARY_DIR}/mod")
 set(CMAKE_FLAGS "-c -info -chk -pca -stchk -trace -ap -g -nco -nfix -in -O2")
 include_directories("${CMAKE_SOURCE_DIR}/INCLUDE")
-set(CMAKE_VERBOSE_MAKEFILE true)
+# uncomment this to debug
+# set(CMAKE_VERBOSE_MAKEFILE true)
 
 # collect modules and interfaces into a module called MODULES
 # the overuse of the word MODULE is brain-twisting, but bear with me
