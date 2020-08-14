@@ -16,9 +16,11 @@ Forums: [http://www.mystran.com/forums]()
 
 Documentation, latest Windows executable, Test Runs, and other files are located on the MYSTRAN forum
 
+---
+
 ## Setting up a build environment
 
-In order to build MYSTRAN, you need a minimal x86_64 GNU environment, CMake, and gfortran.
+In order to build MYSTRAN, you need a minimal x86_64 GNU environment, CMake, and `gfortran`.
 If you're not very experienced, just follow the steps and you'll be fine. It only needs to be done once.
 
 #### Steps for Windows:
@@ -30,6 +32,8 @@ If not, just download the ZIP from the GitHub page and unpack it somewhere.
 
 #### Steps for Linux:
 1) Using your distro's package manager, install CMake, `gfortran` and, optionally, `git`.
+
+---
 
 ## Compiling MYSTRAN
 
@@ -50,6 +54,8 @@ If you don't want to do that, add this command to the end of your `~/.bashrc` fi
 4) Run `mingw32-make.exe`. If you have an N-core processor, you can run `mingw32-make.exe -j N`.
 For instance, in a quad-core processor, `mingw32-make.exe -j 4` is much, _much_ faster than just `make`.
 4) Wait. When `make` finishes, there should be a "Binaries" folder, and a `mystran.exe` binary inside.
+
+---
 
 ## Notes about binary portability and dynamic/static linking
 
