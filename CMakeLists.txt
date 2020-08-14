@@ -17,6 +17,11 @@ include_directories("${CMAKE_SOURCE_DIR}/INCLUDE")
 # uncomment this to debug
 # set(CMAKE_VERBOSE_MAKEFILE true)
 
+# set some extra vars for MSYS builds to make the binary portable
+if (WIN32)
+  set(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
+
 # collect modules and interfaces into a module called MODULES
 # the overuse of the word MODULE is brain-twisting, but bear with me
 set(Modules_DIR "${CMAKE_SOURCE_DIR}/Modules")
