@@ -8,7 +8,6 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 
 Many structural analyses modeled for execution in NASTRAN will execute in MYSTRAN with little, or no, modification. MYSTRAN, however, is not NASTRAN.
 
----
 It is an independent program written in modern Fortran 95.
 
 MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a>
