@@ -72,6 +72,7 @@ set_target_properties(
 
 # issue a couple messages for unix users
 if (UNIX)
+  include(ProcessorCount)
   ProcessorCount(NPROC)
   message(STATUS "You can now compile MYSTRAN by running \"make\".")
   if (NOT NPROC EQUAL 0)
