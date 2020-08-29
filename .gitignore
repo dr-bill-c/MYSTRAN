@@ -1,1 +1,18 @@
+# previously here:
 *.pdf
+
+# CMake output directories:
+Binaries/*
+
+# what follows is github's recommendation for CMake projects
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps

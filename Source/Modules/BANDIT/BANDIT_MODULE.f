@@ -1,4 +1,4 @@
-! ################################################################################################################################## 
+! ##################################################################################################################################
 
       MODULE BANDIT_MODULE
 
@@ -17,15 +17,15 @@
 ! (1) The correspondence of array IPARAM and the $ directive entries described in Gordon's documentation is as follows:
 
 !          IPARAM( 1) corresponds to $LOOP       (not documented: $LOOP is used for program testing - loop on several input decks)
-!          IPARAM( 2) corresponds to $TABLE       
-!          IPARAM( 3) corresponds to $METHOD     
-!          IPARAM( 4) corresponds to $MPC        
-!          IPARAM( 5) corresponds to $SEQUENCE   
-!          IPARAM( 6) corresponds to $CRITERION  
-!          IPARAM( 7) corresponds to $SPRING     
+!          IPARAM( 2) corresponds to $TABLE
+!          IPARAM( 3) corresponds to $METHOD
+!          IPARAM( 4) corresponds to $MPC
+!          IPARAM( 5) corresponds to $SEQUENCE
+!          IPARAM( 6) corresponds to $CRITERION
+!          IPARAM( 7) corresponds to $SPRING
 !          IPARAM( 8) corresponds to $NASTRAN    (not documented - $NASTRAN YES card causes message to be printed to output file )
-!          IPARAM( 9) corresponds to $ELEMENTS   
-!          IPARAM(10) corresponds to $PRINT      
+!          IPARAM( 9) corresponds to $ELEMENTS
+!          IPARAM(10) corresponds to $PRINT
 !          IPARAM(11) corresponds to $FRONTAL
 
 ! (2) The statement IPARAM(I) = J has the following meaning for various J:
@@ -65,7 +65,7 @@
 
 !    Main:
 !    -----
-!    ( 1) Change Program BANDIT to subroutine bandit and add statement: "use iount1, only:  in1" 
+!    ( 1) Change Program BANDIT to subroutine bandit and add statement: "use iount1, only:  in1"
 !    ( 2) Add arg IER to subr BANDIT so that MYSTRAN can check for error and give message.
 !    ( 3) Do not open IOU5, instead set iou5 = in1 (MYSTRAN input file)
 !    ( 4) Change the statement: 135 IOU5=5, to 135 iou5 = in1 to reflect that IOU5 is the MYSTRAN input file.
@@ -91,14 +91,14 @@
 !    Subr FINISH:
 !    ------------
 !    ( 1) Add: use iount1, only: seq
-!    ( 2) Add several lines regarding MYSTRAN file SEQ (used for writing SEQGP card images as well on Bandit file unit IOU6) 
+!    ( 2) Add several lines regarding MYSTRAN file SEQ (used for writing SEQGP card images as well on Bandit file unit IOU6)
 
 !    Subr SEQGP:
 !    -----------
 !    ( 1) Add: use iount1, only: seq
 !    ( 2) Add WRITE(IOU7,*) just before ENDFILE IOU7 to get 1 blank line written to IOU7 (in case there are no SEQGP card images
 !         written to IOU7)
-!    ( 3) Add several lines regarding MYSTRAN file SEQ so that the SEQGP card images are written to that file as well as Bandit IOU6 
+!    ( 3) Add several lines regarding MYSTRAN file SEQ so that the SEQGP card images are written to that file as well as Bandit IOU6
 
 
 ! 11/30/03 Mods:
@@ -107,7 +107,7 @@
 !     Subr TIMER:
 !     -----------
 !     ( 1) Comment out 2 lines in subroutine TIMER (variables tarray, iwall, time not used and Layhey complains about type specifier)
-!     ( 2) Change "call second(t)" to "call cpu_time(t)". Calling second was causing the -NaN problem when BANDIT was imbedded in 
+!     ( 2) Change "call second(t)" to "call cpu_time(t)". Calling second was causing the -NaN problem when BANDIT was imbedded in
 !          MYSTRAN since there is no intrinsic function in Layhey called  second. Not sure what is being used since there is no
 !          intrinsic  function in Layhey documentation called second. There is a subr called second in module ARPACK_UTIL that I
 !          modified to call cpu_time and, if we put the statement: use arpack_util above then we get no problem with -NaN. Module
@@ -136,7 +136,7 @@
 
 !     Subr ELTYPE:
 !     ------------
-!     ( 1) Add integer array NCON_array(1) to be equiv to scalar NCON and call subr READIT with NCON_array(1) instead of NCON 
+!     ( 1) Add integer array NCON_array(1) to be equiv to scalar NCON and call subr READIT with NCON_array(1) instead of NCON
 
 !     Subr FINISH:
 !     ------------
@@ -148,11 +148,11 @@
 
 !     Subr INSERT:
 !     ------------
-!     ( 1) Add integer array NCARD_array(1) to be equiv to scalar NCARD and call subr READIT with NCARD_array(1) instead of NCARD 
+!     ( 1) Add integer array NCARD_array(1) to be equiv to scalar NCARD and call subr READIT with NCARD_array(1) instead of NCARD
 
 !     Subr REED:
 !     ----------
-!     ( 1) Add integer array EID_array(1) to be equiv to scalar EID and call subr READIT with EID_array(1) instead of EID 
+!     ( 1) Add integer array EID_array(1) to be equiv to scalar EID and call subr READIT with EID_array(1) instead of EID
 
 !     Subr RIGID:
 !     -----------
@@ -161,7 +161,7 @@
 
 !     Subr TAXI:
 !     ----------
-!     ( 1) Add integer array NAXIC_array(1) to be equiv to scalar NAXIC and call subr READIT with NAXIC_array(1) instead of NAXIC 
+!     ( 1) Add integer array NAXIC_array(1) to be equiv to scalar NAXIC and call subr READIT with NAXIC_array(1) instead of NAXIC
 
 ! 01/19/04 Mods:
 ! **************
@@ -203,7 +203,7 @@
 !          NGRID = MAX(MYSTRAN_NGRID,KORE/30) used KORE/30 = 10,000,000/30 (since KORE/30 > MYSTRAN_NGRID) was using much of the
 !          memory for NGRID and then there was not enough for the Nodal degree limit. The Nodal degree limit can be set in Bandit
 !          with the $GRID N directive. This sets NGRID to N, so when I input $GRID 7298 (actual number of grids in chassis_grav)
-!          Bandit ran successfully. 
+!          Bandit ran successfully.
 
 ! 08/01/06 Mods:
 ! **************
@@ -337,20 +337,20 @@ C
      &         IFL    ,IIG    ,IGNORE ,IGDEG  ,IH     ,INP    ,IOP    ,
      &         IPARAM ,IPASS  ,ISTA   ,ISTART ,II1    ,II3    ,IWALL1 ,
      &         IWALL2
-       
+
       INTEGER  IOU5   ,IOU6   ,IOU7   ,IOU8   ,IOU9   ,IOU10  ,IOU11  ,
      &         IOU12  ,IOU13  ,IOU14  ,IOU15  ,IOU16  ,IOU17  ,IOU18  ,
      &         IOU19  ,IOU20
-      
+
       INTEGER  K1     ,K2     ,K3     ,K4     ,K5     ,K6     ,K7     ,
      &         K8     ,K9     ,KDIM4  ,KDIM   ,KMOD   ,KNEW   ,KORE   ,
      &         KORIG
-      
+
       INTEGER  LINES
-      
+
       INTEGER  MA     ,MB     ,MAXDEG ,MAXGRD ,MINDEG ,MDIM   ,ME     ,
      &         MM
-      
+
       INTEGER  NAXIC  ,NBITIN ,NBYTE  ,NCM    ,NEDGE  ,NEL    ,NELEM  ,
      &         NEQ    ,NEQR   ,NGRID  ,NLINK  ,NN     ,NW     ,NTYPE  ,
      &         NUM    ,NZERO
@@ -402,7 +402,7 @@ C
 ! B////////////////////////////////////////////////////////////////////B
       IOU5 = IN1              ! IOU5 IS MYSTRAN INPUT FILE. ALREADY OPEN
 ! E////////////////////////////////////////////////////////////////////E
-      CALL BANDIT_FILES ( IOU6 , IOU7 , IOU8 , IOU9 , IOU11, IOU12, 
+      CALL BANDIT_FILES ( IOU6 , IOU7 , IOU8 , IOU9 , IOU11, IOU12,
      &                    IOU13, IOU14, IOU15, IOU16, IOU17 )
 c
       OPEN(IOU6,FILE='bandit.out',FORM='FORMATTED',STATUS='replace')
@@ -611,7 +611,7 @@ C
 
       INTEGER I      ,IER    ,IS     ,J      ,KFAC   ,KFM   ,
      &        KMOD   ,L      ,MAXDEG ,MAXGRD ,MINI   ,NN
-              
+
       REAL     DUMS
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /S/ NN,DUMS(8)
@@ -661,7 +661,7 @@ C
 ! Add the following so we can use IMPLICIT NONE
 
       INTEGER  I      ,IER    ,IPARAM ,KT     ,L      ,MA     ,MB     ,
-     &         NUM 
+     &         NUM
 
       INTEGER  IOU5   ,IOU6   ,IOU7   ,IOU8   ,IOU9   ,IOU10  ,IOU11  ,
      &         IOU12  ,IOU13  ,IOU14  ,IOU15  ,IOU16  ,IOU17  ,IOU18  ,
@@ -674,8 +674,8 @@ C
      -                IOU14,IOU15,IOU16,IOU17,IOU18,IOU19,IOU20
       KT=0
       REWIND IOU8
-      WRITE(IOU6,10)
-   10 FORMAT(/,'Echo of Data Through BEGIN BULK Card:')
+C      WRITE(IOU6,10)
+C   10 FORMAT(/,'Echo of Data Through BEGIN BULK Card:')
 C
 C     INITIALIZE PARAMETERS.
 C
@@ -688,9 +688,9 @@ C
    30 FORMAT(80A1)
       KT=KT+1
       L=LENCAS(KA,80)
-      WRITE(IOU6,60) KT,(KA(I),I=1,L)
-60    FORMAT(I8,'- ',80A1)
-      WRITE(IOU8,30) (KA(I),I=1,L)
+C      WRITE(IOU6,60) KT,(KA(I),I=1,L)
+C60    FORMAT(I8,'- ',80A1)
+C      WRITE(IOU8,30) (KA(I),I=1,L)
 C
 C     IF COLUMN 1 IS $, PROCESS $-CARD.
 C
@@ -730,8 +730,8 @@ C
 
       INTEGER  IBYTE  ,IFL    ,KDIM   ,KMOD   ,KORE   ,LL     ,MAXDEG ,
      &         MAXGRD ,NBITIN ,NBYTE  ,NW
-     
-      REAL     DUM 
+
+      REAL     DUM
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /BITS/ NBITIN,KORE,IFL,DUM(2),NW,NBYTE,IBYTE,KDIM
       COMMON /A/ MAXGRD,MAXDEG,KMOD
@@ -1082,7 +1082,7 @@ C
      &         MAXGRD ,MM     ,NN     ,NBITIN
 
       REAL     DUMBB  ,DUMS
- 
+
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /S/ NN,MM,DUMS(7)
       COMMON /A/ MAXGRD,MAXDEG,KMOD
@@ -1110,7 +1110,7 @@ C
 ! B////////////////////////////////////////////////////////////////////B
       INTEGER  I      ,IBW1   ,IDEG   ,IDIF   ,IDPTH  ,IOLD   ,IPF1   ,
      &         IRW    ,ITST   ,J      ,KMOD
-     
+
       INTEGER  MAXDEG ,MAXGRD ,MM     ,N      ,NBITIN ,NDEG   ,NDSTK  ,
      &         NN     ,NR
 
@@ -1781,8 +1781,8 @@ C
 C KUMP = 4: EOF encountered
 ! --------
 C
-40    WRITE(IOU6,42)
-42    FORMAT(/,'Fatal Error.  End-of-file encountered.')
+40    GO TO 20!WRITE(IOU6,42)
+C42    FORMAT(/,'Fatal Error.  End-of-file encountered.')
       GO TO 20
 C
 ! *********************************************************************
@@ -1850,8 +1850,8 @@ C
 ! KUMP = 2: Quit for all other reasons than above
 ! --------
 
-   20 WRITE(IOU8,'(A)') 'Fatal Error.  bandit.f08 deleted.'
-      if(iparam(1).eq.3) close(iou8,status='delete')
+C   20 WRITE(IOU8,'(A)') 'Fatal Error.  bandit.f08 deleted.'
+   20 if(iparam(1).eq.3) close(iou8,status='delete')
 C     WRITE(IOU6,'(A)') '0End of BANDIT Job.'
 C     STOP 13
       IER=KUMP
@@ -1948,7 +1948,7 @@ C
      &         LVLBOT ,LVLN   ,LVLS1  ,LVLS2  ,LVLWTH ,MAXLW  ,mtw1   ,
      &         MTW2   ,N      ,NDEG   ,NDSTK  ,NDXL   ,ndxn
 
-      REAL    DUMG   
+      REAL    DUMG
 
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /IOUNIT/ IOU5,IOU6,IOU7,IOU8,IOU9,IOU10,IOU11,IOU12,IOU13,
@@ -2036,7 +2036,7 @@ C
       INTEGER  I      ,IEL    ,IER    ,J      ,J1     ,K      ,KFLAG  ,
      &         KMIN   ,L      ,LOC    ,MEM    ,mflag  ,NBW    ,NCM    ,
      &         NEED   ,NEL    ,NEL1   ,NEQ    ,NEQR   ,NLINK  ,NN     ,
-     &         NP     ,NPT    ,NZERO  ,OBW    ,OP     
+     &         NP     ,NPT    ,NZERO  ,OBW    ,OP
 
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /D/ OBW,NBW,OP,NP,NCM,NZERO,NEL,NEQ,NEQR,NLINK
@@ -2244,7 +2244,7 @@ C
      &         MAXB   ,MAXB0  ,MAXLW  ,MAXW0  ,MAXW1  ,MAXWA  ,MAXWB  ,
      &         MM     ,
      &         N      ,NBW    ,NCM    ,NDEG   ,NDSTK  ,NFLG   ,NN     ,
-     &         NP     ,NR     ,NUM    ,NZERO  
+     &         NP     ,NR     ,NUM    ,NZERO
 
       REAL     AVERW0 ,AVERWB ,BRMS0  ,BRMS1  ,BRMSA  ,BRMSB  ,
      &         CRIT1  ,CRIT2  ,DUMD   ,DUMS   ,RMS0   ,RMS1   ,
@@ -2779,7 +2779,7 @@ C
      &         IOU19  ,IOU20
 
       INTEGER  I      ,ITYPE  ,MA     ,MB     ,NUM
-      
+
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /ALPHA/ MA(26),NUM(10),MB(4)
       COMMON /IOUNIT/ IOU5,IOU6,IOU7,IOU8,IOU9,IOU10,IOU11,IOU12,IOU13,
@@ -3027,7 +3027,7 @@ C
      &         IOU12  ,IOU13  ,IOU14  ,IOU15  ,IOU16  ,IOU17  ,IOU18  ,
      &         IOU19  ,IOU20
 
-      INTEGER  I      ,IDUM   ,IER    ,II3    ,IPARAM ,ITYPE  , 
+      INTEGER  I      ,IDUM   ,IER    ,II3    ,IPARAM ,ITYPE  ,
      &         J      ,K      ,L      ,
      &         MA     ,MB     ,NIP    ,NOUT   ,NUM
 
@@ -3592,7 +3592,7 @@ C
      &         N      ,NBITIN ,NBW    ,NDEG   ,NDSTK  ,NFLG   ,
      &         NSTPT  ,NUM
 
-      REAL     DUMBB 
+      REAL     DUMBB
 
 ! E////////////////////////////////////////////////////////////////////E
 C  SET UP LVLST AND LSTPT FROM LVLS2
@@ -3945,7 +3945,7 @@ C
      &         NCARD  ,NCON   ,NEL    ,NELEM  ,NEQ    ,NEQR   ,NLINK  ,
      &         NORIG  ,npt    ,NTYPE  ,NUM
 
-      REAL     DUMD   
+      REAL     DUMD
 
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /ALPHA/ MA(26),NUM(10),MB(4)
@@ -4294,7 +4294,7 @@ C
 
       INTEGER  I      ,IGOTO  ,IPARAM ,JUMP   ,L      ,NN
 
-      REAL     DUMS   
+      REAL     DUMS
 
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /S/ NN,DUMS(8)
@@ -5443,7 +5443,7 @@ C
       INTEGER  I      ,IG     ,II1    ,IP     ,J      ,K      ,KMOD   ,
      &         MAXDEG ,MAXGRD ,MM     ,NBITIN ,NN     ,NORIG
 
-      REAL     DUM    ,DUMBB 
+      REAL     DUM    ,DUMBB
 
 ! E////////////////////////////////////////////////////////////////////E
       COMMON /A/ MAXGRD,MAXDEG,KMOD
@@ -5670,7 +5670,7 @@ C
      &         MAXDEG ,MAXGRD ,MAXLW  ,
      &         NBITIN ,NDEG   ,NDROW  ,NDSTK
 
-      REAL     DUMBB 
+      REAL     DUMBB
 
 ! E////////////////////////////////////////////////////////////////////E
       MAXLW=0
