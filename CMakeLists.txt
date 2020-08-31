@@ -39,10 +39,9 @@ set(
 add_library(MODULES ${MODULES_ALL_FILES})
 
 # collect modules
-list(APPEND modules_names ARPACK Specifics BANDIT LK1 LK2 LK3 LK4 LK5 LK6 LK9 EMG)
+list(APPEND modules_names ARPACK BANDIT LK1 LK2 LK3 LK4 LK5 LK6 LK9 EMG)
 foreach (modname IN LISTS modules_names)
   file(GLOB_RECURSE TMP_MOD_FILES "${CMAKE_SOURCE_DIR}/${modname}/*.f*")
-  file(GLOB_RECURSE TMP_MOD_FILES_PP "${CMAKE_SOURCE_DIR}/${modname}/*.F*")
   add_library(${modname} ${TMP_MOD_FILES} ${TMP_MOD_FILES_PP})
   target_link_libraries(${modname} MODULES)
 endforeach()
@@ -50,7 +49,7 @@ endforeach()
 # prepare the main executable, linked against the specifics and the m
 # it appears utils used to be a module, but that is no longer the case?
 file(GLOB_RECURSE UTIL_FILES "${CMAKE_SOURCE_DIR}/UTIL/*.f*")
-file(GLOB_RECURSE MAIN_FILES "${CMAKE_SOURCE_DIR}/MAIN/*.f*")
+file(GLOB_RECURSE MAIN_FILES "${CMAKE_SOURCE_DIR}/MAIN/*.[fF]*")
 add_executable(mystran ${MAIN_FILES} ${MODULES_ALL_FILES} ${UTIL_FILES})
 target_link_libraries(mystran ${modules_names})
 set_target_properties(
