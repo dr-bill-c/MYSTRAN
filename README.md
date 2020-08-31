@@ -14,4 +14,4 @@ MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a>
 
 Forums: [http://www.mystran.com/forums]()
 
-Documentation, latest end-user executables, Test Runs, and other files are located on the MYSTRAN forum
+Documentation, End-user Executables, Test Runs, and other files are located on the MYSTRAN forum
