@@ -38,34 +38,20 @@ set(
 )
 add_library(MODULES ${MODULES_ALL_FILES})
 
-# choose OS-specific files, put them in a "specifics" module
-set(SPECIFICS_DIR "${CMAKE_SOURCE_DIR}/Specifics")
-if (WIN32)
-  file(GLOB_RECURSE SPECIFICS_FILES "${SPECIFICS_DIR}/Windows/*.f*")
-endif()
-if (UNIX)
-  file(GLOB_RECURSE SPECIFICS_FILES "${SPECIFICS_DIR}/Linux/*.f*")
-endif()
-if (NOT WIN32 AND NOT UNIX)
-  message(FATAL_ERROR, "Environment must be Win32 or Unix-like.")
-endif()
-add_library(SPECIFICS ${SPECIFICS_FILES})
-target_link_libraries(SPECIFICS MODULES)
-
-# collect other modules
+# collect modules
 list(APPEND modules_names ARPACK BANDIT LK1 LK2 LK3 LK4 LK5 LK6 LK9 EMG)
 foreach (modname IN LISTS modules_names)
   file(GLOB_RECURSE TMP_MOD_FILES "${CMAKE_SOURCE_DIR}/${modname}/*.f*")
-  add_library(${modname} ${TMP_MOD_FILES})
+  add_library(${modname} ${TMP_MOD_FILES} ${TMP_MOD_FILES_PP})
   target_link_libraries(${modname} MODULES)
 endforeach()
 
 # prepare the main executable, linked against the specifics and the m
 # it appears utils used to be a module, but that is no longer the case?
 file(GLOB_RECURSE UTIL_FILES "${CMAKE_SOURCE_DIR}/UTIL/*.f*")
-file(GLOB_RECURSE MAIN_FILES "${CMAKE_SOURCE_DIR}/MAIN/*.f*")
+file(GLOB_RECURSE MAIN_FILES "${CMAKE_SOURCE_DIR}/MAIN/*.[fF]*")
 add_executable(mystran ${MAIN_FILES} ${MODULES_ALL_FILES} ${UTIL_FILES})
-target_link_libraries(mystran SPECIFICS ${modules_names})
+target_link_libraries(mystran ${modules_names})
 set_target_properties(
   mystran PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
 )
