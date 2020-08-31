@@ -353,11 +353,11 @@
          ENDIF
       ENDIF
       
-
-
-
-
-
+      CALL ALLOCATE_SPARSE_MAT ( 'KSFD', NDOFS, NTERM_KFSD, SUBR_NAME )
+      CALL ALLOCATE_SPARSE_MAT ( 'KSF' , NDOFS, NTERM_KFS , SUBR_NAME )
+      CALL ALLOCATE_SPARSE_MAT ( 'MSF' , NDOFS, NTERM_MFS , SUBR_NAME )
+      CALL ALLOCATE_SPARSE_MAT ( 'QSYS', NDOFS, NTERM_QSYS, SUBR_NAME )
+      CALL ALLOCATE_SPARSE_MAT ( 'PS'  , NDOFS, NTERM_PS  , SUBR_NAME )
       CALL ALLOCATE_COL_VEC ('QSYS_COL',NDOFS,SUBR_NAME)! Alloc this here since OFP2 uses it (will be zero's if NTERM_QSYS = 0)
 
       IF (READ_SPCARRAYS == 'Y') THEN
@@ -369,7 +369,6 @@
                CALL OURTIM
                MODNAM = 'ALLOCATE ARRAYS FOR, AND READ, KSFD'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-               CALL ALLOCATE_SPARSE_MAT ( 'KSFD', NDOFS, NTERM_KFSD, SUBR_NAME )
                CALL OURTIM
                MODNAM = 'READ KSFD MATRIX'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
@@ -387,7 +386,6 @@
                CALL OURTIM
                MODNAM = 'ALLOCATE ARRAYS FOR, AND READ, KSF'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-               CALL ALLOCATE_SPARSE_MAT ( 'KSF' , NDOFS, NTERM_KFS , SUBR_NAME )
                CALL OURTIM
                MODNAM = 'READ KSF MATRIX'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
@@ -405,7 +403,6 @@
                   CALL OURTIM                                 ! Allocate and read MSF
                   MODNAM = 'ALLOCATE ARRAYS FOR, AND READ, MSF'
                   WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-                  CALL ALLOCATE_SPARSE_MAT ( 'MSF' , NDOFS, NTERM_MFS , SUBR_NAME )
                   CALL OURTIM
                   MODNAM = 'READ MSF MATRIX'
                   WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
@@ -421,7 +418,6 @@
                CALL OURTIM
                MODNAM = 'ALLOCATE ARRAYS FOR, AND READ, QSYS'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-               CALL ALLOCATE_SPARSE_MAT ( 'QSYS', NDOFS, NTERM_QSYS, SUBR_NAME )
                CALL OURTIM
                MODNAM = 'READ QSYS MATRIX'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
@@ -442,7 +438,6 @@
                CALL OURTIM
                MODNAM = 'ALLOCATE SPARSE ARRAYS FOR PS LOADS'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-               CALL ALLOCATE_SPARSE_MAT ( 'PS'  , NDOFS, NTERM_PS  , SUBR_NAME )
                CALL OURTIM
                MODNAM = 'READ PS LOADS'
                WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
@@ -457,10 +452,6 @@
       
 ! Read MPC constraint matrices
 
-      
-      
-      
-      
       IF ((ANY_MPCF_OUTPUT > 0) .OR. (ANY_GPFO_OUTPUT > 0) .OR. (POST /= 0)) THEN
 
          IF (NDOFM > 0) THEN
