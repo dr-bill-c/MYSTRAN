@@ -10,8 +10,8 @@ Many structural analyses modeled for execution in NASTRAN will execute in MYSTRA
 
 It is an independent program written in modern Fortran 95.
 
-MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a>
+##MYSTRAN Homepage: <a href ="http://www.mystran.com">http://www.mystran.com</a>
 
-Forums: [http://www.mystran.com/forums]()
+##Forums: [http://www.mystran.com/forums]()
 
 Documentation, End-user Executables, Test Runs, and other files are located on the MYSTRAN forum
