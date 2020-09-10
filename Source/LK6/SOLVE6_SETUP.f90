@@ -84,6 +84,10 @@
             CALL OUTA_HERE ( 'Y' )
          ENDIF
 
+      ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+         ! Add sparse matrix code here to decompose the KLL stiffness matrix
+
       ELSE
 
          FATAL_ERR = FATAL_ERR + 1

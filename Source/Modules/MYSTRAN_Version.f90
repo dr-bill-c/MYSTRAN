@@ -1,17 +1,3 @@
-! Change log (changes following completion of Version 2.02 on 11/12/04)
-
-! 12/24/04: New module
-
-! ----------------------------------------------------------------------------------------------------------------------------------
-! Change log (changes following completion of Version 4.05 on 04/16/07)
-
-! Add MYSTRAN_COMMENT (I may use this to tell user that this is a beta version)
-
-! ----------------------------------------------------------------------------------------------------------------------------------
-! Change log (changes following completion of Version 7.01 updated on 11/09/14)
-
-! 08/30/15 Change MYSTRAN_VER_AUTH to MYSTRAN_AUTHOR
-
 ! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
@@ -49,9 +35,9 @@
       SAVE
 
       CHARACTER(256*BYTE)            :: MYSTRAN_COMMENT  = '*** Please report any problems to the author at dbcase29@gmail.com ***'
-      CHARACTER(  8*BYTE), PARAMETER :: MYSTRAN_VER_NUM  = '11.1'
-      CHARACTER(  3*BYTE), PARAMETER :: MYSTRAN_VER_MONTH= 'Aug'
-      CHARACTER(  2*BYTE), PARAMETER :: MYSTRAN_VER_DAY  = '30'
+      CHARACTER(  8*BYTE), PARAMETER :: MYSTRAN_VER_NUM  = '11.2'
+      CHARACTER(  3*BYTE), PARAMETER :: MYSTRAN_VER_MONTH= 'Sep'
+      CHARACTER(  2*BYTE), PARAMETER :: MYSTRAN_VER_DAY  = '10'
       CHARACTER(  4*BYTE), PARAMETER :: MYSTRAN_VER_YEAR = '2020'
       CHARACTER( 33*BYTE), PARAMETER :: MYSTRAN_AUTHOR   = 'MYSTRAN developed by Dr Bill Case'
 

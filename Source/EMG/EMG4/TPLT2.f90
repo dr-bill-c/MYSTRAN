@@ -48,6 +48,7 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, EID, FCONV_SHEAR_THICK, EB, ET, ELDOF,                      &
                                          ERR_SUB_NAM, FCONV, KE, INTL_MID, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE,                    &
                                          PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T, SHELL_PROP_ALP, SHRSUM, STE2, TYPE
+      USE PARAMS, ONLY                :  EPSIL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
       USE TPLT2_USE_IFs
@@ -102,6 +103,7 @@
       REAL(DOUBLE)                    :: DUM5(3,9)         ! Intermadiate result in calc SEi stress recovery matrices
       REAL(DOUBLE)                    :: DUM6(2,9)         ! Intermadiate result in calc SEi stress recovery matrices
       REAL(DOUBLE)                    :: EALP(3)           ! Intermed var used in calc STEi therm stress coeffs
+      REAL(DOUBLE)                    :: EPS1              ! A small number to compare to real zero
       REAL(DOUBLE)                    :: FXX(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxx)
       REAL(DOUBLE)                    :: FXY(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxy)
       REAL(DOUBLE)                    :: FYY(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fyy)
@@ -130,6 +132,8 @@
 
 ! **********************************************************************************************************************************
 ! Initialize
+
+      EPS1   = EPSIL(1)
 
       IERROR = 0
 
@@ -384,7 +388,11 @@
   
 ! Now calculate the finite elem shear factor, PHI_SQ  
 
-         CALL CALC_PHI_SQ ( IERROR )
+         IF (SHRSUM > EPS1) THEN
+            CALL CALC_PHI_SQ ( IERROR )
+         ELSE
+            PHI_SQ = ZERO
+         ENDIF
 
 ! Return if IERROR > 0
 

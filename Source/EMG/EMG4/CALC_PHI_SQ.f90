@@ -182,7 +182,7 @@
  1942 FORMAT(' *ERROR  1942: 1 + CBMIN*PSI_HAT = ',1ES9.2,' IS TOO CLOSE TO ZERO FOR ',A,' ELEMENT ',I8                            &
                     ,/,14X,' CANNOT CALCULATE PHI_SQ FACTOR NEEDED FOR TRANSVERSE SHEAR STIFFNESS CALCULATION')
 
- 1943 FORMAT(' *ERROR  1944: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+ 1943 FORMAT(' *ERROR  1943: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,15X,  A, 'ELEMENT ',I8,' IS NOT A VALID ELEMENT FOR THIS SUBR') 
 
 ! **********************************************************************************************************************************

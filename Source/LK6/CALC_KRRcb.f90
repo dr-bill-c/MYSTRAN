@@ -40,7 +40,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ONE
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
-      USE PARAMS, ONLY                :  SOLLIB, SPARSTOR, SUPINFO
+      USE PARAMS, ONLY                :  SPARSTOR, SUPINFO
       USE SPARSE_MATRICES , ONLY      :  SYM_DLR, SYM_KRL, SYM_KRR
       USE SPARSE_MATRICES , ONLY      :  I_KRL, J_KRL, KRL, I_KRR, J_KRR, KRR, I_DLR, J_DLR, DLR,                                  &
                                          I_KRRcb, J_KRRcb, KRRcb, I_KRRcbs, J_KRRcbs, KRRcbs
@@ -159,7 +159,7 @@
 
 ! If DEBUG(104) > 0, check if KRRcb is singular. It should be singular regardless of the number of boundary DOF's.
 ! (KRR is singular if NDOFR = 6 and is a determinant set of supports. KRRcb should be singular always)   
-! (CODE ONLY IMPLEMENTED FOR FOR SOLLIB = 'BANDED'.)                                                         
+! (CODE ONLY IMPLEMENTED FOR 'BANDED')                                                         
 
       IF (DEBUG(104) > 0) THEN
 
@@ -167,36 +167,25 @@
          DEB_PRT(1) = 66
          DEB_PRT(2) = 67
 
-         IF (SOLLIB == 'BANDED') THEN
-
-            INFO = -1                                      ! Set INFO, on input, -1 so that SYM_MAT_DECOMP_LAPACK will not abort
-            CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KRRcb', 'R ', NDOFR, NTERM_KRRcb, I_KRRcb, J_KRRcb, KRRcb, 'N', 'N', 'N', 'N',&
-                                         DEB_PRT, EQUED, KRRcb_SDIA, K_INORM, RCOND, EQUIL_SCALE_FACS, INFO )
-            IF (INFO > 0) THEN                             ! KRRcb was singular as it should be
-               WRITE(ERR,9971)
-               WRITE(ERR,*)
-               IF (SUPINFO == 'N') THEN
-                  WRITE(F06,9971)
-                  WRITE(F06,*)
-               ENDIF
-            ELSE                                           ! KRRcb was not singular. Model must be constrained from RB motion
-               WRITE(ERR,9972)
-               WRITE(ERR,*)
-               IF (SUPINFO == 'N') THEN
-                  WRITE(F06,9972)
-                  WRITE(F06,*)
-               ENDIF
+         INFO = -1                                      ! Set INFO, on input, -1 so that SYM_MAT_DECOMP_LAPACK will not abort
+         CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KRRcb', 'R ', NDOFR, NTERM_KRRcb, I_KRRcb, J_KRRcb, KRRcb, 'N', 'N', 'N', 'N',&
+                                      DEB_PRT, EQUED, KRRcb_SDIA, K_INORM, RCOND, EQUIL_SCALE_FACS, INFO )
+         IF (INFO > 0) THEN                             ! KRRcb was singular as it should be
+            WRITE(ERR,9971)
+            WRITE(ERR,*)
+            IF (SUPINFO == 'N') THEN
+               WRITE(F06,9971)
+               WRITE(F06,*)
             ENDIF
-
-         ELSE
-   
-            FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
-            CALL OUTA_HERE ( 'Y' )
-   
+         ELSE                                           ! KRRcb was not singular. Model must be constrained from RB motion
+            WRITE(ERR,9972)
+            WRITE(ERR,*)
+            IF (SUPINFO == 'N') THEN
+               WRITE(F06,9972)
+               WRITE(F06,*)
+            ENDIF
          ENDIF
-   
+
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -217,9 +206,6 @@
 
  9972 FORMAT(' *INFORMATION: MATRIX KRRcb WAS CHECKED FOR SINGULARITY BUT WAS FOUND TO BE NONSINGULAR.',                           &
                            ' USER SHOULD CHECK MODEL TO MAKE SURE IT IS NOT RESTRAINED FROM RIGID BODY MOTION')
-
- 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
 
 ! **********************************************************************************************************************************
  

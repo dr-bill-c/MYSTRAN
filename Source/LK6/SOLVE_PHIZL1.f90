@@ -111,6 +111,10 @@
                CALL OUTA_HERE ( 'Y' )
             ENDIF
    
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+            ! Add sparse matrix code here to decompose the KLL stiffness matrix
+
          ELSE
    
             FATAL_ERR = FATAL_ERR + 1
@@ -169,12 +173,20 @@
                                                            ! DPBTRS will return PHIZL1_COL = -KLL(-1)*RHS_col
 !                                                            Note 1st arg = 'N' assures that EQUIL_SCAL_FACS will not be used
             IF      (SOLLIB == 'BANDED') THEN
+
                CALL FBS_LAPACK ( 'N', NDOFL, KLL_SDIA, EQUIL_SCALE_FACS, INOUT_COL )
+
+            ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+               ! Add sparse matrix code here to solve for PHIZL1_COL from KLL*PHIZL1_COL = CRS3
+
             ELSE
+
                FATAL_ERR = FATAL_ERR + 1
                WRITE(ERR,9991) SUBR_NAME, SOLLIB
                WRITE(F06,9991) SUBR_NAME, SOLLIB
                CALL OUTA_HERE ( 'Y' )
+
             ENDIF
 
             DO I=1,NDOFL

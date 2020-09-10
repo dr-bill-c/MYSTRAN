@@ -1,4 +1,4 @@
-!! ##################################################################################################################################
+! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -134,14 +134,22 @@
             MODNAM1 = '    Solve for GOA col '
             WRITE(SC1,22345) MODNAM1, J, NDOFA
                                                            ! FBS should not equilibrate since KOO was prevented from equilibrating
-            IF      (SOLLIB == 'BANDED') THEN
+            IF      (SOLLIB == 'BANDED  ') THEN
+
                CALL FBS_LAPACK ( 'N', NDOFO, KOO_SDIA, KOO_SCALE_FACS, INOUT_COL )
+
+            ELSE IF (SOLLIB == 'SPARSE  ') THEN
+         
+               ! Add sparse matrix code here to solve for column j of matrix GOA from eqn KOO*GOA = -KAO(transpose)
+
             ELSE
+
                FATAL_ERR = FATAL_ERR + 1
                WRITE(ERR,9991) SUBR_NAME, SOLLIB
                WRITE(F06,9991) SUBR_NAME, SOLLIB
                CALL OUTA_HERE ( 'Y' )
-1            ENDIF
+
+            ENDIF
 
             DO I=1,NDOFO
                GOA_COL(I) = INOUT_COL(I)

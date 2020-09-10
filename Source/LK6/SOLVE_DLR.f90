@@ -108,6 +108,10 @@
                CALL OUTA_HERE ( 'Y' )
             ENDIF
    
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+            ! Add sparse matrix code here to solve KLL*DLR = -KLR for matrix DLR
+
          ELSE
    
             FATAL_ERR = FATAL_ERR + 1

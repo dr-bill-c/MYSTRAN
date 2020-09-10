@@ -117,7 +117,7 @@
 !        DEBUG  47  = 1 print eigenvalue estimate at each iteration in Lanczos
 !        DEBUG  48  = 1 do not calculate off-diag terms in generalized mass matrix in LINK 4
 !        DEBUG  49  = 1 print KMSMn in EIG_LANCZOS_ARPACK
-
+!        DEBUG  50  = 1 print debug info in EIG_LANCZOS_ARPACK
 
 !        DEBUG  55  = 1 Write PHIXG in full format in EXPAND_PHIXA_TO_PHIXG
 !                   = 2 Write PHIZG in full format in LINK5
@@ -166,7 +166,7 @@
 
 !        DEBUG 103  > 0 Do not use MRL (or MLR) in calc of modal participation factors and effective mass
 
-!        DEBUG 104  > 0 check if KRRcb is singular
+!        DEBUG 104  > 0 check if KRRcb is singular - only done with a BANDED solution (but KRRcb is generally small)
 
 !        DEBUG 105  > 0 write KLLs matrix to unformatted file
 
@@ -268,5 +268,9 @@
 !        DEBUG 201 /= 0 allow SOL = BUCKLING or DIFFEREN to run even if some elements are not coded for these soln's
 
 !        DEBUG 202  > 0 calculate RB and constant strain sanity checks on strain-displacement matrices
+
+!        DEBUG 203  > 0 print debug info in subr BAR1
+
+!        DEBUG 249  > 0 In BREL1 call code for Timoshenko BART instead of BAR1
 
       END MODULE DEBUG_PARAMETERS

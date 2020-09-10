@@ -1,4 +1,4 @@
-!! ##################################################################################################################################
+! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -158,13 +158,23 @@
          DEB_PRT(1) = 28
          DEB_PRT(2) = 29
 
-         IF (SOLLIB == 'BANDED') THEN                      ! Use LAPACK
+         IF (SOLLIB == 'BANDED  ') THEN                    ! Use LAPACK
 
             KOO_SDIA   = 0
             EQUIL_KOO  = 'N'
             INFO = 0
             CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KOO', 'O ', NDOFO, NTERM_KOO, I_KOO, J_KOO, KOO, 'Y', KOORAT, EQUIL_KOO,      &
                                          RCONDK, DEB_PRT, EQUED, KOO_SDIA, K_INORM, RCOND, KOO_SCALE_FACS, INFO )
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+         
+            ! Add sparse matrix code here to decompose matrix KOO
+
+         ELSE
+
+            FATAL_ERR = FATAL_ERR + 1
+            WRITE(ERR,9991) SUBR_NAME, SOLLIB
+            WRITE(F06,9991) SUBR_NAME, SOLLIB
+            CALL OUTA_HERE ( 'Y' )
 
          ENDIF
 

@@ -1,4 +1,4 @@
-!! ##################################################################################################################################
+! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -105,13 +105,21 @@
             MODNAM1 = '    Solve for UO0 col '
             WRITE(SC1,12345,ADVANCE='NO') MODNAM1, J, NSUB, CR13
                                                            ! FBS should not equilibrate since KOO was prevented from equilibrating
-            IF      (SOLLIB == 'BANDED') THEN
+            IF      (SOLLIB == 'BANDED  ') THEN
+
                CALL FBS_LAPACK ( 'N', NDOFO, KOO_SDIA, NULL_SCALE_FACS, INOUT_COL )
+
+            ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+               ! Add sparse matrix code here to solve for column j of matrix UO0 from eqn KOO*UO0 = PO
+
             ELSE
+
                FATAL_ERR = FATAL_ERR + 1
                WRITE(ERR,9991) SUBR_NAME, SOLLIB
                WRITE(F06,9991) SUBR_NAME, SOLLIB
                CALL OUTA_HERE ( 'Y' )
+
             ENDIF
 
             DO I=1,NDOFO

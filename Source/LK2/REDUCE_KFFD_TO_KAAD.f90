@@ -32,7 +32,7 @@
       USE IOUNT1, ONLY                :  ERR, F04, F06, L2E, LINK2E, L2E_MSG, SC1, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, NDOFF, NDOFA, NDOFO, NTERM_KFFD, NTERM_KAAD,    &
                                          NTERM_KAOD, NTERM_KOOD, NTERM_KOODs, NTERM_GOA
-      USE PARAMS, ONLY                :  EPSIL, KOORAT, SOLLIB, SPARSTOR, RCONDK
+      USE PARAMS, ONLY                :  EPSIL, KOORAT, SPARSTOR, RCONDK
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  REDUCE_KFFD_TO_KAAD_BEGEND
       USE CONSTANTS_1, ONLY           :  ONE 
@@ -221,9 +221,6 @@
 
  2400 FORMAT(' *ERROR  2400: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' THERE IS AN O-SET BUT GUYAN REDUCTION MATRIX GOA HAS ',I12,' TERMS IN IT. MUST BE > 0')
-
- 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(A,10X,A)
 

@@ -82,11 +82,21 @@
       ENDIF
 
       IF (EIG_METH == 'LANCZOS') THEN
-         IF      (SOLLIB == 'BANDED') THEN
-            WRITE(F06,90000) EIG_METH, EIG_MODE, EIG_LAP_MAT_TYPE, EIG_SIGMA
+
+         IF      (SOLLIB == 'BANDED  ') THEN
+            WRITE(F06,90001) EIG_METH, EIG_MODE, TRIM(EIG_LAP_MAT_TYPE), EIG_SIGMA, '(BANDED solution)'
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+            WRITE(F06,90001) EIG_METH, EIG_MODE, TRIM(EIG_LAP_MAT_TYPE), EIG_SIGMA, '(SPARSE solution)'
          ENDIF
+
       ELSE
-         WRITE(F06,90003) EIG_METH
+
+         IF      (SOLLIB == 'BANDED  ') THEN
+            WRITE(F06,90003) EIG_METH, '(BANDED solution)'
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+            WRITE(F06,90003) EIG_METH, '(SPARSE solution)'
+         ENDIF
+
       ENDIF
       WRITE(F06,90004) NUM_EIGENS
 
@@ -253,11 +263,10 @@
 ! **********************************************************************************************************************************
 99001 FORMAT(A1)
 
-90000 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,' Mode',I2,1X,A,'Shift eigen = ',1ES9.2,')',//)
+90001 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,' Mode',I2,1X,A,', Shift eigen = ',1ES9.2,')', &
+             /,70X,A/)
 
-90001 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,' using Intel Math Kernel Library)',//)
-
-90003 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,')',//)
+90003 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,')',/,A,/)
 
 90004 FORMAT(32X,'NUMBER OF EIGENVALUES EXTRACTED  . . . . . .',2X,I8,/)
 

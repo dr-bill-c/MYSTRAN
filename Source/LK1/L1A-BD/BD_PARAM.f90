@@ -2764,7 +2764,7 @@
                   IF (ECHO == 'NONE  ') THEN
                      WRITE(F06,101) CARD
                   ENDIF
-                  WRITE(F06,1189) PARNAM,'BANDED',CHRPARM,SOLLIB
+                  WRITE(F06,1189) PARNAM,'BANDED or SPARSE',CHRPARM,SOLLIB
                ENDIF
             ENDIF
          ENDIF

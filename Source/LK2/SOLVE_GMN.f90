@@ -33,7 +33,7 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR, F04, F06, SCR, L2A, LINK2A, L2A_MSG, SC1, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, LINKNO, NDOFG, NDOFM, NTERM_RMG, NTERM_RMN, NTERM_RMM, NTERM_GMN
-      USE PARAMS, ONLY                :  EPSIL, PRTRMG, PRTGMN, SUPINFO
+      USE PARAMS, ONLY                :  EPSIL, PRTRMG, PRTGMN, SOLLIB, SUPINFO
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE CONSTANTS_1, ONLY           :  ONE
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_GMN_BEGEND
@@ -127,7 +127,7 @@
          ENDIF
       ENDIF
 
-! Now solve for GMN using either simple algorithm (RMM diagonal) or using LAPACK equation solver (in subr SOLVE_GMN)
+! Find out if RMM is a diagonal matrix. Getting sol'n for GMN will then be trivial
 
       RMM_DIAG     = 'Y'                                   ! Find out if RMM is a diagonal or identity matrix
       RMM_IDENTITY = 'Y'
@@ -151,7 +151,10 @@
          RMM_IDENTITY = 'N'
       ENDIF
           
-      IF ((RMM_DIAG == 'Y') .AND. (DEBUG(20) /= 1)) THEN
+! Now solve for GMN using either simple algorithm (RMM diagonal) or using BANDED or SPARSE equation solver
+
+      IF ((RMM_DIAG == 'Y') .AND. (DEBUG(20) /= 1)) THEN  ! We can do simple inverse of diagonal matrix RMM
+
          WRITE(ERR,2293) 
          IF (SUPINFO == 'N') THEN
             WRITE(F06,2293) 
@@ -180,21 +183,41 @@
                      WRITE(ERR,2203) K
                      WRITE(F06,2203) K
                      FATAL_ERR = FATAL_ERR + 1
-                     CALL OUTA_HERE ( 'Y' )                ! Zero diagonal in RMM. Cant solve for GMN(K)
+                     CALL OUTA_HERE ( 'Y' )
                   ENDIF
                ENDIF
             ENDDO 
          ENDDO 
 
-      ELSE
-         IF (RMM_DIAG == 'Y') THEN                         ! RMM_DIAG is Y, but DEBUG(20) = 1, so get SOLVE_GMN anyway
+      ELSE                                                 ! Either RMM is not diagonal or DEBUG(20) =1 so we will do full sol'n
+!                                                            for GMN from eqn RMM*GMN = -RMN
+         IF (RMM_DIAG == 'Y') THEN
             WRITE(ERR,2294)
             IF (SUPINFO == 'N') THEN
                WRITE(F06,2294)
             ENDIF
          ENDIF 
-         CALL SOLVE_GMN_SOLVER
+
+         IF (SOLLIB == 'BANDED  ') THEN
+
+            CALL SOLVE_GMN_BANDED
+
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+         
+            ! Add sparse matrix code here to decompose matrix RMM and solve for matrix GMN from eqn RMM*GMN = -RMN
+
+         ELSE
+
+            FATAL_ERR = FATAL_ERR + 1
+            WRITE(ERR,9991) SUBR_NAME, SOLLIB
+            WRITE(F06,9991) SUBR_NAME, SOLLIB
+            CALL OUTA_HERE ( 'Y' )
+
+         ENDIF
+
       ENDIF
+
+! Check to maks sure GMN has nonzero terma
 
       IF (NTERM_GMN <= 0 )THEN
          WRITE(ERR,2204) SUBR_NAME,NTERM_GMN
@@ -202,6 +225,8 @@
          FATAL_ERR = FATAL_ERR + 1
          CALL OUTA_HERE ( 'Y' )                            ! Coding error (NTERM_GMN <= 0 ), so quit
       ENDIF
+
+! Close GMN
 
       IF (NTERM_GMN > 0) THEN
          CLOSE_IT   = 'Y'
@@ -255,6 +280,9 @@
  2294 FORMAT(' *INFORMATION: THE RMM CONSTRAINT MATRIX IS DIAGONAL. HOWEVER, SINCE DEBUG(20) = 1'                                  &
                     ,/,14X,' SUBR SOLVE_GMN WILL BE CALLED TO SOLVE FOR THE GMN CONSTRAINT MATRIX',/)
 
+ 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+
 12345 FORMAT(A,10X)
 
 ! ##################################################################################################################################
@@ -263,7 +291,7 @@
  
 ! ##################################################################################################################################
  
-      SUBROUTINE SOLVE_GMN_SOLVER
+      SUBROUTINE SOLVE_GMN_BANDED
 
 ! Solves RMM x GMN = -RMN for matrix GMN using unsymmetric decomp from LAPACK 
  
@@ -513,6 +541,6 @@
 
 ! **********************************************************************************************************************************
  
-      END SUBROUTINE SOLVE_GMN_SOLVER         
+      END SUBROUTINE SOLVE_GMN_BANDED         
  
       END SUBROUTINE SOLVE_GMN

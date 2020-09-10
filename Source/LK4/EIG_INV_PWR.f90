@@ -109,7 +109,6 @@
          CALL MATADD_SSS       ( NDOFL, 'KLL' , NTERM_KLL , I_KLL , J_KLL , KLL , ONE, 'eig_sigma*KLLD',                           &
                                                 NTERM_KLLD, I_KLLD, J_KLLD, KLLD, EIG_SIGMA,                                       &
                                         'KMSM', NTERM_KMSM, I_KMSM, J_KMSM, KMSM )
-
       ELSE
          CALL MATADD_SSS_NTERM ( NDOFL, 'KLL',  NTERM_KLL , I_KLL , J_KLL , SYM_KLL ,  '-eig_sigma*MLL',                           &
                                                 NTERM_MLL , I_MLL , J_MLL , SYM_MLL , 'KMSM', NTERM_KMSM )
@@ -125,6 +124,7 @@
          CALL OURTIM
          MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
          WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !!!   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KLL', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF
@@ -142,11 +142,15 @@
       DEB_PRT(2) = 45
 
       EQUED = 'N'
-      IF (SOLLIB == 'BANDED') THEN
+      IF (SOLLIB == 'BANDED  ') THEN
 
          INFO = 0
          CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KMSM', 'L ', NDOFL, NTERM_KMSM, I_KMSM, J_KMSM, KMSM, 'Y', KLLRAT, 'N', 'N',     &
                                       DEB_PRT, EQUED, KMSM_SDIA, K_INORM, RCOND, NULL_SCALE_FACS, INFO )
+
+      ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+         ! Add sparse matrix code here to decompose the KLL stiffness matrix
 
       ELSE
 
@@ -183,7 +187,6 @@
          WRITE(F06,4902) EIGEN_VAL_APPROX(0)
       ENDIF
 
-      ITER_NUM = 0
 iters:DO
 
          ITER_NUM = ITER_NUM + 1
@@ -192,20 +195,30 @@ iters:DO
 ! [KLL - sigma*MLL]*Vec = alpha*MLL*Vec (EIGEN_VAL = sigma + 1/alpha)
 
          IF (SOL_NAME(1:8) == 'BUCKLING') THEN
+
             CALL MATMULT_SFF ('KLLD', NDOFL, NDOFL, NTERM_KLLD, SYM_KLLD, I_KLLD, J_KLLD, KLLD, 'EIGENVEC', NDOFL, 1,              &
                                EIGEN_VEC, 'N', 'MVEC',-ONE, MVEC)
          ELSE
+
             CALL MATMULT_SFF ('MLL' , NDOFL, NDOFL, NTERM_MLL , SYM_MLL , I_MLL , J_MLL , MLL , 'EIGENVEC', NDOFL, 1,              &
                                EIGEN_VEC, 'N', 'MVEC', ONE, MVEC)
          ENDIF
 
-         IF      (SOLLIB == 'BANDED') THEN
+         IF      (SOLLIB == 'BANDED  ') THEN
+
             CALL FBS_LAPACK ( 'N', NDOFL, KMSM_SDIA, NULL_SCALE_FACS, MVEC )
+
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+            ! Add sparse matrix code here to solve 1 column of EIGEN_VEC from eqn KMSM*EIGEN_VEC(I) = MVEC using the decomp of KMSM
+
          ELSE
+
             FATAL_ERR = FATAL_ERR + 1
             WRITE(ERR,9991) SUBR_NAME, SOLLIB
             WRITE(F06,9991) SUBR_NAME, SOLLIB
             CALL OUTA_HERE ( 'Y' )
+
          ENDIF
 
          MAX_VALUE = ZERO                                  ! Determine max term in approximate MVEC and check for > 0
@@ -217,6 +230,7 @@ iters:DO
 
          IF (DABS(MAX_VALUE) > EPSIL(1)) THEN              ! If max value in eigenvector > 0 then get next eigenvalue approx
 
+!zzzz       EIGEN_VAL_APPROX(ITER_NUM) = ONE/MAX_VALUE     ! 11/25/11: WRONG !!!!!!!!!!!!!!    
                                                            ! If MVEC had its max numerical value repeated with a different sign,
 !                                                            the algorithm could converge to the negative of the actual eigenvalue.
 !                                                            This algorithm is valid only for positive eigens, so use ABS(MAX_VALUE)
@@ -292,6 +306,7 @@ iters:DO
          MODE_NUM(I) = I
       ENDDO
 
+!!!   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KMSM'
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 

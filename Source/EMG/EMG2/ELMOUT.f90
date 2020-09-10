@@ -437,7 +437,7 @@
             WRITE(BUG,*)
          ENDIF
 
-         IF (TYPE(1:5) == 'QUAD4') THEN
+         IF (TYPE(1:5) == 'QUAD4 ') THEN
             SHELL_T_avg = 0.5*( SHELL_T(1,1) + SHELL_T(2,2) )
             WRITE(BUG,*) '  QUAD4 plate element parameters used in calculating transverse shear stiffness'
             WRITE(BUG,*) '  -----------------------------------------------------------------------------'
