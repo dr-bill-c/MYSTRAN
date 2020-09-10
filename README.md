@@ -14,4 +14,4 @@ It is an independent program written in modern Fortran 95.
 
 ## Forums: <a href ="http://www.mystran.com/forums">http://www.mystran.com/forums</a>
 
-### Documentation, End-user Executables, Test Runs, and other files are located on the MYSTRAN forum
+### Compiling Instructions, Documentation, End-user Executables, Test Runs, and other files are located on the MYSTRAN forum
