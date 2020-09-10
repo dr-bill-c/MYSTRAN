@@ -162,10 +162,10 @@
 
       IF ((RESTART == 'Y') .AND. (RELINK3 == 'Y')) THEN
 sol_do:  DO
-            WRITE(SC1,*) ' Input the value of SOLLIB to use in this restart:'
+            WRITE(SC1,*) ' Input the value of SOLLIB (8 characters) to use in this restart:'
             READ (*,*) SOLLIB
-            IF (SOLLIB /= 'BANDED') THEN
-               WRITE(SC1,*) '  Incorrect SOLLIB. Value must be BANDED'
+            IF ((SOLLIB /= 'BANDED  ') .AND. (SOLLIB /= 'SPARSE  ')) THEN
+               WRITE(SC1,*) '  Incorrect SOLLIB. Value must be BANDED or SPARSE'
                WRITE(SC1,*)
                CYCLE sol_do
             ELSE
@@ -174,17 +174,21 @@ sol_do:  DO
          ENDDO sol_do
       ENDIF
 
-Lib:  IF (SOLLIB == 'BANDED') THEN                         ! Use LAPACK
+Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
          INFO = 0
          CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KLL', L_SET, NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, 'Y', KLLRAT, 'Y', RCONDK,      &
                                       DEB_PRT, EQUED, KLL_SDIA, K_INORM, RCOND, EQUIL_SCALE_FACS, INFO )
 
+      ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+         ! Add sparse matrix code here to decompose the KLL stiffness matrix
+
       ELSE
 
          FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,3001) SUBR_NAME, SOLLIB
-         WRITE(F06,3001) SUBR_NAME, SOLLIB
+         WRITE(ERR,9991) SUBR_NAME, SOLLIB
+         WRITE(F06,9991) SUBR_NAME, SOLLIB
          CALL OUTA_HERE ( 'Y' )
 
       ENDIF Lib
@@ -227,13 +231,21 @@ Lib:  IF (SOLLIB == 'BANDED') THEN                         ! Use LAPACK
          MODNAM = 'FBS - SOLVE FOR RHS ANSWERS FOR                   "'
          WRITE(SC1,3093) LINKNO,MODNAM,ISUB,HOUR,MINUTE,SEC,SFRAC
 
-         IF      (SOLLIB(1:6) == 'BANDED') THEN
+         IF      (SOLLIB == 'BANDED  ') THEN
+
             CALL FBS_LAPACK ( EQUED, NDOFL, KLL_SDIA, EQUIL_SCALE_FACS, INOUT_COL )
+
+         ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+            ! Add sparse matrix code here to solve 1 column of the equations KLL*UL = PL using the decomp of KLL above
+
          ELSE
+
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,3001) SUBR_NAME, SOLLIB
-            WRITE(F06,3001) SUBR_NAME, SOLLIB
+            WRITE(ERR,9991) SUBR_NAME, SOLLIB
+            WRITE(F06,9991) SUBR_NAME, SOLLIB
             CALL OUTA_HERE ( 'Y' )
+
          ENDIF
 
          DO J=1,NDOFL
@@ -396,7 +408,7 @@ Lib:  IF (SOLLIB == 'BANDED') THEN                         ! Use LAPACK
 
  3093 FORMAT(1X,I2,'/',A54,I8,2X,I2,':',I2,':',I2,'.',I3)
 
- 3001 FORMAT(' *ERROR  3001: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+ 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
 
  9998 FORMAT(' *ERROR  9998: COMM ',I3,' INDICATES UNSUCCESSFUL LINK ',I2,' COMPLETION.'                                           &

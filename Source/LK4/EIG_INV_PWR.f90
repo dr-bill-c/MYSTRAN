@@ -109,6 +109,7 @@
          CALL MATADD_SSS       ( NDOFL, 'KLL' , NTERM_KLL , I_KLL , J_KLL , KLL , ONE, 'eig_sigma*KLLD',                           &
                                                 NTERM_KLLD, I_KLLD, J_KLLD, KLLD, EIG_SIGMA,                                       &
                                         'KMSM', NTERM_KMSM, I_KMSM, J_KMSM, KMSM )
+
       ELSE
          CALL MATADD_SSS_NTERM ( NDOFL, 'KLL',  NTERM_KLL , I_KLL , J_KLL , SYM_KLL ,  '-eig_sigma*MLL',                           &
                                                 NTERM_MLL , I_MLL , J_MLL , SYM_MLL , 'KMSM', NTERM_KMSM )
@@ -124,7 +125,6 @@
          CALL OURTIM
          MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
          WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-   !!!   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KLL', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF
@@ -187,6 +187,7 @@
          WRITE(F06,4902) EIGEN_VAL_APPROX(0)
       ENDIF
 
+      ITER_NUM = 0
 iters:DO
 
          ITER_NUM = ITER_NUM + 1
@@ -230,7 +231,6 @@ iters:DO
 
          IF (DABS(MAX_VALUE) > EPSIL(1)) THEN              ! If max value in eigenvector > 0 then get next eigenvalue approx
 
-!zzzz       EIGEN_VAL_APPROX(ITER_NUM) = ONE/MAX_VALUE     ! 11/25/11: WRONG !!!!!!!!!!!!!!    
                                                            ! If MVEC had its max numerical value repeated with a different sign,
 !                                                            the algorithm could converge to the negative of the actual eigenvalue.
 !                                                            This algorithm is valid only for positive eigens, so use ABS(MAX_VALUE)
@@ -306,7 +306,6 @@ iters:DO
          MODE_NUM(I) = I
       ENDDO
 
-!!!   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KMSM'
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 

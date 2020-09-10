@@ -97,6 +97,7 @@
       INTEGER(LONG)                   :: NUM_EST_EIGENS    ! Number of estimated eigens in the freq interval (EIG_FRQ2 - EIG_FRQ1)
       INTEGER(LONG)                   :: NUM_KMSM_DIAG_0   ! Number of zero diagonal terms in KMSM
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = EIG_LANCZOS_ARPACK_BEGEND
+
       REAL(DOUBLE)                    :: EPS1              ! A small number to compare zero to
 
       INTRINSIC                       :: MIN
@@ -162,6 +163,8 @@
                                                 NTERM_MLL , I_MLL , J_MLL , MLL, -EIG_SIGMA,                                       &
                                         'KMSM', NTERM_KMSM, I_KMSM, J_KMSM, KMSM )
       ENDIF
+
+   
 
 ! Det bandwidth of KMSM so BANDGEN can put it in LAPACK band form. KMSM_SDIA is the number of super-diags in the band form of KMSM 
 
@@ -278,7 +281,6 @@
 
 ! Now we can deallocate KMSM (since KMSMn will be used in subr DSBAND)
 
-!!!   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KMSM', CR13
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 
@@ -305,11 +307,6 @@
          NUM1 = NDOFL
       ENDIF
       IF (NEV > (NUM1-1)) THEN
-!!!      WARN_ERR = WARN_ERR + 1
-!!!      WRITE(ERR,4901) EIG_N2, NDOFL-1-DARPACK, NDOFL-1-DARPACK
-!!!      IF (SUPWARN == 'N') THEN
-!!!         WRITE(F06,4901) EIG_N2, NDOFL-1-DARPACK, NDOFL-1-DARPACK
-!!!      ENDIF
          NEV = NUM1 - 1
       ENDIF
 
@@ -358,7 +355,6 @@
       CALL OURTIM
       MODNAM = 'SOLVE FOR EIGENVALS/VECTORS - LANCZOS METH'
       WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-!!!   WRITE(SC1, * )                                       ! Make new line for DTBSV pass messages that overwrite each other
 
       IF (DEBUG(50) == 1) CALL DEBUG_EIG_LANCZOS
       WHICH = 'LM'
@@ -369,8 +365,6 @@
       NVEC       = IPARAM(5)                               ! With HOWMNY = 'A' we are calc'ing eigenvecs for all eigenvalues found
       NUM_EIGENS = IPARAM(5)
 
-!!!   WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
-!!!   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KMSMn ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KMSMn' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate IWORK ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'IWORK' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RFAC  ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'RFAC' )
@@ -441,6 +435,7 @@
       NVEC = NUM_EIGENS - DARPACK                          ! Get rid of the higher DARPACK modes in LANCZOS
       NUM_EIGENS = NVEC
 
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -488,6 +483,7 @@
 48006 FORMAT(' *WARNING    : THE L-SET MASS MATRIX HAS ONLY ',I8,' NONZEROS ON ITS DIAGONAL. THERE ARE NO MORE FINITE EIGENVALUES',&
                            ' BEYOND THIS NUMBER'                                                                                   &
                     ,/,14x,' (NOTE: USE OF BULK DATA PARAM ART_MASS WITH SMALL VALUE MAY ALLOW MGIV TO FIND MORE EIGENVALUES)')
+
 
 ! **********************************************************************************************************************************
 
@@ -588,7 +584,6 @@
       write(f06,'(a,i8)')    '                      : EIG_NCVFACL          = ', eig_ncvfacl
       write(f06,'(a,i8)')    '                      : NCV                  = ', ncv
       write(f06,'(a,i8)')    '                      : NEV                  = ', nev
-      write(f06,*)
 
 ! **********************************************************************************************************************************
 

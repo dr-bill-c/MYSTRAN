@@ -35,9 +35,10 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  MATERIAL_PROPS_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  EPSIL
+      USE PARAMS, ONLY                :  EPSIL, QUAD4TYP
       USE MODEL_STUF, ONLY            :  ALPVEC, EID, EMG_IFE, EMG_RFE, ERR_SUB_NAM, EB, EBM, EM, ET, NUM_EMG_FATAL_ERRS, EMAT,    &
                                          MTRL_TYPE, QUAD_DELTA, RHO, ULT_STRE, ULT_STRN, THETAM, TREF, TYPE
+      use debug_parameters
   
       USE MATERIAL_PROPS_2D_USE_IFs
 
@@ -82,6 +83,30 @@
       EPS1   = EPSIL(1)
   
 ! **********************************************************************************************************************************
+! Once the MIN4T QUAD4 problem with Orthotropic elements is fized remove the lower case code below:
+
+      ierror = 0
+      if ((type(1:5) == 'QUAD4 ') .and. (quad4typ(1:5) == 'MIN4T')) then
+ortho:   do i=1,mematc
+            if (mtrl_type(i) == 8) then
+               ierror = ierror + 1
+               exit ortho
+            endif
+         enddo ortho
+         if (ierror > 0) then
+            write(err,1998) type, eid
+            write(f06,1998) type, eid
+            if (debug(248) == 1) then
+               write(err,1999)
+               write(f06,1999)
+            else
+               num_emg_fatal_errs = num_emg_fatal_errs + 1
+               call outa_here ( 'Y' )
+            endif
+         endif
+      endif
+      ierror = 0
+
 ! Initialize arrays
 
       DO I=1,3                                             ! Material membrane and bending matrices
@@ -219,7 +244,7 @@ mem:  IF (MTRL_TYPE(1) /= 0) THEN
             ALPVEC(3,1)   = ALPHA3            
 
          ELSE IF (MTRL_TYPE(1) == 8) THEN                  ! Orthotropic properties
-!                                                            ----------------------
+!                                                            ----------------------                                                           ! Remove the following l.c. code when MIN4T prob w/ ortho mat'l is fixed
             E1            = EMAT( 1,1)
             E2            = EMAT( 2,1)
             NU12          = EMAT( 3,1)
@@ -962,6 +987,13 @@ coup: IF (MTRL_TYPE(4) /= 0) THEN
  1924 FORMAT(' *ERROR  1924: MATERIAL ERROR. 1 - NU^2 = ',1ES9.2,' IS TOO CLOSE TO ZERO FOR ELEMENT ',I8,', TYPE ',A)
 
  1930 FORMAT(' *ERROR  1930: MATERIAL ERROR. 1 - NU12*NU21 = ',1ES9.2,' IS TOO CLOSE TO ZERO FOR ELEMENT ',I8,', TYPE ',A)
+
+ 1998 format(' *ERROR  1999: Current code for ', a, ' element ', i8, ' is incomplete for Orthotropic material properties.'         &
+                    ,/,14x,' Try a PARAM, QUAD4TYP, MIN4 for an alternate QUAD4 if your elements are nearly rectangular.'          &
+                    ,/,14x,' Otherwise you will have to use CTRIA3 elements'                                                       &
+                    ,/,14x,' You can override this and continue with a bdf entry: DEBUG, 248, 1')
+
+ 1999 format(          14x,' Fatal error stop overridden with DEBUG(248) > 0')
 
 ! **********************************************************************************************************************************
 

@@ -271,6 +271,8 @@
 
 !        DEBUG 203  > 0 print debug info in subr BAR1
 
+!        DEBUG 248  > 0 override fatal error and continue with orthotropic material properties for MIN4T QUAD4
+
 !        DEBUG 249  > 0 In BREL1 call code for Timoshenko BART instead of BAR1
 
       END MODULE DEBUG_PARAMETERS
