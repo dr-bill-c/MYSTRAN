@@ -68,7 +68,6 @@
       USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
       USE PARAMS, ONLY                :  CHKGRDS, EPSIL, EQCHK_OUTPUT, GRDPNT, GRIDSEQ, MEFMGRID, MEFMLOC, PRTCONN,                &
-                                         SUPINFO, SUPWARN, WTMASS
                                          PRTBASIC, PRTCORD, PRTDOF, PRTTSET, PRTSTIFD, PRTSTIFF, SETLKTK, SETLKTM, SUPINFO,        &
                                          SUPWARN, WTMASS
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
