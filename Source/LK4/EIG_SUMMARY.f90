@@ -263,8 +263,8 @@
 ! **********************************************************************************************************************************
 99001 FORMAT(A1)
 
-90001 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,' Mode',I2,1X,A,', Shift eigen = ',1ES9.2,')', &
-             /,70X,A/)
+90001 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,' Mode',I2,1X,A,', Shift eigen = ',1ES9.2,')',&
+             /,70X,A,/)
 
 90003 FORMAT(/,27X,'E I G E N V A L U E   A N A L Y S I S   S U M M A R Y',3X,'(',A8,')',/,A,/)
 
