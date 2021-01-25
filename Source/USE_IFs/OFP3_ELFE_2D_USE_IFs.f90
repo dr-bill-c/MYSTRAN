@@ -33,6 +33,7 @@
       USE ELMDIS_Interface
       USE ELEM_STRE_STRN_ARRAYS_Interface
       USE SHELL_ENGR_FORCE_OGEL_Interface
+      USE CHK_OGEL_ZEROS_Interface
       USE WRITE_ELEM_ENGR_FORCE_Interface
       USE ALLOCATE_FEMAP_DATA_Interface
       USE WRITE_FEMAP_ELFO_VECS_Interface

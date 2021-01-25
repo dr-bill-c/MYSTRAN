@@ -35,6 +35,7 @@
       USE GET_ARRAY_ROW_NUM_Interface
       USE GET_GRID_NUM_COMPS_Interface
       USE WRITE_GRD_PCH_OUTPUTS_Interface
+      USE CHK_OGEL_ZEROS_Interface
       USE WRITE_GRD_PRT_OUTPUTS_Interface
       USE CONVERT_VEC_COORD_SYS_Interface
       USE WRITE_FEMAP_GRID_VECS_Interface

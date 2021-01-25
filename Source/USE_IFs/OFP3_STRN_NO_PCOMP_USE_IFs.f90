@@ -34,6 +34,7 @@
       USE ELEM_STRE_STRN_ARRAYS_Interface
       USE POLYNOM_FIT_STRE_STRN_Interface
       USE CALC_ELEM_STRAINS_Interface
+      USE CHK_OGEL_ZEROS_Interface
       USE WRITE_ELEM_STRAINS_Interface
       USE ALLOCATE_FEMAP_DATA_Interface
       USE WRITE_FEMAP_STRN_VECS_Interface

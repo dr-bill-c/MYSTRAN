@@ -30,6 +30,7 @@
       USE OURTIM_Interface
       USE ROD1_Interface
       USE BAR1_Interface
+      USE BART_Interface
       USE BEAM_Interface
 
       END MODULE BREL1_USE_IFs

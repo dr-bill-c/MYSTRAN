@@ -20,16 +20,12 @@
 ! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN                              
 ! THE SOFTWARE.                                                                                          
 ! _______________________________________________________________________________________________________
-                                                                                                         
+                                                                                                        
 ! End MIT license text.                                                                                      
 
-      MODULE RESTART_DATA_FOR_L3_USE_IFs
+      MODULE CHK_OGEL_ZEROS_USE_IFs
 
-! USE Interface statements for all subroutines called by SUBROUTINE RESTART_DATA_FOR_L3
+! USE Interface statements for all subroutines called by SUBROUTINE CHK_OGEL_ZEROS
+! No subrs CALL'd by SUBROUTINE CHK_OGEL_ZEROS
 
-      USE OURTIM_Interface
-      USE ALLOCATE_SPARSE_MAT_Interface
-      USE READ_MATRIX_1_Interface
-      USE OUTA_HERE_Interface
-
-      END MODULE RESTART_DATA_FOR_L3_USE_IFs
+      END MODULE CHK_OGEL_ZEROS_USE_IFs
