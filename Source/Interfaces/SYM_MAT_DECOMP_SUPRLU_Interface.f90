@@ -24,35 +24,44 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-   MODULE SOLVE_UO0_Interface
+   MODULE SYM_MAT_DECOMP_SUPRLU_Interface
 
    INTERFACE
 
-      SUBROUTINE SOLVE_UO0
+      SUBROUTINE SYM_MAT_DECOMP_SUPRLU ( CALLING_SUBR, MATIN_NAME, NROWS, NTERMS, I_MATIN, J_MATIN, MATIN, INFO )
 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_LOG, ERR, F04, F06, L2F, LINK2F, L2F_MSG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KOO_SDIA, NDOFO, NSUB, NTERM_KOO, NTERM_PO
-      USE TIMDAT, ONLY                :  TSEC
-      USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_UO0_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  PRTUO0, SOLLIB, SPARSE_FLAVOR
-      USE SPARSE_MATRICES, ONLY       :  I_PO, J_PO, PO, I_KOO, J_KOO, KOO
-      USE COL_VECS, ONLY              :  UO0_COL
-      USE LAPACK_LIN_EQN_DPB
- 
+      USE IOUNT1, ONLY                :  WRT_LOG, ERR, F04, F06, SC1
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR
+      USE TIMDAT, ONLY                :  TSEC       
+      USE CONSTANTS_1, ONLY           :  ZERO
+      USE PARAMS, ONLY                :  CRS_CCS, SPARSTOR
+      USE SCRATCH_MATRICES, ONLY      :  I_CCS1, J_CCS1, CCS1
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS
+      USE SUBR_BEGEND_LEVELS, ONLY    :  SYM_MAT_DECOMP_SUPRLU_BEGEND
+
       IMPLICIT NONE
  
       CHARACTER, PARAMETER            :: CR13 = CHAR(13)   ! This causes a carriage return simulating the "+" action in a FORMAT
- 
-      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SOLVE_UO0_BEGEND
 
-                                                           ! LAPACK_S values not used so null this vector
+      CHARACTER(LEN=*), INTENT(IN)    :: CALLING_SUBR      ! The subr that called this subr (used for output error purposes)
+      CHARACTER(LEN=*), INTENT(IN)    :: MATIN_NAME        ! Name of matrix to be decomposed
 
-      END SUBROUTINE SOLVE_UO0
+      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Number of rows in sparse matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: NTERMS            ! Number of nonzeros in sparse matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: I_MATIN(NROWS+1)  ! Indicators of number of nonzero terms in rows of matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: J_MATIN(NTERMS)   ! Col numberts of nonzero terms in matrix MATIN
+
+      INTEGER(LONG), INTENT(INOUT)    :: INFO              ! Output from SuperLU routine
+
+      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SYM_MAT_DECOMP_SUPRLU_BEGEND
+
+      REAL(DOUBLE) , INTENT(IN)       :: MATIN(NTERMS)     ! A small number to compare real zero
+
+      END SUBROUTINE SYM_MAT_DECOMP_SUPRLU
 
    END INTERFACE
 
-   END MODULE SOLVE_UO0_Interface
+   END MODULE SYM_MAT_DECOMP_SUPRLU_Interface
 

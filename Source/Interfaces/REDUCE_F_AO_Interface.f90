@@ -33,13 +33,13 @@
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_ERR, WRT_LOG
-
+      USE CONSTANTS_1, ONLY           :  ZERO
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, LINKNO, KOO_SDIA, NDOFF, NDOFG, NDOFA, NDOFO, NSUB, SOL_NAME,               &
                                          NTERM_KFF , NTERM_KAA , NTERM_KAO , NTERM_KOO ,                                           &
                                          NTERM_KFFD, NTERM_KAAD, NTERM_KAOD, NTERM_KOOD,                                           &
                                          NTERM_MFF , NTERM_MAA , NTERM_MAO , NTERM_MOO ,                                           &
                                          NTERM_PF  , NTERM_PA  , NTERM_PO  , NTERM_GOA
-      USE PARAMS, ONLY                :  EQCHK_OUTPUT, MATSPARS, PRTSTIFD, PRTSTIFF, PRTMASS, PRTFOR
+      USE PARAMS, ONLY                :  EQCHK_OUTPUT, MATSPARS, PRTSTIFD, PRTSTIFF, PRTMASS, PRTFOR, SOLLIB, SPARSE_FLAVOR
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
@@ -51,12 +51,15 @@
                                          I_PF  , J_PF  , PF  , I_PA  , J_PA  , PA  , I_PO  , J_PO  , PO
       USE SPARSE_MATRICES, ONLY       :  SYM_KAA
       USE SCRATCH_MATRICES
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS, SLU_INFO
  
       IMPLICIT NONE
                
       CHARACTER, PARAMETER            :: CR13 = CHAR(13)   ! This causes a carriage return simulating the "+" action in a FORMAT
  
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = REDUCE_F_AO_BEGEND
+
+      REAL(DOUBLE)                    :: DUM_COL(NDOFO)      ! Temp variable used in SuperLU
 
       END SUBROUTINE REDUCE_F_AO
 
