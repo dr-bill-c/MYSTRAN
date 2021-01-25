@@ -282,6 +282,7 @@
                   ENDIF
 
                   IF ((SPCF_OUT(1:5) == 'PRINT') .OR. (SPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM )
                      CALL WRITE_GRD_PRT_OUTPUTS ( JVEC, NUM, WHAT, IHDR, SPCF_ALL_SAME_CID, WRITE_OGEL )
                   ENDIF
 
@@ -543,6 +544,7 @@
                   ENDIF
 
                   IF ((MPCF_OUT(1:5) == 'PRINT') .OR. (MPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM )
                      CALL WRITE_GRD_PRT_OUTPUTS ( JVEC, NUM, WHAT, IHDR, MPCF_ALL_SAME_CID, WRITE_OGEL )
                   ENDIF
 

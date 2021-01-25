@@ -189,6 +189,7 @@ elems_3: DO J = 1,NELE
                         NUM_ELEM = NUM_ELEM + 1
                         EID_OUT_ARRAY(NUM_ELEM,1) = EID
                         IF (NUM_ELEM == NELREQ(I)) THEN
+                           CALL CHK_OGEL_ZEROS ( NUM_OGEL )
                            CALL WRITE_ELEM_ENGR_FORCE ( JVEC, NUM_ELEM, IHDR )
                            EXIT
                         ENDIF

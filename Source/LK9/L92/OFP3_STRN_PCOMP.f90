@@ -188,6 +188,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                         EID_OUT_ARRAY(NUM_LINES,2) = M        ! Ply number for EID
                         IF (ETYPE(J)(1:5) /='USER1') THEN
                            IF (NUM_LINES == NELREQ(I)) THEN
+                              CALL CHK_OGEL_ZEROS ( NUM_OGEL )
                               CALL WRITE_PLY_STRAINS ( JVEC, NUM_LINES, IHDR )
                               EXIT
                            ENDIF
