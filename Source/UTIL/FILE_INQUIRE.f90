@@ -206,8 +206,8 @@
 
     2 FORMAT(' Messages from subr FILE_INQUIRE on whether files are opened ',A)
 
-  944 FORMAT(' *ERROR  944: PROGRAMMING ERROR IN SUBROUTINE ',A,/,                                                                 &
-                       14X,'ATTEMPT TO EXCEED MAX_FIL = ',I4,' NUMBER OF FILES IN WRITING FILE STATUS')
+  944 FORMAT(' *ERROR   944: PROGRAMMING ERROR IN SUBROUTINE ',A,/,                                                                &
+                        14X,'ATTEMPT TO EXCEED MAX_FIL = ',I4,' NUMBER OF FILES IN WRITING FILE STATUS')
 
  2999 FORMAT(1X,A3,' on unit ',I4,1X,A14,' and is ',A10,' with file name = ',A)
 

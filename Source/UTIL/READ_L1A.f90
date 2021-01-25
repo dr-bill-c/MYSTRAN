@@ -672,8 +672,8 @@
 
   911 FORMAT(/,' PROCESSING TERMINATED DUE TO ABOVE ',I8,' ERRORS READING FILE ',/,A)
  
-  944 FORMAT(' *ERROR  944: PROGRAMMING ERROR IN SUBROUTINE ',A,/,                                                                 &
-                     /,14X,'ATTEMPT TO EXCEED MAX_FIL = ',I4,' NUMBER OF FILES IN WRITING FILE STATUS')
+  944 FORMAT(' *ERROR   944: PROGRAMMING ERROR IN SUBROUTINE ',A,/,                                                                &
+                      /,14X,'ATTEMPT TO EXCEED MAX_FIL = ',I4,' NUMBER OF FILES IN WRITING FILE STATUS')
 
 ! **********************************************************************************************************************************
  

@@ -66,6 +66,7 @@
             ENDIF
             INQUIRE(FILE=FILNAM,EXIST=FILE_EXIST)
             NAM_CLS(1:) = CLOSE_STAT
+            WRITE(F04,9001) SUBR_NAME, TSEC, FILE_EXIST, FILE_OPND, NAM_CLS, UNIT_NAME
          ENDIF
  9001    FORMAT(1X,A,' BEGN ',F10.3,2L2,',',1X,A6,1X,',',44X,',  Closing file unit: ',A)
       ENDIF

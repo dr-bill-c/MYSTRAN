@@ -21,7 +21,7 @@
 ! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN                              
 ! THE SOFTWARE.                                                                                          
 ! _______________________________________________________________________________________________________
-                                                                                                        
+                                                                                                         
 ! End MIT license text.                                                                                      
  
       SUBROUTINE RESTART_DATA_FOR_L3
@@ -94,6 +94,7 @@
       ENDIF
 
       IF (IERR > 0) THEN
+         WRITE(SC1, * ) ' PROCESSING STOPPED. SEE F06 FILE FOR DETAILS'
          CALL OUTA_HERE ( 'Y' )
       ENDIF
 

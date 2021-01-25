@@ -143,7 +143,7 @@
                    ENDIF
 
                ELSE IF((ETYPE(J)(1:4) == 'HEXA'  ) .OR. (ETYPE(J)(1:5) == 'PENTA' ) .OR. (ETYPE(J)(1:5) == 'TETRA' ) .OR.          &
-                       (ETYPE(J)(1:4) == 'BEAM'  ) .OR. (ETYPE(J)(1:5) == 'USER1' ) .OR. (ETYPE(J)(1:6) == 'PLOTEL')) THEN
+                       (ETYPE(J)(1:5) == 'USER1' ) .OR. (ETYPE(J)(1:6) == 'PLOTEL')) THEN
                   CONTINUE                                 ! No element forces for these elements
 
                ELSE
