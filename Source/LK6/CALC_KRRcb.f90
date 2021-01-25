@@ -159,7 +159,7 @@
 
 ! If DEBUG(104) > 0, check if KRRcb is singular. It should be singular regardless of the number of boundary DOF's.
 ! (KRR is singular if NDOFR = 6 and is a determinant set of supports. KRRcb should be singular always)   
-! (CODE ONLY IMPLEMENTED FOR 'BANDED')                                                         
+! (CODE ONLY IMPLEMENTED FOR SOLLIB == 'BANDED  ')                                                         
 
       IF (DEBUG(104) > 0) THEN
 

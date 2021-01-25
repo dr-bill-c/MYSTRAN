@@ -35,7 +35,7 @@
                                          NTERM_KMSMs, NTERM_MLL, NUM_EIGENS, NVEC, SOL_NAME, WARN_ERR
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  BAILOUT, EPSIL, KLLRAT, MXITERI, SOLLIB, SPARSTOR, SUPINFO, SUPWARN
+      USE PARAMS, ONLY                :  BAILOUT, EPSIL, KLLRAT, MXITERI, SOLLIB, SPARSE_FLAVOR, SPARSTOR, SUPINFO, SUPWARN
       USE SUBR_BEGEND_LEVELS, ONLY    :  EIG_INV_PWR_BEGEND
       USE EIGEN_MATRICES_1, ONLY      :  EIGEN_VAL, EIGEN_VEC, MODE_NUM
       USE MODEL_STUF, ONLY            :  EIG_N2, EIG_SIGMA
@@ -58,7 +58,7 @@
 !                                                            file in called subr SYM_MAT_DECOMP_LAPACK (ABAND = band form of KLL)
 
       INTEGER(LONG)                   :: I                 ! DO loop index
-      INTEGER(LONG)                   :: INFO        = 0   ! Input value for subr SYM_MAT_DECOMP_LAPACK (quit on sing KRRCB)
+      INTEGER(LONG)                   :: INFO        = 0   ! 
       INTEGER(LONG)                   :: ITER_NUM          ! Number of iterations in converging on eigenvalue 
 
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = EIG_INV_PWR_BEGEND
@@ -97,7 +97,7 @@
       ENDIF
 
       CALL OURTIM
-      MODNAM = 'SOLVE FOR EIGENVALS/VECTORS - INVERSE POWER METH'
+      MODNAM = 'SOLVE FOR EIGENVALS/VECTORS - INV POWER METH'
       WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
 
 ! Calc KMSM = KLL - EIG_SIGMA*MLL (or - EIG_SIGMA*KLLD for BUCKLING) where EIG_SIGMA = shift freq
@@ -117,16 +117,6 @@
          CALL MATADD_SSS       ( NDOFL, 'KLL' , NTERM_KLL , I_KLL , J_KLL , KLL , ONE, '-eig_sigma*MLL',                           &
                                                 NTERM_MLL , I_MLL , J_MLL , MLL, -EIG_SIGMA,                                       &
                                         'KMSM', NTERM_KMSM, I_KMSM, J_KMSM, KMSM )
-      ENDIF
-
-! If this is not a CB or BUCKLING soln, dellocate arrays for KLL.      ! Keep arrays MLL, KLLD. Need them later to calc gen mass
-
-      IF ((SOL_NAME(1:12) /= 'GEN CB MODEL' ) .AND. (SOL_NAME(1:8) /= 'BUCKLING')) THEN
-         CALL OURTIM
-         MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
-         WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
-         WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KLL', CR13
-         CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF
 
 ! Allocate arrays for eigen matrices
@@ -150,13 +140,25 @@
 
       ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-         ! Add sparse matrix code here to decompose the KLL stiffness matrix
+         IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+            INFO = 0
+            CALL SYM_MAT_DECOMP_SUPRLU ( SUBR_NAME, 'KMSM', NDOFL, NTERM_KMSM, I_KMSM, J_KMSM, KMSM, INFO )
+
+         ELSE
+
+            FATAL_ERR = FATAL_ERR + 1
+            WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            CALL OUTA_HERE ( 'Y' )
+
+         ENDIF
 
       ELSE
 
          FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,9991) SUBR_NAME, SOLLIB
-         WRITE(F06,9991) SUBR_NAME, SOLLIB
+         WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+         WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
          CALL OUTA_HERE ( 'Y' )
 
       ENDIF
@@ -211,13 +213,29 @@ iters:DO
 
          ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-            ! Add sparse matrix code here to solve 1 column of EIGEN_VEC from eqn KMSM*EIGEN_VEC(I) = MVEC using the decomp of KMSM
+            IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+               INFO = 0
+
+               IF (SOL_NAME(1:8) == 'BUCKLING') THEN
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'KLLD', NDOFL, NTERM_KLLD, I_KLLD, J_KLLD, KLLD, ITER_NUM, MVEC, INFO )
+               ELSE
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'KLL' , NDOFL, NTERM_KLL , I_KLL , J_KLL , KLL , ITER_NUM, MVEC, INFO )
+               ENDIF
+            ELSE
+
+               FATAL_ERR = FATAL_ERR + 1
+               WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               CALL OUTA_HERE ( 'Y' )
+
+            ENDIF
 
          ELSE
 
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
+            WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+            WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
             CALL OUTA_HERE ( 'Y' )
 
          ENDIF
@@ -309,6 +327,16 @@ iters:DO
       WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KMSM'
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 
+! If this is not a CB or BUCKLING soln, dellocate arrays for KLL.
+
+      IF ((SOL_NAME(1:12) /= 'GEN CB MODEL' ) .AND. (SOL_NAME(1:8) /= 'BUCKLING')) THEN
+         CALL OURTIM
+         MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
+         WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+         WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KLL', CR13
+         CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
+      ENDIF
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -350,7 +378,7 @@ iters:DO
  4904 FORMAT(45X,I4,3X,1ES23.14)
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(10X,I4,3X,1ES15.6,2X,1ES15.2,A)
 
