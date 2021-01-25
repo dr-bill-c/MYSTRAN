@@ -1121,7 +1121,10 @@ C
       COMMON /A/ MAXGRD,MAXDEG,KMOD
       COMMON /BITS/ NBITIN,DUMBB(8)
       COMMON /S/ NN,MM,DUMS(7)
-      DIMENSION NDSTK(NR,1),NDEG(*),IOLD(*)
+! B/2020-12-12/////////////////////////////////////////////////////////B
+Cxxxx DIMENSION NDSTK(NR,1),NDEG(*),IOLD(*) gfortran error. Need > 1
+      DIMENSION NDSTK(NR,*),NDEG(*),IOLD(*)
+! E////////////////////////////////////////////////////////////////////E
       IBW1=0
       IPF1=0
       IDEG=MM
