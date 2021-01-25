@@ -41,7 +41,7 @@
 
       USE PARAMS, ONLY                :  ARP_TOL         , ART_KED         , ART_ROT_KED     , ART_TRAN_KED    ,                   &
                                          ART_MASS        , ART_ROT_MASS    , ART_TRAN_MASS   , AUTOSPC         , AUTOSPC_NSET    , &
-                                         AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         ,                   &
+                                         AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         , CRS_CCS         , &
                                          CBMIN3          , CBMIN4          , CBMIN4T         , CHKGRDS         ,                   &
                                          CUSERIN         , CUSERIN_EID     , CUSERIN_IN4     , CUSERIN_PID     , CUSERIN_SPNT_ID , &
                                          CUSERIN_XSET    , CUSERIN_COMPTYP ,                                                       &
@@ -64,8 +64,8 @@
                                          PRTYS           , PRTQSYS         ,                                                       &
                                          Q4SURFIT        , QUADAXIS        , QUAD4TYP        , RCONDK          , RELINK3         , &
                                          SEQPRT          , SEQQUIT         , SETLKTM         , SETLKTK         , SHRFXFAC        , &
-                                         SKIPMKGG        , SOLLIB          ,                                                       &
-                                         SPC1QUIT        , SORT_MAX        , SPC1SID         , SPARSTOR        , STR_CID         , &
+                                         SKIPMGG         , SOLLIB          , SPARSE_FLAVOR   , SPARSTOR        ,                   &
+                                         SPC1QUIT        , SORT_MAX        , SPC1SID         , STR_CID                           , &
                                          SUPINFO         , SUPWARN                                                               , &
                                          THRESHK         , THRESHK_LAP     , TINY            ,                                     &
                                          TSTM_DEF        , USR_JCT         , USR_LTERM_KGG   , USR_LTERM_MGG   , WINAMEM         , &
@@ -468,6 +468,30 @@
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
   
+! CRS_CCS specifies the storage method (CRS or CCS)
+
+      ELSE IF (JCARD(2)(1:8) == 'CRS_CCS ') THEN
+         PARNAM = 'CRS_CCS '
+         CALL CHAR_FLD ( JCARD(3), JF(3), CHRPARM )
+         IF (IERRFL(3) == 'N') THEN
+            CALL LEFT_ADJ_BDFLD ( CHRPARM )
+            IF      (CHRPARM == 'CRS     ') THEN
+               CRS_CCS  = 'CRS'
+            ELSE IF (CHRPARM == 'CCS     ') THEN
+               CRS_CCS  = 'CCS'
+            ELSE
+               WARN_ERR = WARN_ERR + 1
+               WRITE(ERR,101) CARD
+               WRITE(ERR,1189) PARNAM,'CRS or CCS',CHRPARM,CRS_CCS 
+               IF (SUPWARN == 'N') THEN
+                  IF (ECHO == 'NONE  ') THEN
+                     WRITE(F06,101) CARD
+                  ENDIF
+                  WRITE(F06,1189) PARNAM,'CRS or CCS',CHRPARM,CRS_CCS 
+               ENDIF
+            ENDIF
+         ENDIF
+
 ! CUSERIN = 'Y' causes  MYSTRAN to write CUSERIN, PUSERIN B.D. card images for a substructure to F06
 
       ELSE IF (JCARD(2)(1:8) == 'CUSERIN ') THEN
@@ -2716,27 +2740,26 @@
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
 
-! SKIPMKGG 'Y', 'N' indicator to say whether to skip calculation of MGG, KGG in which case MGG, KGG will be read from previously
-! generated, and saved, files (LINK1L for KGG, LINK1R for MGG)
+! SKIPMGG 'Y', 'N' indicator to say whether to skip calculation of MGG
 
-      ELSE IF (JCARD(2)(1:8) == 'SKIPMKGG') THEN
-         PARNAM = 'SKIPMKGG  '
+      ELSE IF (JCARD(2)(1:7) == 'SKIPMGG') THEN
+         PARNAM = 'SKIPMGG '
          CALL CHAR_FLD ( JCARD(3), JF(3), CHRPARM )
          IF (IERRFL(3) == 'N') THEN
             CALL LEFT_ADJ_BDFLD ( CHRPARM )
             IF      (CHRPARM(1:1) == 'Y') THEN
-               SKIPMKGG = 'Y'
+               SKIPMGG = 'Y'
             ELSE IF (CHRPARM(1:1) == 'N') THEN
-               SKIPMKGG = 'N'
+               SKIPMGG = 'N'
             ELSE
                WARN_ERR = WARN_ERR + 1
                WRITE(ERR,101) CARD
-               WRITE(ERR,1189) PARNAM,'Y OR N',CHRPARM,SKIPMKGG
-               IF (SKIPMKGG == 'N') THEN
+               WRITE(ERR,1189) PARNAM,'Y OR N',CHRPARM,SKIPMGG
+               IF (SKIPMGG == 'N') THEN
                   IF (ECHO == 'NONE  ') THEN
                      WRITE(F06,101) CARD
                   ENDIF
-                  WRITE(F06,1189) PARNAM,'Y OR N',CHRPARM,SKIPMKGG
+                  WRITE(F06,1189) PARNAM,'Y OR N',CHRPARM,SKIPMGG
                ENDIF
             ENDIF
          ENDIF
@@ -2765,6 +2788,29 @@
                      WRITE(F06,101) CARD
                   ENDIF
                   WRITE(F06,1189) PARNAM,'BANDED or SPARSE',CHRPARM,SOLLIB
+               ENDIF
+            ENDIF
+         ENDIF
+
+         IF (SOLLIB == 'SPARSE  ') THEN
+            IF (JCARD(4)(1:) /= ' ') THEN
+               PARNAM = 'AUTOSPC_INFO'
+               CALL CHAR_FLD ( JCARD(4), JF(4), CHRPARM )
+               IF (IERRFL(4) == 'N') THEN
+                  CALL LEFT_ADJ_BDFLD ( CHRPARM )
+                  IF      (CHRPARM(1:7) == 'SUPERLU') THEN
+                     SPARSE_FLAVOR = 'SUPERLU '
+                  ELSE
+                     WARN_ERR = WARN_ERR + 1
+                     WRITE(ERR,101) CARD
+                     WRITE(ERR,1189) PARNAM,'Y OR N',CHRPARM,AUTOSPC_INFO
+                     IF (SUPWARN == 'N') THEN
+                        IF (ECHO == 'NONE  ') THEN
+                           WRITE(F06,101) CARD
+                        ENDIF
+                        WRITE(F06,1189) PARNAM,'Y OR N',CHRPARM,AUTOSPC_INFO
+                     ENDIF
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
