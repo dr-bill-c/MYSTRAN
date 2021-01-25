@@ -19,10 +19,51 @@
       USE MATMULT_SFF_Interface
       USE ARPACK_INFO_MSG_Interface
 
+      character(1*byte), parameter   :: cr13_a = char(13)
       CHARACTER(44*BYTE)             :: MODNAM1            ! Name to write to screen to describe module being run.
       CHARACTER(44*BYTE)             :: MODNAM2            ! Name to write to screen to describe module being run.
 
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = ARPACK_BEGEND
+c
+c\SCCS Information: @(#)
+c FILE: debug.h   SID: 2.3   DATE OF SID: 11/16/95   RELEASE: 2
+c
+c     %---------------------------------%
+c     | See debug.doc for documentation |
+c     %---------------------------------%
+      integer :: logfil = 2
+      integer :: ndigit = 6
+      integer  mgetv0,
+     &         msaupd, msaup2, msaitr, mseigt, msapps, msgets, mseupd,
+     &         mnaupd, mnaup2, mnaitr, mneigh, mnapps, mngets, mneupd,
+     &         mcaupd, mcaup2, mcaitr, mceigh, mcapps, mcgets, mceupd
+      common /debug/
+     &         logfil, ndigit, mgetv0,
+     &         msaupd, msaup2, msaitr, mseigt, msapps, msgets, mseupd,
+     &         mnaupd, mnaup2, mnaitr, mneigh, mnapps, mngets, mneupd,
+     &         mcaupd, mcaup2, mcaitr, mceigh, mcapps, mcgets, mceupd
+
+c     %--------------------------------%
+c     | See stat.doc for documentation |
+c     %--------------------------------%
+c
+c\SCCS Information: @(#) 
+c FILE: stat.h   SID: 2.2   DATE OF SID: 11/16/95   RELEASE: 2 
+c
+      real      t0, t1, t2, t3, t4, t5
+      save      t0, t1, t2, t3, t4, t5
+c
+      integer   nopx, nbx, nrorth, nitref, nrstrt
+      real      tsaupd, tsaup2, tsaitr, tseigt, tsgets, tsapps, tsconv,
+     &          tnaupd, tnaup2, tnaitr, tneigh, tngets, tnapps, tnconv,
+     &          tcaupd, tcaup2, tcaitr, tceigh, tcgets, tcapps, tcconv,
+     &          tmvopx, tmvbx , tgetv0, titref, trvec
+      common /timing/ 
+     &          nopx, nbx, nrorth, nitref, nrstrt,
+     &          tsaupd, tsaup2, tsaitr, tseigt, tsgets, tsapps, tsconv,
+     &          tnaupd, tnaup2, tnaitr, tneigh, tngets, tnapps, tnconv,
+     &          tcaupd, tcaup2, tcaitr, tceigh, tcgets, tcapps, tcconv,
+     &          tmvopx, tmvbx , tgetv0, titref, trvec
 
 ! This is the set of ARPACK routines that are used in the Lanczos algorithm. Below are listed the subroutines included in this
 ! module and the calls to other subroutines in this module
@@ -631,13 +672,13 @@ c
          if      (eig_lap_mat_type(1:3) == 'DGB') then
 
             call ourtim
-!           Write(sc1,4092) linkno,modnam1,hour,minute,sec,sfrac
+!           write(sc1,4092) linkno,modnam1,hour,minute,sec,sfrac
             call dgbtrf(n, n, kl, ku, rfac, lda, iwork, ierr)
 
          else if (eig_lap_mat_type(1:3) == 'DPB') then
 
             call ourtim
-!           Write(sc1,4092) linkno,modnam2,hour,minute,sec,sfrac
+!           write(sc1,4092) linkno,modnam2,hour,minute,sec,sfrac
             call dpbtrf ( 'U', n, ku, rfac, ku+1, ierr )
             do i=1,n
                iwork(i) = i                                                  ! Pivot indices (no pivoting in DPBTRF)
@@ -664,13 +705,13 @@ c
          if      (eig_lap_mat_type(1:3) == 'DGB') then
 
             call ourtim
-!           Write(sc1,4092) linkno,modnam1,hour,minute,sec,sfrac
+!           write(sc1,4092) linkno,modnam1,hour,minute,sec,sfrac
             call dgbtrf(n, n, kl, ku, rfac, lda, iwork, ierr)
 c
          else if (eig_lap_mat_type(1:3) == 'DPB') then
 
             call ourtim
-!           Write(sc1,4092) linkno,modnam2,hour,minute,sec,sfrac
+!           write(sc1,4092) linkno,modnam2,hour,minute,sec,sfrac
             call dpbtrf ( 'U', n, ku, rfac, ku+1, ierr )
             do i=1,n
                iwork(i) = i   ! Pivot indices (no pivoting in DPBTRF)
@@ -721,7 +762,7 @@ c     %--------------------------------------------%
 c
       iter_old          = 0
       dsaupd_loop_count = 0
-      Write(sc1, * )
+      write(sc1, * )
   90  continue 
  
       IF (EIG_MSGLVL > 0) THEN
@@ -749,7 +790,7 @@ c
       else
          dsaupd_loop_count = dsaupd_loop_count + 1
       endif
-      Write(sc1,12345) iter+1, dsaupd_loop_count, ido
+      write(sc1,12345,advance='no') iter+1,dsaupd_loop_count,ido,cr13_a
       Write(f04, 9876) iter+1, dsaupd_loop_count, ido
       Write(f06,*) 'In ARPACK_LANCZOS_EIG: type = ', type
 
@@ -1037,11 +1078,9 @@ c
       Write(f06,*) ! blank line after eigen iteration results
 ! E ///////////////////////////////////////////////////////////////////E
 ! **********************************************************************************************************************************
-12345 format("+",5X,'Iteration',i4,' Reverse comm loop',i4,
-     &' with IDO =',I3)
+12345 format(5X,'Iteration',i4,' Rev comm loop',i4,' with IDO =',i3,a)
 
- 9876 format(7X,'Iteration',i4,' Reverse comm loop ',i4,
-     &' with IDO =',I3)
+ 9876 format(7X,'Iteration',i4,' Rev comm loop',i4,' with IDO =',i3)
 
  4907 FORMAT(/,22X,A
      &      ,/,7X,'1',12X,'2',12X,'3',12X,'4',12X,'5',12X,'6',12X,
@@ -1625,8 +1664,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -2163,8 +2202,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -3041,8 +3080,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -4172,8 +4211,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -4577,7 +4616,7 @@ c     %---------------------------------------------%
 c     %--------------------------------%
 c     | See stat.doc for documentation |
 c     %--------------------------------%
-      include   'stat.h'
+cxxxx include   'stat.h'
  
 c     %-----------------------%
 c     | Executable Statements |
@@ -4762,8 +4801,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -5295,8 +5334,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -6110,8 +6149,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -6582,8 +6621,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -6773,8 +6812,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+cxxxx include   'debug.h'
+cxxxx include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |

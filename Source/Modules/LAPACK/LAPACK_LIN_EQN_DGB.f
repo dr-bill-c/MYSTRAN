@@ -13,6 +13,7 @@
       USE OURTIM_Interface
       USE OUTA_HERE_Interface
 
+      character(1*byte), parameter      :: cr13_dgb = char(13)
       CHARACTER(44*BYTE), PRIVATE       :: MODNAM              ! Name to write to screen to describe module being run.
 
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = LAPACK_BEGEND
@@ -249,7 +250,7 @@
          DO 180 J = 1, MIN( M, N ), NB
             iblock = iblock + 1
             JB = MIN( NB, MIN( M, N )-J+1 )
-            WRITE(SC1,12345) iblock,numblk,jb
+            write(sc1,12345,advance='no') iblock,numblk,jb,cr13_dgb
 *
 *           The active part of the matrix is partitioned
 *
@@ -492,8 +493,7 @@
   180    CONTINUE
       END IF
 *
-12345 format("+",5X,'Block ',i8,' of ',i8,'. Factoring rows 1 thru: '
-     &,1x,i8,'             ')
+12345 format(5X,'Block ',i8,' of ',i8,'. Factoring rows 1 thru: ',i8,a)
 
 ! **********************************************************************************************************************************
  9000 IF (WRT_LOG >= SUBR_BEGEND+1) THEN
@@ -693,7 +693,7 @@
 *
 *           Solve U'*X = B, overwriting B with X.
 *
-            Write(sc1,*)
+            write(sc1,*)
             CALL DTBSV( 'Upper', 'Transpose', 'Non-unit', N, KL+KU, AB,
      $                  LDAB, B( 1, I ), 1, dtbsv_msg )
    30    CONTINUE

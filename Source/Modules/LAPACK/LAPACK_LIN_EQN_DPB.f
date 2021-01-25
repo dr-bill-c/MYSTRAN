@@ -10,6 +10,8 @@
       USE SUBR_BEGEND_LEVELS, ONLY       :  LAPACK_BEGEND
       USE LAPACK_BLAS_AUX
 
+      character(1*byte), parameter      :: cr13_dpb = char(13)
+
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = LAPACK_BEGEND
 
 ! This is the set of LAPACK routines for solving equations
@@ -437,7 +439,7 @@
 *
 *              Factorize the diagonal block
 *
-               WRITE(SC1,12345) iblock,numblk,ib
+               write(sc1,12345,advance='no') iblock,numblk,ib,cr13_dpb
                CALL DPOTF2( UPLO, IB, AB( KD+1, I ), LDAB-1, II )
                IF( II /= 0 ) THEN
                   INFO = I + II - 1
@@ -542,7 +544,7 @@
 *
 *              Factorize the diagonal block
 *
-               WRITE(SC1,12345) iblock,numblk,ib
+               write(sc1,12345,advance='no') iblock,numblk,ib,cr13_dpb
                CALL DPOTF2( UPLO, IB, AB( 1, I ), LDAB-1, II )
                IF( II /= 0 ) THEN
                   INFO = I + II - 1
@@ -629,8 +631,7 @@
   150 CONTINUE
       go to 9000          ! My line
 *
-12345 format("+",5X,'Block ',i8,' of ',i8,'. Factoring rows 1 thru: '
-     &,1x,i8,'             ')
+12345 format(5X,'Block ',i8,' of ',i8,'. Factoring rows 1 thru: ',i8,a)
 
 *     End of DPBTRF
 *
@@ -805,7 +806,7 @@
 *
          WRITE(SC1,*)
          DO 10 J = 1, N
-            WRITE(SC1,12345) J,N
+            write(sc1,12345,advance='no') j,n,cr13_dpb
 *
 *           Compute U(J,J) and test for non-positive-definiteness.
 *
@@ -832,7 +833,7 @@
 *
          WRITE(SC1,*)
          DO 20 J = 1, N
-            WRITE(SC1,12345) J,N
+            write(sc1,12345,advance='no') j,n,cr13_dpb
 *
 *           Compute L(J,J) and test for non-positive-definiteness.
 *
@@ -859,8 +860,7 @@
       INFO = J
       go to 9000          ! My line
 *
-12345 FORMAT("+",5X,'DPBTF2: Unblocked code. Factoring row '
-     $       ,I8,' of ',I8,'               ')
+12345 format(5x,'DPBTF2: Unblocked code. Factoring row ',i8,' of ',i8,a)
 
 *     End of DPBTF2
 *
@@ -1429,6 +1429,7 @@
 *        Solve A*X = B where A = U'*U.
 *
          DO 10 J = 1, NRHS
+            write(f06,*) 'In DPBTRS calling DTBSV with j = ',j
 *
 *           Solve U'*X = B, overwriting B with X.
 *
