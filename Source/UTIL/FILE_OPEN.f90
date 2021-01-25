@@ -32,7 +32,7 @@
 !     (2) called 2nd time (after closing by calling subr) to position at end for subsequent writing after returning
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  F04, IN1, SC1, WRT_ERR, WRT_LOG
+      USE IOUNT1, ONLY                :  ANS, F04, IN1, SC1, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, PROG_NAME
       USE TIMDAT, ONLY                :  STIME, TSEC
       USE MYSTRAN_Version, ONLY       :  MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR, MYSTRAN_AUTHOR,  &
@@ -135,17 +135,17 @@
          ENDDO
       ENDIF
                                                            ! Check STATUS
-      IF ((STATUS /= 'NEW') .AND.(STATUS /= 'OLD') .AND.(STATUS /= 'REPLACE')) THEN
-         IERR = IERR + 1
-         DO I=1,2
-            IF (OUNT(I) > 0) THEN
-               WRITE(OUNT(I),909) SUBR_NAME, 'STATUS', 'NEW or OLD or REPLACE', STATUS
-            ELSE
-               WRITE(SC1,909) SUBR_NAME, 'STATUS', 'NEW or OLD or REPLACE', STATUS
-            ENDIF
-            IF (OUNT(2) == OUNT(1)) EXIT
-         ENDDO
-      ENDIF 
+!     IF ((STATUS /= 'NEW') .AND.(STATUS /= 'OLD') .AND.(STATUS /= 'REPLACE')) THEN
+!        IERR = IERR + 1
+!        DO I=1,2
+!           IF (OUNT(I) > 0) THEN
+!              WRITE(OUNT(I),909) SUBR_NAME, 'STATUS', 'NEW or OLD or REPLACE', STATUS
+!           ELSE
+!              WRITE(SC1,909) SUBR_NAME, 'STATUS', 'NEW or OLD or REPLACE', STATUS
+!           ENDIF
+!           IF (OUNT(2) == OUNT(1)) EXIT
+!        ENDDO
+!     ENDIF 
                                                            ! Check WRITE_L1A
       IF ((WRITE_L1A /= 'Y') .AND. (WRITE_L1A /= 'N'))THEN
          IERR = IERR + 1
@@ -220,8 +220,13 @@
                WRITE(UNIT) STIME
             ENDIF
             IF (WRITE_VER == 'Y') THEN
-               WRITE(UNIT,117) PROG_NAME, MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR,                &
-                               MYSTRAN_AUTHOR, MYSTRAN_COMMENT
+               IF (UNIT == ANS) THEN
+                  WRITE(UNIT,118) PROG_NAME, MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR,                &
+                                  MYSTRAN_AUTHOR
+               ELSE
+                  WRITE(UNIT,117) PROG_NAME, MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR,                &
+                                  MYSTRAN_AUTHOR, MYSTRAN_COMMENT
+               ENDIF
             ENDIF
          ENDIF
       ELSE
@@ -251,7 +256,9 @@
   909 FORMAT(' *ERROR   909: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' ILLEGAL INPUT FOR ARGUMENT ',A,'. MUST BE ',A,' BUT IS "',A,'". ERROR OCCURRED OPENING FILE:')
 
-  117 FORMAT(/,1X,A,' Version',5(1X,A))
+  117 FORMAT(/,1X,A,' Version',5(1X,A),/,A)
+
+  118 FORMAT(/,1X,A,' Version',5(1X,A),/)
 
 ! **********************************************************************************************************************************
 
