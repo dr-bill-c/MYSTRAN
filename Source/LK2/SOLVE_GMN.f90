@@ -26,15 +26,15 @@
 
       SUBROUTINE SOLVE_GMN ( PART_VEC_G_NM, PART_VEC_M )
  
-! Solves the sustem of equations: RMM*GMN = -RMN' for matrix GMN which is used in the reduction of the G set stiffness, mass and
-! load matrices from the G-set to the N, M_sets. If RMM is diagonal, a simple algorithm is used. If it is not, LAPACK routines
-! are called to do the decomp of RMM and the forward-backward substitution (FBS) to obtain GMN using "CONTAIN'ed" subr SOLVE_GMN
+! Solves the sustem of equations: RMM*GMN = -RMN for matrix GMN which is used in the reduction of the G set stiffness, mass and
+! load matrices from the G-set to the N, M_sets. If RMM is diagonal, a simple algorithm is used. If it is not, routines
+! are called to do the decomp of RMM and the forward-backward substitution (FBS) to obtain GMN
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, SCR, L2A, LINK2A, L2A_MSG, SC1, WRT_ERR, WRT_LOG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, LINKNO, NDOFG, NDOFM, NTERM_RMG, NTERM_RMN, NTERM_RMM, NTERM_GMN
-      USE PARAMS, ONLY                :  EPSIL, PRTRMG, PRTGMN, SOLLIB, SUPINFO
-      USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
+      USE IOUNT1, ONLY                :  ERR, F04, F06, SCR, L2A, LINK2A, L2A_MSG, SC1, WRT_LOG
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, NDOFG, NDOFM, NTERM_RMG, NTERM_RMN, NTERM_RMM, NTERM_GMN
+      USE PARAMS, ONLY                :  EPSIL, PRTRMG, PRTGMN, SOLLIB, SPARSE_FLAVOR, SUPINFO
+      USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ONE
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_GMN_BEGEND
       USE SPARSE_MATRICES, ONLY       :  I_RMG, J_RMG, RMG, I_RMN, J_RMN, RMN, I_RMM, J_RMM, RMM, I_GMN, J_GMN, GMN 
@@ -54,7 +54,7 @@
  
       INTEGER(LONG), INTENT(IN)       :: PART_VEC_G_NM(NDOFG)! Partitioning vector (G set into N and M sets) 
       INTEGER(LONG), INTENT(IN)       :: PART_VEC_M(NDOFM)   ! Partitioning vector (1's for all M set DOF's) 
-      INTEGER(LONG)                   :: I,J,K                  ! DO loop indices
+      INTEGER(LONG)                   :: I,J,K               ! DO loop indices
       INTEGER(LONG), PARAMETER        :: NUM1        = 1     ! Used in subr's that partition matrices
       INTEGER(LONG), PARAMETER        :: NUM2        = 2     ! Used in subr's that partition matrices
       INTEGER(LONG)                   :: RMN_ROW_I_NTERMS    ! No. terms in row I of matrix RMN
@@ -150,7 +150,6 @@
          RMM_DIAG     = 'N'
          RMM_IDENTITY = 'N'
       ENDIF
-          
 ! Now solve for GMN using either simple algorithm (RMM diagonal) or using BANDED or SPARSE equation solver
 
       IF ((RMM_DIAG == 'Y') .AND. (DEBUG(20) /= 1)) THEN  ! We can do simple inverse of diagonal matrix RMM
@@ -187,7 +186,7 @@
                   ENDIF
                ENDIF
             ENDDO 
-         ENDDO 
+         ENDDO
 
       ELSE                                                 ! Either RMM is not diagonal or DEBUG(20) =1 so we will do full sol'n
 !                                                            for GMN from eqn RMM*GMN = -RMN
@@ -197,23 +196,7 @@
                WRITE(F06,2294)
             ENDIF
          ENDIF 
-
-         IF (SOLLIB == 'BANDED  ') THEN
-
-            CALL SOLVE_GMN_BANDED
-
-         ELSE IF (SOLLIB == 'SPARSE  ') THEN
-         
-            ! Add sparse matrix code here to decompose matrix RMM and solve for matrix GMN from eqn RMM*GMN = -RMN
-
-         ELSE
-
-            FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
-            CALL OUTA_HERE ( 'Y' )
-
-         ENDIF
+         CALL SOLVE_GMN_SOLVER
 
       ENDIF
 
@@ -260,8 +243,6 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 2092 FORMAT(4X,A44,20X,I2,':',I2,':',I2,'.',I3)
-
  2201 FORMAT(' *ERROR  2201: THE RMN PARTITION OF CONSTRAINT MATRIX RMG HAS ',I12,' TERMS IN IT.'                                  &
                     ,/,14X,' THE NUMBER MUST BE > 0.'                                                                              &
                     ,/,14X,' THIS PROBABLY MEANS THAT THERE WERE NO N-SET DOFs THAT THE RIGID ELEMS & MPCs WERE DEPENDENT ON')
@@ -278,10 +259,10 @@
                     ,/,14X,' A SIMPLE SOLUTION FOR THE GMN CONSTRAINT MATRIX WILL BE USED AVOIDING CALLING SUBR SOLVE_GMN',/)
 
  2294 FORMAT(' *INFORMATION: THE RMM CONSTRAINT MATRIX IS DIAGONAL. HOWEVER, SINCE DEBUG(20) = 1'                                  &
-                    ,/,14X,' SUBR SOLVE_GMN WILL BE CALLED TO SOLVE FOR THE GMN CONSTRAINT MATRIX',/)
+                    ,/,14X,' SUBR SOLVE_GMN_SOLVER WILL BE CALLED TO SOLVE FOR THE GMN CONSTRAINT MATRIX',/)
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(A,10X)
 
@@ -291,7 +272,7 @@
  
 ! ##################################################################################################################################
  
-      SUBROUTINE SOLVE_GMN_BANDED
+      SUBROUTINE SOLVE_GMN_SOLVER
 
 ! Solves RMM x GMN = -RMN for matrix GMN using unsymmetric decomp from LAPACK 
  
@@ -299,12 +280,14 @@
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
       USE IOUNT1, ONLY                :  FILE_NAM_MAXLEN, WRT_ERR, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  NDOFG, NDOFM, NDOFN, NTERM_GMN, NTERM_RMM, NTERM_RMN, BLNK_SUB_NAM
-      USE PARAMS, ONLY                :  EPSIL
+      USE PARAMS, ONLY                :  EPSIL, SOLLIB, SPARSE_FLAVOR
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_GMN_BEGEND
       USE SPARSE_MATRICES, ONLY       :  I_RMN, J_RMN, RMN, I_RMM, J_RMM, RMM, I2_GMN, I_GMN, J_GMN, GMN
+      USE SCRATCH_MATRICES, ONLY      :  I_CCS1, J_CCS1, CCS1
       USE FULL_MATRICES, ONLY         :  RMM_FULL
       USE LAPACK_LIN_EQN_DGE
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS, SLU_INFO
  
 ! Interface module not needed for subr's DGETRF and DGETRS. These are "CONTAIN'ed" in module LAPACK_LIN_EQN_DPB, which
 ! is "USE'd" above
@@ -327,11 +310,7 @@
       INTEGER(LONG)                   :: COMPV             ! Component number (1-6) of a grid DOF
       INTEGER(LONG)                   :: GRIDV             ! Grid number
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices or counters
-      INTEGER(LONG)                   :: INFO      = 0     ! Output from LAPACK routine to do factorization of RMM_FULL
-!                                                            = 0:  successful exit
-!                                                            < 0:  if INFO = -i, the i-th argument had an illegal value
-!                                                            > 0:  if INFO = i, the leading minor of order i is not pos def
-!                                                                  and the factorization (in DPBTRS) could not be completed.
+      INTEGER(LONG)                   :: INFO      = 0     ! Output from factorization routines
       INTEGER(LONG)                   :: IPIV(NDOFM)       ! Pivot indices from factorization of RMM
       INTEGER(LONG)                   :: IOCHK             ! IOSTAT error number when opening a file
       INTEGER(LONG)                   :: NRHS              ! No. of RHS's in solving (RMM)*(GMN) = -RMN
@@ -339,6 +318,7 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SOLVE_GMN_BEGEND + 1
 
       REAL(DOUBLE)                    :: BETA              ! Multiple for rhs for use in subr FBS
+      REAL(DOUBLE)                    :: DUM_COL(NDOFM)    ! Temp variable used in SuperLU
       REAL(DOUBLE)                    :: EPS1              ! A small number to compare real zero
       REAL(DOUBLE)                    :: GMN_COL(NDOFM)    ! A column of GMN solved for herein
       REAL(DOUBLE)                    :: RMN_COL(NDOFM)    ! A column of RMN. The solution for GMN_COL is from RMM*GMN_COL = RMN_COL
@@ -360,44 +340,69 @@
       OUNT(1) = ERR
       OUNT(2) = F06
  
-! Create full matrix RMM_FULL from sparse RMM 
+      IF (SOLLIB == 'BANDED  ') THEN
+                                                           ! Create full matrix RMM_FULL from sparse RMM 
+         CALL ALLOCATE_FULL_MAT  ( 'RMM_FULL', NDOFM, NDOFM, SUBR_NAME )
+         CALL SPARSE_CRS_TO_FULL ( 'RMM       ', NTERM_RMM, NDOFM, NDOFM, SYM_RMM, I_RMM, J_RMM, RMM, RMM_FULL )
 
-      CALL ALLOCATE_FULL_MAT  ( 'RMM_FULL', NDOFM, NDOFM, SUBR_NAME )
-      CALL SPARSE_CRS_TO_FULL ( 'RMM       ', NTERM_RMM, NDOFM, NDOFM, SYM_RMM, I_RMM, J_RMM, RMM, RMM_FULL )
+                                                           ! Perform factorization of RMM_FULL matrix.
 
-! Perform factorization of RMM_FULL matrix. When subr returns, the L, U factors of RMM_FULL are in RMM_FULL (for use
-! when eqns are solved below)
- 
+         CALL OURTIM
+         MODNAM = '    Lapack factorization of RMM'
+         WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+         CALL DGETRF (NDOFM, NDOFM, RMM_FULL, NDOFM, IPIV, INFO )
 
-      CALL OURTIM
-      MODNAM = '    Lapack factorization of RMM'
-      WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
-      CALL DGETRF (NDOFM, NDOFM, RMM_FULL, NDOFM, IPIV, INFO )
-
-      CALLED_SUBR = 'DGETRF'      
-      IF      (INFO < 0) THEN                              ! LAPACK subr XERBLA should have reported error on an illegal argument
+         CALLED_SUBR = 'DGETRF'      
+         IF      (INFO < 0) THEN                           ! LAPACK subr XERBLA should have reported error on an illegal argument
 !                                                            in a called LAPACK subr, so we should not have gotten here
-         WRITE(ERR,993) SUBR_NAME, CALLED_SUBR
-         WRITE(F06,993) SUBR_NAME, CALLED_SUBR
-         FATAL_ERR = FATAL_ERR + 1
-         CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+            WRITE(ERR,993) SUBR_NAME, CALLED_SUBR
+            WRITE(F06,993) SUBR_NAME, CALLED_SUBR
+            FATAL_ERR = FATAL_ERR + 1
+            CALL OUTA_HERE ( 'Y' )                         ! Coding error, so quit
 
-      ELSE IF (INFO > 0) THEN                              ! 0 diag in RMM
+         ELSE IF (INFO > 0) THEN                           ! 0 diag in RMM
 
-         CALL GET_GRID_AND_COMP ( 'M ', INFO, GRIDV, COMPV  )
+            CALL GET_GRID_AND_COMP ( 'M ', INFO, GRIDV, COMPV  )
 
-         WRITE(ERR,2501) CALLED_SUBR, SUBR_NAME, INFO
-         WRITE(F06,2501) CALLED_SUBR, SUBR_NAME, INFO
-         FATAL_ERR = FATAL_ERR + 1
-         IF ((GRIDV > 0) .AND. (COMPV > 0)) THEN
-            WRITE(ERR,25012) GRIDV, COMPV
-            WRITE(F06,25012) GRIDV, COMPV
+            WRITE(ERR,2501) CALLED_SUBR, SUBR_NAME, INFO
+            WRITE(F06,2501) CALLED_SUBR, SUBR_NAME, INFO
+            FATAL_ERR = FATAL_ERR + 1
+            IF ((GRIDV > 0) .AND. (COMPV > 0)) THEN
+               WRITE(ERR,25012) GRIDV, COMPV
+               WRITE(F06,25012) GRIDV, COMPV
+            ENDIF
+            CALL OUTA_HERE ( 'Y' )
+
          ENDIF
+
+      ELSE IF (SOLLIB == 'SPARSE  ') THEN
+
+         IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+            SLU_INFO = 0
+            write(f06,*) ' In SOLVE_GMN calling ALLOCATE_SCR_CCS_MAT for scratch matrix CCS1'
+            CALL ALLOCATE_SCR_CCS_MAT ( 'CCS1', NDOFM, NTERM_RMM, SUBR_NAME )
+            CALL SPARSE_CRS_SPARSE_CCS ( NDOFM, NDOFM, NTERM_RMM, 'RMM', I_RMM, J_RMM, RMM, 'CCS1', J_CCS1, I_CCS1, CCS1, 'Y')
+            CALL SYM_MAT_DECOMP_SUPRLU ( SUBR_NAME, 'RMM', NDOFM, NTERM_RMM, J_CCS1, I_CCS1, CCS1, SLU_INFO )
+
+         ELSE
+
+            FATAL_ERR = FATAL_ERR + 1
+            WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            CALL OUTA_HERE ( 'Y' )
+
+         ENDIF
+
+      ELSE
+
+         FATAL_ERR = FATAL_ERR + 1
+         WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+         WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
          CALL OUTA_HERE ( 'Y' )
 
       ENDIF
 
- 
 ! **********************************************************************************************************************************
 ! Open a scratch file that will be used to write GMN nonzero terms to as we solve for columns of GMN. After all col's
 ! of GMN have been solved for, and we have a count on NTERM_GMN, we will allocate memory to the GMN arrays and read
@@ -439,16 +444,42 @@
 ! Calculate GMN_COL via forward/backward substitution. Remember that rhs is -RMN.
  
          IF (NULL_COL == 'N') THEN                         ! DGETRS will solve for GMN_COL & load it into GMN array
-            TRANS = 'N'
-            NRHS = 1
-            CALL DGETRS ( TRANS, NDOFM, NRHS ,RMM_FULL, NDOFM, IPIV, RMN_COL, NDOFM, INFO )
 
-            CALLED_SUBR = 'DGETRS'      
-            IF      (INFO < 0) THEN                        ! LAPACK subr XERBLA should have reported error on an illegal argument
+            IF      (SOLLIB == 'BANDED  ') THEN
+               TRANS = 'N'
+               NRHS = 1
+               CALL DGETRS ( TRANS, NDOFM, NRHS ,RMM_FULL, NDOFM, IPIV, RMN_COL, NDOFM, INFO )
+
+               CALLED_SUBR = 'DGETRS'      
+               IF      (INFO < 0) THEN                     ! LAPACK subr XERBLA should have reported error on an illegal argument
 !                                                            in calling a LAPACK subr, so we should not have gotten here
-               WRITE(ERR,993) SUBR_NAME, CALLED_SUBR
-               WRITE(F06,993) SUBR_NAME, CALLED_SUBR
+                  WRITE(ERR,993) SUBR_NAME, CALLED_SUBR
+                  WRITE(F06,993) SUBR_NAME, CALLED_SUBR
+                  FATAL_ERR = FATAL_ERR + 1
+                  CALL OUTA_HERE ( 'Y' )
+
+               ENDIF
+
+            ELSE IF (SOLLIB == 'SPARSE  ') THEN
+               IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+                  SLU_INFO = 0
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'RMM', NDOFM, NTERM_RMM, J_CCS1, I_CCS1, CCS1, J, RMN_COL, SLU_INFO )
+
+               ELSE
+
+                  FATAL_ERR = FATAL_ERR + 1
+                  WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  CALL OUTA_HERE ( 'Y' )
+
+               ENDIF
+
+            ELSE
+
                FATAL_ERR = FATAL_ERR + 1
+               WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+               WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
                CALL OUTA_HERE ( 'Y' )
 
             ENDIF
@@ -469,8 +500,29 @@
 
       WRITE(SC1,*) CR13
 
+      CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
       CALL DEALLOCATE_FULL_MAT ( 'RMM_FULL' )
 
+FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the storage allocated inside SuperLU
+
+         IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+            DO J=1,NDOFM                                         ! Need a null col of loads when SuperLU is called to factor KLL
+               DUM_COL(J) = ZERO                                  ! (only because it appears in the calling list)
+            ENDDO
+
+            CALL C_FORTRAN_DGSSV( 3, NDOFM, NTERM_RMM, 1, RMM, I_RMM, J_RMM, DUM_COL, NDOFM, SLU_FACTORS, SLU_INFO )
+
+            IF (SLU_INFO .EQ. 0) THEN
+               WRITE (*,*) 'SUPERLU STORAGE FREED'
+            ELSE
+               WRITE(*,*) 'SUPERLU STORAGE NOT FREED. INFO FROM SUPERLU FREE STORAGE ROUTINE = ', SLU_INFO
+            ENDIF
+
+         ENDIF
+
+      ENDIF FreeS
+ 
 ! The GMN data in SCRATCH-991 is written 1 col at a time. We need it to be written for 1 row at a time with rows in numerical order
 
       CALL ALLOCATE_L2_GMN_2 ( SUBR_NAME )
@@ -526,6 +578,9 @@
 
  2092 FORMAT(4X,A44,20X,I2,':',I2,':',I2,'.',I3)
 
+ 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
+
 12345 FORMAT(A,10X,A)
 
 22345 FORMAT(3X,A,I8,' of ',I8)
@@ -541,6 +596,6 @@
 
 ! **********************************************************************************************************************************
  
-      END SUBROUTINE SOLVE_GMN_BANDED         
+      END SUBROUTINE SOLVE_GMN_SOLVER         
  
       END SUBROUTINE SOLVE_GMN

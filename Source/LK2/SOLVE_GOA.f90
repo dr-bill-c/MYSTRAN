@@ -31,17 +31,16 @@
 ! load matrices from the F-set to the A, O_sets
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  FILE_NAM_MAXLEN, WRT_ERR, WRT_LOG, ERR, F04, F06, SCR
+      USE IOUNT1, ONLY                :  FILE_NAM_MAXLEN, WRT_LOG, ERR, F04, F06, SCR
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KOO_SDIA, NDOFA, NDOFO, NTERM_GOA, NTERM_KOO,   &
                                          NTERM_KAO
       USE PARAMS, ONLY                :  EPSIL, PRTGOA
-      USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
+      USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_GOA_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  BAILOUT, SOLLIB
+      USE PARAMS, ONLY                :  SOLLIB, SPARSE_FLAVOR
       USE SPARSE_MATRICES, ONLY       :  I2_GOA, I_GOA, J_GOA, GOA, I_KOO, J_KOO, KOO, I_KAO, J_KAO, KAO
-      USE DEBUG_PARAMETERS, ONLY      :  DEBUG
-      USE LAPACK_LIN_EQN_DPB
+     USE LAPACK_LIN_EQN_DPB
 
 ! Interface module not needed for subr's DPBTRF and DPBTRS. These are "CONTAIN'ed" in module LAPACK_LIN_EQN_DPB, which
 ! is "USE'd" above
@@ -62,6 +61,7 @@
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: SCRFIL            ! File name
  
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices or counters
+      INTEGER(LONG)                   :: INFO              ! Info on success of factorization or solve
       INTEGER(LONG)                   :: IOCHK             ! IOSTAT error number when opening a file
       INTEGER(LONG)                   :: OUNT(2)           ! File units to write messages to. Input to subr UNFORMATTED_OPEN   
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SOLVE_GOA_BEGEND
@@ -89,11 +89,13 @@
  
 ! Make sure that ABAND (KOO triangular factor) was successfully generated when SYM_MAT_DECOMP_LAPACK was run.
 
-      IF (FACTORED_MATRIX(1:3) /= 'KOO') THEN
-         WRITE(ERR,2504) SUBR_NAME, FACTORED_MATRIX
-         WRITE(F06,2504) SUBR_NAME, FACTORED_MATRIX
-         FATAL_ERR = FATAL_ERR + 1
-         CALL OUTA_HERE ( 'Y' )
+      IF (SOLLIB == 'BANDED  ') THEN
+         IF (FACTORED_MATRIX(1:3) /= 'KOO') THEN
+            WRITE(ERR,2504) SUBR_NAME, FACTORED_MATRIX
+            WRITE(F06,2504) SUBR_NAME, FACTORED_MATRIX
+            FATAL_ERR = FATAL_ERR + 1
+            CALL OUTA_HERE ( 'Y' )
+         ENDIF
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -140,13 +142,25 @@
 
             ELSE IF (SOLLIB == 'SPARSE  ') THEN
          
-               ! Add sparse matrix code here to solve for column j of matrix GOA from eqn KOO*GOA = -KAO(transpose)
+               IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+                  INFO = 0
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'KOO', NDOFO, NTERM_KOO, I_KOO, J_KOO, KOO, J, INOUT_COL, INFO )
+
+               ELSE
+
+                  FATAL_ERR = FATAL_ERR + 1
+                  WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  CALL OUTA_HERE ( 'Y' )
+
+               ENDIF
 
             ELSE
 
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,9991) SUBR_NAME, SOLLIB
-               WRITE(F06,9991) SUBR_NAME, SOLLIB
+               WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+               WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
                CALL OUTA_HERE ( 'Y' )
 
             ENDIF
@@ -230,19 +244,12 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 2092 FORMAT(4X,A44,20X,I2,':',I2,':',I2,'.',I3)
-
  2504 FORMAT(' *ERROR  2504: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' THE NAME OF MATRIX THAT HAS BEEN DECOMPOSED INTO TRIANGULAR FACTORS SHOULD BE "KOO".'                 &
                     ,/,14X,',HOWEVER, IT IS NAMED "',A,'". CANNOT CONTINUE')
 
- 2904 FORMAT(/,23X,'DECOMPOSED KOO MATRIX UPPER TRIANGULAR FACTOR IN BAND FORM REQUIRED BY LAPACK ROUTINE'                         &
-            ,/,7X,'1',12X,'2',12X,'3',12X,'4',12X,'5',12X,'6',12X,'7',12X,'8',12X,'9',12X,'10')    
-
- 9892 FORMAT('               THIS IS FOR ROW AND COL IN THE MATRIX FOR GRID POINT ',I8,' COMPONENT ',I3)
-
- 9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(A,10X,A)
 

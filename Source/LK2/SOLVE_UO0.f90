@@ -29,13 +29,13 @@
 ! Solves KOO*UO0 = PO for matrix UO0 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, L2F, LINK2F, L2F_MSG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KOO_SDIA, LINKNO, NDOFO, NSUB, NTERM_PO
-      USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
+      USE IOUNT1, ONLY                :  WRT_LOG, ERR, F04, F06, L2F, LINK2F, L2F_MSG
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KOO_SDIA, NDOFO, NSUB, NTERM_KOO, NTERM_PO
+      USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_UO0_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  BAILOUT, PRTUO0, SOLLIB
-      USE SPARSE_MATRICES, ONLY       :  I_PO, J_PO, PO
+      USE PARAMS, ONLY                :  PRTUO0, SOLLIB, SPARSE_FLAVOR
+      USE SPARSE_MATRICES, ONLY       :  I_PO, J_PO, PO, I_KOO, J_KOO, KOO
       USE COL_VECS, ONLY              :  UO0_COL
       USE LAPACK_LIN_EQN_DPB
  
@@ -51,6 +51,7 @@
       CHARACTER(22*BYTE)              :: MODNAM1           ! Name to write to screen to describe module being run
  
       INTEGER(LONG)                   :: I,J               ! DO loop indices or counters
+      INTEGER(LONG)                   :: INFO              ! Info on success of SuperLU solve
       INTEGER(LONG)                   :: OUNT(2)           ! File units to write messages to. Input to subr UNFORMATTED_OPEN  
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SOLVE_UO0_BEGEND
 
@@ -71,14 +72,16 @@
       OUNT(1) = ERR
       OUNT(2) = F06
  
-! Subr REDUCE_KFF_TO_KAA should have done the decomp of KOO, so here we run FBS over the columns of PO to get UO0
-! First make sure that ABAND (KOO triangular factor) was successfully generated when SOLVE_GOA was run.
+! For SOLLIB = BANDED, Subr REDUCE_KFF_TO_KAA should have done the decomp of KOO, so here we run FBS over the columns of PO to get
+! UO0. First make sure that ABAND (KOO triangular factor) was successfully generated when SOLVE_GOA was run.
 
-      IF (FACTORED_MATRIX(1:3) /= 'KOO') THEN
-         WRITE(ERR,2504) SUBR_NAME, FACTORED_MATRIX
-         WRITE(F06,2504) SUBR_NAME, FACTORED_MATRIX
-         FATAL_ERR = FATAL_ERR + 1
-         CALL OUTA_HERE ( 'Y' )
+      IF (SOLLIB == 'BANDED  ') THEN
+         IF (FACTORED_MATRIX(1:3) /= 'KOO') THEN
+            WRITE(ERR,2504) SUBR_NAME, FACTORED_MATRIX
+            WRITE(F06,2504) SUBR_NAME, FACTORED_MATRIX
+            FATAL_ERR = FATAL_ERR + 1
+            CALL OUTA_HERE ( 'Y' )
+         ENDIF
       ENDIF
 
 ! Open file for writing UO0
@@ -111,13 +114,26 @@
 
             ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-               ! Add sparse matrix code here to solve for column j of matrix UO0 from eqn KOO*UO0 = PO
+               IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
 
-            ELSE
+                  INFO = 0
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'KOO', NDOFO, NTERM_KOO, I_KOO, J_KOO, KOO, J, INOUT_COL, INFO )
+
+               ELSE
+
+                  FATAL_ERR = FATAL_ERR + 1
+                  WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  CALL OUTA_HERE ( 'Y' )
+
+               ENDIF
+
+
+           ELSE
 
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,9991) SUBR_NAME, SOLLIB
-               WRITE(F06,9991) SUBR_NAME, SOLLIB
+               WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+               WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
                CALL OUTA_HERE ( 'Y' )
 
             ENDIF
@@ -170,7 +186,7 @@
                     ,/,14X,' HOWEVER, IT IS NAMED "',A,'". CANNOT CONTINUE')
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(3X,A,I8,' of ',I8,A)
 

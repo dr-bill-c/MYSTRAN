@@ -34,16 +34,16 @@
 ! MYSTRAN since that approx time does not have full matrix code.
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, L2E, LINK2E, L2E_MSG, SC1, WRT_ERR, WRT_LOG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KOO_SDIA, NDOFF, NDOFA, NDOFO, NTERM_KFF,       &
-                                         NTERM_KAA, NTERM_KAO, NTERM_KOO, NTERM_KOOs, NTERM_GOA
-      USE PARAMS, ONLY                :  EPSIL, KOORAT, MATSPARS, SOLLIB, SPARSTOR, RCONDK
-      USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
+      USE IOUNT1, ONLY                :  ERR, F04, F06, L2E, LINK2E, L2E_MSG, SC1, WRT_LOG
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, KOO_SDIA, NDOFF, NDOFA, NDOFO, NTERM_KFF,       &
+                                         NTERM_KAA, NTERM_KAO, NTERM_KOO, NTERM_GOA
+      USE PARAMS, ONLY                :  KOORAT, MATSPARS, SOLLIB, SPARSTOR, SPARSE_FLAVOR, RCONDK
+      USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  REDUCE_KFF_TO_KAA_BEGEND
       USE CONSTANTS_1, ONLY           :  ONE 
       USE FULL_MATRICES, ONLY         :  KAA_FULL, KAO_FULL, GOA_FULL, DUM1, DUM2
       USE SPARSE_MATRICES, ONLY       :  I_KFF, J_KFF, KFF, I_KAA, J_KAA, KAA, I_KAO, J_KAO, KAO, I_GOA, J_GOA, GOA,               &
-                                         I_KOO, I2_KOO, J_KOO, KOO, I_KOOs, I2_KOOs, J_KOOs, KOOs
+                                         I_KOO, J_KOO, KOO
                                          
       USE SPARSE_MATRICES, ONLY       :  SYM_GOA, SYM_KFF, SYM_KAA, SYM_KAO, SYM_KOO
       USE SCRATCH_MATRICES
@@ -167,13 +167,26 @@
                                          RCONDK, DEB_PRT, EQUED, KOO_SDIA, K_INORM, RCOND, KOO_SCALE_FACS, INFO )
          ELSE IF (SOLLIB == 'SPARSE  ') THEN
          
-            ! Add sparse matrix code here to decompose matrix KOO
+            IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+               INFO = 0
+               CALL SYM_MAT_DECOMP_SUPRLU ( SUBR_NAME, 'KOO', NDOFO, NTERM_KOO, I_KOO, J_KOO, KOO, INFO )
+
+            ELSE
+
+               FATAL_ERR = FATAL_ERR + 1
+               WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               CALL OUTA_HERE ( 'Y' )
+
+            ENDIF
+
 
          ELSE
 
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
+            WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+            WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
             CALL OUTA_HERE ( 'Y' )
 
          ENDIF
@@ -355,10 +368,8 @@
   932 FORMAT(' *ERROR   932: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' PARAMETER SPARSTOR MUST BE EITHER "SYM" OR "NONSYM" BUT VALUE IS ',A)
 
- 2092 FORMAT(4X,A44,20X,I2,':',I2,':',I2,'.',I3)
-
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(A,10X,A)
 
