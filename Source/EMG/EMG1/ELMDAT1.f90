@@ -464,7 +464,7 @@
 
 ! **********************************************************************************************************************************
 ! Generate EMAT matl props for this elem.  Shell elems with PCOMP_PROPS are handled in subr SHELL_ABD_MATRICES.
-! The internal matl ID is in the PROD, PBAR, PSHEL data sets.
+! The internal matl ID is in the PROD, PBAR, PBEAM, PSHEL data sets.
 
       DO I=1,MEMATR
          DO J=1,MEMATC

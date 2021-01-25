@@ -159,8 +159,8 @@
          IF (NTERM_KNMD > 0) THEN                           ! Part I of reduced KNND: calc KNMD*GMN & add & transpose to orig KNND
 
                                                            ! I-1, sparse multiply to get CRS1 = KNMD*GMN. Use CCS1 for GMN CCS
-            CALL MATMULT_SSS_NTERM ( 'KNMD' , NDOFN, NTERM_KNMD , SYM_KNMD, I_KNMD , J_KNMD ,                                      &
-                                     'GMN' , NDOFN, NTERM_GMN , SYM_GMN, J_CCS1, I_CCS1, AROW_MAX_TERMS,                           &
+            CALL MATMULT_SSS_NTERM ( 'KNMD', NDOFN, NTERM_KNMD, SYM_KNMD, I_KNMD, J_KNMD,                                          &
+                                     'GMN' , NDOFN, NTERM_GMN , SYM_GMN , J_CCS1, I_CCS1, AROW_MAX_TERMS,                          &
                                      'CRS1',        NTERM_CRS1 )
 
             CALL ALLOCATE_SCR_CRS_MAT ( 'CRS1', NDOFN, NTERM_CRS1, SUBR_NAME )
@@ -250,8 +250,8 @@
 
                                                            ! II-1, sparse multiply to get CRS1 = KMMD*GMN using CCS1 for GMN CCS
 
-            CALL MATMULT_SSS_NTERM ( 'KMMD' , NDOFM, NTERM_KMMD , SYM_KMMD, I_KMMD , J_KMMD ,                                      &
-                                     'GMN' , NDOFN, NTERM_GMN , SYM_GMN, J_CCS1, I_CCS1, AROW_MAX_TERMS,                           &
+            CALL MATMULT_SSS_NTERM ( 'KMMD', NDOFM, NTERM_KMMD, SYM_KMMD, I_KMMD, J_KMMD ,                                         &
+                                     'GMN' , NDOFN, NTERM_GMN , SYM_GMN , J_CCS1, I_CCS1, AROW_MAX_TERMS,                          &
                                      'CRS1',        NTERM_CRS1 )
             CALL ALLOCATE_SCR_CRS_MAT ( 'CRS1', NDOFM, NTERM_CRS1, SUBR_NAME )
             CALL MATMULT_SSS ( 'KMMD' , NDOFM, NTERM_KMMD , SYM_KMMD, I_KMMD , J_KMMD , KMMD ,                                     &
@@ -356,10 +356,11 @@
             ENDDO
 
             CALL DEALLOCATE_SCR_MAT ( 'CRS2' )             ! II-13, Deallocate CRS2
+            CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
          ELSE
 
-            CALL DEALLOCATE_SCR_MAT ( 'CCS1')
+            CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
             IF (NTERM_KMND > 0) THEN                        ! Set HMN - KMND if KMND nonzero, else HMN is null
                NTERM_HMN = NTERM_KMND
@@ -386,6 +387,7 @@
          CALL DEALLOCATE_SPARSE_MAT ( 'GMNt' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate HMN ', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'HMN' )
+         CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
 
 ! **********************************************************************************************************************************

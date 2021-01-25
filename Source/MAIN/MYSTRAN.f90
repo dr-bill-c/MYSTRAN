@@ -402,7 +402,6 @@ iters:      DO
          CALL FILE_INQUIRE ( 'near end of MAIN' )
       ENDIF
 
-      write(*,*) ' In MAIN : PCHSTAT = "', pchstat,'"'
       CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, PCHSTAT )
 
 ! Close LIJ files

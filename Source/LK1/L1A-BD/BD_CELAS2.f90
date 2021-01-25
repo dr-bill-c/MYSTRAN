@@ -44,7 +44,7 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'BD_CELAS2'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
-      CHARACTER(LEN(JCARD))           :: CELAS_EID         ! Field 2 of CBAR card (this CBAR's elem ID)
+      CHARACTER(LEN(JCARD))           :: CELAS_EID         ! Field 2 of CELAS2 card (this CELAS2's elem ID)
       CHARACTER(LEN(JCARD))           :: JCARD_EDAT(10)    ! JCARD but with fields 5 and 6 switched to get G.P.'s together in EDAT
  
       INTEGER(LONG)                   :: ELEM_ID           ! Elem ID from field 2

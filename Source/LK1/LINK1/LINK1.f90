@@ -55,7 +55,7 @@
       USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
 
-      USE PARAMS, ONLY                :  EMP0_PAUSE, ESP0_PAUSE, SETLKTK, SKIPMKGG
+      USE PARAMS, ONLY                :  EMP0_PAUSE, ESP0_PAUSE, SETLKTK, SKIPMGG
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
       USE MODEL_STUF, ONLY            :  OELDT
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
@@ -237,7 +237,7 @@ res19:IF (RESTART == 'N') THEN
          ENDIF
 ! Generate G-set mass matrix, MGG
 
-         IF (SKIPMKGG == 'N') THEN
+         IF (SKIPMGG == 'N') THEN
 
             CALL OURTIM
             MODNAM = 'CALCULATE ESTIMATE OF MASS MATRIX SIZE      '

@@ -356,10 +356,11 @@
             ENDDO
 
             CALL DEALLOCATE_SCR_MAT ( 'CRS2' )             ! II-13, Deallocate CRS2
+            CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
          ELSE
 
-            CALL DEALLOCATE_SCR_MAT ( 'CCS1')
+            CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
             IF (NTERM_KMN > 0) THEN                        ! Set HMN - KMN if KMN nonzero, else HMN is null
                NTERM_HMN = NTERM_KMN
@@ -386,6 +387,7 @@
          CALL DEALLOCATE_SPARSE_MAT ( 'GMNt' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate HMN ', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'HMN' )
+         CALL DEALLOCATE_SCR_MAT ( 'CCS1' )
 
 ! ---------------------------------------------------------------------------------------------------------------------------------
       ELSE IF (MATSPARS == 'N') THEN                       ! Reduce KGG to KNN using full matrix operations

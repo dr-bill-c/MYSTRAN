@@ -26,7 +26,7 @@
  
       SUBROUTINE ELMGM1 ( INT_ELEM_ID, WRITE_WARN )
  
-! Calculates and checks some element geometry for ROD, BAR, triangles and provides a transformation matrix ( TE ) to transform the
+! Calculates and checks some elem geometry for ROD, BAR, BEAM, triangles and provides a transformation matrix (TE) to transform the
 ! element stiffness matrix in the element system to the basic coordinate system. Calculates grid point coords in local coord system.
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -76,7 +76,7 @@
       REAL(DOUBLE)                    :: VX(3)              ! A vector in the elem x dir
       REAL(DOUBLE)                    :: VY(3)              ! A vector in the elem y dir
       REAL(DOUBLE)                    :: VZ(3)              ! A vector in the elem z dir
-      REAL(DOUBLE)                    :: V13(3)             ! A vector from grid 1 to grid 3 (for 'BAR' or 'USER1' it is V vector)
+      REAL(DOUBLE)                    :: V13(3)             ! A vector from grid 1 to grid 3 (for BAR, BEAM or USER1 it is V vector)
       REAL(DOUBLE)                    :: XIB(2,3)           ! Coords at ends of BUSH elem: XIB(1,J) should = XIB(2,J) for 0 len elem
   
 ! **********************************************************************************************************************************
@@ -457,7 +457,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------------------
 ! Calculate remainder of TE for elements other than ROD
  
-! Calculate V13, vector from G.P.-1 to G.P.-3. If 'BAR' or 'USER1' element the V13 vector is the v vector = XEB(ELGP+1,i)
+! Calculate V13, vector from G.P.-1 to G.P.-3. For BAR, BEAM, BUDH, USER1 the V13 vector is the v vector = XEB(ELGP+1,i)
  
       IF ((TYPE /= 'ROD     ') .AND. (DO_IT == 'Y')) THEN
     
@@ -477,8 +477,8 @@
          MAGZ = DSQRT(VZ(1)*VZ(1) + VZ(2)*VZ(2) + VZ(3)*VZ(3))
          IF (MAGZ <=  EPS1) THEN
             IF ((TYPE == 'BAR     ')  .OR. (TYPE == 'BEAM    ')) THEN
-               WRITE(ERR,1905) EID
-               WRITE(F06,1905) EID
+               WRITE(ERR,1905) TRIM(TYPE), EID
+               WRITE(F06,1905) TRIM(TYPE), EID
                NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
                FATAL_ERR = FATAL_ERR + 1
                RETURN
@@ -559,7 +559,7 @@
 
  1904 FORMAT(' *ERROR  1904: ',A,I8,' HAS LENGTH BETWEEN ITS ELEMENT ENDS (INCL EFFECTS OF OFFSETS) = ',1ES9.2,'. TOO SMALL')
 
- 1905 FORMAT(' *ERROR  1905: V VECTOR ON BAR ELEMENT ',I8,' IS PARALLEL TO VECTOR FROM END A TO END B')
+ 1905 FORMAT(' *ERROR  1905: V VECTOR ON ',A,' ELEMENT ',I8,' IS PARALLEL TO VECTOR FROM END A TO END B')
 
  1906 FORMAT(' *ERROR  1906: ',A,I8,' HAS INTERNAL GRID 3 (FOR V VECTOR) TOO CLOSE TO LINE BETWEEN INTERNAL GRIDS 1 AND 2')
 
