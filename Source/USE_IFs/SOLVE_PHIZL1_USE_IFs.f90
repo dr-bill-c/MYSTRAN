@@ -28,12 +28,12 @@
 ! USE Interface statements for all subroutines called by SUBROUTINE SOLVE_PHIZL1
 
       USE OURTIM_Interface
-      USE SYM_MAT_DECOMP_LAPACK_Interface
-      USE OUTA_HERE_Interface
       USE OPNERR_Interface
       USE FILE_CLOSE_Interface
+      USE OUTA_HERE_Interface
       USE GET_SPARSE_CRS_COL_Interface
       USE FBS_LAPACK_Interface
+      USE FBS_SUPRLU_Interface
       USE deallocate_sparse_mat_Interface
       USE ALLOCATE_SPARSE_MAT_Interface
       USE ALLOCATE_L6_2_Interface

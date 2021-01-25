@@ -23,24 +23,13 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      MODULE SOLVE_DLR_USE_IFs
+      MODULE FBS_SUPRLU_USE_IFs
 
-! USE Interface statements for all subroutines called by SUBROUTINE SOLVE_DLR
+! USE Interface statements for all subroutines called by SUBROUTINE FBS_SUPRLU
 
       USE OURTIM_Interface
-      USE SYM_MAT_DECOMP_LAPACK_Interface
+      USE ALLOCATE_SCR_CCS_MAT_Interface
+      USE SPARSE_CRS_SPARSE_CCS_Interface
       USE OUTA_HERE_Interface
-      USE SYM_MAT_DECOMP_SUPRLU_Interface
-      USE OPNERR_Interface
-      USE FILE_CLOSE_Interface
-      USE GET_SPARSE_CRS_ROW_Interface
-      USE FBS_LAPACK_Interface
-      USE FBS_SUPRLU_Interface
-      USE ALLOCATE_SPARSE_MAT_Interface
-      USE ALLOCATE_L6_2_Interface
-      USE READ_MATRIX_2_Interface
-      USE GET_I_MAT_FROM_I2_MAT_Interface
-      USE MATTRNSP_SS_Interface
-      USE WRITE_SPARSE_CRS_Interface
 
-      END MODULE SOLVE_DLR_USE_IFs
+      END MODULE FBS_SUPRLU_USE_IFs

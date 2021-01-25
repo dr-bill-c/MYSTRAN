@@ -33,6 +33,7 @@
       USE FILE_CLOSE_Interface
       USE GET_SPARSE_CRS_ROW_Interface
       USE FBS_LAPACK_Interface
+      USE FBS_SUPRLU_Interface
       USE ALLOCATE_SPARSE_MAT_Interface
       USE ALLOCATE_L2_GOA_2_Interface
       USE READ_MATRIX_2_Interface

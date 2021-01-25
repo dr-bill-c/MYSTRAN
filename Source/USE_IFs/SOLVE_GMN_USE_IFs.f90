@@ -40,9 +40,14 @@
       USE ALLOCATE_FULL_MAT_Interface
       USE SPARSE_CRS_TO_FULL_Interface
       USE GET_GRID_AND_COMP_Interface
+      USE ALLOCATE_SCR_CCS_MAT_Interface
+      USE SPARSE_CRS_SPARSE_CCS_Interface
+      USE SYM_MAT_DECOMP_SUPRLU_Interface
       USE OPNERR_Interface
       USE FILE_CLOSE_Interface
       USE GET_SPARSE_CRS_COL_Interface
+      USE FBS_SUPRLU_Interface
+      USE DEALLOCATE_SCR_MAT_Interface
       USE DEALLOCATE_FULL_MAT_Interface
       USE READ_MATRIX_2_Interface
       USE SORT_INT2_REAL1_Interface
