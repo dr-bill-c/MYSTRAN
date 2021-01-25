@@ -87,6 +87,10 @@
       CHARACTER(  1*BYTE)      :: CHKGRDS        =    'Y'    ! If 'Y' call GET_ELEM_AGRID_BGRID to check all grids on elems exist
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
+      CHARACTER(  3*BYTE)      :: CRS_CCS        =  'CRS'    ! If CRS matrices are stored in compressed row storage
+!                                                              If CCS matrices are stored in compressed col storage
+
+! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  1*BYTE)      :: CUSERIN        =    'N'    ! If 'Y' write CUSERIN B.D. card images
       INTEGER(LONG)            :: CUSERIN_EID    =  9999999  ! USERIN elem ID if CUSERIN B.D. card images written to F06
       INTEGER(LONG)            :: CUSERIN_PID    =  9999999  ! USERIN prop ID if CUSERIN B.D. card images written to F06
@@ -413,14 +417,17 @@
 !                                                              stiffness will be reset from infinite (zero flexibility) to
 !                                                              SHRFXFAC times the average of the bending stiffnesses in the 2 planes
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  1*BYTE)      :: SKIPMKGG       =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG, KGG
+      CHARACTER(  1*BYTE)      :: SKIPMGG        =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG, KGG
 !                                                               in which case MGG, KGG will be read from previously generated,
 !                                                               and saved, files (LINK1L for KGG, LINK1R for MGG)
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  8*BYTE)      :: SOLLIB         = 'BANDED  '! If 'BANDED  ', use LAPACK and ARPACK for eqn soln and eigens.
-!                                                              The other option will be 'SPARSE' once a Sparse Solver is found
+      CHARACTER(  8*BYTE)      :: SOLLIB         = 'SPARSE  '! If 'BANDED  ', use LAPACK and ARPACK for eqn soln and eigens.
+!                                                              If 'SPARSE  ', use value determined by parameter SPARSE_FLAVOR
+!                                                              defined in field 4 of the PARAM, SOLLIB entry
                                                              
+      CHARACTER(  8*BYTE)      :: SPARSE_FLAVOR  = 'SUPERLU '! This denotes which SPARSE SOLLIB to use. Currently SuperLU is the
+!                                                              only option
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       INTEGER(LONG)            :: SORT_MAX       =     5     ! Max number of times to run sort algorithm before stopping with error.
@@ -437,6 +444,10 @@
 !                                                              -1 is local element coord system (default)
 !                                                               0 is basic coord system
 !                                                               j (any other integer) is a defined coord system for output
+
+! ----------------------------------------------------------------------------------------------------------------------------------
+      CHARACTER(  3*BYTE)      :: SPRS_OPT       =  'CRS'    ! 'CRS' if Compressed Row Storage of selected matrices is used, or
+!                                                              'CCS' if Compressed Col Storage is to be used
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  1*BYTE)      :: SUPINFO        =    'Y'    ! 'Y', 'N' indicator to supress info msg's in the F06 file
