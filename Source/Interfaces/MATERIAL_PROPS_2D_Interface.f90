@@ -37,9 +37,10 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  MATERIAL_PROPS_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  EPSIL
+      USE PARAMS, ONLY                :  EPSIL, QUAD4TYP
       USE MODEL_STUF, ONLY            :  ALPVEC, EID, EMG_IFE, EMG_RFE, ERR_SUB_NAM, EB, EBM, EM, ET, NUM_EMG_FATAL_ERRS, EMAT,    &
                                          MTRL_TYPE, QUAD_DELTA, RHO, ULT_STRE, ULT_STRN, THETAM, TREF, TYPE
+      use debug_parameters
   
       IMPLICIT NONE
  

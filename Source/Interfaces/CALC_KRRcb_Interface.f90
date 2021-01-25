@@ -38,7 +38,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ONE
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
-      USE PARAMS, ONLY                :  SOLLIB, SPARSTOR, SUPINFO
+      USE PARAMS, ONLY                :  SPARSTOR, SUPINFO
       USE SPARSE_MATRICES , ONLY      :  SYM_DLR, SYM_KRL, SYM_KRR
       USE SPARSE_MATRICES , ONLY      :  I_KRL, J_KRL, KRL, I_KRR, J_KRR, KRR, I_DLR, J_DLR, DLR,                                  &
                                          I_KRRcb, J_KRRcb, KRRcb, I_KRRcbs, J_KRRcbs, KRRcbs

@@ -52,7 +52,7 @@
 
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ELMGM1_BEGEND
   
-      REAL(DOUBLE)                    :: V13(3)             ! A vector from grid 1 to grid 3 (for 'BAR' or 'USER1' it is V vector)
+      REAL(DOUBLE)                    :: V13(3)             ! A vector from grid 1 to grid 3 (for BAR, BEAM or USER1 it is V vector)
   
       END SUBROUTINE ELMGM1
 

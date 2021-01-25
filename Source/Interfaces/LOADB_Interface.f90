@@ -36,18 +36,18 @@
       USE SCONTR, ONLY                :  BD_ENTRY_LEN, BLNK_SUB_NAM, ECHO, FATAL_ERR, IMB_BLANK, JF, LIND_GRDS_MPCS,               &
                                          LSUB, LLOADC, LMPCADDC, LSPCADDC, MDT, MTDAT_TEMPP1, MTDAT_TEMPRB,                        &
                                          MAX_GAUSS_POINTS, MAX_STRESS_POINTS,                                                      &
-                                         MELGP, MELDOF, MMPC, MOFFSET, NBAROR, NFORCE,NGRAV, NGRDSET, NGRID, NLOAD, NMPC, NMPCADD, &
-                                         NPCOMP, NRBAR, NRBE1, NRBE2, NRFORCE, NRSPLINE, NSLOAD, NSPOINT, NSPC, NSPC1, NSPCADD,    &
-                                         NPBAR, NPBARL, NPLOAD, NSUB, NUM_MPCSIDS, NUM_PARTVEC_RECORDS, PROG_NAME, SOL_NAME,       &
-                                         NCBAR, NCBUSH, NCHEXA20, NCHEXA8, NCPENTA15, NCPENTA6, NCQUAD4, NCQUAD4K, NCROD, NCSHEAR, &
-                                         NCTETRA10, NCTETRA4, NCTRIA3, NCTRIA3K, WARN_ERR
+                                         MELGP, MELDOF, MMPC, MOFFSET, NBAROR, NBEAMOR, NFORCE,NGRAV, NGRDSET, NGRID, NLOAD, NMPC, &
+                                         NMPCADD, NPCOMP, NRBAR, NRBE1, NRBE2, NRFORCE, NRSPLINE, NSLOAD, NSPOINT, NSPC, NSPC1,    &
+                                         NSPCADD, NPBAR, NPBARL, NPLOAD, NSUB, NUM_MPCSIDS, NUM_PARTVEC_RECORDS, PROG_NAME,        &
+                                         SOL_NAME, NCBAR, NCBEAM, NCBUSH, NCHEXA20, NCHEXA8, NCPENTA15, NCPENTA6, NCQUAD4,         &
+                                         NCQUAD4K, NCROD, NCSHEAR, NCTETRA10, NCTETRA4, NCTRIA3, NCTRIA3K, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE PARAMS, ONLY                :  GRIDSEQ, IORQ1M, IORQ1S, IORQ1B, IORQ2B, IORQ2T, QUADAXIS, SUPINFO, SUPWARN
       USE OUTPUT4_MATRICES, ONLY      :  NUM_PARTN_REQUESTS
       USE SUBR_BEGEND_LEVELS, ONLY    :  LOADB_BEGEND 
       USE MODEL_STUF, ONLY            :  FORMOM_SIDS, GRAV_SIDS, IOR3D_MAX, LOAD_SIDS,                                             &
-                                         MPCSET, MPC_SIDS, MPCSIDS, MPCADD_SIDS, PBAR, PCOMP, RPCOMP, PRESS_SIDS, RFORCE_SIDS,     &
+                                         MPCSET, MPC_SIDS, MPCSIDS, MPCADD_SIDS, PBAR, RPCOMP, PRESS_SIDS, RFORCE_SIDS,            &
                                          RPBAR, SLOAD_SIDS, SPC_SIDS, SPC1_SIDS, SPCADD_SIDS, SPCSET, CC_EIGR_SID, SCNUM, SUBLOD
  
       IMPLICIT NONE

@@ -34,7 +34,7 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, IERRFL, JCARD_LEN, JF, LBUSHOFF, LVVEC, MEDAT_CBUSH,&
-                                         NBUSHOFF, NCBUSH, NCBEAM, NEDAT, NELE, NVVEC, WARN_ERR
+                                         NBUSHOFF, NCBUSH, NEDAT, NELE, NVVEC, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  BD_CBUSH_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, HALF

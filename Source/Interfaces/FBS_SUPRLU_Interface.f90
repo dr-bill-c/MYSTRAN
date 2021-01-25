@@ -24,49 +24,43 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-   MODULE LINK1_Interface
+   MODULE FBS_SUPRLU_Interface
 
    INTERFACE
 
-      SUBROUTINE LINK1
+      SUBROUTINE FBS_SUPRLU ( CALLING_SUBR, MATIN_NAME, NROWS, NTERMS, I_MATIN, J_MATIN, MATIN, ICOL, RHS_COL, INFO )
 
-  
-      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG
 
-      USE IOUNT1, ONLY                :  WRT_LOG
-
-      USE IOUNT1, ONLY                :  ERR, F04, F06, F21, F22, F23, F24, L1C, L1F, L1I, L1G, L1J, L1P, L1S, L1U, L1W, SC1
-                                         
-      USE IOUNT1, ONLY                :  F21FIL, F22FIL, F23FIL, F24FIL, LINK1C, LINK1F, LINK1I, LINK1G, LINK1J, LINK1P, LINK1S,   &
-                                         LINK1U, LINK1W
-
-      USE IOUNT1, ONLY                :  L1FSTAT, L1ISTAT, L1PSTAT, L1SSTAT, L1USTAT, L1WSTAT
-
-      USE IOUNT1, ONLY                :  F21_MSG, F22_MSG, F23_MSG, F24_MSG, L1F_MSG, L1G_MSG, L1I_MSG, L1J_MSG, L1P_MSG, L1S_MSG, &
-                                         L1U_MSG, L1W_MSG
-
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, ELDT_F22_ME_BIT, ELDT_F21_P_T_BIT, ELDT_F23_KE_BIT, ELDT_F24_SE_BIT,&
-                                         FATAL_ERR, IBIT, LINKNO, LTERM_KGG, LTERM_KGGD, LTERM_MGGE, NDOFM, NFORCE,                &
-                                         NGRAV, NMPC, NPLOAD, NRFORCE, NRIGEL, NSLOAD, NTERM_RMG, NTSUB, RESTART, SOL_NAME
-
-      USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
-      USE DOF_TABLES, ONLY            :  TDOFI
-
-      USE PARAMS, ONLY                :  EMP0_PAUSE, ESP0_PAUSE, SETLKTK, SKIPMGG
-      USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
-      USE MODEL_STUF, ONLY            :  OELDT
-      USE DEBUG_PARAMETERS, ONLY      :  DEBUG
-  
+      USE PENTIUM_II_KIND, ONLY       :  LONG, DOUBLE
+      USE IOUNT1, ONLY                :  WRT_LOG, ERR, F04, F06, SC1
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR
+      USE TIMDAT, ONLY                :  TSEC       
+      USE CONSTANTS_1, ONLY           :  ZERO
+      USE PARAMS, ONLY                :  CRS_CCS
+      USE SCRATCH_MATRICES, ONLY      :  I_CCS1, J_CCS1, CCS1
+      USE SUBR_BEGEND_LEVELS, ONLY    :  FBS_SUPRLU_BEGEND
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS
       IMPLICIT NONE
+ 
+      CHARACTER(LEN=*), INTENT(IN)    :: CALLING_SUBR      ! The subr that called this subr (used for output error purposes)
+      CHARACTER(LEN=*), INTENT(IN)    :: MATIN_NAME        ! Name of matrix to be decomposed
 
-      CHARACTER, PARAMETER            :: CR13 = CHAR(13)   ! This causes a carriage return simulating the "+" action in a FORMAT
-      CHARACTER( 1*BYTE)              :: RESPONSE          ! User response ('Y' or 'N') to a screen prompt
-     
-      INTEGER(LONG), PARAMETER        :: P_LINKNO    = 0   ! Prior LINK no's that should have run before this LINK can execute
+      INTEGER(LONG), INTENT(IN)       :: ICOL              ! Internal subcase or row number for which the FBS is being performed
+      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Number of rows in sparse matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: NTERMS            ! Number of nonzeros in sparse matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: I_MATIN(NROWS+1)  ! Indicators of number of nonzero terms in rows of matrix MATIN
+      INTEGER(LONG), INTENT(IN)       :: J_MATIN(NTERMS)   ! Col numberts of nonzero terms in matrix MATIN
 
-      END SUBROUTINE LINK1
+      INTEGER(LONG), INTENT(INOUT)    :: INFO              ! Output from SuperLU routine
+
+      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = FBS_SUPRLU_BEGEND
+
+      REAL(DOUBLE) , INTENT(IN)       :: MATIN(NTERMS)     ! A small number to compare real zero
+      REAL(DOUBLE) , INTENT(IN)       :: RHS_COL(NROWS)    ! RHS column for which the FBS is solving
+
+      END SUBROUTINE FBS_SUPRLU
 
    END INTERFACE
 
-   END MODULE LINK1_Interface
+   END MODULE FBS_SUPRLU_Interface
 
