@@ -1,4 +1,3 @@
-! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -444,10 +443,6 @@
 !                                                              -1 is local element coord system (default)
 !                                                               0 is basic coord system
 !                                                               j (any other integer) is a defined coord system for output
-
-! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  3*BYTE)      :: SPRS_OPT       =  'CRS'    ! 'CRS' if Compressed Row Storage of selected matrices is used, or
-!                                                              'CCS' if Compressed Col Storage is to be used
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  1*BYTE)      :: SUPINFO        =    'Y'    ! 'Y', 'N' indicator to supress info msg's in the F06 file

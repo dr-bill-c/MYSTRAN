@@ -2794,7 +2794,7 @@
 
          IF (SOLLIB == 'SPARSE  ') THEN
             IF (JCARD(4)(1:) /= ' ') THEN
-               PARNAM = 'AUTOSPC_INFO'
+               PARNAM = 'SPARSE_FLAVOR'
                CALL CHAR_FLD ( JCARD(4), JF(4), CHRPARM )
                IF (IERRFL(4) == 'N') THEN
                   CALL LEFT_ADJ_BDFLD ( CHRPARM )
