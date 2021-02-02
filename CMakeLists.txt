@@ -29,13 +29,17 @@ include_directories("${SUPERLU_DIR}/SRC")
 
 # download the superlu source if needed
 if(NOT EXISTS ${SUPERLU_FN})
-  message(STATUS "Downloading SuperLU ${SUPERLU_VERSION} source...")
-  file(DOWNLOAD ${SUPERLU_URL} ${SUPERLU_FN} TIMEOUT 60 TLS_VERIFY ON)
+  message(
+    STATUS
+    "Downloading SuperLU ${SUPERLU_VERSION} source from ${SUPERLU_URL}..."
+  )
+  file(DOWNLOAD ${SUPERLU_URL} ${SUPERLU_FN} TIMEOUT 60)
   message(STATUS "Done downloading.")
 endif()
 
-# extract the superlu source
+# extract superlu source
 file(ARCHIVE_EXTRACT INPUT ${SUPERLU_FN})
+
 
 # set some extra vars for MSYS builds to make the binary portable
 if (WIN32)
