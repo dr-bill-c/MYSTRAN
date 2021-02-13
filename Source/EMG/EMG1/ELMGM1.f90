@@ -182,8 +182,8 @@
 ! NOTE: This is NOT transforming the offsets to basic. It is merely calculating the value of the offsets in basic coords so that
 !       they can be used below to find the element axes in basic coords
 
-      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
-
+!xxx  IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
+      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'ROD     ')) THEN
          IF (EOFF(INT_ELEM_ID) == 'Y') THEN
             DO I=1,ELGP
                ACID_G = GRID(BGRID(I),3)                   ! Get global coord sys for this grid
@@ -325,7 +325,8 @@
 ! NOTE: BUSH is a zero length element and the vector in the element x direction is determined from either:
 !       (1) CID 
 
-      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
+!xxx  IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
+      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'ROD     ')) THEN
          VX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
          VX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
          VX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
@@ -338,38 +339,39 @@
       LX(2) = VX(2)
       LX(3) = VX(3)
                                                            ! When there is no BUSH_CID the x axis is along line between the 2 grids
-      IF (TYPE == 'BUSH    ') THEN
-         VX(1) = XEB(2,1) - XEB(1,1)
-         VX(2) = XEB(2,2) - XEB(1,2)
-         VX(3) = XEB(2,3) - XEB(1,3)
-         LX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
-         LX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
-         LX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
-      ENDIF
+!xxx  IF (TYPE == 'BUSH    ') THEN
+!xxx     VX(1) = XEB(2,1) - XEB(1,1)
+!xxx     VX(2) = XEB(2,2) - XEB(1,2)
+!xxx     VX(3) = XEB(2,3) - XEB(1,3)
+!xxx     LX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
+!xxx     LX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
+!xxx     LX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
+!xxx  ENDIF
 
 ! Length of element between ends is:
 
       ELEM_LEN_AB = DSQRT( LX(1)*LX(1) + LX(2)*LX(2) + LX(3)*LX(3) )
 
+
 ! If ELEM_LEN_AB is equal to zero (for all but BUSH) then write error and return. If BUSH elem length NOT zero, then error also
 
-      IF (TYPE /= 'BUSH    ') THEN
-         IF (ELEM_LEN_AB <= EPS1) THEN
-            WRITE(ERR,1904) TYPE, EID, ELEM_LEN_AB
-            WRITE(F06,1904) TYPE, EID, ELEM_LEN_AB
-            NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
-            FATAL_ERR = FATAL_ERR + 1
-            RETURN
-         ENDIF
-      ELSE
-         IF (ELEM_LEN_AB > .0001D0) THEN
-            WRITE(ERR,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
-            WRITE(F06,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
-            NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
-            FATAL_ERR = FATAL_ERR + 1
-            RETURN
-         ENDIF
-      ENDIF
+!xxx  IF (TYPE /= 'BUSH    ') THEN
+!        IF (ELEM_LEN_AB <= EPS1) THEN
+!           WRITE(ERR,1904) TYPE, EID, ELEM_LEN_AB
+!           WRITE(F06,1904) TYPE, EID, ELEM_LEN_AB
+!           NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
+!           FATAL_ERR = FATAL_ERR + 1
+!           RETURN
+!        ENDIF
+!xxx  ELSE
+!xxx     IF (ELEM_LEN_AB > .0001D0) THEN
+!xxx        WRITE(ERR,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
+!xxx        WRITE(F06,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
+!xxx        NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
+!xxx        FATAL_ERR = FATAL_ERR + 1
+!xxx        RETURN
+!xxx     ENDIF
+!xxx  ENDIF
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
 ! Unit vector in element X direction except for BUSH element with CID >= 0 (i.e. when BUSH does not have a V vector)

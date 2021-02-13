@@ -30,7 +30,8 @@
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, NEU
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, NGRID
+      USE PARAMS, ONLY                :  SUPWARN
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NGRID, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE CC_OUTPUT_DESCRIBERS, ONLY  :  STRE_OPT
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
@@ -92,7 +93,7 @@
          ENDIF
       ENDDO
 
-      IF      (ELEM_TYP(1:4) == 'ELAS') THEN
+      IF     (ELEM_TYP(1:4) == 'ELAS') THEN
          VEC_ID_OFFSET = 60100
       ELSE IF (ELEM_TYP == 'ROD     ') THEN
          VEC_ID_OFFSET = 60200
@@ -121,10 +122,11 @@
       ELSE IF (ELEM_TYP == 'SHEAR   ') THEN
          VEC_ID_OFFSET = 61400
       ELSE
-         FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,943) SUBR_NAME, ELEM_TYP
-         WRITE(F06,943) SUBR_NAME, ELEM_TYP
-         CALL OUTA_HERE ( 'Y' )
+         WARN_ERR = WARN_ERR + 1
+         WRITE(ERR,943) TRIM(ELEM_TYP), 'STRESS', TRIM(SUBR_NAME)
+         IF (SUPWARN == 'N') THEN
+            WRITE(F06,943) TRIM(ELEM_TYP), 'STRESS', TRIM(SUBR_NAME)
+         ENDIF
       ENDIF
 
 ! Process elements
@@ -471,8 +473,7 @@
       RETURN
 
 ! **********************************************************************************************************************************
-  943 FORMAT(' *ERROR   943: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' INVALID ELEMENT TYPE = "',A,'" FOR ARGUMENT ELEM_TYP')             
+  943 FORMAT(' *WARNING    : ELEMENT TYPE = "',A,'" FOR FEMAP ',A,' OUTPUT IN SUBROUTINE ',A,' HAS NOT BEEN PROGRAMMED')
 
  1001 FORMAT(2(I8,','),'       1,')
 

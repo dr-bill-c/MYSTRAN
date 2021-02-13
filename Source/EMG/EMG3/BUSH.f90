@@ -35,8 +35,8 @@
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM
       USE TIMDAT, ONLY                :  TSEC
-      USE CONSTANTS_1, ONLY           :  ZERO, HALF
-      USE MODEL_STUF, ONLY            :  BE1, BE2, EOFF, EPROP, KE, OFFDIS, SE1, SE2
+      USE CONSTANTS_1, ONLY           :  ZERO, HALF, TWO, FOUR
+      USE MODEL_STUF, ONLY            :  BE1, BE2, EOFF, EPROP, KE, ELEM_LEN_AB, OFFDIS, SE1, SE2
       USE SUBR_BEGEND_LEVELS, ONLY    :  BUSH_BEGEND
 
       USE BUSH_USE_IFs
@@ -50,10 +50,12 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BUSH_BEGEND
       INTEGER(LONG)                   :: I,J               ! DO loop indices
 
+      REAL(DOUBLE)                    :: DELK2, DELK3      ! Intermediate terms in KE calculation
       REAL(DOUBLE)                    :: DUM0(6,12)        ! Intermediate matrix in a calc
       REAL(DOUBLE)                    :: DUM1(6,12)        ! Intermediate matrix in a calc
       REAL(DOUBLE)                    :: STIFF(12,12)      ! 12x12 partition from KE (complete stiff matrix for this elem)
       REAL(DOUBLE)                    :: KB(6)             ! The 6 stiffness values input on the PBUSH entry          
+      REAL(DOUBLE)                    :: L                 ! ELEM_LEN_AB
       REAL(DOUBLE)                    :: STRE_RCV(2)       ! Two stress recovery values
       REAL(DOUBLE)                    :: STRN_RCV(2)       ! Two strain recovery values
 
@@ -69,27 +71,50 @@
 
       IF ((OPT(3) == 'Y') .OR. (OPT(4) == 'Y')) THEN
 
+         L = ELEM_LEN_AB
+
          DO I=1,6
             KB(I) = EPROP(I)
          ENDDO
 
-         KE( 1, 1) =  KB(1)   ;   KE( 1, 7) = -KB(1)
-         KE( 7, 1) = -KB(1)   ;   KE( 7, 7) =  KB(1)
+         DELK2     =  KB(2)*(L*L/FOUR)
+         DELK3     =  KB(3)*(L*L/FOUR)
 
-         KE( 2, 2) =  KB(2)   ;   KE( 2, 8) = -KB(2)
-         KE( 8, 2) = -KB(2)   ;   KE( 8, 8) =  KB(2)
+         KE( 1, 1) =  KB(1)
+         KE( 2, 2) =  KB(2)
+         KE( 3, 3) =  KB(3)
+         KE( 4, 4) =  KB(4)
+         KE( 5, 5) =  KB(5) + DELK3
+         KE( 6, 6) =  KB(6) + DELK2
 
-         KE( 3, 3) =  KB(3)   ;   KE( 3, 9) = -KB(3)
-         KE( 9, 3) = -KB(3)   ;   KE( 9, 9) =  KB(3)
+         KE( 7, 7) =  KB(1)
+         KE( 8, 8) =  KB(2)
+         KE( 9, 9) =  KB(3)
+         KE(10,10) =  KB(4)
+         KE(11,11) =  KE(5,5)
+         KE(12,12) =  KE(6,6)
 
-         KE( 4, 4) =  KB(4)   ;   KE( 4,10) = -KB(4)
-         KE(10, 4) = -KB(4)   ;   KE(10,10) =  KB(4)
+         KE( 1, 7) = -KB(1)
+         KE( 2, 8) = -KB(2)
+         KE( 3, 9) = -KB(3)
+         KE( 4,10) = -KB(4)
+         KE( 5,11) = -KB(5) + DELK3
+         KE( 6,12) = -KB(6) + DELK2
 
-         KE( 5, 5) =  KB(5)   ;   KE( 5,11) = -KB(5)
-         KE(11, 5) = -KB(5)   ;   KE(11,11) =  KB(5)
+         KE( 2, 6) =  KB(2)*L/TWO
+         KE( 2,12) =  KE(2,6)
+         KE( 3, 5) = -KB(3)*L/TWO
+         KE( 3,11) =  KE(3,5)
+         KE( 5, 9) = -KE(3,5)
+         KE( 6, 8) = -KE(2,6)
+         KE( 8,12) = -KE(2,6)
+         KE( 9,11) = -KE(3,5)
 
-         KE( 6, 6) =  KB(6)   ;   KE( 6,12) = -KB(6)
-         KE(12, 6) = -KB(6)   ;   KE(12,12) =  KB(6)
+         DO I=1,12
+            DO J=I,12
+               KE(J,I) = KE(I,J)
+            ENDDO
+         ENDDO
 
          DO I=1,12
             DO J=1,12
@@ -106,10 +131,10 @@
 
       IF (OPT(3) == 'Y') THEN
                                                            ! Calc SEi stress recovery matrices
-         STRE_RCV(1) = EPROP(14)                           ! --- Stress/strain recovery coefficients from PBUSH entry
-         STRE_RCV(2) = EPROP(15)
-         STRN_RCV(1) = EPROP(16)
-         STRN_RCV(2) = EPROP(17)
+         STRE_RCV(1) = EPROP(19)                           ! --- Stress/strain recovery coefficients from PBUSH entry
+         STRE_RCV(2) = EPROP(20)
+         STRN_RCV(1) = EPROP(21)
+         STRN_RCV(2) = EPROP(22)
 
          DO I=1,6
             DO J=1,12
@@ -135,7 +160,7 @@
          DUM0(6, 6) = -HALF*STRE_RCV(2)
          DUM0(6,12) =  HALF*STRE_RCV(2)
 
-         CALL MATMULT_FFF ( DUM0, STIFF, 6, 12, 12, DUM1 )   ! --- Dummy 6x12 matrix that has the SEi matrix data
+         CALL MATMULT_FFF ( DUM0, STIFF, 6, 12, 12, DUM1 ) ! --- Dummy 6x12 matrix that has the SEi matrix data
 
          DO I=1,3                                          ! --- SEi
             DO J=1,12

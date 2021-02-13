@@ -708,15 +708,21 @@
                OFFDIS(2,1) = BAROFF(IROW,4)
                OFFDIS(2,2) = BAROFF(IROW,5)
                OFFDIS(2,3) = BAROFF(IROW,6)
-             ENDIF
+            ELSE
+               EOFF(INT_ELEM_ID) = 'N'
+            ENDIF
 
          ELSE IF (TYPE(1:4) == 'BUSH') THEN                ! Always have offset for BUSH since at least one end will hvae to be
             BUSH_OCID = EDAT(EPNTK+6)                      ! offset in order to get zero elem length
             IROW = EDAT(EPNTK + 7)
-            EOFF(INT_ELEM_ID) = 'Y'
-            OFFDIS(1,1) = BUSHOFF(IROW,1)*ELEM_LEN_12
-            OFFDIS(1,2) = BUSHOFF(IROW,2)*ELEM_LEN_12
-            OFFDIS(1,3) = BUSHOFF(IROW,3)*ELEM_LEN_12
+            IF (IROW > 0) THEN
+               EOFF(INT_ELEM_ID) = 'Y'
+               OFFDIS(1,1) = BUSHOFF(IROW,1)*ELEM_LEN_12
+               OFFDIS(1,2) = BUSHOFF(IROW,2)*ELEM_LEN_12
+               OFFDIS(1,3) = BUSHOFF(IROW,3)*ELEM_LEN_12
+            ELSE
+               EOFF(INT_ELEM_ID) = 'N'
+            ENDIF
 
          ELSE IF (TYPE(1:5) == 'TRIA3') THEN
 

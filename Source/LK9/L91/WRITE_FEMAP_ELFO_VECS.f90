@@ -30,7 +30,8 @@
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, NEU
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, NGRID
+      USE PARAMS, ONLY                :  SUPWARN
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NGRID, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE SUBR_BEGEND_LEVELS, ONLY    :  WRITE_FEMAP_ELFO_VECS_BEGEND
@@ -93,7 +94,7 @@
          ENDIF
       ENDDO
 
-      IF (ELEM_TYP == 'ROD     ') THEN
+      IF      (ELEM_TYP == 'ROD     ') THEN
          VEC_ID_OFFSET = 50100
       ELSE IF (ELEM_TYP == 'BAR     ') THEN
          VEC_ID_OFFSET = 50200
@@ -116,10 +117,11 @@
       ELSE IF (ELEM_TYP == 'ELAS4   ') THEN
          VEC_ID_OFFSET = 51100
       ELSE
-         FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,939) SUBR_NAME, ELEM_TYP
-         WRITE(F06,939) SUBR_NAME, ELEM_TYP
-         CALL OUTA_HERE ( 'Y' )
+         WARN_ERR = WARN_ERR + 1
+         WRITE(ERR,943) TRIM(ELEM_TYP), 'ELEM FORCE', TRIM(SUBR_NAME)
+         IF (SUPWARN == 'N') THEN
+            WRITE(F06,943) TRIM(ELEM_TYP), 'ELEM FORCE', TRIM(SUBR_NAME)
+         ENDIF
       ENDIF
 
 ! Process BAR and ROD elements
@@ -361,8 +363,7 @@
       RETURN
 
 ! **********************************************************************************************************************************
-  939 FORMAT('* ERROR   939: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' INVALID ELEMENT TYPE = ',A,' FOR ARGUMENT "ELEM_TYP"')             
+  943 FORMAT(' *WARNING    : ELEMENT TYPE = "',A,'" FOR FEMAP ',A,' OUTPUT IN SUBROUTINE ',A,' HAS NOT BEEN PROGRAMMED')
 
  1001 FORMAT(2(I8,','),'       1,')
 
