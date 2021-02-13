@@ -125,7 +125,7 @@
 
       EDAT(NEDAT-2) = -EDAT(NEDAT-2)      
 
-! Put property ID (neg of EID) and material ID's into array PROD
+! Put property ID (neg of elem ID) and material ID's into array PROD
 
       NPROD = NPROD + 1
 

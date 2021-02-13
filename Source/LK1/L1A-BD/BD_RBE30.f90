@@ -67,7 +67,7 @@
  
 !   FIELD   ITEM            EXPLANATION 
 !   -----   ------------    -------------
-!    2      EID             RBE3 elem ID
+!    2      ELID            RBE3 elem ID
 !    3      blank
 !    4      REFGRID         Ref grid point ID (this DOF will go into M-set)
 !    5      REFC            Ref component number (1-6) (comp of REFGRID) 

@@ -44,7 +44,7 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'BD_CELAS1'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
-      CHARACTER(LEN(JCARD))           :: CELAS_EID         ! Field 2 of CELAS1 card (this CELAS1's elem ID)
+      CHARACTER(LEN(JCARD))           :: CELAS_ELID        ! Field 2 of CELAS1 card (this CELAS1's elem ID)
       CHARACTER(LEN(JCARD))           :: JCARD_EDAT(10)    ! JCARD but with fields 5 and 6 switched to get G.P.'s together in EDAT
  
       INTEGER(LONG)                   :: I                 ! DO loop index
@@ -75,7 +75,7 @@
 ! Make JCARD from CARD
  
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
-      CELAS_EID = JCARD(2)
+      CELAS_ELID = JCARD(2)
  
 ! Make JCARD_EDAT, which is the version that will have JCARD fields 5, 6 switched when subr ELEPRO called
 
@@ -83,7 +83,7 @@
          JCARD_EDAT(I) = JCARD(I)
       ENDDO 
 
-! Check property ID field. Set to EID if blank
+! Check property ID field. Set to element ID if blank
   
       IF (JCARD(3)(1:) == ' ') THEN
          JCARD_EDAT(3) = JCARD(2)
@@ -104,8 +104,8 @@
          CALL I4FLD ( JCARD(5), JF(5), IDOF )
          IF ((IDOF <= 0) .OR. (IDOF > 6)) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1133) IDOF, JF(5), CELAS_EID
-            WRITE(F06,1133) IDOF, JF(5), CELAS_EID
+            WRITE(ERR,1133) IDOF, JF(5), CELAS_ELID
+            WRITE(F06,1133) IDOF, JF(5), CELAS_ELID
          ENDIF
       ENDIF
  
@@ -113,8 +113,8 @@
          CALL I4FLD ( JCARD(7), JF(7), IDOF )
          IF ((IDOF <= 0) .OR. (IDOF > 6)) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1133) IDOF, JF(7), CELAS_EID
-            WRITE(F06,1133) IDOF, JF(7), CELAS_EID
+            WRITE(ERR,1133) IDOF, JF(7), CELAS_ELID
+            WRITE(F06,1133) IDOF, JF(7), CELAS_ELID
          ENDIF
       ENDIF
  

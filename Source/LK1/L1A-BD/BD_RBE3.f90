@@ -47,7 +47,7 @@
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
       CHARACTER( 1*BYTE)              :: CDOF(6)           ! An output from subr RDOF
       CHARACTER(LEN(JCARD))           :: CHRINP            ! An 8 character field returned from subr IP6CHK
-      CHARACTER(LEN(JCARD))           :: CHAR_EID          ! Char value for element ID in field 2 of parent entry
+      CHARACTER(LEN(JCARD))           :: CHAR_ELID         ! Char value for element ID in field 2 of parent entry
       CHARACTER( 1*BYTE)              :: FND_NEW_WGT       ! 'Y' if a weight entry has been found
       CHARACTER( 8*BYTE)              :: IP6TYP            ! Descriptor of what is in the 8 char field sent to subr IP6CHK
       CHARACTER( 1*BYTE)              :: NEXT_MUST_BE_GRID ! 'Y' if next field must be grid (i.e. need grid after wgt and comp)
@@ -70,7 +70,7 @@
       INTEGER(LONG)                   :: REFC_NUM_Ci       ! Number of displ components in REFC field
       INTEGER(LONG)                   :: REFC      = 0     ! REFC value in field 5 of parent entry
       INTEGER(LONG)                   :: REFGRID   = 0     ! REFGRID value in field 4 of parent entry
-      INTEGER(LONG)                   :: REID      = 0     ! This elements' ID
+      INTEGER(LONG)                   :: RELID     = 0     ! This elements' ID
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_RBE3_BEGEND
  
       REAL(DOUBLE)                    :: R8INP             ! A real value read from a field on this RBE3 entry
@@ -90,7 +90,7 @@
  
 !   FIELD   ITEM            EXPLANATION 
 !   -----   ------------    -------------
-!    2      EID             RBE3 elem ID
+!    2      ELID            RBE3 elem ID
 !    3      blank
 !    4      REFGRID         Ref grid point ID (this grid will go into M-set)
 !    5      REFC            Ref component number (1-6) (comp of REFGRID) 
@@ -131,11 +131,11 @@
  
 ! Read and check data on parent entry
  
-      CHAR_EID = JCARD(2)
+      CHAR_ELID = JCARD(2)
       CALL I4FLD ( JCARD(2), JF(2), I4INP )                ! Field 2: Elem ID
       IF (IERRFL(2) == 'N') THEN
-         REID                   = I4INP
-         RIGID_ELEM_IDS(NRIGEL) = REID
+         RELID                   = I4INP
+         RIGID_ELEM_IDS(NRIGEL) = RELID
       ELSE
          JERR = JERR + 1
       ENDIF
@@ -154,8 +154,8 @@
             REFC = I4INP
          ELSE
             JERR = JERR + 1
-            WRITE(ERR,1124) JF(5), 'RBE3', CHAR_EID, JF(5), JCARD(5)
-            WRITE(F06,1124) JF(5), 'RBE3', CHAR_EID, JF(5), JCARD(5)
+            WRITE(ERR,1124) JF(5), 'RBE3', CHAR_ELID, JF(5), JCARD(5)
+            WRITE(F06,1124) JF(5), 'RBE3', CHAR_ELID, JF(5), JCARD(5)
          ENDIF
       ELSE
          JERR = JERR + 1
@@ -178,8 +178,8 @@
             INTDOF = I4INP
          ELSE
             JERR = JERR + 1
-            WRITE(ERR,1124) JF(7), 'RBE3', CHAR_EID, JF(7), JCARD(7)
-            WRITE(F06,1124) JF(7), 'RBE3', CHAR_EID, JF(7), JCARD(7)
+            WRITE(ERR,1124) JF(7), 'RBE3', CHAR_ELID, JF(7), JCARD(7)
+            WRITE(F06,1124) JF(7), 'RBE3', CHAR_ELID, JF(7), JCARD(7)
          ENDIF
       ELSE
          JERR = JERR + 1
@@ -229,8 +229,8 @@
             ENDIF
          ELSE
             JERR = JERR + 1
-            WRITE(ERR,1151) '9', 'RBE3', CHAR_EID, JCARD(9)
-            WRITE(F06,1151) '9', 'RBE3', CHAR_EID, JCARD(9)
+            WRITE(ERR,1151) '9', 'RBE3', CHAR_ELID, JCARD(9)
+            WRITE(F06,1151) '9', 'RBE3', CHAR_ELID, JCARD(9)
          ENDIF
       ENDIF
 
@@ -259,8 +259,8 @@
                CALL CHAR_FLD ( JCARD(J), JF(J), CHRINP )
                IF ((CHRINP(1:2) == 'UM') .OR. (CHRINP(1:4) == '"UM"')) THEN
                   JERR = JERR + 1
-                  WRITE(ERR,1155) JF(J), 'RBE3', CHAR_EID, I
-                  WRITE(F06,1155) JF(J), 'RBE3', CHAR_EID, I
+                  WRITE(ERR,1155) JF(J), 'RBE3', CHAR_ELID, I
+                  WRITE(F06,1155) JF(J), 'RBE3', CHAR_ELID, I
                ENDIF
             ENDDO
 
@@ -277,8 +277,8 @@ do_j:       DO J=2,9
                         INTDOF = I4INP
                      ELSE
                         JERR = JERR + 1
-                        WRITE(ERR,1129) JF(J), 'RBE3', CHAR_EID, I, JF(J), JCARD(J)
-                        WRITE(F06,1129) JF(J), 'RBE3', CHAR_EID, I, JF(J), JCARD(J)
+                        WRITE(ERR,1129) JF(J), 'RBE3', CHAR_ELID, I, JF(J), JCARD(J)
+                        WRITE(F06,1129) JF(J), 'RBE3', CHAR_ELID, I, JF(J), JCARD(J)
                      ENDIF
                   ELSE
                      JERR = JERR + 1
@@ -305,8 +305,8 @@ do_j:       DO J=2,9
                      ENDIF
                   ELSE
                      JERR = JERR + 1
-                     WRITE(ERR,1154) J, 'RBE3', CHAR_EID, I
-                     WRITE(F06,1154) J, 'RBE3', CHAR_EID, I
+                     WRITE(ERR,1154) J, 'RBE3', CHAR_ELID, I
+                     WRITE(F06,1154) J, 'RBE3', CHAR_ELID, I
                      NEXT_MUST_BE_GRID = 'N'
                   ENDIF
                ELSE                                        ! Not a weight or Ci so this must be a grid
@@ -342,7 +342,7 @@ do_j:       DO J=2,9
       IF (JERR == 0) THEN
          WRITE(L1F) RTYPE
          NRECARD = NRECARD + 1
-         WRITE(L1F) REID, REFGRID, REFC, IRBE3, WT_TOT
+         WRITE(L1F) RELID, REFGRID, REFC, IRBE3, WT_TOT
          DO I=1,IRBE3
             WRITE(L1F) GRID(I), COMP(I), WTi(I)
             CALL RDOF ( COMP(I), CDOF )

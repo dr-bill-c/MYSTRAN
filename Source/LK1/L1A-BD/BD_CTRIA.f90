@@ -98,7 +98,7 @@
          JCARD_EDAT(I) = JCARD(I)
       ENDDO 
 
-! Check property ID field. Set to EID if blank
+! Check property ID field. Set to element ID if blank
   
       IF (JCARD(3)(1:) == ' ') THEN
          JCARD_EDAT(3) = JCARD(2)
@@ -184,8 +184,8 @@
          NPLATEOFF = NPLATEOFF + 1
          IF (NPLATEOFF > LPLATEOFF) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1144) SUBR_NAME,LPLATEOFF
-            WRITE(F06,1144) SUBR_NAME,LPLATEOFF
+            WRITE(ERR,1144) SUBR_NAME,' TOO MANY PLATE OFFSETS. LIMIT IS NPLATEOFF =  ',LPLATEOFF
+            WRITE(F06,1144) SUBR_NAME,' TOO MANY PLATE OFFSETS. LIMIT IS NPLATEOFF =  ',LPLATEOFF
             CALL OUTA_HERE ( 'Y' )
          ENDIF
          NEDAT = NEDAT + 1
@@ -233,8 +233,8 @@
             NPLATETHICK = NPLATETHICK + 1
             IF (NPLATETHICK > LPLATETHICK) THEN
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,1148) SUBR_NAME,LPLATETHICK
-               WRITE(F06,1148) SUBR_NAME,LPLATETHICK
+               WRITE(ERR,1144) SUBR_NAME,' TOO MANY PLATE THICKNESSES. LIMIT IS NPLATETHICK = ',LPLATETHICK
+               WRITE(F06,1144) SUBR_NAME,' TOO MANY PLATE THICKNESSES. LIMIT IS NPLATETHICK = ',LPLATETHICK
                CALL OUTA_HERE ( 'Y' )
             ENDIF
             CALL R8FLD ( JCARD(J), JF(J), R8INP )
@@ -263,10 +263,7 @@
                     ,/,14X,' TOO MANY PLATE ELEMENT MATERIAL PROPERTY ANGLES. LIMIT IS NMATANGLE =  ',I8) 
 
  1144 FORMAT(' *ERROR  1144: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' TOO MANY PLATE OFFSETS. LIMIT IS NPLATEOFF =  ',I8) 
-
- 1148 FORMAT(' *ERROR  1144: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' TOO MANY PLATE THICKNESSES. LIMIT IS NPLATETHICK = ',I8) 
+                    ,/,14X,A,I8) 
 
  1196 FORMAT(' *ERROR  1196: VALUE FOR MATERIAL ANGLE ON ',A,A,' MUST BE AN INTEGER OR REAL NUMBER BUT VALUE READ WAS ',A)
 

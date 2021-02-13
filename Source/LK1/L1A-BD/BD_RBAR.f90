@@ -31,7 +31,7 @@
 
 !       1) Record 1 has the rigid element type: 'RBAR    '
 !       2) Record 2 has:
-!            REID : Rigid element ID
+!            RELID: Rigid element ID
 !            GID1 : 1st Grid ID
 !            IDOF1: Independent DOF's at GID1
 !            DDOF1: Dependent   DOF's at GID1
@@ -66,7 +66,7 @@
       INTEGER(LONG)                   :: IDOF_ERR  = 0     ! Count of the no. of DOF component errors in fields 5,6
       INTEGER(LONG)                   :: IDUM              ! Dummy arg in subr IP^CHK not used herein
       INTEGER(LONG)                   :: RBDOF(4)          ! The DOF's in fields 5,6,7,8
-      INTEGER(LONG)                   :: REID      = 0     ! Rigid element ID
+      INTEGER(LONG)                   :: RELID     = 0     ! Rigid element ID
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_RBAR_BEGEND
  
 ! **********************************************************************************************************************************
@@ -81,7 +81,7 @@
  
 !   FIELD   ITEM           
 !   -----   ------------   
-!    2      REID , Rigid Elem ID
+!    2      RELID, Rigid Elem ID
 !    3      GID1 , Grid ID for 1st RBAR grid
 !    4      GID2 , Grid ID for 2nd RBAR grid
 !    5      IDOF1, Indep. DOF's at GID1 
@@ -103,11 +103,11 @@
 
 ! Read and check data
  
-      CALL I4FLD ( JCARD(2), JF(2), REID )                 ! Read rigid element ID in field 2 
+      CALL I4FLD ( JCARD(2), JF(2), RELID )                 ! Read rigid element ID in field 2 
       IF (IERRFL(2) /= 'N') THEN
          JERR = JERR + 1
       ELSE
-         RIGID_ELEM_IDS(NRIGEL) = REID
+         RIGID_ELEM_IDS(NRIGEL) = RELID
       ENDIF
  
       CALL I4FLD ( JCARD(3), JF(3), GID1 )                 ! Read 1st grid in field 3
@@ -190,8 +190,8 @@
             ENDIF
          ENDDO
          IF (IDOF_ERR > 0) THEN
-            WRITE(ERR,1142) REID,JCARD(5),JCARD(6)
-            WRITE(F06,1142) REID,JCARD(5),JCARD(6)
+            WRITE(ERR,1142) RELID,JCARD(5),JCARD(6)
+            WRITE(F06,1142) RELID,JCARD(5),JCARD(6)
          ENDIF
       ENDIF
 
@@ -199,7 +199,7 @@
 
       IF ((JERR == 0) .AND. (IDOF_ERR == 0)) THEN
          WRITE(L1F) RTYPE
-         WRITE(L1F) REID,GID1,RBDOF(1),RBDOF(3),GID2,RBDOF(2),RBDOF(4)
+         WRITE(L1F) RELID,GID1,RBDOF(1),RBDOF(3),GID2,RBDOF(2),RBDOF(4)
          NRECARD = NRECARD + 1
       ENDIF
 

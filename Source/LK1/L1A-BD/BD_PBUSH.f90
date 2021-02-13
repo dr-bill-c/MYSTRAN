@@ -37,7 +37,7 @@
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
       USE PARAMS, ONLY                :  EPSIL
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, IERRFL, JCARD_LEN, JF, LPBUSH, NPBUSH, WARN_ERR
-      USE CONSTANTS_1, ONLY           :  ZERO
+      USE CONSTANTS_1, ONLY           :  ZERO, ONE
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  BD_PBUSH_BEGEND
       USE MODEL_STUF, ONLY            :  PBUSH, RPBUSH
@@ -92,8 +92,6 @@
  
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
  
-! Check for overflow
-
       NPBUSH = NPBUSH+1
  
 ! Read and check data on parent card
@@ -125,7 +123,7 @@
          CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,8,9 )
       ELSE IF (JCARD(3)(1:3) == 'GE ') THEN
          OFFSET      = 12
-         NUM_ENTRIES = 1
+         NUM_ENTRIES = 6
          CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,0,0,0,0,0 )
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,5,6,7,8,9 )
       ELSE IF (JCARD(3)(1:3) == 'RCV') THEN
@@ -148,9 +146,9 @@
  
       CALL CRDERR ( CARD )
 
-! Read and check data on 3 optional cont entries
+! Read and check data on 3 optional con't entries
 
-      DO I=1,3
+      DO I=1,4
 
          IF (LARGE_FLD_INP == 'N') THEN
             CALL NEXTC  ( CARD, ICONT, IERR )
@@ -175,18 +173,25 @@
                CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,8,9 )
             ELSE IF (JCARD(3)(1:3) == 'GE ') THEN
                OFFSET      = 12
-               NUM_ENTRIES = 1
+               NUM_ENTRIES = 6
                CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,0,0,0,0,0 )
                CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,5,6,7,8,9 )
             ELSE IF (JCARD(3)(1:3) == 'RCV') THEN
-               OFFSET      = 13
+               OFFSET      = 18
                NUM_ENTRIES = 4
+               CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,0,0 )
+               CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,0,8,9 )
+            ELSE IF (JCARD(3)(1:3) == 'M  ') THEN
+               OFFSET      = 22
+               NUM_ENTRIES = 1
                CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,0,0 )
                CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,0,8,9 )
             ELSE
                FATAL_ERR = FATAL_ERR + 1
+               WRITE(ERR,1148) PROPERTY_ID, 'K, B, GE, or RCV', JCARD(3)
+               WRITE(F06,1148) PROPERTY_ID, 'K, B, GE, or RCV', JCARD(3)
+               EXIT
             ENDIF
-
             DO J=1,NUM_ENTRIES                             ! Read real property values in fields 4-9
                CALL R8FLD ( JCARD(J+3), JF(J+3), R8INP )
                IF (IERRFL(J) == 'N') THEN
@@ -195,6 +200,12 @@
             ENDDO
  
             CALL CRDERR ( CARD )
+
+         ELSE                                              ! If no con't entries, default stress/strain RCV's to 1.0
+
+            DO J=19,22
+               RPBUSH(NPBUSH,J) = ONE
+            ENDDO
 
          ENDIF
 
@@ -213,9 +224,9 @@
 ! **********************************************************************************************************************************
  1145 FORMAT(' *ERROR  1145: DUPLICATE ',A,' ENTRY WITH ID = ',I8)
  
- 1178 FORMAT(' *ERROR  1178: ',A,A,' HAS INCORRECT VALUE "',A,'"  IN FIELD 3')
+ 1148 FORMAT(' *ERROR  1148: FIELD 3 OF PBUSH ', I8, ' CONTINUATION ENTRY SHOULD BE ', A, ' BUT IS: ', A)
 
- 1192 FORMAT(' *ERROR  1192: ID IN FIELD ',I3,' OF ',A,A,' MUST BE ',A,' BUT IS = ',I8)
+ 1178 FORMAT(' *ERROR  1178: ',A,A,' HAS INCORRECT VALUE "',A,'"  IN FIELD 3')
 
 ! **********************************************************************************************************************************
  

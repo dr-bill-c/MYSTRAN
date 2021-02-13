@@ -96,7 +96,7 @@
 !   FIELD         ITEM                  ARRAY ELEMENT
 !   -----   ----------------         -----------------
 !    1      Elem type                 ETYPE(nele) = 'USERIN  '
-!    2      EID, Element ID           EDAT(nedat+1)
+!    2      ELID, Element ID          EDAT(nedat+1)
 !    3      PID, "Prop" ID            EDAT(nedat+2)
 !    4      NG , Num GRID's           EDAT(nedat+3)
 !    5      NS , Num SPOINT's         EDAT(nedat+4)

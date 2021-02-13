@@ -48,7 +48,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP     ! If 'Y', CARD is large field format
       CHARACTER(LEN=JCARD_LEN)        :: BAR_OR_BEAM       ! Field 1 of CBAR/CBEAM card
       CHARACTER(LEN(CARD))            :: CHILD             ! "Child" card read in subr NEXTC, called herein
-      CHARACTER(LEN=JCARD_LEN)        :: EID               ! Field 2 of CBAR/CBEAM card
+      CHARACTER(LEN=JCARD_LEN)        :: ELID              ! Field 2 of CBAR/CBEAM card
       CHARACTER( 1*BYTE)              :: FOUND     = 'N'   ! 'Y' if the V vec is one that is already stored in array VVEC
       CHARACTER( 8*BYTE)              :: IP6TYP            ! An output from subr IP6CHK called herein
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
@@ -115,7 +115,7 @@
  
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
       BAR_OR_BEAM = JCARD(1)
-      EID         = JCARD(2)
+      ELID        = JCARD(2)
  
 ! Set JCARD_EDAT to JCARD
 
@@ -309,8 +309,8 @@
                   ENDIF
                ELSE
                   FATAL_ERR = FATAL_ERR + 1
-                  WRITE(ERR,1130) JCARD(J) ,J, JCARD(1) ,EID
-                  WRITE(F06,1130) JCARD(J) ,J, JCARD(1), EID
+                  WRITE(ERR,1130) JCARD(J) ,J, JCARD(1) ,ELID
+                  WRITE(F06,1130) JCARD(J) ,J, JCARD(1), ELID
                ENDIF
             ELSE
                NEDAT = NEDAT + 1                           ! Null EDAT for this pin flag
