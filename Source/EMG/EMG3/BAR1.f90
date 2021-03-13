@@ -40,6 +40,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  BAR1_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, TEN, TWELVE
+      USE DEBUG_PARAMETERS
       USE PARAMS, ONLY                :  EPSIL, ART_KED, ART_ROT_KED, ART_TRAN_KED
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
       USE MODEL_STUF, ONLY            :  ELDOF, DOFPIN, DT, EID, NUM_EMG_FATAL_ERRS, KE, KED, PEL, PTE, SE1, SE2, STE1, STE2, TYPE,&
@@ -157,6 +158,7 @@
       R2   = R0*I2
       BETA = R0*I12
       DEN  = I1*I2 - I12*I12                               !    I1*I2 > I12^2 was checked when PBAR's were read in subr LOADB
+      IF (DEBUG(203) > 0) CALL DEBUG_BAR1 ( 1 )
 
 ! If I12 > 0 then R1, R2 remain as is. If I12 = 0 then R1, R2 depend on G1 and G2. Quit if R1D or R2D = 0.
 ! If DEBUG(12) = 1, then use R1 and R2 from below even when I12 = 0
@@ -211,6 +213,7 @@
       C01    = L/TWO
       C02    = L*L/THREE
       C03    = C02/TWO
+      IF (DEBUG(203) > 0) CALL DEBUG_BAR1 ( 2 )
   
 ! Generate KE 
 
@@ -582,6 +585,84 @@
  2101 FORMAT(12(1ES14.6))
 
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE DEBUG_BAR1 (WHAT)
+
+      USE PENTIUM_II_KIND
+      USE IOUNT1, ONLY                :  ERR, F04, F06
+
+      IMPLICIT NONE
+
+      INTEGER(LONG), INTENT(IN)       :: WHAT
+
 ! **********************************************************************************************************************************
-  
+      IF (WHAT == 1) THEN
+
+         WRITE(F06,*)
+         WRITE(F06,1997)
+         WRITE(F06,'(A,I8)') 'In subr BAR1 with BAR element ',EID
+         WRITE(F06,*) '-------------------------------------'
+         WRITE(F06,1998) 'L       = ',L
+         WRITE(F06,1998) 'AREA    = ',AREA
+         WRITE(F06,1998) 'I1      = ',I1
+         WRITE(F06,1998) 'I2      = ',I2
+         WRITE(F06,1998) 'I12     = ',I12
+         WRITE(F06,1998) 'JTOR    = ',JTOR
+         WRITE(F06,1998) 'K1      = ',K1
+         WRITE(F06,1998) 'K2      = ',K2
+         WRITE(F06,1998) 'E       = ',E
+         WRITE(F06,1998) 'G       = ',G
+         WRITE(F06,1998) 'SCOEFF  = ',SCOEFF
+         WRITE(F06,1998) 'ALPHA   = ',ALPHA
+         WRITE(F06,1998) 'TREF    = ',TREF
+         WRITE(F06,1998) 'G1      = ',G1
+         WRITE(F06,1998) 'G2      = ',G2
+         WRITE(F06,1998) 'R0      = ',R0
+         WRITE(F06,1999) 'R1      = ',R1, ' initially (before checking I12, G1)'
+         WRITE(F06,1999) 'R2      = ',R2, ' initially (before checking I12, G2)'
+         WRITE(F06,1998) 'BETA    = ',BETA
+         WRITE(F06,1998) 'DEN     = ',DEN
+
+      ELSE IF (WHAT == 2) THEN
+
+         WRITE(F06,1999) 'R1      = ',R1, ' finally'
+         WRITE(F06,1999) 'R2      = ',R2, ' finally'
+         WRITE(F06,1998) 'DELTA1  = ',DELTA1
+         WRITE(F06,1998) 'DELTA2  = ',DELTA2
+         WRITE(F06,1998) 'DELTA12 = ',DELTA12
+         WRITE(F06,1998) 'RA      = ',RA
+         WRITE(F06,1998) 'RG      = ',RG
+         WRITE(F06,1998) 'K11     = ',K11
+         WRITE(F06,1998) 'K12     = ',K12
+         WRITE(F06,1998) 'K21     = ',K21
+         WRITE(F06,1998) 'K22     = ',K22
+         WRITE(F06,1998) 'K1T     = ',K1T
+         WRITE(F06,1998) 'K2T     = ',K2T
+         WRITE(F06,1998) 'K3T     = ',K3T
+         WRITE(F06,1998) 'K4T     = ',K4T
+         WRITE(F06,1998) 'C01     = ',C01
+         WRITE(F06,1998) 'C02     = ',C02
+         WRITE(F06,1998) 'C03     = ',C03
+         WRITE(F06,*)
+         WRITE(F06,1997)
+         WRITE(F06,*)
+
+      ENDIF
+
+! **********************************************************************************************************************************
+ 1997 FORMAT('************************************************************')
+
+ 1998 FORMAT(A, 1ES14.6)
+
+ 1999 FORMAT(A, 1ES14.6, A)
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE DEBUG_BAR1
+
       END SUBROUTINE BAR1

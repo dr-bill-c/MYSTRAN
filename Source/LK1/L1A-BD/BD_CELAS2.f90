@@ -44,7 +44,7 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'BD_CELAS2'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
-      CHARACTER(LEN(JCARD))           :: CELAS_EID         ! Field 2 of CBAR card (this CBAR's elem ID)
+      CHARACTER(LEN(JCARD))           :: CELAS_ELID        ! Field 2 of CELAS2 card (this CELAS2's elem ID)
       CHARACTER(LEN(JCARD))           :: JCARD_EDAT(10)    ! JCARD but with fields 5 and 6 switched to get G.P.'s together in EDAT
  
       INTEGER(LONG)                   :: ELEM_ID           ! Elem ID from field 2
@@ -105,7 +105,7 @@
 
 ! Get elem ID from field 2 so we can use negative of it as property ID
 
-      CELAS_EID = JCARD(2)
+      CELAS_ELID = JCARD(2)
       NPELAS = NPELAS + 1
       CALL I4FLD ( JCARD(2), JF(2), ELEM_ID )
       PELAS(NPELAS,1) = -ELEM_ID
@@ -146,8 +146,8 @@
          CALL I4FLD ( JCARD(5), JF(5), IDOF )
          IF ((IDOF <= 0) .OR. (IDOF > 6)) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1133) IDOF,JF(5),CELAS_EID
-            WRITE(F06,1133) IDOF,JF(5),CELAS_EID
+            WRITE(ERR,1133) IDOF,JF(5),CELAS_ELID
+            WRITE(F06,1133) IDOF,JF(5),CELAS_ELID
          ENDIF
       ENDIF
  
@@ -155,8 +155,8 @@
          CALL I4FLD ( JCARD(7), JF(7), IDOF )
          IF ((IDOF <= 0) .OR. (IDOF > 6)) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1133) IDOF,JF(7),CELAS_EID
-            WRITE(F06,1133) IDOF,JF(7),CELAS_EID
+            WRITE(ERR,1133) IDOF,JF(7),CELAS_ELID
+            WRITE(F06,1133) IDOF,JF(7),CELAS_ELID
          ENDIF
       ENDIF
  

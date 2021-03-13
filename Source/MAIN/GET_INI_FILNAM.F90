@@ -52,11 +52,6 @@
       FILNAM( 1:LEN(PROG_NAME)) = PROG_NAME
       FILNAM(LEN(PROG_NAME)+1:LEN(PROG_NAME)+4) = '.INI'
 
-      ! set the directory separator to '\' iff targeting Windows
-#ifdef _WIN32
-      OS_DIR_SEP = '\'
-#endif
-
       IF (MYSTRAN_DIR_LEN > 0) THEN
          INIFIL(1:MYSTRAN_DIR_LEN)  = MYSTRAN_DIR
          INIFIL(MYSTRAN_DIR_LEN+1:MYSTRAN_DIR_LEN+2)  = OS_DIR_SEP

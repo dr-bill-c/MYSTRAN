@@ -256,6 +256,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
                   ENDDO do_strain_pts
 
                   IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM_OGEL )
                      CALL WRITE_ELEM_STRAINS ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I) )
                      EXIT
                   ENDIF

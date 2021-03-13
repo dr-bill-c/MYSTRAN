@@ -30,13 +30,13 @@
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_ERR, WRT_LOG
-
+      USE CONSTANTS_1, ONLY           :  ZERO
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, LINKNO, KOO_SDIA, NDOFF, NDOFG, NDOFA, NDOFO, NSUB, SOL_NAME,               &
                                          NTERM_KFF , NTERM_KAA , NTERM_KAO , NTERM_KOO ,                                           &
                                          NTERM_KFFD, NTERM_KAAD, NTERM_KAOD, NTERM_KOOD,                                           &
                                          NTERM_MFF , NTERM_MAA , NTERM_MAO , NTERM_MOO ,                                           &
                                          NTERM_PF  , NTERM_PA  , NTERM_PO  , NTERM_GOA
-      USE PARAMS, ONLY                :  EQCHK_OUTPUT, MATSPARS, PRTSTIFD, PRTSTIFF, PRTMASS, PRTFOR
+      USE PARAMS, ONLY                :  EQCHK_OUTPUT, MATSPARS, PRTSTIFD, PRTSTIFF, PRTMASS, PRTFOR, SOLLIB, SPARSE_FLAVOR
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
@@ -48,6 +48,7 @@
                                          I_PF  , J_PF  , PF  , I_PA  , J_PA  , PA  , I_PO  , J_PO  , PO
       USE SPARSE_MATRICES, ONLY       :  SYM_KAA
       USE SCRATCH_MATRICES
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS, SLU_INFO
  
       USE REDUCE_F_AO_USE_IFs
 
@@ -66,6 +67,7 @@
       INTEGER(LONG)                   :: PART_VEC_SUB(NSUB)  ! Partitioning vector (1's for all subcases) 
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = REDUCE_F_AO_BEGEND
 
+      REAL(DOUBLE)                    :: DUM_COL(NDOFO)      ! Temp variable used in SuperLU
       REAL(DOUBLE)                    :: KAA_DIAG(NDOFA)     ! Diagonal terms from KAA
       REAL(DOUBLE)                    :: KAA_MAX_DIAG        ! Max diag term  from KAA
       REAL(DOUBLE)                    :: KAAD_DIAG(NDOFA)    ! Diagonal terms from KAAD
@@ -96,7 +98,6 @@
 ! **********************************************************************************************************************************
       IF (DO_WHICH_CODE_FRAG == 1) THEN                    ! This is for all except BUCKLING w LOAD_ISTEP=2 (eigen part of BUCKLING)
 
-
 ! If there is an O-set, reduce KFF to KAA, MFF to MAA, PF to PA using UO = GOA*UA + UO0, where GOA = -KOO(-1)*KAO', UO0 = KOO(-1)*PO
 ! If there is no O-set, then equate KAA to KFF, MAA to MFF, PA to PF
 
@@ -110,9 +111,9 @@
 
             CALL OURTIM                                    ! Reduce KFF to KAA 
             IF (MATSPARS == 'Y') THEN
-               MODNAM = '  REDUCE KFF TO KAA (SPARSE MATRIX ROUTINES)'
+               MODNAM = 'REDUCE KFF TO KAA (SPARSE MATRIX ROUTINES)'
             ELSE
-               MODNAM = '  REDUCE KFF TO KAA (FULL MATRIX ROUTINES)'
+               MODNAM = 'REDUCE KFF TO KAA (FULL MATRIX ROUTINES)'
             ENDIF
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
@@ -120,9 +121,9 @@
 
             CALL OURTIM                                    ! Reduce MFF to MAA 
             IF (MATSPARS == 'Y') THEN
-               MODNAM = '  REDUCE MFF TO MAA (SPARSE MATRIX ROUTINES)'
+               MODNAM = 'REDUCE MFF TO MAA (SPARSE MATRIX ROUTINES)'
             ELSE
-               MODNAM = '  REDUCE MFF TO MAA (FULL MATRIX ROUTINES)'
+               MODNAM = 'REDUCE MFF TO MAA (FULL MATRIX ROUTINES)'
             ENDIF
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
@@ -135,9 +136,9 @@
 
                   CALL OURTIM
                   IF (MATSPARS == 'Y') THEN
-                     MODNAM = '  REDUCE PF  TO PA  (SPARSE MATRIX ROUTINES)'
+                     MODNAM = 'REDUCE PF  TO PA  (SPARSE MATRIX ROUTINES)'
                   ELSE
-                     MODNAM = '  REDUCE PF  TO PA  (FULL MATRIX ROUTINES)'
+                     MODNAM = 'REDUCE PF  TO PA  (FULL MATRIX ROUTINES)'
                   ENDIF
                   WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
@@ -153,10 +154,30 @@
 
             ENDIF
 
+FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the storage allocated inside SuperLU
+
+               IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+                  DO J=1,NDOFO
+                     DUM_COL(J) = ZERO
+                  ENDDO
+
+                  CALL C_FORTRAN_DGSSV( 3, NDOFO, NTERM_KOO, 1, KOO , I_KOO , J_KOO , DUM_COL, NDOFO, SLU_FACTORS, SLU_INFO )
+
+                  IF (SLU_INFO .EQ. 0) THEN
+                     WRITE (*,*) 'SUPERLU STORAGE FREED'
+                  ELSE
+                     WRITE(*,*) 'SUPERLU STORAGE NOT FREED. INFO FROM SUPERLU FREE STORAGE ROUTINE = ', SLU_INFO
+                  ENDIF
+
+               ENDIF
+
+            ENDIF FreeS
+ 
          ELSE                                              ! There is no O-set, so equate F, A sets
 
             CALL OURTIM
-            MODNAM = '  EQUATING A-SET TO F-SET'
+            MODNAM = 'EQUATING A-SET TO F-SET'
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
             NDOFA     = NDOFF
@@ -189,7 +210,7 @@
 
 ! Deallocate F set arrays
 
-         MODNAM = '  DEALLOCATE F-SET ARRAYS'
+         MODNAM = 'DEALLOCATE F-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFF  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFF' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MFF  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MFF' )
@@ -198,7 +219,7 @@
 
 ! Deallocate ABAND (which was KOO before decomp and TOO later) and GOA
 
-         MODNAM = '  DEALLOCATE GOA, ABAND ARRAYS'
+         MODNAM = 'DEALLOCATE GOA, ABAND ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
@@ -228,7 +249,7 @@
             ENDIF
          ENDIF
 
-         MODNAM = '  DEALLOCATE O SET ARRAYS'
+         MODNAM = 'DEALLOCATE O SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAO', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAO' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KOO', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KOO' )
@@ -307,7 +328,7 @@
 
          IF (EQCHK_OUTPUT(4) > 0) THEN
             CALL OURTIM
-            MODNAM = '  EQUILIBRIUM CHECK ON KAA                '
+            MODNAM = 'EQUILIBRIUM CHECK ON KAA                '
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
             CALL STIFF_MAT_EQUIL_CHK ( EQCHK_OUTPUT(4),'A ', SYM_KAA, NDOFA, NTERM_KAA, I_KAA, J_KAA, KAA, KAA_DIAG, KAA_MAX_DIAG, &
                                        RBGLOBAL_ASET)
@@ -328,9 +349,9 @@
 
             CALL OURTIM                                       ! Reduce KFF to KAA 
             IF (MATSPARS == 'Y') THEN
-               MODNAM = '  REDUCE KFFD TO KAAD (SPARSE MATRIX ROUTINES)'
+               MODNAM = 'REDUCE KFFD TO KAAD (SPARSE MATRIX ROUTINES)'
             ELSE
-               MODNAM = '  REDUCE KFFD TO KAAD (FULL MATRIX ROUTINES)'
+               MODNAM = 'REDUCE KFFD TO KAAD (FULL MATRIX ROUTINES)'
             ENDIF
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
@@ -339,7 +360,7 @@
          ELSE                                                 ! There is no O-set, so equate F, A sets
 
             CALL OURTIM
-            MODNAM = '  EQUATING A-SET TO F-SET'
+            MODNAM = 'EQUATING A-SET TO F-SET'
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
             NDOFA     = NDOFF
@@ -354,14 +375,14 @@
 
 ! Deallocate F set arrays
 
-         MODNAM = '  DEALLOCATE F-SET ARRAYS'
+         MODNAM = 'DEALLOCATE F-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFFD  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFFD' )
          WRITE(SC1,*) CR13
 
 ! Deallocate ABAND (which was KOO before decomp and TOO later) and GOA
 
-         MODNAM = '  DEALLOCATE GOA, ABAND ARRAYS'
+         MODNAM = 'DEALLOCATE GOA, ABAND ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
@@ -391,7 +412,7 @@
             ENDIF
          ENDIF
 
-         MODNAM = '  DEALLOCATE O SET ARRAYS'
+         MODNAM = 'DEALLOCATE O SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAOD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAOD' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KOOD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KOOD' )
@@ -414,7 +435,7 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 2092 FORMAT(4X,A44,20X,I2,':',I2,':',I2,'.',I3)
+ 2092 FORMAT(6X,A44,20X,I2,':',I2,':',I2,'.',I3)
 
 12345 FORMAT(A,10X,A)
 

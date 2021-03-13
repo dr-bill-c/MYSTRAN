@@ -10,7 +10,7 @@
 ! copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to   
 ! the following conditions:                                                                              
                                                                                                          
-! The above copyright notice and this permission notice shall be included in all copies or substantial   
+! The above copyright notice and this permission notice shall be included in all copies or substantial
 ! portions of the Software and documentation.                                                                              
                                                                                                          
 ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS                                
@@ -35,7 +35,7 @@
                                          NELE, NCBAR, NCBUSH, NCELAS1, NCELAS2, NCELAS3, NCELAS4, NCROD, SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  OFP3_ELFE_1D_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO
+      USE CONSTANTS_1, ONLY           :  ZERO, HALF
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE PARAMS, ONLY                :  OTMSKIP, POST
       USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, EDAT, ELAS_COMP, EPNT, ETYPE, EID, ELMTYP, ELOUT, FCONV, METYPE,         &
@@ -59,8 +59,10 @@
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(INOUT)    :: OT4_EROW          ! Row number in OT4 file for elem related OTM descriptors
       INTEGER(LONG)                   :: ELOUT_ELFE        ! If > 0, there are ELFORCE(ENGR) requests for some elems                
-      INTEGER(LONG)                   :: I,J,K             ! DO loop indices
+      INTEGER(LONG)                   :: I,J,K,L           ! DO loop indices
       INTEGER(LONG)                   :: IERROR       = 0  ! Local error count
+!!!   INTEGER(LONG)                   :: IROW_MAT          ! Row number in OTM's
+!!!   INTEGER(LONG)                   :: IROW_TXT          ! Row number in OTM text file
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NDUM              ! An arg passed to CALC_ELEM_STRESSES
       INTEGER(LONG)                   :: NUM_ELEM          ! No. elems processed prior to writing results to F06 file
@@ -71,7 +73,10 @@
                                                            ! Indicator for output of elem data to BUG file
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = OFP3_ELFE_1D_BEGEND
  
-      REAL(DOUBLE)  :: LENGTH
+      REAL(DOUBLE)                    :: DUM0(6,12)        ! Intermediate matrix in a calc
+      REAL(DOUBLE)                    :: DUM1(6)           ! Intermediate matrix in a calc
+      REAL(DOUBLE)                    :: FORCES(12)        ! Forces at the grid points
+      REAL(DOUBLE)                    :: LENGTH
  
       INTRINSIC IAND
   
@@ -128,6 +133,8 @@
          ENDDO 
       ENDDO   
  
+!!!   IROW_MAT = 0
+!!!   IROW_TXT = 0
       OT4_DESCRIPTOR = 'Element engineering force'
 reqs2:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs2
@@ -178,12 +185,44 @@ elems_2: DO J = 1,NELE
                      ENDIF
 
                      IF (ETYPE(J)(1:4) == 'BUSH') THEN
-                        OGEL(NUM_OGEL,1) = -PEL(1)
-                        OGEL(NUM_OGEL,2) = -PEL(2)
-                        OGEL(NUM_OGEL,3) = -PEL(3)
-                        OGEL(NUM_OGEL,4) = -PEL(4)
-                        OGEL(NUM_OGEL,5) = -PEL(5)
-                        OGEL(NUM_OGEL,6) = -PEL(6)
+
+                        DO K=1,6
+                           DO L=1,12
+                              DUM0(K,L) = ZERO
+                           ENDDO
+                        ENDDO
+
+                        DUM0(1, 1) = -HALF
+                        DUM0(1, 7) =  HALF
+
+                        DUM0(2, 2) = -HALF
+                        DUM0(2, 8) =  HALF
+
+                        DUM0(3, 3) = -HALF
+                        DUM0(3, 9) =  HALF
+
+                        DUM0(4, 4) = -HALF
+                        DUM0(4,10) =  HALF
+
+                        DUM0(5, 5) = -HALF
+                        DUM0(5,11) =  HALF
+
+                        DUM0(6, 6) = -HALF
+                        DUM0(6,12) =  HALF
+
+                        DO K=1,12
+                           FORCES(K) = PEL(K)
+                        ENDDO
+
+                       CALL MATMULT_FFF ( DUM0, FORCES, 6, 12, 1, DUM1 )
+
+                       OGEL(NUM_OGEL,1) = DUM1(1)
+                       OGEL(NUM_OGEL,2) = DUM1(2)
+                       OGEL(NUM_OGEL,3) = DUM1(3)
+                       OGEL(NUM_OGEL,4) = DUM1(4)
+                       OGEL(NUM_OGEL,5) = DUM1(5)
+                       OGEL(NUM_OGEL,6) = DUM1(6)
+
                      ENDIF
 
                      IF (ETYPE(J)(1:3) == 'ROD') THEN
@@ -263,6 +302,7 @@ elems_2: DO J = 1,NELE
                      NUM_ELEM = NUM_ELEM + 1
                      EID_OUT_ARRAY(NUM_ELEM,1) = EID
                      IF (NUM_ELEM == NELREQ(I)) THEN
+                        CALL CHK_OGEL_ZEROS ( NUM_OGEL )
                         CALL WRITE_ELEM_ENGR_FORCE ( JVEC, NUM_ELEM, IHDR )
                         EXIT
                      ENDIF
@@ -276,7 +316,7 @@ elems_2: DO J = 1,NELE
          ENDDO elems_2
  
       ENDDO reqs2
- 
+
       IF ((POST /= 0) .AND. (ANY_ELFE_OUTPUT > 0)) THEN
 
          NUM_FROWS= 0
@@ -319,7 +359,7 @@ elems_2: DO J = 1,NELE
          DO J=1,NELE                                       ! Write out BUSH engineering forces
             EID   = EDAT(EPNT(J))
             TYPE  = ETYPE(J)
-            IF (ETYPE(J)(1:3) == 'BUSH') THEN
+            IF (ETYPE(J)(1:4) == 'BUSH') THEN
                NUM_FROWS= NUM_FROWS+ 1
                DO K=0,MBUG-1
                   WRT_BUG(K) = 0

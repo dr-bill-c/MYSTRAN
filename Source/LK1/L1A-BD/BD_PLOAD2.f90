@@ -47,7 +47,7 @@
       CHARACTER( 8*BYTE)              :: TOKEN              ! The 1st 8 characters from a JCARD
       CHARACTER( 8*BYTE)              :: TOKTYP             ! The type of token in a field of parent card. Output from subr TOKCHK
  
-      INTEGER(LONG)                   :: PLOAD_EID(6)       ! Elem ID's on parent card if "THRU" not used for input
+      INTEGER(LONG)                   :: PLOAD_ELID(6)      ! Elem ID's on parent card if "THRU" not used for input
       INTEGER(LONG)                   :: J                  ! DO loop index
       INTEGER(LONG)                   :: JERR               ! Error count
       INTEGER(LONG)                   :: SETID              ! Load set ID on PLOADi card
@@ -69,9 +69,9 @@
 !   -----   ------------  
 !    2      SID
 !    3      Pressure
-!    4-9    Element ID's (PLOAD_EID's)
+!    4-9    Element ID's (PLOAD_ELID's)
 ! or:
-!    4-6    EID1 THRU EID2
+!    4-6    ELID1 THRU ELID2
  
  
 ! Make JCARD from CARD
@@ -101,7 +101,7 @@
  
       CALL R8FLD ( JCARD(3), JF(3), RPRESS )
 
-! Check for the 2 options on specifying data on the card. Either all data are PLOAD_EID's or the THRU  option is used in
+! Check for the 2 options on specifying data on the card. Either all data are PLOAD_ELID's or the THRU  option is used in
 ! which case field 5 will have "THRU".
   
 
@@ -122,9 +122,9 @@
          IF (THRU == 'N') THEN
             DO J=4,9
                IF (JCARD(J)(1:) == ' ') EXIT
-               CALL I4FLD ( JCARD(J), JF(J), PLOAD_EID(J-3) )
+               CALL I4FLD ( JCARD(J), JF(J), PLOAD_ELID(J-3) )
                IF (IERRFL(J) == 'N') THEN
-                  IF (PLOAD_EID(J-3) <= 0) THEN
+                  IF (PLOAD_ELID(J-3) <= 0) THEN
                      JERR      = JERR + 1
                      FATAL_ERR = FATAL_ERR + 1
                      WRITE(ERR,1152) JCARD(1), JCARD(2)
@@ -135,10 +135,10 @@
                ENDIF
             ENDDO   
          ELSE 
-            CALL I4FLD ( JCARD(4), JF(4), PLOAD_EID(1) )
-            CALL I4FLD ( JCARD(6), JF(6), PLOAD_EID(2) )
+            CALL I4FLD ( JCARD(4), JF(4), PLOAD_ELID(1) )
+            CALL I4FLD ( JCARD(6), JF(6), PLOAD_ELID(2) )
             IF ((IERRFL(4) == 'N') .AND. (IERRFL(4) == 'N')) THEN
-               IF ((PLOAD_EID(2) < PLOAD_EID(1)) .OR. (PLOAD_EID(1) <= 0) .OR. (PLOAD_EID(2) <= 0)) THEN
+               IF ((PLOAD_ELID(2) < PLOAD_ELID(1)) .OR. (PLOAD_ELID(1) <= 0) .OR. (PLOAD_ELID(2) <= 0)) THEN
                   JERR      = JERR + 1
                   FATAL_ERR = FATAL_ERR + 1
                   WRITE(ERR,1128) JCARD(1), JCARD(2)

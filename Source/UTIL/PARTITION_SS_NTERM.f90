@@ -1,33 +1,33 @@
 ! ##################################################################################################################################
-! Begin MIT license text.
+! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
-
-! Copyright 2019 Dr William R Case, Jr (dbcase29@gmail.com)
-
-! Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+                                                                                                         
+! Copyright 2019 Dr William R Case, Jr (dbcase29@gmail.com)                                              
+                                                                                                         
+! Permission is hereby granted, free of charge, to any person obtaining a copy of this software and      
 ! associated documentation files (the "Software"), to deal in the Software without restriction, including
 ! without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-! copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to
-! the following conditions:
-
-! The above copyright notice and this permission notice shall be included in all copies or substantial
-! portions of the Software and documentation.
-
-! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-! OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-! AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-! THE SOFTWARE.
+! copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to   
+! the following conditions:                                                                              
+                                                                                                         
+! The above copyright notice and this permission notice shall be included in all copies or substantial   
+! portions of the Software and documentation.                                                                              
+                                                                                                         
+! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS                                
+! OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,                            
+! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE                            
+! AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER                                 
+! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,                          
+! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN                              
+! THE SOFTWARE.                                                                                          
 ! _______________________________________________________________________________________________________
-
-! End MIT license text.
-
+                                                                                                        
+! End MIT license text.                                                                                      
+ 
       SUBROUTINE PARTITION_SS_NTERM ( MAT_A_NAME, NTERM_A, NROW_A, NCOL_A, SYM_A, I_A, J_A                                         &
                                     , ROW_PART_VEC, COL_PART_VEC, VAL_ROWS, VAL_COLS, AROW_MAX_TERMS                               &
-                                    , MAT_B_NAME, NTERM_B, SYM_B )
-
+                                    , MAT_B_NAME, NTERM_B, SYM_B )                
+ 
 ! Determines size of a partitioned matrix. An input matrix (MATIN) in sparse CRS (compressed row storage) format represented by:
 
 !             I_A(i) integer array of indices that give the starting locations, in MATIN, where each row begins
@@ -60,12 +60,13 @@
       USE SPARSE_ALG_ARRAYS, ONLY     :  ALG, J_AROW
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE SUBR_BEGEND_LEVELS, ONLY    :  PARTITION_SS_NTERM_BEGEND
-
+ 
       USE PARTITION_SS_NTERM_USE_IFs
 
       IMPLICIT NONE
 
-      CHARACTER, PARAMETER            :: CR13 = CHAR(13)   ! This causes a carriage return simulating the "+" action in a FORMAT
+      CHARACTER, PARAMETER            :: CR13 = CHAR(13)      ! This causes a carriage return simulating the "+" action in a FORMAT
+ 
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'PARTITION_SS_NTERM'
       CHARACTER(LEN=*), INTENT(IN )   :: SYM_A                  ! 'Y' if input matrix is symmetric (and terms below diag
                                                                 !     are not included in MATIN)
@@ -78,7 +79,7 @@
       INTEGER(LONG), INTENT(IN )      :: NTERM_A                ! No. terms in MATIN
       INTEGER(LONG), INTENT(IN )      :: NROW_A                 ! No. rows in MATIN
       INTEGER(LONG), INTENT(IN )      :: NCOL_A                 ! No. cols in MATIN
-      INTEGER(LONG), INTENT(IN )      :: VAL_ROWS               ! Value in ROW_PART_VEC to look for for partitioning rows
+      INTEGER(LONG), INTENT(IN )      :: VAL_ROWS               ! Value in ROW_PART_VEC to look for for partitioning rows  
       INTEGER(LONG), INTENT(IN )      :: VAL_COLS               ! Value in COL_PART_VEC to look for for partitioning cols
       INTEGER(LONG), INTENT(IN )      :: I_A(NROW_A+1)          ! Starting locations in MATIN for each row
       INTEGER(LONG), INTENT(IN )      :: J_A(NTERM_A)           ! Col number for each MATIN input matrix term
@@ -89,11 +90,11 @@
       INTEGER(LONG)                   :: B_COL_NUM_ARRAY(NCOL_A)! Col number for terms where COL_PART_VEC = VAL_COLS
 !                                                                 e.g., if COL_PART_VEC = 1 1 0 1 0 1 0 0, VAL_COLS = 1,
 !                                                                 then: B_COL_NUM_ARRAY = 1 2 0 3 0 4 0 0
-!                                                                 It is a counter for the VAL_COLS terms in COL_PART_VEC
-      INTEGER(LONG)                   :: B_COL_NUM              ! A col number value from B_COL_NUM_ARRAY
-      INTEGER(LONG)                   :: B_ROW_NUM_ARRAY(NROW_A)! Row number for terms where ROW_PART_VEC = VAL_ROWS
-      INTEGER(LONG)                   :: B_ROW_NUM              ! A row number value from B_ROW_NUM_ARRAY
-      INTEGER(LONG)                   :: I,II,K,L               ! DO loop indices or counters
+!                                                                 It is a counter for the VAL_COLS terms in COL_PART_VEC 
+      INTEGER(LONG)                   :: B_COL_NUM              ! A col number value from B_COL_NUM_ARRAY 
+      INTEGER(LONG)                   :: B_ROW_NUM_ARRAY(NROW_A)! Row number for terms where ROW_PART_VEC = VAL_ROWS 
+      INTEGER(LONG)                   :: B_ROW_NUM              ! A row number value from B_ROW_NUM_ARRAY 
+      INTEGER(LONG)                   :: I,II,K,L               ! DO loop indices or counters 
       INTEGER(LONG)                   :: I1,I2                  ! DO loop range
       INTEGER(LONG)                   :: IERROR                 ! Error indicator
       INTEGER(LONG)                   :: KBEG_MATIN             ! Index into array I_A where a row of matrix A ends
@@ -102,12 +103,12 @@
       INTEGER(LONG)                   :: MATIN_NTERM_ROW_I      ! Number of terms in MATIN row I
       INTEGER(LONG)                   :: NCOL_B                 ! Number of columns in the output matrix
       INTEGER(LONG)                   :: NROW_B                 ! No. rows in B
-      INTEGER(LONG)                   :: ROW_AT_COLJ_BEG(NCOL_A)! jth term is row number in MATIN where col j nonzeros begin
+      INTEGER(LONG)                   :: ROW_AT_COLJ_BEG(NCOL_A)! jth term is row number in MATIN where col j nonzeros begin 
       INTEGER(LONG)                   :: ROW_AT_COLJ_END(NCOL_A)! jth term is row number in MATIN where col j nonzeros end
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = PARTITION_SS_NTERM_BEGEND
 
       INTRINSIC                       :: DABS
-
+       
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -145,7 +146,7 @@
             B_ROW_NUM_ARRAY(I) = K
          ENDIF
       ENDDO
-      NROW_B = K
+      NROW_B = K 
 
       K = 0
       DO I=1,NCOL_A
@@ -196,10 +197,10 @@
 ! terms for the MATOUT partition that are not explicitly in MATIN. This is done by getting MATIN terms in the column (above the
 ! diagonal of a row) as well as the explicit terms from MATIN that are there from the diagonal out to the end of the row. The two
 ! arrays: ROW_AT_COLJ_BEG and ROW_AT_COLJ_END are used to aid in getting the terms in the column above the diagonal.
-! ROW_AT_COLJ_BEG is an array that gives, for each col of MATIN, the starting row number of nonzero terms in that column.
+! ROW_AT_COLJ_BEG is an array that gives, for each col of MATIN, the starting row number of nonzero terms in that column.  
 ! ROW_AT_COLJ_END is an array that gives, for each col of MATIN, the ending   row number of nonzero terms in that column.
 ! The span: ROW_AT_COLJ_BEG to ROW_AT_COLJ_END is used when we search for terms in the columns.
-! We only need ROW_AT_COLJ_BEG and ROW_AT_COLJ_END when MATIN is input symmetric and MATOUT is not to be output as symmetric
+! We only need ROW_AT_COLJ_BEG and ROW_AT_COLJ_END when MATIN is input symmetric and MATOUT is not to be output as symmetric  
 
       IF ((SYM_A == 'Y') .AND. (SYM_B == 'N')) THEN
 
@@ -213,8 +214,8 @@
       AROW_MAX_TERMS = 0                                   ! Find the max number of nonzero terms in any row of input matrix MATIN
       KBEG_MATIN     = 1
       DO I=1,NROW_A                                   ! Matrix partition loop. Range over the rows in MATIN
-         KTERM_AROW = 0
-         MATIN_NTERM_ROW_I = I_A(I+1) - I_A(I)     ! Number of terms in matrix MATIN in row I
+         KTERM_AROW = 0                                       
+         MATIN_NTERM_ROW_I = I_A(I+1) - I_A(I)     ! Number of terms in matrix MATIN in row I 
          KEND_MATIN = KBEG_MATIN + MATIN_NTERM_ROW_I - 1   ! KBEG_MATIN to KEND_MATIN is range of indices of terms in MATIN row I
          IF (ROW_PART_VEC(I) == VAL_ROWS) THEN
             KTERM_AROW = 0
@@ -246,7 +247,7 @@
       L = 0
 i_do: DO I=1,NROW_A                                        ! Matrix partition loop. Range over the rows in MATIN
 
-         MATIN_NTERM_ROW_I = I_A(I+1) - I_A(I)             ! Number of terms in matrix MATIN in row I
+         MATIN_NTERM_ROW_I = I_A(I+1) - I_A(I)             ! Number of terms in matrix MATIN in row I 
          KEND_MATIN = KBEG_MATIN + MATIN_NTERM_ROW_I - 1   ! KBEG_MATIN to KEND_MATIN is range of indices of terms in MATIN row I
 
          IF (ROW_PART_VEC(I) == VAL_ROWS) THEN
@@ -261,14 +262,14 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
             DO K=1,AROW_MAX_TERMS                          ! Null J_AROW and AROW each time we begin a new row of A
                J_AROW(K) = 0
                ALG(K)(1:) = ' '
-            ENDDO
+            ENDDO 
             J_AROW_NULL = 'Y'                              ! Nothing in J_AROW at this point
 
             KTERM_AROW = 0
 
             IF ((SYM_A == 'Y') .AND. (SYM_B == 'N')) THEN  ! 1st, if this SYM is true, count terms in col above the diag in row I
-
-               DO K=1,KBEG_MATIN-1                         ! Go through all terms in sparse MATIN from K=1 to where row I begins
+                        
+               DO K=1,KBEG_MATIN-1                         ! Go through all terms in sparse MATIN from K=1 to where row I begins 
                   IF (J_A(K) == I) THEN                    ! looking for terms whose column number is the row number I
                      KTERM_AROW = KTERM_AROW + 1
                      I1 = ROW_AT_COLJ_BEG(I)
@@ -308,7 +309,7 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
                      IF ((DEBUG(86) == 2) .OR. (DEBUG(86) == 3)) CALL PARTITION_SS_NTERM_DEB ( '5' )
                   ENDIF
                ENDIF
-            ENDDO
+            ENDDO 
 
 
          ENDIF
@@ -328,7 +329,7 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
          WRITE(F04,9002) SUBR_NAME,TSEC
  9002    FORMAT(1X,A,' END  ',F10.3)
       ENDIF
-
+ 
       RETURN
 
 ! **********************************************************************************************************************************
@@ -357,8 +358,8 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
 
       CHARACTER( 1*BYTE)              :: WHICH                  ! Decides what to print out for this call to this subr
 
-      INTEGER(LONG)                   :: KK                     ! Local count
-      INTEGER(LONG)                   :: II                     ! Local DO loop variable
+      INTEGER(LONG)                   :: KK                     ! Local count 
+      INTEGER(LONG)                   :: II                     ! Local DO loop variable 
 
 ! **********************************************************************************************************************************
       IF      (WHICH == '1') THEN
@@ -459,7 +460,7 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
 '         J_AROW from column I of matrix A while working on row I of matrix A. These are the terms that would be below the diag',/,&
 '         in matrix A but are not explicitly in the array due to symmetry storage.'                                            ,//,&
 ' For each non null row of matrix A that is to be partitioned into matrix B, the following shows the development of array'      ,/,&
-' J_AROW and the rows and columns where terms will be placed in the partitioned matrix (when subr PARTITION_SS is run)')
+' J_AROW and the rows and columns where terms will be placed in the partitioned matrix (when subr PARTITION_SS is run)') 
 
  2021 FORMAT(1X,/' **************************************************************************************************************',&
               '*********************')

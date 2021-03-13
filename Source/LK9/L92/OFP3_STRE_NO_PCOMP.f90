@@ -254,6 +254,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
 
                   IF (ETYPE(J)(1:5) /='USER1') THEN
                      IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
+                        CALL CHK_OGEL_ZEROS ( NUM_OGEL )
                         CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I) )
                         EXIT
                      ENDIF

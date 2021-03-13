@@ -226,6 +226,7 @@ headr:IF (IHDR == 'Y') THEN
 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN                   ! Engr force for ELAS was put into OGEL(I,1)
 
+!!!      WRITE(F06,1202) FILL(1: 0), (EID_OUT_ARRAY(I,1),OGEL(I,1),I=1,NUM)
          J1 = 1
          DO I=1,NUM,5
             IF (J1+4 <= NUM) THEN
@@ -539,7 +540,7 @@ headr:IF (IHDR == 'Y') THEN
 
       ELSE IF (WHICH == 'BUSH' ) THEN
          DO II=1,NUM
-            WRITE(ANS,1612) FILL(1:16), EID_OUT_ARRAY(II,1),(OGEL(II,JJ),JJ=1,3)
+            WRITE(ANS,1612) FILL(1:16), EID_OUT_ARRAY(II,1),(OGEL(II,JJ),JJ=1,6)
          ENDDO   
          WRITE(ANS,1613) (MAX_ANS(JJ),JJ=1,6),(MIN_ANS(JJ),JJ=1,6),(ABS_ANS(JJ),JJ=1,6)
 
@@ -629,7 +630,7 @@ headr:IF (IHDR == 'Y') THEN
  
  1612 FORMAT(A,I8,6(1ES14.6))
   
- 1613 FORMAT(1X,A,'          ------------- ------------- ------------- ------------- ------------- ------------- ',/,              &
+ 1613 FORMAT(1X,'                        ------------- ------------- ------------- ------------- ------------- ------------- ',/,  &
              1X,'MAX (for output set):  ',6(ES14.6),/,                                                                             &
              1X,'MIN (for output set):  ',6(ES14.6),//,                                                                            &
              1X,'ABS (for output set):  ',6(ES14.6))

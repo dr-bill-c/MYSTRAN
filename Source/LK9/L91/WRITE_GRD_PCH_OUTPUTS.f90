@@ -60,7 +60,7 @@
 
 ! **********************************************************************************************************************************
 !  Make sure that WHAT is a valid value
-      IF ((WHAT == 'ACCE') .OR. (WHAT == 'DISP') .OR. (WHAT == 'OLOAD') .OR. (WHAT == 'SPCF') .OR. (WHAT == 'MPCF')) THEN
+      IF ((WHAT == 'ACCE') .OR. (WHAT == 'DISP') .OR. (WHAT == 'OLOAD') .OR. (WHAT == 'SPCF') .OR. (WHAT(1:4) == 'MPCF')) THEN
          CONTINUE
       ELSE
          WRITE(ERR,9100) WHAT
@@ -137,6 +137,7 @@
 
       ENDDO
  
+! ----------------------------------------------------------------------
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM

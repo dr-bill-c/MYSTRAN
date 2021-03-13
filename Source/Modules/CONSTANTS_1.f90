@@ -55,7 +55,7 @@
       REAL(DOUBLE),  PARAMETER        :: ELEVEN            =   11.0_QUAD
       REAL(DOUBLE),  PARAMETER        :: TWELVE            =   12.0_QUAD
       REAL(DOUBLE),  PARAMETER        :: FORTY5            =   45.0_QUAD
-      REAL(DOUBLE),  PARAMETER        :: ONE_HUNDRED        =  100.0_QUAD
+      REAL(DOUBLE),  PARAMETER        :: ONE_HUNDRED       =  100.0_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONE_THOUSAND      = 1000.0_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONE80             =  180.0_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONEPP6            =    1.0E+06_QUAD

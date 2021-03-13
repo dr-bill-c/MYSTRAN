@@ -43,7 +43,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
  
-      INTEGER(LONG)                   :: CMASS_EID         ! Element ID
+      INTEGER(LONG)                   :: CMASS_ELID        ! Element ID
       INTEGER(LONG)                   :: GPOINT1,GPOINT2   ! 2 grid points (1 must be blank or zero)
       INTEGER(LONG)                   :: I                 ! DO loop index
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_CMASS_BEGEND
@@ -77,17 +77,17 @@
  
 ! Get element ID and check for duplicate
 
-      CALL I4FLD ( JCARD(2), JF(2), CMASS_EID )
+      CALL I4FLD ( JCARD(2), JF(2), CMASS_ELID )
       IF (IERRFL(2) == 'N') THEN
          DO I=1,NCMASS-1
-            IF (CMASS_EID == CMASS(I,1)) THEN
+            IF (CMASS_ELID == CMASS(I,1)) THEN
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,1145) JCARD(1),CMASS_EID
-               WRITE(F06,1145) JCARD(1),CMASS_EID
+               WRITE(ERR,1145) JCARD(1),CMASS_ELID
+               WRITE(F06,1145) JCARD(1),CMASS_ELID
                EXIT
             ENDIF
          ENDDO 
-         CMASS(NCMASS,1) = CMASS_EID
+         CMASS(NCMASS,1) = CMASS_ELID
       ENDIF
 
 ! Get type and put into CMASS col 2

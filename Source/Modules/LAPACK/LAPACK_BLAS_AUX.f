@@ -13,6 +13,8 @@
 
       USE OUTA_HERE_Interface
 
+      character(1*byte), parameter      :: cr13_lba = char(13)
+
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = LAPACK_BEGEND
 
       CONTAINS
@@ -1036,7 +1038,7 @@ c
          KPLUS1 = K + 1
          IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
             DO 60, J = 1, N
-               Write(sc1,12345) j,n,col_num
+               write(sc1,12345,advance='no') j,n,col_num,cr13_lba
                TEMP1 = ALPHA*X( J )
                TEMP2 = ZERO
                L     = KPLUS1 - J
@@ -1076,7 +1078,7 @@ c
 *
          IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
             DO 100, J = 1, N
-               Write(sc1,12345) j,n,col_num
+               write(sc1,12345,advance='no') j,n,col_num,cr13_lba
                TEMP1  = ALPHA*X( J )
                TEMP2  = ZERO
                Y( J ) = Y( J )       + TEMP1*A( 1, J )
@@ -1112,8 +1114,7 @@ c
 *
       RETURN
 *
-12345 FORMAT("+",7X,'mult row ',I8,' of ',I8,' times col ',i8,'         
-     &              ')
+12345 format(7X,'mult row ',i8,' of ',i8,' times col ',i8, a)         
  
 *     End of DSBMV .
 *
@@ -2679,7 +2680,7 @@ c
             IF( INCX.EQ.1 )THEN
                DO 20, J = N, 1, -1
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,22345) j
+                     write(sc1,22345,advance='no') j,cr13_lba
                   endif
                   IF( X( J ).NE.ZERO )THEN
                      L = KPLUS1 - J
@@ -2696,7 +2697,7 @@ c
                JX = KX
                DO 40, J = N, 1, -1
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,22345) j
+                     write(sc1,22345,advance='no') j,cr13_lba
                   endif
                   KX = KX - INCX
                   IF( X( JX ).NE.ZERO )THEN
@@ -2717,7 +2718,7 @@ c
             IF( INCX.EQ.1 )THEN
                DO 60, J = 1, N
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,12345) j,n
+                     write(sc1,12345,advance='no') j,n,cr13_lba
                   endif
                   IF( X( J ).NE.ZERO )THEN
                      L = 1 - J
@@ -2733,7 +2734,7 @@ c
                JX = KX
                DO 80, J = 1, N
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,12345) j,n
+                     write(sc1,12345,advance='no') j,n,cr13_lba
                   endif
                   KX = KX + INCX
                   IF( X( JX ).NE.ZERO )THEN
@@ -2760,7 +2761,7 @@ c
             IF( INCX.EQ.1 )THEN
                DO 100, J = 1, N
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,12345) j,n
+                     write(sc1,12345,advance='no') j,n,cr13_lba
                   endif
                   TEMP = X( J )
                   L    = KPLUS1 - J
@@ -2775,7 +2776,7 @@ c
                JX = KX
                DO 120, J = 1, N
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,12345) j,n
+                     write(sc1,12345,advance='no') j,n,cr13_lba
                   endif
                   TEMP = X( JX )
                   IX   = KX
@@ -2796,7 +2797,7 @@ c
             IF( INCX.EQ.1 )THEN
                DO 140, J = N, 1, -1
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,22345) j
+                     write(sc1,22345,advance='no') j,cr13_lba
                   endif
                   TEMP = X( J )
                   L    = 1      - J
@@ -2812,7 +2813,7 @@ c
                JX = KX
                DO 160, J = N, 1, -1
                   if (dtbsv_msg == 'Y') then
-                     Write(sc1,22345) j
+                     write(sc1,22345,advance='no') j,cr13_lba
                   endif
                   TEMP = X( JX )
                   IX   = KX
@@ -2834,9 +2835,9 @@ c
 *
       RETURN
 *
-12345 format("+",7X,'Forward  pass, row ',i8,' to ',i8,'   ')               
+12345 format(7X,'Forward  pass, row ',i8,' to ',i8, a)               
 
-22345 format("+",7X,'Backward pass, row ',i8,' to        1 ')
+22345 format(7X,'Backward pass, row ',i8,' to        1 ', a)
 
 *     End of DTBSV .
 *
@@ -5931,14 +5932,14 @@ CIBM           PREFER SCALAR
          VALUE = ZERO
          IF( LSAME( UPLO, 'U' ) ) THEN
             DO 20 J = 1, N
-               Write(sc1,12345) j, n
+               write(sc1,12345,advance='no') j, n, cr13_lba
                DO 10 I = MAX( K+2-J, 1 ), K + 1
                   VALUE = MAX( VALUE, ABS( AB( I, J ) ) )
    10          CONTINUE
    20       CONTINUE
          ELSE
             DO 40 J = 1, N
-               Write(sc1,12345) j, n
+               write(sc1,12345,advance='no') j, n, cr13_lba
                DO 30 I = 1, MIN( N+1-J, K+1 )
                   VALUE = MAX( VALUE, ABS( AB( I, J ) ) )
    30          CONTINUE
@@ -5952,7 +5953,7 @@ CIBM           PREFER SCALAR
          VALUE = ZERO
          IF( LSAME( UPLO, 'U' ) ) THEN
             DO 60 J = 1, N
-               Write(sc1,12345) j, n
+               write(sc1,12345,advance='no') j, n, cr13_lba
                SUM = ZERO
                L = K + 1 - J
                DO 50 I = MAX( 1, J-K ), J - 1
@@ -5963,7 +5964,7 @@ CIBM           PREFER SCALAR
                WORK( J ) = SUM + ABS( AB( K+1, J ) )
    60       CONTINUE
             DO 70 I = 1, N
-               Write(sc1,12345) i, n
+               write(sc1,12345,advance='no') i, n, cr13_lba
                VALUE = MAX( VALUE, WORK( I ) )
    70       CONTINUE
          ELSE
@@ -5971,7 +5972,7 @@ CIBM           PREFER SCALAR
                WORK( I ) = ZERO
    80       CONTINUE
             DO 100 J = 1, N
-               Write(sc1,12345) j, n
+               write(sc1,12345,advance='no') j, n, cr13_lba
                SUM = WORK( J ) + ABS( AB( 1, J ) )
                L = 1 - J
                DO 90 I = J + 1, MIN( N, J+K )
@@ -5991,14 +5992,14 @@ CIBM           PREFER SCALAR
          IF( K.GT.0 ) THEN
             IF( LSAME( UPLO, 'U' ) ) THEN
                DO 110 J = 2, N
-                  Write(sc1,12345) j, n
+                  write(sc1,12345,advance='no') j, n, cr13_lba
                   CALL DLASSQ( MIN( J-1, K ), AB( MAX( K+2-J, 1 ), J ),
      $                         1, SCALE, SUM )
   110          CONTINUE
                L = K + 1
             ELSE
                DO 120 J = 1, N - 1
-                  Write(sc1,12345) j, n
+                  write(sc1,12345,advance='no') j, n, cr13_lba
                   CALL DLASSQ( MIN( N-J, K ), AB( 2, J ), 1, SCALE,
      $                         SUM )
   120          CONTINUE
@@ -6017,8 +6018,7 @@ CIBM           PREFER SCALAR
 *
 *     End of DLANSB
 *
-12345 format("+",5x,'Row ',i8,' of ',i8,
-     &'                                                 ')
+12345 format(5x,'Row ',i8,' of ',i8, a)
 
       END FUNCTION DLANSB
 
@@ -10077,7 +10077,7 @@ CIBM           PREFER SCALAR
 *
             DO 110 J = JFIRST, JLAST, JINC
 
-               Write(sc1,12345) iter_num, j, jlast
+               write(sc1,12345,advance='no') iter_num,j,jlast,cr13_lba
 *
 *              Compute x(j) = b(j) / A(j,j), scaling x if necessary.
 *
@@ -10200,7 +10200,7 @@ CIBM           PREFER SCALAR
 *
             DO 160 J = JFIRST, JLAST, JINC
 
-               Write(sc1,12345) iter_num, j, jlast
+               write(sc1,12345,advance='no') iter_num,j,jlast,cr13_lba
 *
 *              Compute x(j) = b(j) - sum A(k,j)*x(k).
 *                                    k<>j
@@ -10348,8 +10348,7 @@ CIBM           PREFER SCALAR
 *
 *     End of DLATBS
 *
-12345 format("+",5X,'Iteration number ',i4,' : J = ',I8,' to ',I8,
-     &'                          ')
+12345 format(5X,'Iteration number ',i4,' : J = ',i8,' to ',i8, a)
 
 ! **********************************************************************************************************************************
  9000 continue            ! My lines

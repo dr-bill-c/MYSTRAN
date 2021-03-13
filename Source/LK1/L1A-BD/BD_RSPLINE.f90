@@ -74,7 +74,7 @@
       INTEGER(LONG)                   :: NUM_DEPENDENTS    ! Count of number of pairs of dependent grids/components
       INTEGER(LONG)                   :: NUM_ENTRIES       ! Count of number of entries placed into array GC_FLDS
       INTEGER(LONG)                   :: NUM_Ci            ! Number of displ components in a DCOMP field
-      INTEGER(LONG)                   :: REID      = 0     ! This elements' ID
+      INTEGER(LONG)                   :: ELID      = 0     ! This elements' ID
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_RSPLINE_BEGEND
  
       REAL(DOUBLE)                    :: DL_RAT            ! Value in field 3 for D/L ratio
@@ -92,7 +92,7 @@
  
 !   FIELD   ITEM            EXPLANATION 
 !   -----   ------------    -------------
-!    2      EID             RSPLINE elem ID
+!    2      ELID            RSPLINE elem ID
 !    3      D/L             Diam/length ratio of the rod used in determining the beam deflection relationship
 !    4      G1              Indep grid at one end of the RSPLINE line
 !    5-9    Gi,Ci           Dep grid/comps (dep grid/comps)
@@ -131,8 +131,8 @@
  
       CALL I4FLD ( JCARD(2), JF(2), I4INP )                ! Field 2: Elem ID
       IF (IERRFL(2) == 'N') THEN
-         REID                   = I4INP
-         RIGID_ELEM_IDS(NRIGEL) = REID
+         ELID                   = I4INP
+         RIGID_ELEM_IDS(NRIGEL) = ELID
       ELSE
          JERR = JERR + 1
       ENDIF
@@ -263,7 +263,7 @@ do_1: DO
       IF (JERR == 0) THEN
          DO J=1,NUM_DEPENDENTS
             WRITE(L1F) RTYPE
-            WRITE(L1F) REID, J, NUM_DEPENDENTS, IGRID1, IGRID2, DGRID(J), DCOMP(J), DL_RAT
+            WRITE(L1F) ELID, J, NUM_DEPENDENTS, IGRID1, IGRID2, DGRID(J), DCOMP(J), DL_RAT
             NRECARD = NRECARD + 1
          ENDDO
       ENDIF

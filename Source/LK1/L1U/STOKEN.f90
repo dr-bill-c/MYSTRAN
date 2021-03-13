@@ -103,9 +103,9 @@
 
       DO I=TOKEN_BEG,STRNG_END                             ! Make sure we are positioned at beginning of a token
          IF ((TOKSTR(I:I) == ' ') .OR. (TOKSTR(I:I) == ',')) THEN
-           TOKEN_BEG = TOKEN_BEG + 1
+            TOKEN_BEG = TOKEN_BEG + 1
          ELSE
-           EXIT
+            EXIT
          ENDIF
       ENDDO
 
@@ -167,8 +167,8 @@ i_loop1: DO I = TOKEN_BEG,STRNG_END
 
          IF (TOKEN_END <= STRNG_END) THEN
 
-            TOKEN_BEG = STRNG_END + 1                      ! Find start of next token. Default it to STRNG_END+1 to start
-i_loop2:    DO I = TOKEN_END+1,STRNG_END                        ! with just in case we are already at the end of TOKSTR.
+            TOKEN_BEG = STRNG_END + 1                      ! Find start of next token. Default it to STRNG_END+1 to start with
+i_loop2:    DO I = TOKEN_END+1,STRNG_END                   ! just in case we are already at the end of TOKSTR.
                IF ((TOKSTR(I:I) == ' ') .OR. (TOKSTR(I:I) == ',')) THEN
                   CYCLE i_loop2
                ELSE
@@ -231,7 +231,7 @@ i_loop2:    DO I = TOKEN_END+1,STRNG_END                        ! with just in c
 
             TOKEN_BEG = STRNG_END + 1
 
-            IF ((NUM_TOK_EXP == 3).AND.(NTOKEN < 3)) THEN
+            IF ((NUM_TOK_EXP == 3) .AND. (NTOKEN < 3)) THEN
                IERROR = 2                                  ! Error: we found 'THRU' but didnt get 3 tokens
             ENDIF
 
@@ -285,24 +285,32 @@ i_loop2:    DO I = TOKEN_END+1,STRNG_END                        ! with just in c
 ! **********************************************************************************************************************************
 
       IF      (PRINT_ITEM == 0) THEN
-         WRITE(F06,99000) CALLING_SUBR, TOKSTR(1:STRNG_END) 
+         WRITE(F06,*)
+         WRITE(F06,99000) CALLING_SUBR, '"', TOKSTR(1:STRNG_END), '"' 
       ELSE IF (PRINT_ITEM == 1) THEN
          WRITE(F06,99001) TOKEN_BEG     ,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
       ELSE IF (PRINT_ITEM == 2) THEN
          WRITE(F06,99002) TOKEN_BEG,TOKEN_END,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
       ELSE IF (PRINT_ITEM == 3) THEN
          WRITE(F06,99003) TOKEN_BEG,TOKEN_END,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
+      ELSE IF (PRINT_ITEM == 4) THEN
+         WRITE(F06,99004) TOKEN_BEG,TOKEN_END,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
+      ELSE IF (PRINT_ITEM == 5) THEN
+         WRITE(F06,99005) TOKEN_BEG,TOKEN_END,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
+      ELSE IF (PRINT_ITEM == 6) THEN
+         WRITE(F06,99006) TOKEN_BEG     ,THRU,EXCEPT,NUM_TOK_EXP,NTOKEN,(TOKTYP(I),I=1,3),(TOKEN(I),I=1,3),IERROR
+         WRITE(F06,99999)
       ENDIF
 
 99000 FORMAT(' //////////////////////////////////////////////////////////////////////////////////////////////////////////////////',&
-              '/////////////////',/,' Subr STOKEN (called by subr ',A,')  has array TOKSTR at the beg. of subr STOKEN =',/,1X,A,// &
+              '/////////////////',/,' Subr STOKEN (called by subr ',A,')  has array TOKSTR at the beg. of subr STOKEN =',/,1X,3A,//&
               ,45x,'Progress of subr STOKEN in parsing part of TOKSTR:',/                                                          &
               ,45x,'--------------------------------------------------',/                                                          &
               ,35x,'   TOKEN   THRU EXCEPT   Num Tokens  TOKTYP1  TOKTYP2  TOKTYP3  TOKEN1   TOKEN2   TOKEN3   IERROR',/           &
               ,35X,' ---------              ------------',/                                                                        &
               ,35X,' Beg   End              Expect Found')
 
-99001 FORMAT(/,' (1) Beg STOKEN - bef outer:DO :',I6,6X,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2)
+99001 FORMAT(/,' (1) Beg STOKEN-before outer:DO:',I6,6X,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2)
 
 99002 FORMAT(  ' (2) After calling TOKCHK      :',I6,I6,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2)
 
@@ -312,7 +320,10 @@ i_loop2:    DO I = TOKEN_END+1,STRNG_END                        ! with just in c
 
 99005 FORMAT(  ' (5) CYCLE back to outer DO    :',I6,I6,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2,/)
 
-99006 FORMAT(  ' (6) End STOKEN - aft outer DO :',I6,6X,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2)
+99006 FORMAT(  ' (6) End STOKEN-after outer DO :',I6,6X,2X,A3,2X,A3,7X,I2,3X,I2,3X,6(1X,A8),3X,I2)
+
+99999 FORMAT(' \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\' &
+            ,'\\\\\\\\\\\\\\\\\\\\\\\\', //)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN

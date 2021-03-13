@@ -33,17 +33,18 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR, F06
       USE SCONTR, ONLY                :  FATAL_ERR
+      USE CONSTANTS_1, ONLY           :  ZERO
 
       USE WRT_REAL_TO_CHAR_VAR_USE_IFs                        ! Added 2019/07/14
 
       IMPLICIT NONE
 
+      CHARACTER(14*BYTE), INTENT(OUT) :: CHAR_VAR(NCOLS)      ! Character representation of the real data in one row of REAL_VAR
+
       INTEGER(LONG), INTENT(IN)       :: NCOLS                ! Number of cols in array REAL_VAR
       INTEGER(LONG), INTENT(IN)       :: NROWS                ! Number of rows in array REAL_VAR
       INTEGER(LONG), INTENT(IN)       :: ROW_NUM              ! Row number in array REAL_VAR to write
       INTEGER(LONG)                   :: J                    ! DO loop index
-
-      CHARACTER(14*BYTE), INTENT(OUT) :: CHAR_VAR(NCOLS)      ! Character representation of the real data in one row of REAL_VAR
 
       REAL(DOUBLE) , INTENT(IN)       :: REAL_VAR(NROWS,NCOLS)! 
 
@@ -53,7 +54,7 @@
       ENDDO
 
       DO J=1,NCOLS
-         IF (REAL_VAR(ROW_NUM,J) == 0.0) THEN
+         IF (ABS(REAL_VAR(ROW_NUM,J)) == ZERO) THEN
             WRITE(CHAR_VAR(J),'(A)') '  0.0         '
          ELSE
             WRITE(CHAR_VAR(J),'(1ES14.6)') REAL_VAR(ROW_NUM,J)
@@ -61,10 +62,6 @@
       ENDDO
 
       RETURN
-
-! **********************************************************************************************************************************
-!9102 FORMAT(' *ERROR  9102: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-!                   ,/,14X,' INPUT VARIABLE NUM_WORDS WAS = ',I8,' BUT CANNOT BE > MOGEL = ',I8)
 
 ! **********************************************************************************************************************************
 

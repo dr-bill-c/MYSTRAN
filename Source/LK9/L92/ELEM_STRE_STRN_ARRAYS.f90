@@ -28,8 +28,8 @@
  
 ! Calculates element stress and strain arrays (arrays STRESS and STRAIN). Stresses are calculated for all engineering elements
 ! (1-D, 2-D, 3-D elements). Strains are calculated for the BUSH element, all 2-D and 3-D elements. The default method for
-! calculating stresses is to first calculate strains by multiplying the element strain-displ matrices (BEi) times the elem displ's
-! (in local elem coords) and then calc stresses from those strains using material props.
+! calculating stresses (for 2D and 3D elements) is to first calculate strains by multiplying the element strain-displ matrices
+! (BEi) times the elem displ's (in local elem coords) and then calc stresses from those strains using material props.
 
 ! For the TRIA3 and QUAD4 there is a DEBUG option to calculate stresses directly by multiplying the stress-displ matrices (SEi)
 ! times the elem displ's
@@ -137,7 +137,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Calc strains for 1D elements
+! Calc strains for 1D BUSH element
 
       IF (TYPE(1:4) == 'BUSH') THEN
 
@@ -231,12 +231,13 @@
          CALL MATMULT_FFF ( EB , STRAIN2, 3, 3, 1, DUM32 )
          CALL MATMULT_FFF ( ET3, STRAIN3, 3, 3, 1, DUM33 )
          DO I=1,3
+
             STRESS1_MECH(I) =        DUM31(I)
             STRESS2_MECH(I) =        DUM32(I)
-                                                           ! Need PHI_SQ on transv shear stress since this calc is from strains and
+            STRESS3_MECH(I) = PHI_SQ*DUM33(I)              ! Need PHI_SQ on transv shear stress since this calc is from strains and
                                                            ! BE3, not SE3. If DEBUG(176) > 0 then stresses are calc'd from the SE3
-            STRESS3_MECH(I) = PHI_SQ*DUM33(I)              ! below and SE3 has PHI_SQ incorporated in subrs QPLT1, QPLT3, TPLT2.
-         ENDDO
+         ENDDO                                             ! below and SE3 has PHI_SQ incorporated in subrs QPLT1, QPLT3, TPLT2.
+              
   
          IF (SUBLOD(INT_SC_NUM,2) > 0) THEN
             CALL MATMULT_FFF ( EM , ALPTM  , 3, 3, 1, STRESS1_THERM )

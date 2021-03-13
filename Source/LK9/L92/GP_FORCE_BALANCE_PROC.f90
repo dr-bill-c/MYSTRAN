@@ -31,8 +31,8 @@
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, SHORT, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ANS, ERR, F04, F06, SC1, WRT_ERR, WRT_LOG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, GROUT_GPFO_BIT, IBIT, INT_SC_NUM, JTSUB, NDOFM, MELDOF,    &
-                                         NDOFO, NDOFR, NELE, NGRID, NUM_CB_DOFS, NVEC, SOL_NAME
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, GROUT_GPFO_BIT, IBIT, INT_SC_NUM, JTSUB, NDOFG, NDOFM, MELDOF, NDOFO, NDOFR,&
+                                         NELE, NGRID, NUM_CB_DOFS, NVEC, SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  GP_FORCE_BALANCE_PROC_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE_HUNDRED
@@ -119,6 +119,8 @@
          QGS1(I)        = ZERO
          TOTALS(I)      = ZERO
       ENDDO     
+
+      CALL CHK_COL_ARRAYS_ZEROS
 
 ! Write output headers.
 
@@ -335,6 +337,9 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
             WRITE(F06,9206) (QGm1(J),J=1,6)
 
             IF ((SOL_NAME(1:5) == 'MODES') .OR. (SOL_NAME(1:12) == 'GEN CB MODEL')) THEN
+               DO J=1,6
+                  IF(FG1(J) == ZERO) THEN  ;  FG1(J) = -ZERO  ;  ENDIF  ! Avoids writing -0.0 for -FG1(J) below
+               ENDDO
                WRITE(F06,9207) ACHAR(Udd), ( -FG1(J),J=1,6)
             ENDIF
             IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
@@ -379,6 +384,8 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
                      DO L=1,6
                         BEG_ROW_NUM = 6*(K-1) + 1
                         PEG1(L) = PEG(BEG_ROW_NUM + L - 1) ! PEG are elem forces at elem ends in global coords
+                        IF(PEG1(L) == ZERO) THEN  ;  PEG1(L) = -ZERO  ;  ENDIF  ! Avoids writing -0.0 for -PEG1(J) below
+
                         TOTALS(L) = TOTALS(L) - PEG1(L)
                      ENDDO
                      WRITE(F06,9209) TYPE, EID, ( -PEG1(L),L=1,6)
@@ -538,7 +545,50 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
 
 12345 FORMAT(5X,'Process grid ',I8,' of ',I8,A)
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE CHK_COL_ARRAYS_ZEROS 
+
+      IMPLICIT NONE
+
+      INTEGER(LONG)                   :: II                ! DO loop index
+
 ! **********************************************************************************************************************************
+
+      DO II=1,NDOFG
+
+         IF (ALLOCATED( FG_COL)) THEN
+            IF ( FG_COL(II) == -ZERO) THEN   ;    FG_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+         IF (ALLOCATED( PG_COL)) THEN
+            IF ( PG_COL(II) == -ZERO) THEN   ;    PG_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+         IF (ALLOCATED(QGs_COL)) THEN
+            IF (QGs_COL(II) == -ZERO) THEN   ;   QGs_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+         IF (ALLOCATED(QGm_COL)) THEN
+            IF (QGm_COL(II) == -ZERO) THEN   ;   QGm_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+         IF (ALLOCATED(QGr_COL)) THEN
+            IF (QGr_COL(II) == -ZERO) THEN   ;   QGr_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+         IF (ALLOCATED( UG_COL)) THEN
+            IF ( UG_COL(II) == -ZERO) THEN   ;    UG_COL(II) = ZERO   ;   ENDIF
+         ENDIF
+
+      ENDDO
+
+      END SUBROUTINE CHK_COL_ARRAYS_ZEROS
+
 
       END SUBROUTINE GP_FORCE_BALANCE_PROC
 

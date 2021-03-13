@@ -1,3 +1,4 @@
+! ###############################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -23,12 +24,25 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      MODULE SOLVE6_SETUP_USE_IFs
+   MODULE CHK_OGEL_ZEROS_Interface
 
-! USE Interface statements for all subroutines called by SUBROUTINE SOLVE6_SETUP
+   INTERFACE
 
-      USE OURTIM_Interface
-      USE SYM_MAT_DECOMP_LAPACK_Interface
-      USE OUTA_HERE_Interface
+      SUBROUTINE CHK_OGEL_ZEROS ( NUM )
 
-      END MODULE SOLVE6_SETUP_USE_IFs
+ 
+      USE PENTIUM_II_KIND, ONLY       :  LONG
+      USE SCONTR, ONLY                :  MOGEL
+      USE CONSTANTS_1, ONLY           :  ZERO
+      USE LINK9_STUFF, ONLY           :  OGEL
+
+      IMPLICIT NONE
+ 
+      INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows in OGEL to check
+ 
+      END SUBROUTINE CHK_OGEL_ZEROS
+
+   END INTERFACE
+
+   END MODULE CHK_OGEL_ZEROS_Interface
+

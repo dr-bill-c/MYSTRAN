@@ -43,7 +43,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
  
-      INTEGER(LONG)                   :: CMASS_EID         ! Element ID
+      INTEGER(LONG)                   :: CMASS_ELID        ! Element ID
       INTEGER(LONG)                   :: I                 ! DO loop index
       INTEGER(LONG)                   :: SPOINT1,SPOINT2   ! 2 scalar points (1 must be blank or zero)
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_CMASS_BEGEND
@@ -76,19 +76,19 @@
  
 ! Get element ID and check for duplicate. Set prop ID = -elem ID and put mass in field 3 into RPMASS
 
-      CALL I4FLD ( JCARD(2), JF(2), CMASS_EID )
+      CALL I4FLD ( JCARD(2), JF(2), CMASS_ELID )
       IF (IERRFL(2) == 'N') THEN
          DO I=1,NCMASS-1
-            IF (CMASS_EID == CMASS(I,1)) THEN
+            IF (CMASS_ELID == CMASS(I,1)) THEN
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,1145) JCARD(1),CMASS_EID
-               WRITE(F06,1145) JCARD(1),CMASS_EID
+               WRITE(ERR,1145) JCARD(1),CMASS_ELID
+               WRITE(F06,1145) JCARD(1),CMASS_ELID
                EXIT
             ENDIF
          ENDDO 
-         CMASS(NCMASS,1) =  CMASS_EID                      ! CMASS4 elem ID
-         CMASS(NCMASS,3) = -CMASS_EID                      ! Prop ID of CMASS4 set = -elem ID
-         PMASS(NPMASS,1) = -CMASS_EID                      ! Mass value
+         CMASS(NCMASS,1) =  CMASS_ELID                      ! CMASS4 elem ID
+         CMASS(NCMASS,3) = -CMASS_ELID                      ! Prop ID of CMASS4 set = -elem ID
+         PMASS(NPMASS,1) = -CMASS_ELID                      ! Mass value
          CALL R8FLD ( JCARD(3), JF(3), RPMASS(NPMASS,1) )
       ENDIF
 

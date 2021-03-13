@@ -37,6 +37,7 @@
       USE ELEM_STRE_STRN_ARRAYS_Interface
       USE ROT_COMP_ELEM_AXES_Interface
       USE CALC_ELEM_STRESSES_Interface
+      USE CHK_OGEL_ZEROS_Interface
       USE WRITE_PLY_STRESSES_Interface
       USE ALLOCATE_FEMAP_DATA_Interface
       USE WRITE_FEMAP_STRE_VECS_Interface

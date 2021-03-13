@@ -83,7 +83,6 @@
       EPS1   = EPSIL(1)
   
 ! **********************************************************************************************************************************
-! Write message and quit if orthotropic matl's and MIN4 QUAD4. User will get option to run again bypassing this error
 ! Once the MIN4T QUAD4 problem with Orthotropic elements is fized remove the lower case code below:
 
       ierror = 0

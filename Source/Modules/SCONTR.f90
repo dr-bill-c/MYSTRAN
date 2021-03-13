@@ -501,7 +501,7 @@
       INTEGER(LONG), PARAMETER :: MEMATC              =   4      ! No. cols allowed in dimensioning array EMAT
       INTEGER(LONG), PARAMETER :: MRPBAR              =  17      ! No. cols allowed in dimensioning array RPBAR
       INTEGER(LONG), PARAMETER :: MRPBEAM             =  45      ! No. cols allowed in dimensioning array RPBEAM
-      INTEGER(LONG), PARAMETER :: MRPBUSH             =  17      ! No. cols allowed in dimensioning array RPBUSH
+      INTEGER(LONG), PARAMETER :: MRPBUSH             =  23      ! No. cols allowed in dimensioning array RPBUSH
       INTEGER(LONG), PARAMETER :: MRPCOMP0            =   6      ! No. real data on PCOMP parent entry (Z0, NSM, SB, TREF, GE)
       INTEGER(LONG), PARAMETER :: MRPCOMP_PLIES       =   3      ! No. real data for each layer on PCOMP (Ti, THETAi) plus
 !                                                                  calculated Di = +/- dist from ref plane to center of ply

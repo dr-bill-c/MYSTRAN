@@ -45,7 +45,7 @@
       CHARACTER( 1*BYTE),INTENT(INOUT):: CC_LOAD_FND(LSUB,2)! 'Y' if B.D load/temp card w/ same set ID (SID) as C.C. LOAD = SID
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)          ! The 10 fields of characters making up CARD
  
-      INTEGER(LONG)                   :: EID1,EID2          ! Elem ID's on parent card. If "THRU" not in field 8, EID2 is no present
+      INTEGER(LONG)                   :: ELID1,ELID2        ! Elem ID's on parent card. If "THRU" not in field 8, ELID2 is no present
       INTEGER(LONG)                   :: I4INP              ! A value read from input file that should be an integer value
       INTEGER(LONG)                   :: J                  ! DO loop index
       INTEGER(LONG)                   :: JERR               ! Error count
@@ -70,7 +70,7 @@
 !   FIELD   ITEM          Description
 !   -----   ----       ------------------
 !    2      SID        Load set ID
-!    3      EID        Element ID
+!    3      ELID       Element ID
 !    4      P1         Pressure at grid 1
 !    5      P2         Pressure at grid 2
 !    6      P3         Pressure at grid 3
@@ -84,13 +84,13 @@
 !   FIELD   ITEM          Description
 !   -----   ----       ------------------
 !    2      SID        Load set ID
-!    3      EID1       Element ID of 1st elem
+!    3      ELID1      Element ID of 1st elem
 !    4      P1         Pressure at grid 1
 !    5      P2         Pressure at grid 2
 !    6      P3         Pressure at grid 3
 !    7      P4         Pressure at grid 4 (not used unless elem is a QUAD4)
 !    8      "THRU"
-!    9      EID2       Element ID of 1st elem. Elems in the range EID1 through EID2 will be loaded.
+!    9      ELID2      Element ID of 1st elem. Elems in the range ELID1 through ELID2 will be loaded.
  
  
 ! Make JCARD from CARD and up the count on NPLOAD
@@ -117,10 +117,10 @@
  
 ! Read data in fields 3-7 (same for either format). Only need to make sure data is correct format. We don't need values here
 
-      EID1 = 0                                             ! Element ID
+      ELID1 = 0                                             ! Element ID
       CALL I4FLD ( JCARD(3), JF(3), I4INP )
       IF (IERRFL(3) == 'N') THEN
-         EID1 = I4INP      
+         ELID1 = I4INP      
       ENDIF
 
       IF (JCARD(4)(1:) /= ' ') THEN
@@ -149,12 +149,12 @@
       CALL LEFT_ADJ_BDFLD ( JCARD(8) )
       IF (JCARD(8)(1:4) == 'THRU') THEN
 
-         EID2 = 0
+         ELID2 = 0
          CALL I4FLD ( JCARD(9), JF(9), I4INP )
          IF (IERRFL(9) == 'N') THEN
-            EID2 = I4INP
-            IF (EID2 >= EID1) THEN
-               EID2 = I4INP
+            ELID2 = I4INP
+            IF (ELID2 >= ELID1) THEN
+               ELID2 = I4INP
             ELSE
                JERR      = JERR + 1
                FATAL_ERR = FATAL_ERR + 1

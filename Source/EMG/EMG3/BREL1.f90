@@ -36,11 +36,12 @@
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  BREL1_BEGEND
       USE CONSTANTS_1, ONLY           :  TWO
       USE PARAMS, ONLY                :  EPSIL
+      USE DEBUG_PARAMETERS
       USE MODEL_STUF, ONLY            :  EID, ELEM_LEN_AB, EMAT, NUM_EMG_FATAL_ERRS, EPROP, FCONV, ME, ULT_STRE, ULT_STRN, &
                                          TYPE, ZS
  
@@ -57,6 +58,7 @@
       REAL(DOUBLE)                    :: ALPHA             ! Coefficient of thermal expansion
       REAL(DOUBLE)                    :: AREA              ! Cross-sectional area
       REAL(DOUBLE)                    :: E                 ! Youngs modulus
+      REAL(DOUBLE)                    :: EPS1              ! A small number to compare for real zero
       REAL(DOUBLE)                    :: G                 ! Shear modulus
       REAL(DOUBLE)                    :: GE                ! Material damping coeff
       REAL(DOUBLE)                    :: I1                ! Bending inertia in plane 1
@@ -78,6 +80,8 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+      EPS1 = EPSIL(1)
+
 ! Set element property and material constants
  
       IF (TYPE == 'ROD     ') THEN
@@ -88,7 +92,7 @@
          NSM      = EPROP(4)                               ! Non-structural mass
          FCONV(1) = AREA
 
-      ELSE IF (TYPE == 'BAR     ') THEN
+      ELSE IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BART    ')) THEN
 
          AREA     = EPROP( 1)                              ! Cross-sectional area
          I1       = EPROP( 2)                              ! Plane 1 moment of inertia
@@ -147,11 +151,24 @@
 
             CALL ROD1 ( OPT, ELEM_LEN_AB, AREA, JTOR, ZS(1), E, G, ALPHA, TREF )
  
-         ELSE IF (TYPE == 'BAR     ') THEN
+         ELSE IF (TYPE == 'BAR     ') THEN                 ! Bernoulli-Euler prismatic beam
+         
+            IF (DEBUG(249) == 0) THEN
 
-            CALL BAR1 ( OPT, ELEM_LEN_AB, AREA, I1, I2, JTOR, ZS(9), K1, K2, I12, E, G, ALPHA, TREF )
+               CALL BAR1 ( OPT, ELEM_LEN_AB, AREA, I1, I2, JTOR, ZS(9), K1, K2, I12, E, G, ALPHA, TREF )
 
-         ELSE IF (TYPE == 'BEAM    ') THEN
+            ELSE
+               IF (DABS(I12) < EPS1) THEN
+                  CALL BART ( OPT, ELEM_LEN_AB, AREA, I1, I2, JTOR, ZS(9), K1, K2, I12, E, G, ALPHA, TREF )
+               ELSE
+                  WRITE(ERR,1963) EID
+                  WRITE(F06,1963) EID
+                  RETURN
+               ENDIF
+               
+            ENDIF
+
+         ELSE IF (TYPE == 'BEAM    ') THEN                 ! General beam
 
             CALL BEAM
 
@@ -159,6 +176,9 @@
  
       ENDIF
  
+! **********************************************************************************************************************************
+ 1963 FORMAT(' *ERROR  1962: TIMOSHENKO BAR ELEMENT ',A,' CANNOT HAVE NONZERO I12. IT WILL BE SET TO I12 = 0.')
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM

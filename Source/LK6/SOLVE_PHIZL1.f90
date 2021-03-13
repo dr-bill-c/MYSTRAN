@@ -37,7 +37,7 @@
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FACTORED_MATRIX, FATAL_ERR, KLL_SDIA, NDOFR, NDOFL, NTERM_DLR,              &
                                          NTERM_PHIZL1, NTERM_KLL, NTERM_KLLs
       USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC, TSEC
-      USE PARAMS, ONLY                :  EPSIL, SOLLIB, SPARSTOR
+      USE PARAMS, ONLY                :  EPSIL, SOLLIB, SPARSE_FLAVOR, SPARSTOR
       USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE_PHIZL1_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
       USE SCRATCH_MATRICES, ONLY      :  I_CRS3, J_CRS3, CRS3
@@ -93,42 +93,6 @@
 ! **********************************************************************************************************************************
       EPS1 = EPSIL(1)
 
-! Decomp KLL if required
-
-         DEB_PRT(1) = 64
-         DEB_PRT(2) = 65
-   
-         IF (SOLLIB == 'BANDED') THEN
-   
-            INFO  = 0
-            EQUED = 'N'
-            CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KLL', 'L ', NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, 'Y', 'N', 'N', 'N', DEB_PRT, &
-                                         EQUED, KLL_SDIA, K_INORM, RCOND, EQUIL_SCALE_FACS, INFO )
-            IF (EQUED == 'Y') THEN                         ! If EQUED == 'Y' then error. We don't want KLL equilibrated
-               WRITE(ERR,6001) SUBR_NAME, EQUED
-               WRITE(F06,6001) SUBR_NAME, EQUED
-               FATAL_ERR = FATAL_ERR + 1
-               CALL OUTA_HERE ( 'Y' )
-            ENDIF
-   
-         ELSE IF (SOLLIB == 'SPARSE  ') THEN
-
-            ! Add sparse matrix code here to decompose the KLL stiffness matrix
-
-         ELSE
-   
-            FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
-            CALL OUTA_HERE ( 'Y' )
-   
-         ENDIF
-
-      DO I=1,NDOFL                                         ! Make sure that scale factors are one. We don't want any equil scaling
-         EQUIL_SCALE_FACS(I) = ONE                         ! of KLL in this subr. FBS below has EQUIL_SCALE_FACS as an input but
-      ENDDO                                                ! they shouldn't be used as EQUED = 'N' is also input there (1st arg)
-
-!***********************************************************************************************************************************
 ! Solve for PHIZL1  
 
 ! Open a scratch file that will be used to write PHIZL1   nonzero terms to as we solve for columns of PHIZL1  . After all col's
@@ -172,19 +136,30 @@
          IF (NULL_COL == 'N') THEN                         ! FBS will solve for PHIZL1_COL & load it into PHIZL1   array
                                                            ! DPBTRS will return PHIZL1_COL = -KLL(-1)*RHS_col
 !                                                            Note 1st arg = 'N' assures that EQUIL_SCAL_FACS will not be used
-            IF      (SOLLIB == 'BANDED') THEN
+            IF      (SOLLIB == 'BANDED  ') THEN
 
                CALL FBS_LAPACK ( 'N', NDOFL, KLL_SDIA, EQUIL_SCALE_FACS, INOUT_COL )
 
             ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-               ! Add sparse matrix code here to solve for PHIZL1_COL from KLL*PHIZL1_COL = CRS3
+               IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+                  INFO = 0
+                  CALL FBS_SUPRLU ( SUBR_NAME, 'KLL', NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, J, INOUT_COL, INFO )
+               ELSE
+
+                  FATAL_ERR = FATAL_ERR + 1
+                  WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+                  CALL OUTA_HERE ( 'Y' )
+
+               ENDIF
 
             ELSE
 
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,9991) SUBR_NAME, SOLLIB
-               WRITE(F06,9991) SUBR_NAME, SOLLIB
+               WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+               WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
                CALL OUTA_HERE ( 'Y' )
 
             ENDIF
@@ -249,7 +224,7 @@
                     ,/,14X,' MATRIX KLL WAS EQUILIBRATED: EQUED = ',A,'. CODE NOT WRITTEN TO ALLOW THIS AS YET')
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
 12345 FORMAT(3X,A,I8,' of ',I8,A) 
 

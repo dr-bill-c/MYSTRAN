@@ -326,7 +326,7 @@
  1105 FORMAT(' *ERROR  1105: ILLEGAL ENTRY IN FIELD ',I2,' OR ',I2,' OF ',A,I8,' ENTRY.',                                          &
                            ' FIELD ',I2,' ENTRY MUST BE GREATER THAN FIELD ',I2,' ENTRY')
 
- 1111 FORMAT(' *ERROR  1105: ILLEGAL ENTRY IN FIELD ',I2,' OR ',I2,' OF ',A,I8,' ENTRY.',                                          &
+ 1111 FORMAT(' *ERROR  1111: ILLEGAL ENTRY IN FIELD ',I2,' OR ',I2,' OF ',A,I8,' ENTRY.',                                          &
                            ' FREQ RANGE, |F2 - F1| MUST BE > 0')
 
 ! **********************************************************************************************************************************

@@ -28,11 +28,11 @@
 ! USE Interface statements for all subroutines called by SUBROUTINE EIG_LANCZOS_ARPACK
 
       USE OURTIM_Interface
-      USE OUTA_HERE_Interface
       USE MATADD_SSS_NTERM_Interface
       USE ALLOCATE_SPARSE_MAT_Interface
       USE MATADD_SSS_Interface
       USE BANDSIZ_Interface
+      USE OUTA_HERE_Interface
       USE ALLOCATE_LAPACK_MAT_Interface
       USE BANDGEN_LAPACK_DPB_Interface
       USE BANDGEN_LAPACK_DGB_Interface

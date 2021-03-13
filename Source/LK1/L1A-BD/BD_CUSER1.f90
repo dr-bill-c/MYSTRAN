@@ -91,7 +91,7 @@
          JCARD_EDAT(I) = JCARD(I)
       ENDDO 
 
-! Check property ID field. Set to EID if blank
+! Check property ID field. Set to element ID if blank
   
       IF (JCARD(3)(1:) == ' ') THEN
          JCARD_EDAT(3) = JCARD(2)

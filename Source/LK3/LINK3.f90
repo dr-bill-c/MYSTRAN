@@ -35,20 +35,21 @@
 !      memory than sparse storage for large stiffness matrices.
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_BUG, WRT_ERR, WRT_LOG, ERR, F04, F06, L2T, L3A, SC1, LINK2T, LINK3A, L2T_MSG, L3A_MSG
+      USE IOUNT1, ONLY                :  WRT_BUG, WRT_LOG, ERR, F04, F06, L3A, SC1, LINK3A, L3A_MSG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, FATAL_ERR, KLL_SDIA, LINKNO, MBUG, NDOFL, NSUB,                       &
-                                         NTERM_KLL, NTERM_KLLs, NTERM_PL, RESTART,  SOL_NAME, WARN_ERR
-      USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC       
+                                         NTERM_KLL, NTERM_PL, RESTART,  SOL_NAME, WARN_ERR
+      USE TIMDAT, ONLY                :  HOUR, MINUTE, SEC, SFRAC       
       USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, TEN
-      USE PARAMS, ONLY                :  EPSERR, EPSIL, KLLRAT, RELINK3, RCONDK, SOLLIB, SPARSTOR, SUPINFO,                        &
-                                         SUPWARN
-      USE SPARSE_MATRICES, ONLY       :  I_KLL, I2_KLL, J_KLL, KLL, I_KLLs, I2_KLLs, J_KLLs, KLLs, I_PL, J_PL, PL
+      USE PARAMS, ONLY                :  CRS_CCS, EPSERR, EPSIL, KLLRAT, RELINK3, RCONDK, SOLLIB, SUPWARN, SPARSE_FLAVOR
+      USE SPARSE_MATRICES, ONLY       :  I_KLL, J_KLL, KLL, I_PL, J_PL, PL
       USE LAPACK_DPB_MATRICES, ONLY   :  RES
       USE COL_VECS, ONLY              :  UL_COL, PL_COL
       USE MACHINE_PARAMS, ONLY        :  MACH_EPS, MACH_SFMIN
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE LAPACK_BLAS_AUX
       USE LAPACK_LIN_EQN_DPB
+      USE SCRATCH_MATRICES, ONLY      :  I_CCS1, J_CCS1, CCS1
+      USE SuperLU_STUF, ONLY          :  SLU_FACTORS, SLU_INFO
 
 ! Interface module not needed for subr's DPBTRF and DPBTRS. These are "CONTAIN'ed" in module LAPACK_LIN_EQN_DPB,
 ! which is "USE'd" above
@@ -59,7 +60,7 @@
  
       CHARACTER, PARAMETER            :: CR13 = CHAR(13)   ! This causes a carriage return simulating the "+" action in a FORMAT
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'LINK3'
-      CHARACTER(  1*BYTE)             :: L_SET    = 'L '   ! A-set designator
+      CHARACTER(  2*BYTE)             :: L_SET    = 'L '   ! L-set designator
       CHARACTER(  1*BYTE)             :: EQUED             ! 'Y' if the stiff matrix was equilibrated in subr EQUILIBRATE    
       CHARACTER(  1*BYTE)             :: NULL_COL          ! 'Y' if a col of KAO(transpose) is null 
       CHARACTER( 54*BYTE)             :: MODNAM            ! Name to write to screen
@@ -69,7 +70,7 @@
 
       INTEGER(LONG)                   :: IER_DECOMP        ! Overall error indicator
       INTEGER(LONG)                   :: ISUB              ! DO loop index for subcases 
-      INTEGER(LONG)                   :: INFO     = 0      ! Input value for subr SYM_MAT_DECOMP_LAPACK (quit on sing KRRCB)
+      INTEGER(LONG)                   :: INFO     = 0      ! Info output from some routine that has been called
       INTEGER(LONG)                   :: I,J               ! DO loop indices            
       INTEGER(LONG)                   :: OUNT(2)           ! File units to write messages to. Input to subr UNFORMATTED_OPEN  
       INTEGER(LONG), PARAMETER        :: P_LINKNO = 2      ! Prior LINK no's that should have run before this LINK can execute
@@ -80,8 +81,7 @@
 
       REAL(DOUBLE)                    :: EQUIL_SCALE_FACS(NDOFL)
                                                            ! LAPACK_S values returned from subr SYM_MAT_DECOMP_LAPACK
-
-      REAL(DOUBLE)                    :: INOUT_COL(NDOFL)  ! Temp variable for subr FBS
+      REAL(DOUBLE)                    :: DUM_COL(NDOFL)    ! Temp variable used in SuperLU
       REAL(DOUBLE)                    :: K_INORM           ! Inf norm of KLL matrix (det in  subr COND_NUM)
       REAL(DOUBLE)                    :: LAP_ERR1          ! Bound on displ error = 2*OMEGAI/RCOND
       REAL(DOUBLE)                    :: OMEGAI            ! RES_INORM/DEN (similar to EPSILON)
@@ -160,7 +160,11 @@
       DEB_PRT(2) = 35
       IER_DECOMP = 0
 
-      IF ((RESTART == 'Y') .AND. (RELINK3 == 'Y')) THEN
+      DO J=1,NDOFL                                         ! Need a null col of loads when SuperLU is called to factor KLL
+         DUM_COL(J) = ZERO                                 ! (only because it appears in the calling list)
+      ENDDO
+
+      IF ((RESTART == 'Y') .AND. (RELINK3 == 'Y')) THEN     
 sol_do:  DO
             WRITE(SC1,*) ' Input the value of SOLLIB (8 characters) to use in this restart:'
             READ (*,*) SOLLIB
@@ -174,7 +178,7 @@ sol_do:  DO
          ENDDO sol_do
       ENDIF
 
-Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
+Factr:IF (SOLLIB == 'BANDED  ') THEN                       ! Use LAPACK
 
          INFO = 0
          CALL SYM_MAT_DECOMP_LAPACK ( SUBR_NAME, 'KLL', L_SET, NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, 'Y', KLLRAT, 'Y', RCONDK,      &
@@ -182,22 +186,32 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
       ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-         ! Add sparse matrix code here to decompose the KLL stiffness matrix
+         IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+            SLU_INFO = 0
+            CALL SYM_MAT_DECOMP_SUPRLU ( SUBR_NAME, 'KLL', NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, SLU_INFO )
+
+         ELSE
+
+            FATAL_ERR = FATAL_ERR + 1
+            WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+            CALL OUTA_HERE ( 'Y' )
+
+         ENDIF
 
       ELSE
 
          FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,9991) SUBR_NAME, SOLLIB
-         WRITE(F06,9991) SUBR_NAME, SOLLIB
+         WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+         WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
          CALL OUTA_HERE ( 'Y' )
 
-      ENDIF Lib
+      ENDIF Factr
 
 !***********************************************************************************************************************************
 !  Allocate col vector arrays for loads, displs and res vector
 
-      CALL ALLOCATE_COL_VEC ( 'UL_COL', NDOFL, SUBR_NAME )
-      CALL ALLOCATE_COL_VEC ( 'PL_COL', NDOFL, SUBR_NAME )
       CALL ALLOCATE_LAPACK_MAT ( 'RES', NDOFL, 1, SUBR_NAME )
 
 ! Open file for writing displs to.
@@ -208,17 +222,22 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
       WRITE(F06,*)
       BETA = ONE
-      DO ISUB = 1,NSUB
+Solve:DO ISUB = 1,NSUB
+
+         SLU_INFO = 0
+         CALL ALLOCATE_COL_VEC ( 'UL_COL', NDOFL, SUBR_NAME )
+         CALL ALLOCATE_COL_VEC ( 'PL_COL', NDOFL, SUBR_NAME )
 
          CALL OURTIM                                       ! Get the loads for this subcase from I_PL, J_PL, PL and put into PL_COL
          MODNAM = 'GET COL OF PL LOADS FOR                        Subcase'
          WRITE(SC1,3093) LINKNO,MODNAM,ISUB,HOUR,MINUTE,SEC,SFRAC
          DO J=1,NDOFL
-            PL_COL(J) = ZERO
+            PL_COL(J)  = ZERO
+            DUM_COL(J) = ZERO
          ENDDO
          CALL GET_SPARSE_CRS_COL ( 'PL        ', ISUB, NTERM_PL, NDOFL, NSUB, I_PL, J_PL, PL, BETA, PL_COL, NULL_COL )
          DO J=1,NDOFL
-            INOUT_COL(J) = PL_COL(J)
+            DUM_COL(J) = PL_COL(J)
          ENDDO
  
          IF (DEBUG(32) == 1) THEN                          ! DEBUG output of load vector for this subcase, if requested
@@ -233,23 +252,34 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
          IF      (SOLLIB == 'BANDED  ') THEN
 
-            CALL FBS_LAPACK ( EQUED, NDOFL, KLL_SDIA, EQUIL_SCALE_FACS, INOUT_COL )
+            CALL FBS_LAPACK ( EQUED, NDOFL, KLL_SDIA, EQUIL_SCALE_FACS, DUM_COL )
 
          ELSE IF (SOLLIB == 'SPARSE  ') THEN
 
-            ! Add sparse matrix code here to solve 1 column of the equations KLL*UL = PL using the decomp of KLL above
+            IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+               SLU_INFO = 0
+               CALL FBS_SUPRLU ( SUBR_NAME, 'KLL', NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, ISUB, DUM_COL, SLU_INFO )
+            ELSE
+
+               FATAL_ERR = FATAL_ERR + 1
+               WRITE(ERR,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               WRITE(F06,9991) SUBR_NAME, 'SPARSE_FLAVOR'
+               CALL OUTA_HERE ( 'Y' )
+
+            ENDIF
 
          ELSE
 
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,9991) SUBR_NAME, SOLLIB
-            WRITE(F06,9991) SUBR_NAME, SOLLIB
+            WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+            WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
             CALL OUTA_HERE ( 'Y' )
 
          ENDIF
 
          DO J=1,NDOFL
-            UL_COL(J) = INOUT_COL(J)
+            UL_COL(J) = DUM_COL(J)
          ENDDO
 
          IF (DEBUG(33) == 1) THEN                          ! DEBUG output of displs
@@ -295,9 +325,30 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
             WRITE(L3A) UL_COL(J)
          ENDDO
 
-      ENDDO
-      CALL DEALLOCATE_SPARSE_MAT ( 'KLLs' )
-      WRITE(F06,*)
+         CALL DEALLOCATE_COL_VEC  ( 'UL_COL' )
+         CALL DEALLOCATE_COL_VEC  ( 'PL_COL' )
+
+      ENDDO Solve
+
+FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the storage allocated inside SuperLU
+
+         IF (SPARSE_FLAVOR(1:7) == 'SUPERLU') THEN
+
+            DO J=1,NDOFL                                         ! Need a null col of loads when SuperLU is called to factor KLL
+               DUM_COL(J) = ZERO                                  ! (only because it appears in the calling list)
+            ENDDO
+
+            CALL C_FORTRAN_DGSSV( 3, NDOFL, NTERM_KLL, 1, KLL , I_KLL , J_KLL , DUM_COL, NDOFL, SLU_FACTORS, SLU_INFO )
+
+            IF (SLU_INFO .EQ. 0) THEN
+               WRITE (*,*) 'SUPERLU STORAGE FREED'
+            ELSE
+               WRITE(*,*) 'SUPERLU STORAGE NOT FREED. INFO FROM SUPERLU FREE STORAGE ROUTINE = ', SLU_INFO
+            ENDIF
+
+         ENDIF
+
+      ENDIF FreeS
  
 ! Dellocate arrays
 
@@ -316,9 +367,6 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RES   ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'RES' )
-      WRITE(SC1,12345,ADVANCE='NO') '       Deallocate UL_COL', CR13   ;   CALL DEALLOCATE_COL_VEC  ( 'UL_COL' )
-      WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PL_COL', CR13   ;   CALL DEALLOCATE_COL_VEC  ( 'PL_COL' )
-      WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PL    ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PL' )
 
       CALL FILE_CLOSE ( L3A, LINK3A, 'KEEP', 'Y' )
 
@@ -356,7 +404,6 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 ! Write LINK3 end to screen
 
       WRITE(SC1,153) LINKNO
-
 !***********************************************************************************************************************************
   150 FORMAT(/,' >> LINK',I3,' BEGIN',/)
 
@@ -366,8 +413,8 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
 
   153 FORMAT(  ' >> LINK',I3,' END')
 
-  932 FORMAT(' *ERROR   932: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' PARAMETER SPARSTOR MUST BE EITHER "SYM" OR "NONSYM" BUT VALUE IS ',A)
+  933 FORMAT(' *ERROR   933: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
+                    ,/,14X,' CRS_CCS  MUST BE EITHER "CRS" OR "CCS" BUT VALUE IS ',A)
 
   999 FORMAT(' *ERROR   999: INCORRECT SOLUTION IN EXEC CONTROL. SHOULD BE ',A,', BUT IS SOL = ',A)
 
@@ -409,7 +456,7 @@ Lib:  IF (SOLLIB == 'BANDED  ') THEN                         ! Use LAPACK
  3093 FORMAT(1X,I2,'/',A54,I8,2X,I2,':',I2,':',I2,'.',I3)
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
  9998 FORMAT(' *ERROR  9998: COMM ',I3,' INDICATES UNSUCCESSFUL LINK ',I2,' COMPLETION.'                                           &
                     ,/,14X,' FATAL ERROR - CANNOT START LINK ',I2)

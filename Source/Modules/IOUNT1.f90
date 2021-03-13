@@ -337,6 +337,10 @@
       INTEGER(LONG)                   :: IN1           =    8 ! Unit no. for input file 
       INTEGER(LONG)                   :: IN4           = 1004 ! Unit no. for IN4file 
       INTEGER(LONG)                   :: INC           = 1005 ! Unit no. for Bulk Data INCLUDE files
+
+! BANDIT file unit nos: IOU6,IOU7,IOU8,IOU9,IOU10,IOU11,IOU12,IOU13,IOU14,IOU15,IOU16,IOU17,IOU18,IOU19,IOU20 defined in DATA stmt
+! in BANDIT_BLOCK_DATA. Values are 1006-1020
+
       INTEGER(LONG)                   :: INI           =    9 ! Unit no. for MYSTRAN.INI file
       INTEGER(LONG)                   :: L1A           =  101 ! Unit no. for file LINK1A
       INTEGER(LONG)                   :: NEU           =   10 ! Unit no. for FEMPA neutral file 

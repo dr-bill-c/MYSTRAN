@@ -61,7 +61,7 @@
  
 !   FIELD   ITEM            EXPLANATION 
 !   -----   ------------    -------------
-!    2      EID             RSPLINE elem ID
+!    2      ELID            RSPLINE elem ID
 !    3      D/L             Diam/length ratio of the rod used in determining the beam deflection relationship
 !    4      G1              Indep grid at one end of the RSPLINE line
 !    5-9    Gi,Ci           Dep grid/comps (dep grid/comps)

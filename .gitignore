@@ -4,6 +4,9 @@
 # CMake output directories:
 Binaries/*
 
+# downloaded SuperLU sources
+superlu*
+
 # what follows is github's recommendation for CMake projects
 CMakeLists.txt.user
 CMakeCache.txt

@@ -198,8 +198,8 @@
              ' :::::::::::::::::::::::::::::::::::::::::START DEBUG(87) OUTPUT FROM SUBROUTINE CRS_CCS:::::::::::::::::::::::'    ,&
               ':::::::::::::::::::::',/)
 
- 1012 FORMAT(' SSS SPARSE MATRIX CRS TO CCS CONVERSION ROUTINE: Convert input matrix A, stored in sparse Compressed Row Storage'  ,&
-' (CRS) format, to',/,' ------------------------------------------------',/,&
+ 1012 FORMAT(' SPARSE MATRIX CRS TO CCS CONVERSION ROUTINE: Convert input matrix A, stored in sparse Compressed Row Storage'      ,&
+' (CRS) format, to',/,' -------------------------------------------',/,&
 ' output matrix B, stored in sparse Compressed Column (CCS) format.',/)
 
  1014 FORMAT(40X,' The name of CRS formatted matrix A is: ',A                                                                   ,/,&
@@ -225,16 +225,16 @@
 
  3021 FORMAT(' Compressed Col Storage (CCS) format of output matrix B:'                                                         ,/,&
              ' -------------------------------------------------------'                                                        ,//,&
-             ' 1) Index, L, and array I_B(L) for matrix B, where I_B(L+1) - I_B(L) is the number of nonzero terms in row L of'    ,&
-             ' matrix B.',/,'    (also, I_B(L) is the index, K, in array B(K) where row L begins - up to, but not including, the' ,&
-             ' last entry in I_B(L)).',/)
+             ' 1) Index, L, and array J_B(L) for matrix B, where J_B(L+1) - J_B(L) is the number of nonzero terms in row L of'    ,&
+             ' matrix B.',/,'    (also, J_B(L) is the index, K in array B(K), where row L begins - up to, but not including, the' ,&
+             ' last entry in J_B(L)).',/)
 
- 3022 FORMAT('    L, I_C(L)       = ',2I12)
+ 3022 FORMAT('    L, J_B(L)       = ',2I12)
 
- 3023 FORMAT(' 2) Index, K, and arrays J_B(K) and B(K). B(K) are the nonzeros in matrix B and J_B(K) is the col number in matrix', &
+ 3023 FORMAT(' 2) Index, K, and arrays I_B(K) and B(K). B(K) are the nonzeros in matrix B and I_B(K) is the col number in matrix', &
              ' B for term B(K).',/)
 
- 3024 FORMAT('    K, J_B(K), B(K) = ',2I12,1ES15.6)
+ 3024 FORMAT('    K, I_B(K), B(K) = ',2I12,1ES15.6)
 
  1095 FORMAT(' ::::::::::::::::::::::::::::::::::::::::END DEBUG(87) OUTPUT FROM SUBROUTINE CRS_CCS::::::::::::::::::::::::::',    &
               ':::::::::::::::::::::'                                                                                           ,/,&

@@ -44,7 +44,7 @@
 
       USE PARAMS, ONLY                :  ARP_TOL         , ART_KED         , ART_ROT_KED     , ART_TRAN_KED    ,                   &
                                          ART_MASS        , ART_ROT_MASS    , ART_TRAN_MASS   , AUTOSPC         , AUTOSPC_NSET    , &
-                                         AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         ,                   &
+                                         AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         , CRS_CCS         , &
                                          CBMIN3          , CBMIN4          , CBMIN4T         , CHKGRDS         ,                   &
                                          CUSERIN         , CUSERIN_EID     , CUSERIN_IN4     , CUSERIN_PID     , CUSERIN_SPNT_ID , &
                                          CUSERIN_XSET    , CUSERIN_COMPTYP ,                                                       &
@@ -67,8 +67,8 @@
                                          PRTYS           , PRTQSYS         ,                                                       &
                                          Q4SURFIT        , QUADAXIS        , QUAD4TYP        , RCONDK          , RELINK3         , &
                                          SEQPRT          , SEQQUIT         , SETLKTM         , SETLKTK         , SHRFXFAC        , &
-                                         SKIPMKGG        , SOLLIB          ,                                                       &
-                                         SPC1QUIT        , SORT_MAX        , SPC1SID         , SPARSTOR        , STR_CID         , &
+                                         SKIPMGG         , SOLLIB          , SPARSE_FLAVOR   , SPARSTOR        ,                   &
+                                         SPC1QUIT        , SORT_MAX        , SPC1SID         , STR_CID                           , &
                                          SUPINFO         , SUPWARN                                                               , &
                                          THRESHK         , THRESHK_LAP     , TINY            ,                                     &
                                          TSTM_DEF        , USR_JCT         , USR_LTERM_KGG   , USR_LTERM_MGG   , WINAMEM         , &

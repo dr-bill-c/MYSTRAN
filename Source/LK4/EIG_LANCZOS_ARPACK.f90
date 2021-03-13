@@ -116,7 +116,7 @@
       NUM_NEG_TERMS1 = 0
       NUM_NEG_TERMS2 = 0
 
-      IF      (SOLLIB == 'BANDED  ') THEN
+!     IF      (SOLLIB == 'BANDED  ') THEN
 
          IF (NDOFL < EIGESTL) THEN
             IF (EIG_FRQ2 > EPS1) THEN
@@ -132,14 +132,14 @@
             ENDIF
          ENDIF
 
-      ELSE
+!     ELSE
 
-         FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,9991) SUBR_NAME, SOLLIB
-         WRITE(F06,9991) SUBR_NAME, SOLLIB
-         CALL OUTA_HERE ( 'Y' )
+!        FATAL_ERR = FATAL_ERR + 1
+!        WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+!        WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
+!        CALL OUTA_HERE ( 'Y' )
 
-      ENDIF
+!     ENDIF
 
       IF (EIG_FRQ2 > EPS1) THEN
          WRITE(SC1,101) EIG_FRQ2, NUM_EST_EIGENS
@@ -474,7 +474,7 @@
  9892 FORMAT('               THIS IS FOR ROW AND COL IN THE MATRIX FOR GRID POINT ',I8,' COMPONENT ',I3)
 
  9991 FORMAT(' *ERROR  9991: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' SOLLIB = ',A,' NOT PROGRAMMED ',A)
+                    ,/,14X,A, ' = ',A,' NOT PROGRAMMED ',A)
 
  9996 FORMAT('  PROCESSING STOPPED DUE TO ABOVE ARPACK ERRORS')
 

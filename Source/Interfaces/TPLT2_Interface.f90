@@ -40,6 +40,7 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, EID, FCONV_SHEAR_THICK, EB, ET, ELDOF,                      &
                                          ERR_SUB_NAM, FCONV, KE, INTL_MID, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE,                    &
                                          PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T, SHELL_PROP_ALP, SHRSUM, STE2, TYPE
+      USE PARAMS, ONLY                :  EPSIL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
       IMPLICIT NONE 

@@ -31,7 +31,7 @@
 
 !       1) Record 1 has the rigid element type: 'RBE1    '
 !       2) Record 2 has: 
-!             REID            : Rigid element ID
+!             RELID           : Rigid element ID
 !             IGID(i),IDOF(i) : Pairs of indep Grid/DOF (up to 6)
 !             DGID, DDOF      : One pair of dependent Grid/DOF              
  
@@ -76,7 +76,7 @@
       INTEGER(LONG)                   :: JFLD1             ! A computed field number on the card
       INTEGER(LONG)                   :: JFLD2             ! A computed field number on the card
       INTEGER(LONG)                   :: NUM_IDOF_FLDS = 0 ! Number of fields that have independent DOF's specified
-      INTEGER(LONG)                   :: REID      = 0     ! This rigid elements' ID
+      INTEGER(LONG)                   :: RELID     = 0     ! This rigid elements' ID
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_RBE1_BEGEND
  
 ! **********************************************************************************************************************************
@@ -91,7 +91,7 @@
  
 !   FIELD   ITEM           
 !   -----   ------------   
-!    2      REID   , Rigid Elem ID
+!    2      RELID  , Rigid Elem ID
 !    3      IGID(1), Grid ID for 1st independent grid
 !    4      IDOF(1), DOF's at 1st independent grid 
 !    5      IGID(2), Grid ID for 2nd independent grid, if it exists
@@ -142,11 +142,11 @@
  
 ! Read Elem ID
  
-      CALL I4FLD ( JCARD(2), JF(2), REID )
+      CALL I4FLD ( JCARD(2), JF(2), RELID )
       IF (IERRFL(2) /= 'N') THEN
          JERR = JERR + 1
       ELSE
-         RIGID_ELEM_IDS(NRIGEL) = REID
+         RIGID_ELEM_IDS(NRIGEL) = RELID
       ENDIF
 
 ! Read up to 3 pairs of independent grids and DOF's in fields 3-8 of the parent card.
@@ -298,7 +298,7 @@
                         ENDIF
                         IF (JERR == 0) THEN
                            WRITE(L1F) RTYPE
-                           WRITE(L1F) REID,DGID,DDOF,NUM_IDOF_FLDS,(IGID(I),IDOF(I),I=1,NUM_IDOF_FLDS)
+                           WRITE(L1F) RELID,DGID,DDOF,NUM_IDOF_FLDS,(IGID(I),IDOF(I),I=1,NUM_IDOF_FLDS)
                            NRECARD = NRECARD + 1
                         ENDIF
                      ENDIF
@@ -356,8 +356,8 @@
             ENDIF
          ENDDO
          IF (IDOF_ERR > 0) THEN
-            WRITE(ERR,1143) REID,(CHR_IDOF(I),I=1,3)
-            WRITE(F06,1143) REID,(CHR_IDOF(I),I=1,3)
+            WRITE(ERR,1143) RELID,(CHR_IDOF(I),I=1,3)
+            WRITE(F06,1143) RELID,(CHR_IDOF(I),I=1,3)
             IF (MORE_IDOF == 'N') THEN
                WRITE(ERR,11431)
                WRITE(F06,11431)

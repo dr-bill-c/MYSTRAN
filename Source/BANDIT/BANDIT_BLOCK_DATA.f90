@@ -26,6 +26,8 @@
 
       BLOCK DATA BANDIT_BLOCK_DATA
 
+! BANDIT file unit nos: IOU6,IOU7,IOU8,IOU9,IOU10,IOU11,IOU12,IOU13,IOU14,IOU15,IOU16,IOU17,IOU18,IOU19,IOU20 defined in DATA stmt
+
 ! **********************************************************************************************************************************
       COMMON /ALPHA/ MA(26),NUM(10),MB(4)
 

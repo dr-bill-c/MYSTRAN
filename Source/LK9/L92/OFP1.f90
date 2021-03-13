@@ -159,6 +159,7 @@
                   ENDIF
 
                   IF ((ACCE_OUT(1:5) == 'PRINT') .OR. (ACCE_OUT(1:4) == 'BOTH')) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM )
                      CALL WRITE_GRD_PRT_OUTPUTS ( JVEC, NUM, WHAT, IHDR, ACCE_ALL_SAME_CID, WRITE_OGEL )
                   ENDIF
 
@@ -234,6 +235,7 @@
                   ENDIF
 
                   IF ((DISP_OUT(1:5) == 'PRINT') .OR. (DISP_OUT(1:4) == 'BOTH')) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM )
                      CALL WRITE_GRD_PRT_OUTPUTS ( JVEC, NUM, WHAT, IHDR, DISP_ALL_SAME_CID, WRITE_OGEL )
                   ENDIF
 
@@ -307,6 +309,7 @@
                   ENDIF
 
                   IF ((OLOA_OUT(1:5) == 'PRINT') .OR. (OLOA_OUT(1:4) == 'BOTH')) THEN
+                     CALL CHK_OGEL_ZEROS ( NUM )
                      CALL WRITE_GRD_PRT_OUTPUTS ( JVEC, NUM, WHAT, IHDR, OLOAD_ALL_SAME_CID, WRITE_OGEL )
                   ENDIF
 

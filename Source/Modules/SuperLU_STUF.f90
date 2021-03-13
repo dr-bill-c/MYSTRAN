@@ -1,4 +1,4 @@
-! ###############################################################################################################################
+! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -24,31 +24,11 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-   MODULE SOLVE6_SETUP_Interface
+      MODULE SuperLU_STUF
 
-   INTERFACE
+         USE PENTIUM_II_KIND, ONLY    : LONG, DBL_LONG
 
-      SUBROUTINE SOLVE6_SETUP ( CALLING_SUBR )
+         INTEGER(LONG)                :: SLU_INFO
+         INTEGER(DBL_LONG)            :: SLU_FACTORS
 
-
-      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, KLL_SDIA, NDOFL, NTERM_KLL, NTERM_KLLs
-      USE TIMDAT, ONLY                :  TSEC
-      USE PARAMS, ONLY                :  EPSIL, SOLLIB, SPARSTOR
-      USE SUBR_BEGEND_LEVELS, ONLY    :  SOLVE6_SETUP_BEGEND
-      USE SPARSE_MATRICES, ONLY       :  I_KLL, J_KLL, KLL, I_KLLs, J_KLLs, KLLs
-      USE LAPACK_LIN_EQN_DPB
-
-      IMPLICIT NONE
-
-      CHARACTER(LEN=*), INTENT(IN)    :: CALLING_SUBR      ! Name of subr that called thi one
- 
-      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SOLVE6_SETUP_BEGEND
-
-      END SUBROUTINE SOLVE6_SETUP
-
-   END INTERFACE
-
-   END MODULE SOLVE6_SETUP_Interface
-
+      END MODULE SuperLU_STUF

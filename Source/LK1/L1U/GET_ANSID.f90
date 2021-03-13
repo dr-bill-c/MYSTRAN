@@ -40,8 +40,8 @@
  
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'GET_ANSID'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Case Control card (can be modified by subr CSHIFT, called herein)
-      CHARACTER(LEN=LEN(CARD))        :: CARD1             ! CARD shifted to begin in col after "=" sign
-      CHARACTER(LEN=LEN(CARD))        :: ERRTOK            ! An output from subr STOKEN, called herein
+      CHARACTER(LEN=LEN(CARD)+1)      :: CARD1             ! CARD shifted to begin in col after "=" sign
+      CHARACTER(LEN=LEN(CARD)+1)      :: ERRTOK            ! An output from subr STOKEN, called herein
       CHARACTER( 3*BYTE)              :: EXCEPT            ! An input/output to/from subr STOKEN, called herein
       CHARACTER( 3*BYTE)              :: THRU              ! An inputoutput to/from subr STOKEN, called herein
       CHARACTER( 8*BYTE)              :: TOKEN(3)          ! An output from subr STOKEN, called herein
@@ -82,13 +82,13 @@
          CALL STOKEN ( SUBR_NAME, CARD1, ISTART, TOKLEN, NTOKEN, IERROR, TOKTYP, TOKEN, ERRTOK, THRU, EXCEPT )
          IF (NTOKEN > 1) THEN
             FATAL_ERR = FATAL_ERR + 1
-            WRITE(ERR,1704)
-            WRITE(F06,1704)
+            WRITE(ERR,1704) NTOKEN
+            WRITE(F06,1704) NTOKEN
          ELSE
             IF ((ISTART <= TOKLEN) .AND. (CARD1(ISTART:ISTART) /= '$')) THEN
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,1704)
-               WRITE(F06,1704)
+               WRITE(ERR,1704) NTOKEN
+               WRITE(F06,1704) NTOKEN
             ELSE
                IF      (TOKTYP(1) == 'INTEGER ') THEN
                   READ(TOKEN(1),'(I8)',IOSTAT=IOCHK) SETID

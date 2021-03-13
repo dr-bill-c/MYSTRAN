@@ -34,7 +34,7 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG
       USE IOUNT1, ONLY                :  WRT_BUG, WRT_FIJ, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELOUT_ELFN_BIT, ELDT_BUG_U_P_BIT, ELDT_F25_U_P_BIT, FATAL_ERR,NELE, IBIT,   &
-                                         INT_SC_NUM, MBUG, SOL_NAME                                           
+                                         INT_SC_NUM, MBUG, MOGEL, SOL_NAME                                           
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO
       USE SUBR_BEGEND_LEVELS, ONLY    :  OFP3_ELFN_BEGEND

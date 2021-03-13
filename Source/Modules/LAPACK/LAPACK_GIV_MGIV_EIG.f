@@ -14,6 +14,8 @@
       USE OURTIM_Interface
       USE OUTA_HERE_Interface
 
+      character(1*byte), parameter      :: cr13_lge = char(13)
+
       CHARACTER(44*BYTE), PRIVATE       :: MODNAM          ! Name to write to screen to describe module being run.
 
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = LAPACK_BEGEND
@@ -1109,14 +1111,14 @@
 *
       UPDATE = .TRUE.
       I = N + 1
-      Write(sc1,*)
+      write(sc1,*)
       phase = 1
       phase_index = 0
    10 CONTINUE
       IF( UPDATE ) THEN
          I = I - 1
          phase_index = phase_index + 1
-         Write(sc1,12345) phase,phase_index,i-m 
+         write(sc1,12345,advance='no') phase,phase_index,i-m,cr13_lge
          KBT = MIN( KB, I-1 )
          I0 = I - 1
          I1 = MIN( N, I+KA )
@@ -1192,7 +1194,7 @@
 !        write(sc1,*)
          DO 130 K = 1, KB - 1
             loopno = 130
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             IF( UPDATE ) THEN
 *
 *              Determine the rotations which would annihilate the bulge
@@ -1294,7 +1296,7 @@
 !        write(sc1,*)
          DO 170 K = KB, 1, -1
             loopno = 170
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             IF( UPDATE ) THEN
                J2 = I - K - 1 + MAX( 2, K-I0+1 )*KA1
             ELSE
@@ -1333,7 +1335,7 @@
 !        write(sc1,*)
          DO 210 K = KB, 1, -1
             loopno = 210
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             J2 = I - K - 1 + MAX( 1, K-I0+1 )*KA1
             NR = ( N-J2+KA ) / KA1
             J1 = J2 + ( NR-1 )*KA1
@@ -1386,7 +1388,7 @@
 !        write(sc1,*)
          DO 230 K = 1, KB - 1
             loopno = 230
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             J2 = I - K - 1 + MAX( 1, K-I0+2 )*KA1
 *
 *           finish applying rotations in 1st set from the left
@@ -1689,11 +1691,11 @@
 *
       UPDATE = .TRUE.
       I = 0
-      Write(sc1,*)
+      write(sc1,*)
       phase = 1
   490 CONTINUE
       IF( UPDATE ) THEN
-         Write(sc1,12345) phase,i,m 
+         write(sc1,12345,advance='no') phase,i,m,cr13_lge 
          I = I + 1
          KBT = MIN( KB, M-I )
          I0 = I + 1
@@ -1775,7 +1777,7 @@
 !        write(sc1,*)
          DO 610 K = 1, KB - 1
             loopno = 610
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             IF( UPDATE ) THEN
 *
 *              Determine the rotations which would annihilate the bulge
@@ -1877,7 +1879,7 @@
 !        write(sc1,*)
          DO 650 K = KB, 1, -1
             loopno = 650
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             IF( UPDATE ) THEN
                J2 = I + K + 1 - MAX( 2, K+I0-M )*KA1
             ELSE
@@ -1918,7 +1920,7 @@
 !        write(sc1,*)
          DO 690 K = KB, 1, -1
             loopno = 690
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             J2 = I + K + 1 - MAX( 1, K+I0-M )*KA1
             NR = ( J2+KA-1 ) / KA1
             J1 = J2 - ( NR-1 )*KA1
@@ -1973,7 +1975,7 @@
 !        write(sc1,*)
          DO 710 K = 1, KB - 1
             loopno = 710
-!           write(sc1,22345) loopno,k,kb
+!           write(sc1,22345,advance='no') loopno,k,kb,cr13_lge
             J2 = I + K + 1 - MAX( 1, K+I0-M+1 )*KA1
 *
 *           finish applying rotations in 1st set from the right
@@ -2274,11 +2276,9 @@
 *     End of DSBGST
 
 ! **********************************************************************************************************************************
-22345 format("+",5X,'Loop ',I8,': K = ',I8,' of ',i8,                  
-     &'                                  ')
+22345 format(5X,'Loop ',i8,': K = ',i8,' of ',i8, a)                 
 
-12345 format("+",5X,'Phase ',I1,': Updating from index ',I8,' to ',I8,
-     &'                        ')
+12345 format(5X,'Phase ',i1,': Updating from index ',i8,' to ',i8, a)
 
 ! **********************************************************************************************************************************
  
@@ -2472,9 +2472,9 @@
             J1 = KDN + 2
             J2 = 1
 *
-            Write(sc1,*)
+            write(sc1,*)
             DO 90 I = 1, N - 2
-               Write(sc1,12345) i,n-2
+               write(sc1,12345,advance='no') i,n-2,cr13_lge
 *
 *              Reduce i-th row of matrix to tridiagonal form
 *
@@ -2860,8 +2860,7 @@
 *     End of DSBTRD
 *
 ! **********************************************************************************************************************************
-12345 format("+",5X,'Loop ',i8,' of ',i8,
-     &'                                                ')
+12345 format(5X,'Loop ',i8,' of ',i8, a)
 
 ! **********************************************************************************************************************************
  
@@ -3340,9 +3339,9 @@
       NWL = 0
       NWU = 0
 *
-      Write(sc1,*)
+      write(sc1,*)
       DO 70 JB = 1, NSPLIT
-         Write(sc1,12345) jb,nsplit
+         write(sc1,12345,advance='no') jb,nsplit,cr13_lge
          IOFF = IEND
          IBEGIN = IOFF + 1
          IEND = ISPLIT( JB )
@@ -3591,8 +3590,7 @@
 *     End of DSTEBZ
 *
 ! **********************************************************************************************************************************
-12345 format("+",5X,'Block ',i8,' of ',i8,
-     &'                                               ')
+12345 format(5X,'Block ',i8,' of ',i8, a)
 
   801 format(' *ERROR   801: ERROR ATTEMPTING TO SOLVE FOR EIGENVALUES',
      &'. IN SUBROUTINE DLAEBZ, (CALLED FROM SUBR ',A,')'

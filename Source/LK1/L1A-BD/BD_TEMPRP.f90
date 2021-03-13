@@ -43,8 +43,8 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'BD_TEMPRP'
       CHARACTER(LEN=*), INTENT(INOUT) :: CARD                ! A Bulk Data card
       CHARACTER( 1*BYTE),INTENT(INOUT):: CC_LOAD_FND(LSUB,2) ! 'Y' if B.D load/temp card w/ same set ID (SID) as C.C. LOAD = SID
-      CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP     ! If 'Y', CARD is large field format
-      CHARACTER(LEN(CARD))            :: CHILD             ! "Child" card read in subr NEXTC, called herein
+      CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP       ! If 'Y', CARD is large field format
+      CHARACTER(LEN(CARD))            :: CHILD               ! "Child" card read in subr NEXTC, called herein
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)           ! The 10 fields of characters making up CARD
       CHARACTER(LEN(JCARD))           :: CARD_NAME           ! Field 1 of the parent card
       CHARACTER( 8*BYTE)              :: FIELDS              ! Descriptor of fields in error for output error purposes
@@ -52,11 +52,11 @@
       CHARACTER( 1*BYTE)              :: KEEP_IT     = 'N'   ! 'Y' if this is a TEMPRB or TEMPP1 we need to write to LINK1K
       CHARACTER( 1*BYTE)              :: THRU_3      = 'N'   ! 'Y' if field 3 of cont. card is "THRU"
       CHARACTER( 1*BYTE)              :: THRU_6      = 'N'   ! 'Y' if field 6 of cont. card is "THRU"
-      CHARACTER( 8*BYTE)              :: TOKEN             ! The 1st 8 characters from a JCARD
+      CHARACTER( 8*BYTE)              :: TOKEN               ! The 1st 8 characters from a JCARD
       CHARACTER( 8*BYTE)              :: TOKTYP(10)          ! Character description of a JCARD (output from subr TOKCHK
  
       INTEGER(LONG)                   :: CONT_CARD_NUM  = 0  ! Count of continuation cards (used for output error messages)
-      INTEGER(LONG)                   :: EID, EID1, EID2     ! Element ID's
+      INTEGER(LONG)                   :: ELID, ELID1, ELID2  ! Element ID's
       INTEGER(LONG)                   :: I,J                 ! DO loop indices
       INTEGER(LONG)                   :: I4INP1, I4INP2      ! Values read by subr I4FLD when reading a CARD field
       INTEGER(LONG)                   :: ICONT               ! Indicator whether next card read was a continuation of the parent
@@ -80,19 +80,19 @@
 !    FIELD   ITEM          
 !    -----   ------------  
 !     2      SID
-!     3      EID1
+!     3      ELID1
 !     4-5    TB, TP for TEMPP1
 !     4-9    TBA, TBB, TP1A, TP1B, TP2A, TP2B for TEMPRB
 !  On optional continuation cards (two options for specifying data):
 !  Option 1, specify individual elements:
-!     2-9    EIDi
-!  Option 2, specify elems with "THRU": EID2 thru EIDI and EIDJ thru EIDK
-!     2      EID2
+!     2-9    ELIDi
+!  Option 2, specify elems with "THRU": ELID2 thru ELIDI and ELIDJ thru ELIDK
+!     2      ELID2
 !     3      "THRU"
-!     4      EIDI
-!     5      EIDJ
+!     4      ELIDI
+!     5      ELIDJ
 !     6      "THRU"
-!     7      EIDK
+!     7      ELIDK
  
 ! Make JCARD from CARD
  
@@ -123,10 +123,10 @@
 
       CALL I4FLD ( JCARD(3), JF(3), I4INP1 )               ! Read elem ID in field 3
       IF (IERRFL(3) == 'N') THEN
-         EID = I4INP1
-         IF (EID <=0) THEN
-            WRITE(ERR,1192) JF(3), JCARD(1), JCARD(2), ' > 0 ', EID
-            WRITE(F06,1192) JF(3), JCARD(1), JCARD(2), ' > 0 ', EID
+         ELID = I4INP1
+         IF (ELID <=0) THEN
+            WRITE(ERR,1192) JF(3), JCARD(1), JCARD(2), ' > 0 ', ELID
+            WRITE(F06,1192) JF(3), JCARD(1), JCARD(2), ' > 0 ', ELID
             FATAL_ERR = FATAL_ERR + 1
          ENDIF
       ENDIF
@@ -159,7 +159,7 @@
 
             IF (KEEP_IT == 'Y') THEN
   
-! First check for the 2 options on specifying data on continuation card. Either all data are EID's or the THRU option
+! First check for the 2 options on specifying data on continuation card. Either all data are ELID's or the THRU option
 ! is used in which case field 3 and/or 6 should have "THRU".
   
                IERR = 0
@@ -179,11 +179,11 @@
                   ENDIF
                ENDDO
 
-               IF (INTEGERS == 'N') THEN                   ! Check for "EID1 THRU EID2" plus, possibly, "EID3 THRU EID4" 
+               IF (INTEGERS == 'N') THEN                   ! Check for "ELID1 THRU ELID2" plus, possibly, "ELID3 THRU ELID4" 
                   IF ((TOKTYP(2) == 'INTEGER ') .AND. (TOKTYP(3) == 'THRU    ') .AND. (TOKTYP(4) == 'INTEGER ')) THEN
                      THRU_3 = 'Y'
                      IF ((TOKTYP(5) == 'INTEGER ') .AND. (TOKTYP(6) == 'THRU    ') .AND. (TOKTYP(7) == 'INTEGER ')) THEN
-                        THRU_6 = 'Y'                       ! This is valid input (EID1 THRU EID2)
+                        THRU_6 = 'Y'                       ! This is valid input (ELID1 THRU ELID2)
                      ELSE IF ((TOKTYP(5) == 'BLANK   ') .AND. (TOKTYP(6) == 'BLANK   ') .AND. (TOKTYP(7) == 'BLANK   ')) THEN
                         THRU_6 = 'N'                       ! This is valid input (fields 5,6,7 blank)
                      ELSE
@@ -202,7 +202,7 @@
                      WRITE(ERR,1190) FIELDS,CARD_NAME,SID,CONT_CARD_NUM,JCARD(2),JCARD(3),JCARD(4)
                      WRITE(F06,1190) FIELDS,CARD_NAME,SID,CONT_CARD_NUM,JCARD(2),JCARD(3),JCARD(4)
                      IF ((TOKTYP(5) == 'INTEGER ') .AND. (TOKTYP(6) == 'THRU    ') .AND. (TOKTYP(7) == 'INTEGER ')) THEN
-                        THRU_6 = 'Y'                       ! This is valid input (EID1 THRU EID2)
+                        THRU_6 = 'Y'                       ! This is valid input (ELID1 THRU ELID2)
                      ELSE IF ((TOKTYP(5) == 'BLANK   ') .AND. (TOKTYP(6) == 'BLANK   ') .AND. (TOKTYP(7) == 'BLANK   ')) THEN
                         THRU_6 = 'N'                       ! This is valid input (fields 5,6,7 blank)
                      ELSE
@@ -221,8 +221,8 @@
                      IF (JCARD(J)(1:) == ' ') CYCLE
                      CALL I4FLD ( JCARD(J), JF(J), I4INP1 )
                      IF (IERRFL(J) == 'N') THEN
-                        EID = I4INP1
-                        IF (EID <= 0) THEN
+                        ELID = I4INP1
+                        IF (ELID <= 0) THEN
                            FATAL_ERR = FATAL_ERR+1
                            WRITE(ERR,1166) CARD_NAME,SID,CONT_CARD_NUM,J
                            WRITE(F06,1166) CARD_NAME,SID,CONT_CARD_NUM,J
@@ -233,22 +233,22 @@
                   CALL I4FLD ( JCARD(2), JF(2), I4INP1 )
                   CALL I4FLD ( JCARD(4), JF(4), I4INP2 )
                   IF ((IERRFL(2) == 'N') .AND. (IERRFL(4) == 'N')) THEN
-                     EID1 = I4INP1
-                     EID2 = I4INP2
-                     IF (EID2 < EID1) THEN
+                     ELID1 = I4INP1
+                     ELID2 = I4INP2
+                     IF (ELID2 < ELID1) THEN
                         FATAL_ERR = FATAL_ERR+1
                         IERR = IERR + 1
                         FIELDS = '2 and 4 '
                         WRITE(ERR,1153) FIELDS,CARD_NAME,SID,CONT_CARD_NUM
                         WRITE(F06,1153) FIELDS,CARD_NAME,SID,CONT_CARD_NUM
                      ENDIF
-                     IF (EID1 <= 0) THEN
+                     IF (ELID1 <= 0) THEN
                         FATAL_ERR = FATAL_ERR+1
                         IERR = IERR + 1
                         WRITE(ERR,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(2)
                         WRITE(F06,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(2)
                      ENDIF
-                     IF (EID2 <= 0) THEN
+                     IF (ELID2 <= 0) THEN
                         FATAL_ERR = FATAL_ERR+1
                         IERR = IERR + 1
                         WRITE(ERR,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(4)
@@ -259,22 +259,22 @@
                      CALL I4FLD ( JCARD(5), JF(5), I4INP1 )
                      CALL I4FLD ( JCARD(7), JF(7), I4INP2 )
                      IF ((IERRFL(5) == 'N') .AND. (IERRFL(7) == 'N')) THEN
-                        EID1 = I4INP1
-                        EID2 = I4INP2
-                        IF (EID2 < EID1) THEN
+                        ELID1 = I4INP1
+                        ELID2 = I4INP2
+                        IF (ELID2 < ELID1) THEN
                            FATAL_ERR = FATAL_ERR+1
                            FIELDS = '5 and 7 '
                            IERR = IERR + 1
                            WRITE(ERR,1153) FIELDS,CARD_NAME,SID,CONT_CARD_NUM
                            WRITE(F06,1153) FIELDS,CARD_NAME,SID,CONT_CARD_NUM
                         ENDIF
-                        IF (EID1 <= 0) THEN
+                        IF (ELID1 <= 0) THEN
                            FATAL_ERR = FATAL_ERR+1
                            IERR = IERR + 1
                            WRITE(ERR,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(5)
                            WRITE(F06,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(5)
                         ENDIF
-                        IF (EID2 <= 0) THEN
+                        IF (ELID2 <= 0) THEN
                            FATAL_ERR = FATAL_ERR+1
                            IERR = IERR + 1
                            WRITE(ERR,1166) CARD_NAME,SID,CONT_CARD_NUM,JF(7)

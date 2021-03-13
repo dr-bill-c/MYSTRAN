@@ -33,6 +33,7 @@
       USE ALLOCATE_COL_VEC_Interface
       USE GET_SPARSE_CRS_COL_Interface
       USE FBS_LAPACK_Interface
+      USE FBS_SUPRLU_Interface
       USE WRITE_VECTOR_Interface
       USE DEALLOCATE_COL_VEC_Interface
       USE FILE_CLOSE_Interface

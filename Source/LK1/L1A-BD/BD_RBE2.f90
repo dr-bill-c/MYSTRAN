@@ -65,7 +65,7 @@
       INTEGER(LONG)                   :: IGID      = 0     ! Independent grid ID
       INTEGER(LONG)                   :: JERR      = 0     ! A local error count
       INTEGER(LONG)                   :: NUM_COMP  = 0     ! Total number of components specified in DDOF
-      INTEGER(LONG)                   :: REID      = 0     ! This elements' ID
+      INTEGER(LONG)                   :: RELID      = 0     ! This elements' ID
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_RBE2_BEGEND
  
 ! **********************************************************************************************************************************
@@ -80,7 +80,7 @@
  
 !   FIELD   ITEM           
 !   -----   ------------   
-!    2      REID, Rigid Elem ID
+!    2      RELID, Rigid Elem ID
 !    3      IGID, Independent Grid ID
 !    4      DDOF, Dependent DOF's for the Grids following
 !   5-9     DGID, Dependent Grid ID's
@@ -101,11 +101,11 @@
 
 ! Read and check data
  
-      CALL I4FLD ( JCARD(2), JF(2), REID )                 ! Read Elem ID
+      CALL I4FLD ( JCARD(2), JF(2), RELID )                 ! Read Elem ID
       IF (IERRFL(2) /= 'N') THEN
          JERR = JERR + 1
       ELSE
-         RIGID_ELEM_IDS(NRIGEL) = REID
+         RIGID_ELEM_IDS(NRIGEL) = RELID
       ENDIF
 
       CALL I4FLD ( JCARD(3), JF(3), IGID )                 ! Read independent Grid ID
@@ -138,7 +138,7 @@
             CALL I4FLD ( JCARD(J), JF(J), DGID )           ! Get dep. grid ID's in fields 5 - 9
             IF ((IERRFL(J) == 'N') .AND. (JERR == 0)) THEN
                WRITE(L1F) RTYPE                            ! Write element type to LINK1F
-               WRITE(L1F) REID,DGID,DDOF,IGID              ! Write data to LINK1F, one record per dependent Grid
+               WRITE(L1F) RELID,DGID,DDOF,IGID              ! Write data to LINK1F, one record per dependent Grid
                NRECARD = NRECARD + 1
                NTERM_RMG = NTERM_RMG + 7*NUM_COMP
             ENDIF
@@ -166,7 +166,7 @@
                   CALL I4FLD ( JCARD(J), JF(J), DGID )     ! Get dep. grid ID's in fields 5 - 9
                   IF ((IERRFL(J) == 'N') .AND. (JERR == 0)) THEN
                      WRITE(L1F) RTYPE                      ! Write element type to LINK1F
-                     WRITE(L1F) REID,DGID,DDOF,IGID        ! Write data to LINK1F, one record per dependent Grid
+                     WRITE(L1F) RELID,DGID,DDOF,IGID        ! Write data to LINK1F, one record per dependent Grid
                      NRECARD = NRECARD + 1
                      NTERM_RMG = NTERM_RMG + 7*NUM_COMP
                   ENDIF
