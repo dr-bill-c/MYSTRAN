@@ -1,5 +1,6 @@
 MYSTRAN
 =======
+<<<<<<< HEAD
 
 MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
@@ -17,6 +18,8 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
 
 # Introduction
+=======
+>>>>>>> Update
 
 MYSTRAN is a general purpose finite element analysis computer program for structures that can be modeled as linear (i.e. displacements, forces and stresses proportional to applied load). MYSTRAN is an acronym for “My Structural Analysis”, to indicate it’s usefulness in solving a wide variety of finite element analysis problems.
 
