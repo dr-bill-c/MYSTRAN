@@ -8,7 +8,7 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
 [Introduction](#introduction) |
 [Features](#features) |
-[Installation Instructions](#installation-instructions) |
+[Compiling Instructions](#compiling-instructions) |
 [Ways You Can Help](#ways-you-can-help) |
 [Community](#community)
 
@@ -29,7 +29,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 - Support for True Classical Laminate Plate Theory
 - All of our documentation can be found in MYSTRAN forums
 
-# Installation Instructions
+# Compiling Instructions
 
 For Windows
 
