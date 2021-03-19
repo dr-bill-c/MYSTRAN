@@ -27,7 +27,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 - Modal analysis
 - Linear Static Analysis
 - Support for True Classical Laminate Plate Theory
-- "All of our documentation can be found in MYSTRA forums"
+- All of our documentation can be found in MYSTRAN forums
 
 # Installation Instructions
 
