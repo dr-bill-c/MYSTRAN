@@ -1099,12 +1099,12 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
       ENDIF
 
       IF      (WHICH_MSG == '1') THEN
-         !MSG(1) = 'does not exist. Internal defaults will be used.'
+         MSG(1) = 'does not exist. Internal defaults will be used.'
          MSG(1) = 'not found. Using default initialization parameters.'
-         !MSG(2) = 'This could be due to not setting the DOS environment variable'
-         !MSG(3) = 'MYSTRAN_directory with the DOS command: SET MYSTRAN_directory=xxxxx'
-         !MSG(4) = 'where xxxxx is the directory where MYSTRAN.exe resides.'
-         !MSG(5) = 'See the MYSTRAN Install and Run Manual for help'
+         MSG(2) = 'This could be due to not setting the DOS environment variable'
+         MSG(3) = 'MYSTRAN_directory with the DOS command: SET MYSTRAN_directory=xxxxx'
+         MSG(4) = 'where xxxxx is the directory where MYSTRAN.exe resides.'
+         MSG(5) = 'See the MYSTRAN Install and Run Manual for help'
          DO I=1,NUM_MSGS
             WRITE(SC1,2000) MSG(I)
          ENDDO
