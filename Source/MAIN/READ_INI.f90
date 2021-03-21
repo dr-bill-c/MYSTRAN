@@ -1072,7 +1072,7 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
  
       IMPLICIT NONE
  
-      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 1     ! Number of messages to write
+      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 5     ! Number of messages to write
 
       CHARACTER( 1*BYTE), INTENT(IN)  :: WHICH_MSG           ! Which message to write to screen
       CHARACTER(79*BYTE)              :: MSG(NUM_MSGS)       ! Message to write
@@ -1100,7 +1100,6 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
 
       IF      (WHICH_MSG == '1') THEN
          MSG(1) = 'does not exist. Internal defaults will be used.'
-         MSG(1) = 'not found. Using default initialization parameters.'
          MSG(2) = 'This could be due to not setting the DOS environment variable'
          MSG(3) = 'MYSTRAN_directory with the DOS command: SET MYSTRAN_directory=xxxxx'
          MSG(4) = 'where xxxxx is the directory where MYSTRAN.exe resides.'
