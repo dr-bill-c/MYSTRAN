@@ -47,8 +47,8 @@
                                          AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         , CRS_CCS         , &
                                          CBMIN3          , CBMIN4          , CBMIN4T         , CHKGRDS         ,                   &
                                          CUSERIN         , CUSERIN_EID     , CUSERIN_IN4     , CUSERIN_PID     , CUSERIN_SPNT_ID , &
-                                         CUSERIN_XSET    , CUSERIN_COMPTYP ,                                                       &
-                                         DARPACK         , EIGESTL         , EIGNORM2        , ELFORCEN        , EPSERR          , &
+                                         CUSERIN_XSET    , CUSERIN_COMPTYP , DARPACK         ,                                     &
+                                         DELBAN          , EIGESTL         , EIGNORM2        , ELFORCEN        , EPSERR          , &
                                          EQCHK_REF_GRID  , EQCHK_NORM      , EQCHK_OUTPUT    , EQCHK_TINY      ,                   &
                                          EPSIL           , EMP0_PAUSE      , ESP0_PAUSE      , F06_COL_START   ,                   &
                                          GRDPNT          , GRIDSEQ         , HEXAXIS         ,                                     &

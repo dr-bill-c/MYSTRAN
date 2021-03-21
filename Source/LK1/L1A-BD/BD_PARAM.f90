@@ -44,8 +44,8 @@
                                          AUTOSPC_RAT     , AUTOSPC_INFO    , AUTOSPC_SPCF    , BAILOUT         , CRS_CCS         , &
                                          CBMIN3          , CBMIN4          , CBMIN4T         , CHKGRDS         ,                   &
                                          CUSERIN         , CUSERIN_EID     , CUSERIN_IN4     , CUSERIN_PID     , CUSERIN_SPNT_ID , &
-                                         CUSERIN_XSET    , CUSERIN_COMPTYP ,                                                       &
-                                         DARPACK         , EIGESTL         , EIGNORM2        , ELFORCEN        , EPSERR          , &
+                                         CUSERIN_XSET    , CUSERIN_COMPTYP , DARPACK         ,                                     &
+                                         DELBAN          , EIGESTL         , EIGNORM2        , ELFORCEN        , EPSERR          , &
                                          EQCHK_REF_GRID  , EQCHK_NORM      , EQCHK_OUTPUT    , EQCHK_TINY      ,                   &
                                          EPSIL           , EMP0_PAUSE      , ESP0_PAUSE      , F06_COL_START   ,                   &
                                          GRDPNT          , GRIDSEQ         , HEXAXIS         ,                                     &
@@ -589,7 +589,29 @@
          CALL BD_IMBEDDED_BLANK   ( JCARD,0,3,0,0,0,0,0,0 )! Make sure that there are no imbedded blanks in field 3
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
-  
+
+! DELBAN, where if it is 1, delete the bandit files left over, if 0, don't.
+
+      ELSE IF (JCARD(2)(1:8) == 'DELBAN  ') THEN
+         PARNAM = 'DELBAN  '
+         CALL I4FLD ( JCARD(3), JF(3), I4PARM )
+         IF (IERRFL(3) == 'N') THEN
+            IF (I4PARM /= DELBAN) THEN
+               WRITE(ERR,1146) PARNAM,DELBAN,I4PARM
+               IF (SUPINFO == 'N') THEN
+                  WRITE(F06,1146) PARNAM,DELBAN,I4PARM
+               ENDIF
+               DELBAN = I4PARM
+            ENDIF
+         ENDIF
+
+
+         
+         CALL BD_IMBEDDED_BLANK   ( JCARD,0,3,0,0,0,0,0,0 )! Make sure that there are no imbedded blanks in field 3
+         CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
+         CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
+
+
 ! EIGESTL defines upper limit on NDOFL for running code to estimate the number of eigens < EIG_FRQ2
 
       ELSE IF (JCARD(2)(1:8) == 'EIGESTL ') THEN

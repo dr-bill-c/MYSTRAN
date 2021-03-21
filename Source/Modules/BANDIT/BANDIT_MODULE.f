@@ -8,6 +8,7 @@
       USE TIMDAT, ONLY                   :  HOUR, MINUTE, SEC,
      &                                      SFRAC, TSEC
       USE SUBR_BEGEND_LEVELS, ONLY       :  BANDIT_BEGEND
+      USE PARAMS, ONLY                   :  DELBAN
 
       INTEGER(LONG), PARAMETER, PRIVATE :: SUBR_BEGEND = BANDIT_BEGEND
 
@@ -577,9 +578,18 @@ c     (IBM JCL was written to check Bandit's exit code; now obsolete.
 c     Stop 13 above served same purpose.)
 c     IF(IPARAM(8).EQ.4) STOP 5
 ! B////////////////////////////////////////////////////////////////////B
-      close(iou6,status="keep")
-      close(iou7,status="keep")
-      close(iou8,status="keep")
+      IF(DELBAN.EQ.1) THEN
+          close(iou6,status="delete")
+          close(iou7,status="delete")
+          close(iou8,status="delete")
+
+      ELSE
+          close(iou6,status="keep")
+          close(iou7,status="keep")
+          close(iou8,status="keep")
+      END IF
+
+
  9000 continue
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
