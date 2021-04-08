@@ -31,12 +31,12 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 
 # Compiling Instructions
 
-##For Windows
+### For Windows
 
     * A binary can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=39
     * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
 
-##For Linux
+### For Linux
 
 <details>
 <summary> Debian/Ubuntu (using apt)</summary>
