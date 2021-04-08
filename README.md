@@ -39,17 +39,58 @@ For Windows
 For Linux
 
 <details>
-<summary> Debian/Ubuntu </summary>
+<summary> Debian/Ubuntu (using apt)</summary>
 <br>
 MYSTRAN relies upon the following dependencies
 
 - gcc
 - gfortran
 - make
-- cmake (version 3.18 or above)
 - git
 - f2c (aka libf2c)
+- cmake (version 3.18 or above)
 
+Check if gcc is installed. 
+```
+dpkg-query -l | grep -P "^ii\s+gcc\s+"
+```
+If it is not installed, installed it.
+```
+sudo apt install gcc
+```
+
+Check if gfortran is installed
+```
+dpkg-query -l | grep -P "^ii\s+gfortran\s+"
+```
+If it is not installed, install it.
+```
+sudo apt install gfortran
+```
+
+Check if make is installed
+```
+dpkg-query -l | grep -P "^ii\s+make\s+"
+```
+If it is not installed, install it.
+```
+sudo apt install make
+```
+
+Check if git is installed
+```
+dpkg-query -l | grep -P "^ii\s+git\s+"
+```
+If it is not installed, install it.
+```
+sudo apt install git
+```
+
+Check if f2c is installed
+```
+dpkg-query -l | grep -P "^ii\s+f2c\s+"
+```
+If it is not installed, install it.
 ```
 sudo apt install f2c
 ```
@@ -60,6 +101,7 @@ sudo apt install f2c
 
 For the Install and Use Manual, the User Manual, and Test Runs, see this link:
 https://www.mystran.com/forums/showthread.php?tid=39
+
 
 
 # Ways You Can Help
