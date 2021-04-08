@@ -112,19 +112,39 @@ sudo make install
 
 You now have all of the prerequisites to compile Mystran.
 
+Aquire the Mystran source.
+```
+git clone https://github.com/dr-bill-c/MYSTRAN.git
+cd MYSTRAN
+```
 
+Generate the build scripts.
+```
+cmake .
+```
 
+Compile with make.
+```
+make
+```
 
+Copy the mystran binary to the appropriate location
+```
+sudo cp MYSTRAN/Binaries/mystran /usr/local/bin/mystran
+```
 
+Delete the git repository 
+```
+cd ..
+sudo rm -r MYSTRAN
+```
+
+Congragulations! You have just installed MYSTRAN.
 
 </details>
 
-    * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
-
 For the Install and Use Manual, the User Manual, and Test Runs, see this link:
 https://www.mystran.com/forums/showthread.php?tid=39
-
-
 
 # Ways You Can Help
 
