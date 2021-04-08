@@ -38,6 +38,17 @@ For Windows
 
 For Linux
 
+## Debian/Ubuntu
+
+MYSTRAN relies upon the following dependencies
+
+- gcc
+- gfortran
+- make
+- cmake (version 3.18 or above)
+- git
+- f2c (aka libf2c)
+
     * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
 
 For the Install and Use Manual, the User Manual, and Test Runs, see this link:
