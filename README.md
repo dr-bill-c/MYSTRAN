@@ -39,8 +39,8 @@ For Windows
 For Linux
 
 <details>
-##<summary> Debian/Ubuntu </summary>
-
+<summary> Debian/Ubuntu </summary>
+<br>
 MYSTRAN relies upon the following dependencies
 
 - gcc
@@ -49,6 +49,7 @@ MYSTRAN relies upon the following dependencies
 - cmake (version 3.18 or above)
 - git
 - f2c (aka libf2c)
+</details>
 
     * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
 
