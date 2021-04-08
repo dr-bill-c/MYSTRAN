@@ -38,7 +38,8 @@ For Windows
 
 For Linux
 
-## Debian/Ubuntu
+<details>
+##<summary> Debian/Ubuntu </summary>
 
 MYSTRAN relies upon the following dependencies
 
