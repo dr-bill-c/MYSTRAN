@@ -97,7 +97,7 @@ sudo apt install f2c
 
 Check if cmake is installed
 ```
-dpkg-query -l | grep -P "^ii\s+cmake\s"
+dpkg-query -l | grep -P "^ii\s+cmake\s+"
 ```
 If it is not installed, or it is not version 3.18 or later, you can purge it,
 and aquire the newest version from source.
@@ -109,6 +109,11 @@ cd cmake
 make
 sudo make install
 ```
+
+You now have all of the prerequisites to compile Mystran.
+
+
+
 
 
 
