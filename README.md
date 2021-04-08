@@ -37,6 +37,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
     * A binary can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=39
     * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
 
+
 ### For Linux
 
 <details>
@@ -97,6 +98,7 @@ sudo apt install f2c
 ```
 
 Check if cmake is installed
+
 ```
 dpkg-query -l | grep -P "^ii\s+cmake\s+"
 ```
@@ -143,11 +145,6 @@ sudo rm -r MYSTRAN
 Congragulations! You have just installed MYSTRAN.
 
 </details>
-
-For the Install and Use Manual, the User Manual, and Test Runs, see this link:
-https://www.mystran.com/forums/showthread.php?tid=39
-
-
 
 # Developmental Goals
 
