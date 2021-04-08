@@ -95,6 +95,23 @@ If it is not installed, install it.
 sudo apt install f2c
 ```
 
+Check if cmake is installed
+```
+dpkg-query -l | grep -P "^ii\s+cmake\s"
+```
+If it is not installed, or it is not version 3.18 or later, you can purge it,
+and aquire the newest version from source.
+```
+sudo apt purge cmake
+git clone "https://gitlab.kitware.com/cmake/cmake.git"
+cd cmake
+./bootstrap
+make
+sudo make install
+```
+
+
+
 </details>
 
     * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
