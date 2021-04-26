@@ -210,6 +210,9 @@
 
       GET_VVEC     = 'Y'
       VVEC_DEFINED = 'N'
+      DO J=1,3                                             ! Initialize V vector
+         VV(J) = ZERO
+      ENDDO
       IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'USER1   ')) THEN
  
          VVEC_FLAG = 0
@@ -299,15 +302,6 @@
          ENDIF
       ENDIF
  
-!     IF ((TYPE == 'BUSH    ') .AND. (GET_VVEC == 'Y')) THEN
-!        IF (VVEC_DEFINED /= 'Y') THEN
-!           WRITE(ERR,1902) TYPE, EID
-!           WRITE(F06,1902) TYPE, EID
-!           NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
-!           FATAL_ERR = FATAL_ERR + 1
-!        ENDIF
-!     ENDIF
-! 
 ! **********************************************************************************************************************************
 ! For BUSH, get coord systems
 
@@ -672,6 +666,7 @@
                ENDDO
             ENDDO 
             IF ((DEBUG(9) > 0) .AND. (NFLAG > 0)) THEN
+               WRITE(F06,*) 'In ELMDAT1: DOFPIN for ',type,eid,' is = ',(dofpin(i),i=1,nflag)
                WRITE(F06,*)
             ENDIF
 
@@ -712,14 +707,14 @@
                EOFF(INT_ELEM_ID) = 'N'
             ENDIF
 
-         ELSE IF (TYPE(1:4) == 'BUSH') THEN                ! Always have offset for BUSH since at least one end will hvae to be
-            BUSH_OCID = EDAT(EPNTK+6)                      ! offset in order to get zero elem length
+         ELSE IF (TYPE(1:4) == 'BUSH') THEN
+            BUSH_OCID = EDAT(EPNTK+6)
             IROW = EDAT(EPNTK + 7)
             IF (IROW > 0) THEN
                EOFF(INT_ELEM_ID) = 'Y'
-               OFFDIS(1,1) = BUSHOFF(IROW,1)*ELEM_LEN_12
-               OFFDIS(1,2) = BUSHOFF(IROW,2)*ELEM_LEN_12
-               OFFDIS(1,3) = BUSHOFF(IROW,3)*ELEM_LEN_12
+               OFFDIS(1,1) = BUSHOFF(IROW,1)               ! These offsets are in BUSH_OCID coord sys. Will have to be transformed
+               OFFDIS(1,2) = BUSHOFF(IROW,2)               ! to element local coords later (in subr where BUSH stiff is generated)
+               OFFDIS(1,3) = BUSHOFF(IROW,3)
             ELSE
                EOFF(INT_ELEM_ID) = 'N'
             ENDIF
@@ -923,10 +918,11 @@
 
       IMPLICIT NONE
 
-      CHARACTER(17*BYTE)              :: CBUSH_MSG(8)
+      CHARACTER(17*BYTE)              :: CBUSH_MSG(9)
 
 ! **********************************************************************************************************************************
-      WRITE(F06,*) '************************************************************************************************************'
+      WRITE(F06,*)
+      WRITE(F06,98720)
       WRITE(F06,'(A,A,I8,A,I4,A)') ' In ELMDAT1 for ', type, eid, ' (EPNTK = ',epntk,')'
       WRITE(F06,*) '----------------------------------------------'
       CBUSH_MSG(1) = '  element ID'
@@ -937,6 +933,7 @@
       CBUSH_MSG(6) = '  CID'
       CBUSH_MSG(7) = '  OCID'
       CBUSH_MSG(8) = '  offset flag'
+      CBUSH_MSG(9) = '  Location flag'
       DO I=1,2
          WRITE(F06,'(A,I2,A,I8,A)') '    EDAT(EPNTK+',I-1,') = ',EDAT(EPNTK+I-1), CBUSH_MSG(I)
       ENDDO
@@ -957,6 +954,21 @@
          WRITE(F06,'(A,3(1ES14.6))') '    XEB basic sys coords of end    of VVEC  = ', (XEB(ELGP+1,J),j=1,3)
          WRITE(F06,*)
       ENDIF
+
+      WRITE(F06,*)
+      WRITE(F06,98799)
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' ::::::::::::::::::::::::::::::::::::::::::START DEBUG(110) OUTPUT FROM SUBROUTINE ELMDAT1:::::::::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' :::::::::::::::::::::::::::::::::::::::::::END DEBUG(110) OUTPUT FROM SUBROUTINE ELMDAT1::::::::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
 
 ! **********************************************************************************************************************************
 

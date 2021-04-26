@@ -40,7 +40,7 @@
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE PARAMS, ONLY                :  EPSIL
       USE MODEL_STUF, ONLY            :  BGRID, BUSH_CID, BUSH_OCID, CAN_ELEM_TYPE_OFFSET, CORD, EID, ELEM_LEN_12, ELEM_LEN_AB,    &
-                                         ELGP, NUM_EMG_FATAL_ERRS, EOFF, GRID, OFFDIS, RCORD, TE, TE_IDENT, TYPE, XEB, XEL
+                                         ELGP, NUM_EMG_FATAL_ERRS, EOFF, GRID, OFFDIS, OFFDIS_B, RCORD, TE, TE_IDENT, TYPE, XEB, XEL
  
       IMPLICIT NONE
  

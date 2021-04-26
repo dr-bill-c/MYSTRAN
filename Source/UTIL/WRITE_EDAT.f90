@@ -70,7 +70,6 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-
 ! Initialize
 
       DO I=0,MAX(2*LGUSERIN+LSUSERIN+6,25)
@@ -110,6 +109,7 @@
       EDAT_DESCR( 6, 3) = 'CID             '
       EDAT_DESCR( 7, 3) = 'OCID            '
       EDAT_DESCR( 8, 3) = 'Offset key      '
+      EDAT_DESCR( 9, 3) = 'Location Key    '
 
       EDAT_DESCR( 0, 4) = 'ELAS1           '
       EDAT_DESCR( 1, 4) = 'Elem ID         '

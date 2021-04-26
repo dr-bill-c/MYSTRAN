@@ -29,5 +29,6 @@
 
       USE OURTIM_Interface
       USE MATMULT_FFF_Interface
+      USE WRT_REAL_TO_CHAR_VAR_Interface
 
       END MODULE BUSH_USE_IFs

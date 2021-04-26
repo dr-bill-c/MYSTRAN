@@ -405,7 +405,7 @@
          CALL ALLOCATE_FULL_MAT ( 'MNN_FULL', NDOFN, NDOFN, SUBR_NAME )
 
          IF (NTERM_MNN > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'MNN       ', NTERM_MNN, NDOFN, NDOFN, SYM_MNN, I_MNN, J_MNN,MNN, MNN_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'MNN', NTERM_MNN, NDOFN, NDOFN, SYM_MNN, I_MNN, J_MNN,MNN, MNN_FULL )
          ENDIF
       
          IF (NTERM_MNM > 0) THEN                           ! Part 1: calc MNM*GMN and add it & it's transpose to MNN_FULL

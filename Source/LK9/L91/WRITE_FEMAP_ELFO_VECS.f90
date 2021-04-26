@@ -116,6 +116,8 @@
          VEC_ID_OFFSET = 51000
       ELSE IF (ELEM_TYP == 'ELAS4   ') THEN
          VEC_ID_OFFSET = 51100
+      ELSE IF (ELEM_TYP == 'BUSH    ') THEN
+         VEC_ID_OFFSET = 51200
       ELSE
          WARN_ERR = WARN_ERR + 1
          WRITE(ERR,943) TRIM(ELEM_TYP), 'ELEM FORCE', TRIM(SUBR_NAME)
@@ -350,6 +352,41 @@
             WRITE(NEU,1007) FEMAP_EL_NUMS(I,1), ELEM_VEC(I)
          ENDDO
          WRITE(NEU,1008)
+
+      ELSE IF (ELEM_TYP == 'BUSH    ') THEN
+
+         TITLE_E( 1) = 'Force XE'
+         TITLE_E( 2) = 'Force YE'
+         TITLE_E( 3) = 'Force ZE'
+         TITLE_E( 4) = 'Moment XE'
+         TITLE_E( 5) = 'Moment YE'
+         TITLE_E( 6) = 'Moment ZE'
+
+         DO J=1,6
+            VEC_ID = VEC_ID_OFFSET + J
+            WRITE(NEU,1001) FEMAP_SET_ID, VEC_ID
+            WRITE(NEU,1002) ELEM_NAME(1:ELEM_NAME_LEN), TITLE_E(J)
+            DO I=1,NUM_FEMAP_ROWS
+               ELEM_VEC(I)  = FEMAP_EL_VECS(I,J)
+               ELEM_NUMS(I) = FEMAP_EL_NUMS(I,1)
+            ENDDO
+            CALL GET_VEC_MIN_MAX_ABS ( NUM_FEMAP_ROWS, ELEM_NUMS, ELEM_VEC, VEC_MIN, VEC_MAX, VEC_ABS, ELEM_MIN, ELEM_MAX )
+            WRITE(NEU,1003) VEC_MIN, VEC_MAX, VEC_ABS
+            DO I=1,20
+               ID(I) = 0
+            ENDDO
+            WRITE(NEU,1004) (ID(I),I= 1,10)
+            WRITE(NEU,1004) (ID(I),I=11,20)
+            WRITE(NEU,1005) ELEM_MIN, ELEM_MAX, OUT_TYPE, ENT_TYPE
+            CALC_WARN  = '0'
+            COMP_DIR   = '0'
+            CENT_TOTAL = '1'
+            WRITE(NEU,1006) CALC_WARN, COMP_DIR, CENT_TOTAL
+            DO I=1,NUM_FEMAP_ROWS
+               WRITE(NEU,1007) FEMAP_EL_NUMS(I,1), ELEM_VEC(I)
+            ENDDO
+            WRITE(NEU,1008)
+         ENDDO
 
       ENDIF
 

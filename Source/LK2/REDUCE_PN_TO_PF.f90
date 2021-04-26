@@ -246,7 +246,7 @@
          CALL ALLOCATE_FULL_MAT ( 'PF_FULL', NDOFF, NSUB, SUBR_NAME )
 
          IF (NTERM_PN > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'Pf        ', NTERM_Pf, NDOFf, NSUB, SYM_Pf, I_Pf, J_Pf, Pf, Pf_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'PF', NTERM_Pf, NDOFf, NSUB, SYM_Pf, I_Pf, J_Pf, Pf, Pf_FULL )
          ENDIF
 
          IF ((NDOFF > 0) .AND. (NDOFSE > 0)) THEN          ! Do reduction only if there is an SE-set and an F-set

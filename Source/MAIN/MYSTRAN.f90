@@ -131,6 +131,10 @@
 
       CALL TIME_INIT
 
+! Read data in initialization file, MYSTRAN.INI, if it exists.
+
+      CALL READ_INI ( INI_EXIST )
+
 ! Write logo and copyright notice to screen. Then write MYSTRAN start time/date
 
       WRITE(SC1,117) PROG_NAME, MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR, MYSTRAN_AUTHOR
@@ -147,10 +151,6 @@
       START_DAY    = DAY
 
       STIME = (10**8)*MONTH+(10**6)*DAY+(10**4)*HOUR+(10**2)*MINUTE+SEC
-
-! Read data in initialization file, MYSTRAN.INI, if it exists.
-
-      CALL READ_INI ( INI_EXIST )
 
 ! Read input data filename (from command line) and calc LEN_INPUT_FNAME.
 
@@ -447,7 +447,7 @@ iters:      DO
 
   152 FORMAT(/,' >> MYSTRAN END    : ',I2,'/',I2,'/',I4,' at ',I2,':',I2,':',I2,'.',I3)
 
-  155 FORMAT(' MYSTRAN terminated normally. Total CPU time = ',1ES9.2,' seconds')
+  155 FORMAT(' MYSTRAN terminated normally. Total CPU time = ',1ES9.2,' seconds',/,'                    ========')
 
   156 FORMAT(' Check F06 output file for ',I8,' warning messages')
 

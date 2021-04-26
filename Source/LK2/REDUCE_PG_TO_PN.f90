@@ -190,7 +190,7 @@
          CALL ALLOCATE_FULL_MAT ( 'PN_FULL', NDOFN, NSUB, SUBR_NAME )  ! Calc reduced PN
 
          IF (NTERM_PN > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'PN        ', NTERM_PN, NDOFN, NSUB, SYM_PN, I_PN, J_PN, PN, PN_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'PN', NTERM_PN, NDOFN, NSUB, SYM_PN, I_PN, J_PN, PN, PN_FULL )
          ENDIF
 
          IF (NTERM_PM > 0) THEN                            ! Calc GMN(t)*PM and add to partitioned PN to get reduced PN 

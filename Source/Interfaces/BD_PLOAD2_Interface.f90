@@ -43,7 +43,7 @@
       CHARACTER(LEN=*),INTENT(IN)     :: CARD               ! A Bulk Data card
       CHARACTER( 1*BYTE),INTENT(INOUT):: CC_LOAD_FND(LSUB,2)! 'Y' if B.D load/temp card w/ same set ID (SID) as C.C. LOAD = SID
  
-      INTEGER(LONG)                   :: PLOAD_EID(6)       ! Elem ID's on parent card if "THRU" not used for input
+      INTEGER(LONG)                   :: PLOAD_ELID(6)      ! Elem ID's on parent card if "THRU" not used for input
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_PLOAD2_BEGEND
   
       END SUBROUTINE BD_PLOAD2

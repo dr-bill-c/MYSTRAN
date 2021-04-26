@@ -28,15 +28,17 @@
 
    INTERFACE
 
-      SUBROUTINE BUSH ( OPT, WRITE_WARN )
+      SUBROUTINE BUSH ( INT_ELEM_ID, OPT, WRITE_WARN )
 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, F04, F06
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NCORD
       USE TIMDAT, ONLY                :  TSEC
-      USE CONSTANTS_1, ONLY           :  ZERO, HALF
-      USE MODEL_STUF, ONLY            :  BE1, BE2, EOFF, EPROP, KE, OFFDIS, SE1, SE2
+      USE CONSTANTS_1, ONLY           :  ZERO, HALF, QUARTER
+      USE DEBUG_PARAMETERS, ONLY      :  DEBUG
+      USE MODEL_STUF, ONLY            :  BE1, BE2, BUSH_OCID, BUSHOFF, BUSH_DXA, BUSH_DXB, BUSH_DY, BUSH_DZ, CORD, EOFF, EPROP, KE,&
+                                         ELEM_LEN_12, OFFDIS_B, RCORD, SE1, SE2, TE, XEB
       USE SUBR_BEGEND_LEVELS, ONLY    :  BUSH_BEGEND
 
       IMPLICIT NONE 
@@ -45,6 +47,7 @@
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices
 
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BUSH_BEGEND
+      INTEGER(LONG), INTENT(IN)       :: INT_ELEM_ID       ! Internal element ID
 
       END SUBROUTINE BUSH
 

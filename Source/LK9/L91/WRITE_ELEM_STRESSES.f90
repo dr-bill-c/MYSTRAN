@@ -297,10 +297,10 @@
             ENDIF
 
          ELSE IF  (TYPE == 'BUSH    ') THEN
-            WRITE(F06,1801) FILL(1: 1), FILL(1: 1)
+            WRITE(F06,1801) FILL(1: 1), FILL(1: 1)                    ; IF (DEBUG(200) > 0) WRITE(ANS,1801) FILL(1:16), FILL(1:16)
 
          ELSE IF  (TYPE == 'USERIN  ') THEN
-            WRITE(F06,1901) FILL(1: 1), FILL(1: 1)
+            WRITE(F06,1901) FILL(1: 1), FILL(1: 1)                    ; IF (DEBUG(200) > 0) WRITE(ANS,1901) FILL(1:16), FILL(1:16)
 
          ENDIF
 
@@ -326,7 +326,7 @@
          ENDIF
 
          DO I=1,NUM
-            WRITE(F06,1303) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS)  ; IF (DEBUG(200) > 0) WRITE(ANS,1313) EID_OUT_ARRAY(I,1),  &
+            WRITE(F06,1303) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS)  ; IF (DEBUG(200) > 0) WRITE(ANS,1313) EID_OUT_ARRAY(I,1),    &
                                                                                                             (OGEL(I,J),J=1,NCOLS)
          ENDDO
 
@@ -572,15 +572,17 @@
  1303 FORMAT(19X,I8,8(1ES14.6))
 
  1304 FORMAT(28X,'------------- ------------- ------------- ------------- ------------- ------------- -------------',/,            &
-             1X,'MAX (for output set):     ',7(ES14.6),/,                                                                          &
-             1X,'MIN (for output set):     ',7(ES14.6),//,                                                                         &
-             1X,'ABS (for output set):     ',7(ES14.6))
+             16X,'MAX* :     ',7(ES14.6),/,                                                                                        &
+             16X,'MIN* :     ',7(ES14.6),//,                                                                                       &
+             16X,'ABS* :     ',7(ES14.6),/                                                                                         &
+             16X,'* for output set')
 
  1305 FORMAT(27X,' ------------- ------------- ------------- ------------- ------------- ------------- -------------',             &
                  ' -------------',/,                                                                                               &
-             1X,'MAX (for output set):     ',8(ES14.6),/,                                                                          &
-             1X,'MIN (for output set):     ',8(ES14.6),//,                                                                         &
-             1X,'ABS (for output set):     ',8(ES14.6))
+             16X,'MAX* :     ',8(ES14.6),/,                                                                                        &
+             16X,'MIN* :     ',8(ES14.6),//,                                                                                       &
+             16X,'ABS* :     ',8(ES14.6),/                                                                                         &
+             16X,'* for output set')
 
  1313 FORMAT(16X,I8,8(1ES14.6))
 
@@ -708,7 +710,7 @@
   
  1902 FORMAT(19X,I8,8(1ES14.6))
 
- 1912 FORMAT(19X,I8,8(1ES14.6))
+ 1912 FORMAT(17X,I8,8(1ES14.6))
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
  9300 FORMAT(' *ERROR  9300: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &

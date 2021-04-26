@@ -24,32 +24,30 @@
                                                                                                         
 ! End MIT license text.                                                                                      
  
-      SUBROUTINE CALC_ELEM_STRESSES ( SIZE_ALLOCATED, NUM1, NUM_FEMAP_ROWS, WRITE_OGEL, WRITE_FEMAP )
+      SUBROUTINE CALC_ELEM_NODE_FORCES
  
-! Calls routines that process the STRESS array calculated in subr ELEM_STRE_STRN_ARRAYS to obtain element specific stress values
-! that will be written to the F06 file
+! Calculates elem nodal forces in local elem coord system for one elem and one subcase for all element types.
  
-      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG
-      USE IOUNT1, ONLY                :  WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR 
+      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, INT_SC_NUM, JTSUB, NGRID, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
-      USE MODEL_STUF, ONLY            :  TYPE
-      USE SUBR_BEGEND_LEVELS, ONLY    :  CALC_ELEM_STRESSES_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO
+      USE SUBR_BEGEND_LEVELS, ONLY    :  CALC_ELEM_NODE_FORCES_BEGEND
+      USE CONSTANTS_1, ONLY           :  ZERO, HALF
+      USE MODEL_STUF, ONLY            :  AGRID, ELAS_COMP, ELDOF, EPROP, KE, PEL, PTE, UEL, TYPE, SUBLOD
  
-      USE CALC_ELEM_STRESSES_USE_IFs
+      USE CALC_ELEM_NODE_FORCES_USE_IFs
 
       IMPLICIT NONE
-
-      CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'CALC_ELEM_STRESSES'
-      CHARACTER( 1*BYTE), INTENT(IN)  :: WRITE_OGEL        ! If 'Y' then write data to array OGEL
-      CHARACTER( 1*BYTE), INTENT(IN)  :: WRITE_FEMAP       ! If 'Y' then write data to array FEMAP arrays
  
-      INTEGER(LONG), INTENT(IN)       :: SIZE_ALLOCATED    ! No. of rows allocated to array that will be written to in a subr
-!                                                            called here so we can check that we don't try to write more rows
-      INTEGER(LONG), INTENT(IN)       :: NUM_FEMAP_ROWS    ! Number of rows that will be written to FEMAP arrays
-      INTEGER(LONG), INTENT(INOUT)    :: NUM1              ! Cum rows written to OGEL prior to running this subr
-      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = CALC_ELEM_STRESSES_BEGEND
+      CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'CALC_ELEM_NODE_FORCES'
+ 
+      INTEGER(LONG)                   :: I,J               ! DO loop indices
+      INTEGER(LONG)                   :: I1,I2             ! Calculated displ component no's for ELAS elems
+      INTEGER(LONG)                   :: NCOLS             ! Number of rows in element stiffness matrix
+      INTEGER(LONG)                   :: NROWS             ! Number of cols in element stiffness matrix
+      INTEGER(LONG)                   :: NUM_COMPS_GRID_1  ! No. displ components for 1st grid on ELAS elems
+      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = CALC_ELEM_NODE_FORCES_BEGEND
  
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -59,28 +57,65 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Calculate STRESS(4-6) for elements that have nonzero STRESS(4-6)
-
-      IF      ((TYPE(1:3) == 'BAR'  ) .OR. (TYPE(1:4) == 'BUSH') .OR. (TYPE(1:4) == 'ELAS') .OR. (TYPE(1:3) == 'ROD'  )) THEN
-         CALL ONE_D_STRESS_OUTPUTS ( SIZE_ALLOCATED, NUM1, NUM_FEMAP_ROWS, WRITE_OGEL, WRITE_FEMAP )
-
-      ELSE IF ((TYPE(1:5) == 'TRIA3') .OR. (TYPE(1:5) == 'QUAD4') .OR. (TYPE(1:5) == 'SHEAR') .OR. (TYPE(1:6) == 'USERIN')) THEN
-
-         CALL SHELL_STRESS_OUTPUTS ( SIZE_ALLOCATED, NUM1, NUM_FEMAP_ROWS, WRITE_OGEL, WRITE_FEMAP )
-
-      ELSE IF ((TYPE(1:4) == 'HEXA' ) .OR. (TYPE(1:5) == 'PENTA') .OR. (TYPE(1:5) == 'TETRA')) THEN
-
-         CALL SOLID_STRESS_OUTPUTS ( SIZE_ALLOCATED, NUM1, NUM_FEMAP_ROWS, WRITE_OGEL, WRITE_FEMAP )
-
-      ELSE
-
-         FATAL_ERR = FATAL_ERR + 1
-         WRITE(ERR,9203) SUBR_NAME, TYPE
-         WRITE(F06,9203) SUBR_NAME, TYPE
-         CALL OUTA_HERE ( 'Y' )
-
-      ENDIF
+      NROWS = ELDOF
+      NCOLS = ELDOF
  
+      DO I=1,NCOLS
+         PEL(I) = ZERO
+      ENDDO 
+ 
+! **********************************************************************************************************************************
+! Calc forces for one element. The ELAS and ROD1 elem have very sparse stiffness matrices, so an explicit form is used
+! for them. All other element forces are calculated by multiplication of complete stiffness matrix with the displ's.
+ 
+      IF (TYPE == 'ELAS    ') THEN                         ! Calculate forces for ELAS1-4 elems
+ 
+         I1 = ELAS_COMP(1)
+         CALL GET_GRID_NUM_COMPS ( AGRID(1), NUM_COMPS_GRID_1, SUBR_NAME )
+         I2 = NUM_COMPS_GRID_1 + ELAS_COMP(2)
+         PEL(I1) = KE(I1,I1)*UEL(I1) + KE(I1,I2)*UEL(I2)   ! Note: KE is global and local for the ELAS elems
+         PEL(I2) = KE(I2,I1)*UEL(I1) + KE(I2,I2)*UEL(I2)
+ 
+      ELSE IF (TYPE == 'BUSH    ') THEN                    ! Calculate forces for BUSH elem
+         PEL(1) = HALF*EPROP(1)*(UEL( 1) + UEL( 7))
+         PEL(2) = HALF*EPROP(2)*(UEL( 2) + UEL( 8))
+         PEL(3) = HALF*EPROP(3)*(UEL( 3) + UEL( 9))
+         PEL(4) = HALF*EPROP(4)*(UEL( 4) + UEL(10))
+         PEL(5) = HALF*EPROP(5)*(UEL( 5) + UEL(11))
+         PEL(6) = HALF*EPROP(6)*(UEL( 6) + UEL(12))
+
+      ELSE IF (TYPE == 'ROD     ') THEN                    ! Calculate forces for ROD1 elem
+ 
+         IF (SUBLOD(INT_SC_NUM,2) > 0) THEN
+            PEL(1) = -PTE(1,JTSUB)
+            PEL(7) = -PTE(7,JTSUB)
+         ENDIF
+
+         PEL( 1) = PEL(1) + KE( 1, 1)*UEL( 1) + KE( 1, 7)*UEL( 7)
+         PEL( 4) =          KE( 4, 4)*UEL( 4) + KE( 4,10)*UEL(10)
+         PEL( 7) = PEL(7) + KE( 7, 1)*UEL( 1) + KE( 7, 7)*UEL( 7)
+         PEL(10) =          KE(10, 4)*UEL( 4) + KE(10,10)*UEL(10)
+ 
+      ELSE IF (TYPE == 'USERIN  ') THEN
+
+         WRITE(F06,9991) TYPE
+
+      ELSE                                                 ! Calculate forces for any other type of elem
+ 
+         DO I=1,NROWS
+ 
+            IF (SUBLOD(INT_SC_NUM,2) > 0) THEN
+               PEL(I) = -PTE(I,JTSUB)
+            ENDIF
+ 
+            DO J=1,NCOLS
+               PEL(I) = PEL(I) + KE(I,J)*UEL(J)
+            ENDDO
+         ENDDO
+ 
+      ENDIF
+
+   
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -91,12 +126,8 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 9200 FORMAT(' *ERROR  9200: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' ARRAY OGEL WAS ALLOCATED TO HAVE ',I12,' ROWS. ATTEMPT TO WRITE TO OGEL BEYOND THIS')
- 
- 9203 FORMAT(' *ERROR  9203: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' INCORRECT ELEMENT TYPE = "',A,'"')
- 
+ 9991 FORMAT(' *INFORMATION: ELEMENT NODE FORCE CALCULATION NOT PROGRAMMED FOR ',A,' ELEMENTS')
+
 ! **********************************************************************************************************************************
 
-      END SUBROUTINE CALC_ELEM_STRESSES
+      END SUBROUTINE CALC_ELEM_NODE_FORCES

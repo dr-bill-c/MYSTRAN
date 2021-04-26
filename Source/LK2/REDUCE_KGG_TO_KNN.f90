@@ -395,7 +395,7 @@
          CALL ALLOCATE_FULL_MAT ( 'KNN_FULL', NDOFN, NDOFN, SUBR_NAME )
 
          IF (NTERM_KNN > 0) THEN                           ! Put KNN-bar into KNN_FULL
-            CALL SPARSE_CRS_TO_FULL ( 'KNN       ', NTERM_KNN, NDOFN, NDOFN, SYM_KNN, I_KNN, J_KNN, KNN, KNN_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'KNN', NTERM_KNN, NDOFN, NDOFN, SYM_KNN, I_KNN, J_KNN, KNN, KNN_FULL )
          ENDIF
       
          IF (NTERM_KNM > 0) THEN                           ! Part 1: calc KNM*GMN and add it & it's transpose to KNN_FULL

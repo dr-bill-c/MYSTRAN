@@ -37,7 +37,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ELEM_STRE_STRN_ARRAYS_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, one, four
-      USE MODEL_STUF, ONLY            :  ALPVEC, BE1, BE2, BE3, DT, EM, EB, ES, ET, ELDOF, PHI_SQ, STRAIN, STRESS, SUBLOD,         &
+      USE MODEL_STUF, ONLY            :  ALPVEC, BE1, BE2, BE3, DT, EM, EB, ES, ET, ELDOF, PEL, PHI_SQ, STRAIN, STRESS, SUBLOD,    &
                                          TREF, TYPE, UEL, SE1, SE2, SE3, STE1, STE2, STE3
       USE DEBUG_PARAMETERS
       USE PARAMS, ONLY                :  STR_CID

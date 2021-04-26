@@ -32,16 +32,16 @@
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR,     F04,     F06,     L1G
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, DATA_NAM_LEN, MMATL, MPBAR, MPBEAM, MPBUSH, MPELAS, MPROD, MPSHEL,          &
                                          MPSOLID, MPUSER1,MPUSERIN, MRMATLC, MRPBAR, MRPBEAM, MRPBUSH, MRPELAS, MRPROD, MPSHEAR,   &
-                                         MRPSHEAR, MRPSHEL, MRPUSER1, NBAROFF, NEDAT, NELE, NMATANGLE, NMATL, MPCOMP0,             &
+                                         MRPSHEAR, MRPSHEL, MRPUSER1, NBAROFF, NBUSHOFF, NEDAT, NELE, NMATANGLE, NMATL, MPCOMP0,   &
                                          MRPCOMP0, MPCOMP_PLIES, MRPCOMP_PLIES, MUSERIN_MAT_NAMES, NPBAR, NPBEAM, NPBUSH, NPCOMP,  &
                                          NPELAS, NPLATEOFF, NPLATETHICK, NPROD, NPSHEAR, NPSHEL, NPSOLID, NPUSER1, NPUSERIN, NVVEC
       USE PARAMS, ONLY                :  CBMIN3, CBMIN4, IORQ1M, IORQ1S, IORQ1B, IORQ2B, IORQ2T 
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ELSAVE_BEGEND
-      USE MODEL_STUF, ONLY            :  BAROFF, EDAT, EOFF, EPNT, ESORT1, ESORT2, ETYPE, MATANGLE, MATL, RMATL,PBAR, RPBAR,       &
-                                         PBEAM, RPBEAM, PBUSH, RPBUSH, PCOMP, RPCOMP, PELAS, RPELAS, PROD, RPROD, PSHEAR, RPSHEAR, &
-                                         PSHEL, RPSHEL, PSOLID, PUSER1, RPUSER1, PUSERIN, PLATEOFF, PLATETHICK, USERIN_MAT_NAMES,  &
-                                         VVEC
+      USE MODEL_STUF, ONLY            :  BAROFF, BUSHOFF, EDAT, EOFF, EPNT, ESORT1, ESORT2, ETYPE, MATANGLE, MATL, RMATL,PBAR,     &
+                                         RPBAR, PBEAM, RPBEAM, PBUSH, RPBUSH, PCOMP, RPCOMP, PELAS, RPELAS, PROD, RPROD, PSHEAR,   &
+                                         RPSHEAR, PSHEL, RPSHEL, PSOLID, PUSER1, RPUSER1, PUSERIN, PLATEOFF, PLATETHICK,           &
+                                         USERIN_MAT_NAMES, VVEC
       USE ELSAVE_USE_IFs
 
       IMPLICIT NONE
@@ -110,6 +110,17 @@
       DO I = 1,NBAROFF
          DO J = 1,6
             WRITE(L1G) BAROFF(I,J)
+         ENDDO
+      ENDDO   
+
+! Write BUSH offsets
+ 
+      DATA_SET_NAME = 'BUSH OFFSETS'
+      WRITE(L1G) DATA_SET_NAME
+      WRITE(L1G) NBUSHOFF
+      DO I = 1,NBUSHOFF
+         DO J = 1,6
+            WRITE(L1G) BUSHOFF(I,J)
          ENDDO
       ENDDO   
 

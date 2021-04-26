@@ -29,10 +29,11 @@
 ! Converts matrices in sparse compressed row storage format to full format 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, F04
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO
+      USE DEBUG_PARAMETERS
       USE SUBR_BEGEND_LEVELS, ONLY    :  SPARSE_CRS_TO_FULL_BEGEND
  
       USE SPARSE_CRS_TO_FULL_USE_IFs
@@ -101,6 +102,7 @@
          ENDDO 
       ENDIF
 
+      IF( DEBUG(205) > 0) CALL DEBUG_CRS_TO_FULL
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -111,6 +113,49 @@
 
       RETURN
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE DEBUG_CRS_TO_FULL
+ 
+      IMPLICIT NONE
+ 
+      CHARACTER(14*BYTE)              :: MATOUT_CHAR(NCOLS) ! Character representation of the real data in one row of REAL_VAR
+
 ! **********************************************************************************************************************************
+      WRITE(F06,98720)
+
+      WRITE(F06,9300) MATIN_NAME
+
+      DO I=1,NROWS
+         CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, I, MATOUT_CHAR )
+         WRITE(F06,9206) (MATOUT_CHAR(J),J=1,NCOLS)
+      ENDDO
+
+      WRITE(F06,98799)
+ 
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+ 9206 FORMAT(10000A14)
+
+ 9300 FORMAT(49X, 'Matrix ', A, ' displayed in full format', //) 
+
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' ::::::::::::::::::::::::::::::::::::START DEBUG(205) OUTPUT FROM SUBROUTINE SPARSE_CRS_TO_FULL::::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' ::::::::::::::::::::::::::::::::::::::END DEBUG(205) OUTPUT FROM SUBROUTINE SPARSE_CRS_TO_FULL::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE DEBUG_CRS_TO_FULL
  
       END SUBROUTINE SPARSE_CRS_TO_FULL

@@ -1072,7 +1072,7 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
  
       IMPLICIT NONE
  
-      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 5     ! Number of messages to write
+      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 2     ! Number of messages to write
 
       CHARACTER( 1*BYTE), INTENT(IN)  :: WHICH_MSG           ! Which message to write to screen
       CHARACTER(79*BYTE)              :: MSG(NUM_MSGS)       ! Message to write
@@ -1084,26 +1084,11 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
          MSG(I)(1:) = ' '
       ENDDO
 
-      IF      (INIFIL_NAME_LEN <=  79) THEN
-         WRITE(SC1,1001) INIFIL(1: 79)
-
-      ELSE IF ((INIFIL_NAME_LEN >  79) .AND. (INIFIL_NAME_LEN <= 159)) THEN
-         WRITE(SC1, 1002) INIFIL(1:159)
-
-      ELSE IF ((INIFIL_NAME_LEN > 159) .AND. (INIFIL_NAME_LEN <= 239)) THEN
-         WRITE(SC1, 1003) INIFIL(1:239)
-
-      ELSE IF (INIFIL_NAME_LEN > 239) THEN
-         WRITE(SC1, 1004) INIFIL(1:FILE_NAM_MAXLEN)
-
-      ENDIF
+      WRITE(SC1,1001) TRIM(INIFIL)
 
       IF      (WHICH_MSG == '1') THEN
-         MSG(1) = 'does not exist. Internal defaults will be used.'
-         MSG(2) = 'This could be due to not setting the DOS environment variable'
-         MSG(3) = 'MYSTRAN_directory with the DOS command: SET MYSTRAN_directory=xxxxx'
-         MSG(4) = 'where xxxxx is the directory where MYSTRAN.exe resides.'
-         MSG(5) = 'See the MYSTRAN Install and Run Manual for help'
+         MSG(1) = 'does not exist. Internal defaults will be used instead.'
+         MSG(2) = 'If you want to use the INI file, see the MYSTRAN Installation and Run Manual'
          DO I=1,NUM_MSGS
             WRITE(SC1,2000) MSG(I)
          ENDDO
@@ -1113,13 +1098,7 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
       ENDIF
 
 ! **********************************************************************************************************************************
- 1001 FORMAT(' Initialization file: ',/,1X,A)
-
- 1002 FORMAT(' Initialization file: ',/,1X,A)
-
- 1003 FORMAT(' Initialization file: ',/,1X,A)
-
- 1004 FORMAT(' Initialization file: ',/,1X,A)
+ 1001 FORMAT(' Optional Initialization file: ',/,1X,A)
 
  2000 FORMAT(1X,A)
 

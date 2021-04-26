@@ -57,6 +57,7 @@
       INTEGER(LONG), INTENT(IN)       :: ITE               ! Unit number for text files for OTM row descriptors 
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(INOUT)    :: OT4_EROW          ! Row number in OT4 file for elem related OTM descriptors
+      INTEGER(LONG)                   :: NDUM              ! Value initialized to zero and used in call to CALC_ELEM_STRESSES
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = OFP3_STRE_NO_PCOMP_BEGEND
  
                                                            ! Array of %errs from subr POLYNOM_FIT_STRE_STRN (only NUM_PTS vals used)

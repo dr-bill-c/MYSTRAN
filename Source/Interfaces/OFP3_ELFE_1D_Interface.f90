@@ -10,7 +10,7 @@
 ! copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to   
 ! the following conditions:                                                                              
                                                                                                          
-! The above copyright notice and this permission notice shall be included in all copies or substantial   
+! The above copyright notice and this permission notice shall be included in all copies or substantial
 ! portions of the Software and documentation.                                                                              
                                                                                                          
 ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS                                
@@ -37,11 +37,11 @@
                                          NELE, NCBAR, NCBUSH, NCELAS1, NCELAS2, NCELAS3, NCELAS4, NCROD, SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  OFP3_ELFE_1D_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO
+      USE CONSTANTS_1, ONLY           :  ZERO, HALF
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE PARAMS, ONLY                :  OTMSKIP, POST
-      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, EDAT, ELAS_COMP, EPNT, ETYPE, EID, ELMTYP, ELOUT, FCONV, METYPE,         &
-                                         NUM_EMG_FATAL_ERRS, PEL, PLY_NUM, STRESS, TYPE, XEL
+      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, BUSH_DXA, BUSH_DXB, BUSH_DY, BUSH_DZ, EDAT, ELAS_COMP, EPNT, ETYPE, EID, &
+                                         ELMTYP, ELOUT, FCONV, METYPE, NUM_EMG_FATAL_ERRS, PEL, PLY_NUM, STRESS, TYPE, XEL
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, MAXREQ, OGEL
       USE OUTPUT4_MATRICES, ONLY      :  OTM_ELFE, TXT_ELFE
   

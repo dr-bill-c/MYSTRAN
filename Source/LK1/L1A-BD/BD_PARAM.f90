@@ -589,7 +589,7 @@
          CALL BD_IMBEDDED_BLANK   ( JCARD,0,3,0,0,0,0,0,0 )! Make sure that there are no imbedded blanks in field 3
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
-
+  
 ! DELBAN, where if it is 1, delete the bandit files left over, if 0, don't.
 
       ELSE IF (JCARD(2)(1:8) == 'DELBAN  ') THEN

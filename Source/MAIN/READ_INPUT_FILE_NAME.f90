@@ -78,7 +78,7 @@
             IF (NC_DIR+1 > FILE_NAM_MAXLEN) THEN           ! make sure that DEFDIR part of INFILE not too long up to this point
                INFILE(1:FILE_NAM_MAXLEN) = DEFDIR(1:FILE_NAM_MAXLEN)
                WRITE(SC1,1002) FILE_NAM_MAXLEN
-               WRITE(SC1,'(2X,A255)') INFILE
+               WRITE(SC1,'(A)') TRIM(INFILE)
                CALL OUTA_HERE ( 'Y' )
             ENDIF
             INFILE(1:NC_DIR) = DEFDIR(1:NC_DIR)            ! Set INFILE to DEFDIR
@@ -111,7 +111,7 @@
 outer:DO                                                   ! Loop which sets filename, check if it exists and cycles back if not
          IF (NC_TOT + NC_FILNAM > FILE_NAM_MAXLEN) THEN
             WRITE(SC1,1002) FILE_NAM_MAXLEN
-            WRITE(SC1,'(2X,A255)') INFILE
+            WRITE(SC1,'(A)') TRIM(INFILE)
             CALL OUTA_HERE ( 'Y' )
          ENDIF
          INFILE(NC_TOT+1:) = FILNAM(1:)

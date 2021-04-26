@@ -67,7 +67,7 @@
       INTEGER(LONG)                   :: GDOF              ! G-set DOF number
       INTEGER(LONG)                   :: I,J,K,L           ! DO loop indices
       INTEGER(LONG)                   :: IB                ! Intermediate value used in determining NREQ
-      INTEGER(LONG)                   :: IELEM             ! Internal element ID
+      INTEGER(LONG)                   :: IELE              ! Internal element ID
       INTEGER(LONG)                   :: IGRID             ! Internal grid ID
       INTEGER(LONG)                   :: NREQ              ! Number of grids for which G.P. force balance is requested
       INTEGER(LONG)                   :: NUM_COMPS         ! Either 6 or 1 depending on whether grid is a physical grid or a SPOINT
@@ -285,14 +285,14 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
                NUM_CONN_ELEMS = GRID_ELEM_CONN_ARRAY(I,2)
                DO J=1,NUM_CONN_ELEMS
                   AELEM = GRID_ELEM_CONN_ARRAY(I,2+J)
-                  CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, AELEM, IELEM )
-                  CALL GET_ELGP ( IELEM )
-                  CALL GET_ELEM_AGRID_BGRID ( IELEM, 'N' )
+                  CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, AELEM, IELE )
+                  CALL GET_ELGP ( IELE )
+                  CALL GET_ELEM_AGRID_BGRID ( IELE, 'N' )
                   DO K=1,ELGP
                      IF (AGRID(K) == GRID_NUM) THEN
                         PLY_NUM = 0                        ! 'N' in call to EMG means do not write to BUG file
-                        CALL EMG ( IELEM, OPT, 'N', SUBR_NAME, 'N' )
-                        IF (ETYPE(IELEM)(1:4) /= 'ELAS') THEN
+                        CALL EMG ( IELE, OPT, 'N', SUBR_NAME, 'N' )
+                        IF (ETYPE(IELE)(1:4) /= 'ELAS') THEN
                            CALL ELEM_TRANSFORM_LBG ( 'PTE', dum_ke, PTE )
                         ENDIF
                         DO L=1,6
@@ -367,13 +367,13 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
             NUM_CONN_ELEMS = GRID_ELEM_CONN_ARRAY(I,2)
             DO J=1,NUM_CONN_ELEMS
                AELEM = GRID_ELEM_CONN_ARRAY(I,2+J)
-               CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, AELEM, IELEM )
-               CALL GET_ELGP ( IELEM )
-               CALL GET_ELEM_AGRID_BGRID ( IELEM, 'N' )
+               CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, AELEM, IELE )
+               CALL GET_ELGP ( IELE )
+               CALL GET_ELEM_AGRID_BGRID ( IELE, 'N' )
                DO K=1,ELGP
                   IF (AGRID(K) == GRID_NUM) THEN
                      PLY_NUM = 0                           ! 'N' in call to EMG means do not write to BUG file
-                     CALL EMG ( IELEM, OPT, 'N', SUBR_NAME, 'N' )
+                     CALL EMG ( IELE, OPT, 'N', SUBR_NAME, 'N' )
 
                      CALL ELMDIS                           ! Get local displ, UEL, for this element
                                                            ! Calc elem loads, PEL. 

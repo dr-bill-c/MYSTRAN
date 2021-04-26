@@ -51,7 +51,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ALLOCATE_MODEL_STUF_BEGEND
 
-      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, ME, OFFDIS, OFFSET, KE, KED, KEM,                &
+      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, ME, OFFDIS, OFFDIS_B, OFFSET, KE, KED, KEM,      &
                                          PEB, PEG, PEL, PPE, PRESS, PTE, SE1, SE2, SE3, STE1, STE2, STE3, UEB, UEG, UEL, UGG,      &
                                          USERIN_NUM_ACT_GRDS, USERIN_ACT_COMPS, USERIN_ACT_GRIDS, USERIN_MAT_NAMES, XEB, XEL, XGL
       USE MODEL_STUF, ONLY            :  CMASS, CONM2, PMASS, RPMASS, RCONM2

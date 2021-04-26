@@ -397,7 +397,7 @@ dok21:               DO K=1,NCORD
                               CIDK = CORD(K,2)
                               RID  = CORD(K,3)
                               I1 = I1 + 1
-                              IF (I1 > NCORD) THEN
+                              IF (I1 > NCORD+1) THEN
                                  WRITE(ERR,1305) SUBR_NAME
                                  WRITE(F06,1305) SUBR_NAME
                                  FATAL_ERR = FATAL_ERR + 1

@@ -174,7 +174,7 @@
       INTEGER(LONG)            :: MIN4T_QUAD4_TRIA_NO =   0      ! The num (1 thru 4) of the TRIA3 elem that makes up a MIN4T QUAD4
       INTEGER(LONG)            :: MLL_SDIA            =   0      ! Number of super-diagonals in matrix MLL
       INTEGER(LONG)            :: MMPC                =   0      ! Max no. of grid/comp/coeff triplets on any one MPC  logical card
-      INTEGER(LONG)            :: MOFFSET             =   0      ! No. rows allowed in dimensioning array OFFDIS, OFFSET
+      INTEGER(LONG)            :: MOFFSET             =   0      ! No. rows allowed in dim array OFFDIS, OFFSET. Set in subr LOADB
       INTEGER(LONG)            :: MRBE3               =   0      ! Max no. of grid/comp/coeff triplets on any one RBE3 logical card
       INTEGER(LONG)            :: MRSPLINE            =   0      ! Max no. of non-blank fields on any one RSPLINE logical card
 

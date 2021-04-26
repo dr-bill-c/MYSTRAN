@@ -43,7 +43,7 @@
  
       CHARACTER(LEN=*), INTENT(INOUT) :: CARD                ! A Bulk Data card
       CHARACTER( 1*BYTE),INTENT(INOUT):: CC_LOAD_FND(LSUB,2) ! 'Y' if B.D load/temp card w/ same set ID (SID) as C.C. LOAD = SID
-      CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP     ! If 'Y', CARD is large field format
+      CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP       ! If 'Y', CARD is large field format
  
       INTEGER(LONG)                   :: CONT_CARD_NUM  = 0  ! Count of continuation cards (used for output error messages)
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_TEMPRP_BEGEND

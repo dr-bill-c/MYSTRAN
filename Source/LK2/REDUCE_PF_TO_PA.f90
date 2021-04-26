@@ -187,7 +187,7 @@
          CALL ALLOCATE_FULL_MAT ( 'PA_FULL', NDOFA, NSUB, SUBR_NAME )  ! Calc reduced PA
 
          IF (NTERM_PA > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'PA        ', NTERM_PA, NDOFA, NSUB, SYM_PA, I_PA, J_PA, PA, PA_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'PA', NTERM_PA, NDOFA, NSUB, SYM_PA, I_PA, J_PA, PA, PA_FULL )
          ENDIF
 
          IF (NTERM_PO > 0) THEN                            ! Calc GOA(t)*PO and add to partitioned PA to get reduced PA 

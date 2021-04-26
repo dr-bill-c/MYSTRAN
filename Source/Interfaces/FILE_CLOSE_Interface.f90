@@ -39,7 +39,7 @@
 
       IMPLICIT NONE
  
-      CHARACTER(FILE_NAM_MAXLEN*BYTE), INTENT(IN) :: FILNAM            ! File name
+      CHARACTER(LEN=*)   , INTENT(IN) :: FILNAM            ! File name
 
       CHARACTER(LEN=*)   , INTENT(IN) :: CLOSE_STAT        ! Status for close
       CHARACTER(LEN=*)   , INTENT(IN) :: WRITE_F04         ! If 'Y' write to F04, otherwise do not

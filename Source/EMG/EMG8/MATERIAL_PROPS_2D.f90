@@ -83,6 +83,7 @@
       EPS1   = EPSIL(1)
   
 ! **********************************************************************************************************************************
+
 ! Once the MIN4T QUAD4 problem with Orthotropic elements is fized remove the lower case code below:
 
       ierror = 0
@@ -96,7 +97,7 @@ ortho:   do i=1,mematc
          if (ierror > 0) then
             write(err,1998) type, eid
             write(f06,1998) type, eid
-            if (debug(248) == 1) then
+            if (debug(248) == 1) then                      ! Override fatal err. Continue with ortho mat'l props for MIN4T QUAD4
                write(err,1999)
                write(f06,1999)
             else

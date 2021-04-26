@@ -345,7 +345,7 @@
          CALL ALLOCATE_FULL_MAT ( 'MAA_FULL', NDOFA, NDOFA, SUBR_NAME )
 
          IF (NTERM_MAA > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'MAA       ', NTERM_MAA, NDOFA, NDOFA, SYM_MAA, I_MAA, J_MAA,MAA, MAA_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'MAA', NTERM_MAA, NDOFA, NDOFA, SYM_MAA, I_MAA, J_MAA,MAA, MAA_FULL )
          ENDIF
 
          IF (NTERM_MAO > 0) THEN                           ! Part 1: calc MAO*GOA and add it & it's transpose to MAA_FULL

@@ -64,7 +64,7 @@
       INTEGER(LONG)                   :: ELOUT_STRN        ! If > 0, there are STRAIN   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error count
-      INTEGER(LONG)                   :: NDUM      = 0     ! Dummy valye needed in call to CALC_ELEM_ENFR_FORCES
+      INTEGER(LONG)                   :: NDUM              ! Dummy valye needed in call to CALC_ELEM_ENFR_FORCES
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NUM_OGEL_ROWS     ! No. elems processed prior to writing results to F06 file
       INTEGER(LONG)                   :: NUM_FROWS         ! No. elems processed for FEMAP
@@ -271,6 +271,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
  
       IF ((POST /= 0) .AND. (ANY_STRN_OUTPUT > 0)) THEN
                     
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out BUSH strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCBUSH, 6, SUBR_NAME )
          DO J=1,NELE
@@ -301,6 +302,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TRIA3K strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTRIA3K, 22, SUBR_NAME )
          DO J=1,NELE
@@ -331,6 +333,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TRIA3 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTRIA3, 22, SUBR_NAME )
          DO J=1,NELE 
@@ -361,6 +364,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4K strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4K, 22, SUBR_NAME )
          DO J=1,NELE
@@ -391,6 +395,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4, 22, SUBR_NAME )
          DO J=1,NELE
@@ -421,6 +426,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA8 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA8, 12, SUBR_NAME )
          DO J=1,NELE
@@ -451,6 +457,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA20 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA20, 12, SUBR_NAME )
          DO J=1,NELE
@@ -481,6 +488,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out PENTA6 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCPENTA6, 12, SUBR_NAME )
          DO J=1,NELE
@@ -511,6 +519,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out PENTA15 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCPENTA15, 12, SUBR_NAME )
          DO J=1,NELE
@@ -541,6 +550,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TETRA4 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTETRA4, 12, SUBR_NAME )
          DO J=1,NELE
@@ -571,6 +581,7 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TETRA10 strains
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTETRA10, 12, SUBR_NAME )
          DO J=1,NELE

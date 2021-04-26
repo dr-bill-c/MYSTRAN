@@ -79,7 +79,6 @@
 ! **********************************************************************************************************************************
 ! Calc engineering stresses from array STRESS and put into array OGEL
  
-
       IF      (TYPE == 'BAR     ') THEN                    ! Stresses for BAR1 elements
 
          C1 = ZS(1)
@@ -253,6 +252,7 @@
  
  9203 FORMAT(' *ERROR  9203: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' INCORRECT ELEMENT TYPE = "',A,'"')
+
 
 
 

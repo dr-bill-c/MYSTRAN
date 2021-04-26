@@ -1125,6 +1125,10 @@
 
       REAL(DOUBLE), ALLOCATABLE       :: BUSHOFF(:,:)        ! BAR/BEAM elem offsets (3 offsets at each of 2 grids)
 
+      REAL(DOUBLE)                    :: BUSH_DXA            ! Offset dist of BUSH elem from end A in elem Xe dir.
+      REAL(DOUBLE)                    :: BUSH_DXB            ! Offset dist of BUSH elem from end B in elem Xe dir.=L - DXA
+      REAL(DOUBLE)                    :: BUSH_DY             ! Offset distance of BUSH elem from  in elem Ye direction
+      REAL(DOUBLE)                    :: BUSH_DZ             ! Offset distance of BUSH elem from  in elem Ze direction
 
 !  BAROFF  = NBAROFF  x 3 real array of offsets for CBAR, CBEAM
 
@@ -1547,7 +1551,9 @@
 
       REAL(DOUBLE) , ALLOCATABLE      :: ME(:,:)             ! Current elem mass matrix
 
-      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS(:,:)         ! Array of elem offset distances
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS_B(:,:)       ! Array of elem offset distances in basic coord system
+
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS(:,:)         ! Array of elem offset distances in global coord system
 
       REAL(DOUBLE) , ALLOCATABLE      :: PEB(:)              ! Array of current elem nodal forces in basic coords for one S/C
 
