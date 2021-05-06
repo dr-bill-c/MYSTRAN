@@ -106,7 +106,7 @@
 ! Offsets are in fields 4 - 9 of the first continuation card. If there are no offsets for this element, a zero is entered
 ! in array EDAT(nedat7).
 
-      NEDAT_START    = NEDAT
+      NEDAT_START = NEDAT
       EPS1 = EPSIL(1)
 
 ! Make JCARD from CARD
@@ -308,6 +308,7 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                   WRITE(F06,1180) JCARD(3), NAME, EID
                ENDIF
             ENDIF
+
             EDAT(NEDAT_START+7) = OCID                     ! Slot 7 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
 
             IF      (OCID == -1) THEN                      ! Get components of BUSHOFF
@@ -339,12 +340,24 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
             EDAT(NEDAT_START+7) = -1                       ! Con't entry was blank so default OCID and null offset flag
             EDAT(NEDAT_START+8) =  0
 
+            NBUSHOFF = NBUSHOFF + 1
+            EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+            BUSHOFF(NBUSHOFF,1) = HALF
+            BUSHOFF(NBUSHOFF,2) = ZERO
+            BUSHOFF(NBUSHOFF,3) = ZERO
+
          ENDIF
 
       ELSE
 
          EDAT(NEDAT_START+7) = -1                          ! There was no con't entry so default OCID and null offset flag
          EDAT(NEDAT_START+8) =  0
+
+         NBUSHOFF = NBUSHOFF + 1
+         EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+         BUSHOFF(NBUSHOFF,1) = HALF
+         BUSHOFF(NBUSHOFF,2) = ZERO
+         BUSHOFF(NBUSHOFF,3) = ZERO
 
       ENDIF
 
@@ -380,9 +393,6 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
 
  1189 FORMAT(' *ERROR  1189: ',A,A,' MUST HAVE NON-NEGATIVE VALUE FOR CID IF FIELD ',I2,' IS NOT BLANK. VALUE READ WAS ',I8)
  
-
-
-
 ! **********************************************************************************************************************************
 
       END SUBROUTINE BD_CBUSH
