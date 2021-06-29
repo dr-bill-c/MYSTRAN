@@ -348,12 +348,12 @@ elems_2: DO J = 1,NELE
                ENDIF
                CALL ELMDIS
                CALL CALC_ELEM_NODE_FORCES
-               FEMAP_EL_VECS(NUM_FROWS,1) = -PEL(1)
-               FEMAP_EL_VECS(NUM_FROWS,2) = -PEL(2)
-               FEMAP_EL_VECS(NUM_FROWS,3) = -PEL(3)
-               FEMAP_EL_VECS(NUM_FROWS,4) = -PEL(4)
-               FEMAP_EL_VECS(NUM_FROWS,5) = -PEL(5)
-               FEMAP_EL_VECS(NUM_FROWS,6) = -PEL(6)
+               FEMAP_EL_VECS(NUM_FROWS,1) =  PEL(7)                            !  Prior to 2021-06-09 was = -PEL(1)
+               FEMAP_EL_VECS(NUM_FROWS,2) =  PEL(8)                            !  Prior to 2021-06-09 was = -PEL(2)
+               FEMAP_EL_VECS(NUM_FROWS,3) =  PEL(9)                            !  Prior to 2021-06-09 was = -PEL(3)
+               FEMAP_EL_VECS(NUM_FROWS,4) =  PEL(8)*DZ - PEL(9)*DY  + PEL(10)  !  Prior to 2021-06-09 was = -PEL(4)
+               FEMAP_EL_VECS(NUM_FROWS,5) = -PEL(7)*DZ - PEL(9)*DXB + PEL(11)  !  Prior to 2021-06-09 was = -PEL(5)
+               FEMAP_EL_VECS(NUM_FROWS,6) =  PEL(7)*DY + PEL(8)*DXB + PEL(12)  !  Prior to 2021-06-09 was = -PEL(6)
             ENDIF            
          ENDDO
          IF (NUM_FROWS > 0) THEN

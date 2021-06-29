@@ -1,4 +1,3 @@
-! ###############################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -24,30 +23,10 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-   MODULE CC_ACCE_Interface
+      MODULE MATL_TRANSFORM_MATRIX_USE_IFs
 
-   INTERFACE
+! USE Interface statements for all subroutines called by SUBROUTINE MATL_TRANSFORM_MATRIX
 
-      SUBROUTINE CC_ACCE ( CARD )
+      USE OURTIM_Interface
 
- 
-      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_LOG, F04, PCHSTAT
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, CC_CMD_DESCRIBERS, LSUB, NSUB, NCCCD 
-      USE TIMDAT, ONLY                :  TSEC
-      USE SUBR_BEGEND_LEVELS, ONLY    :  CC_ACCE_BEGEND
-      USE CC_OUTPUT_DESCRIBERS, ONLY  :  ACCE_OUT
-      USE MODEL_STUF, ONLY            :  SC_ACCE
- 
-      IMPLICIT NONE
- 
-      CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
- 
-      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = CC_ACCE_BEGEND
- 
-      END SUBROUTINE CC_ACCE
-
-   END INTERFACE
-
-   END MODULE CC_ACCE_Interface
-
+      END MODULE MATL_TRANSFORM_MATRIX_USE_IFs

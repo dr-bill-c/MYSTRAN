@@ -125,24 +125,71 @@
  
       CHARACTER(14*BYTE)              :: MATOUT_CHAR(NCOLS) ! Character representation of the real data in one row of REAL_VAR
 
+      INTEGER                         :: II,JJ,KK,LL        ! DO loop indices or counters
+      INTEGER                         :: NGC                ! If NCOLS is divisible by 6, NGC is that number
+      INTEGER                         :: NGR                ! If NROWS is divisible by 6, NGR is that number
+
 ! **********************************************************************************************************************************
       WRITE(F06,98720)
 
       WRITE(F06,9300) MATIN_NAME
 
-      DO I=1,NROWS
-         CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, I, MATOUT_CHAR )
-         WRITE(F06,9206) (MATOUT_CHAR(J),J=1,NCOLS)
-      ENDDO
+      NGC = 0
+icols:DO II=1,NROWS
+         IF (6*II == NROWS) THEN
+            NGC = II
+            EXIT icols
+         ENDIF
+      ENDDO icols
+
+      NGR = 0
+irows:DO II=1,NROWS
+         IF (6*II == NROWS) THEN
+            NGR = II
+            EXIT irows
+         ENDIF
+      ENDDO irows
+
+      IF ((NGC > 0) .AND. (NGR > 0)) THEN
+
+         DO II=1,NGR
+            DO KK=1,6
+               CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, 6*(II-1)+KK, MATOUT_CHAR )
+               DO JJ=1,NGC
+                  IF (JJ < NGC) THEN
+                     WRITE(F06,9206,ADVANCE='NO') (MATOUT_CHAR(6*(JJ-1)+LL),LL=1,6)
+                  ELSE
+                     WRITE(F06,9207,ADVANCE='YES') (MATOUT_CHAR(6*(JJ-1)+LL),LL=1,6)
+                  ENDIF
+               ENDDO
+            ENDDO
+            IF (II < NGR) WRITE(F06,9208,ADVANCE='YES')
+         ENDDO
+
+      ELSE
+
+         DO II=1,NROWS
+            CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, II, MATOUT_CHAR )
+            WRITE(F06,9206) (MATOUT_CHAR(JJ),JJ=1,NCOLS)
+         ENDDO
+
+      ENDIF
+
+      WRITE(F06,*)
 
       WRITE(F06,98799)
  
       WRITE(F06,*)
 
 ! **********************************************************************************************************************************
- 9206 FORMAT(10000A14)
+ 9206 FORMAT(6A14,' |')
 
- 9300 FORMAT(49X, 'Matrix ', A, ' displayed in full format', //) 
+ 9207 FORMAT(6A14)
+
+ 9208 FORMAT('  -----------------------------------------------------------------------------------------------------------------',&
+             '-------------------------------------------------------')
+
+ 9300 FORMAT(65X, 'Matrix ', A, ' displayed in full format',/,65X,'----------------------------------------',/) 
 
 98720 FORMAT(' __________________________________________________________________________________________________________________',&
              '_________________'                                                                                               ,//,&

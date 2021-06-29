@@ -84,6 +84,17 @@
       REAL(DOUBLE)                    :: X3E               ! x coord of elem node 3
       REAL(DOUBLE)                    :: Y3E               ! y coord of elem node 3
   
+! The following 3 args are needed when subr TPLT2 is called when that triangular shell element is used in a MIN4T QUAD4 which is
+! made up of 4 non-overlapping TPLT2 elements. Since TPLT2 can also be a stand-alone element, we need these args when that occurs.
+! The only time TPLT2 is called from this subr is when it is a stand-alone element.
+
+! We give them the PARAMETER attributes below to make sure this subr won't call TPLT2 with any other values. For the MIN4T QUAD4,
+! TPLT2 is called in subr QPLT3 with appropriate values of TRIA_NUM, PSI.
+
+      CHARACTER(LEN=1), PARAMETER     :: MN4T_QD   = 'N'
+      INTEGER(LONG)   , PARAMETER     :: TRIA_NUM  = 1
+      REAL(DOUBLE)    , PARAMETER     :: PSI       = 0.0D0
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -176,7 +187,7 @@
   
          IF (TYPE == 'TRIA3   ') THEN
             IF (INTL_MID(2) /= 0) THEN
-               CALL TPLT2 ( OPT, AREA, X2E, X3E, Y3E, 'Y', IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB )
+               CALL TPLT2 (OPT, AREA, X2E, X3E, Y3E, 'Y', IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB, MN4T_QD, TRIA_NUM, PSI)
             ENDIF
          ENDIF
  
@@ -193,9 +204,9 @@
 
                if (type == 'QUAD4K  ') then
                   WRITE(ERR,*) ' *ERROR: Code not written for SHELL_B effect on KE yet for QUAD4K elements'
-                  WRITE(ERR,*) '         Or, if QUAD4, make sure that the element has nonzero transverse shear moduluii, G1Z, G2Z'
+                  WRITE(ERR,*) '         Or, if QUAD4, make sure that the element has nonzero transverse shear moduli, G1Z, G2Z'
                   WRITE(F06,*) ' *ERROR :Code not written for SHELL_B effect on KE yet for QUAD4K elements'
-                  WRITE(F06,*) '         Or, if QUAD4, make sure that the element has nonzero transverse shear moduluii, G1Z, G2Z'
+                  WRITE(F06,*) '         Or, if QUAD4, make sure that the element has nonzero transverse shear moduli, G1Z, G2Z'
                   call outa_here ( 'Y' )
                endif
 

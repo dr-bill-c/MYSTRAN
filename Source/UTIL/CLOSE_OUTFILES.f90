@@ -24,13 +24,13 @@
                                                                                                         
 ! End MIT license text.                                                                                      
  
-      SUBROUTINE CLOSE_OUTFILES ( BUG_CLOSE_STAT, ERR_CLOSE_STAT, F04_CLOSE_STAT, PCH_CLOSE_STAT ) 
+      SUBROUTINE CLOSE_OUTFILES ( BUG_CLOSE_STAT, ERR_CLOSE_STAT, F04_CLOSE_STAT, OP2_CLOSE_STAT, PCH_CLOSE_STAT ) 
  
 ! Closes BUGFIL, ERRFIL, F04FIL, F06FIL
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE
-      USE IOUNT1, ONLY                :  BUG   , ERR   , F04   , F06   , PCH    ,SC1, WRT_LOG,                                     &
-                                         BUGFIL, ERRFIL, F04FIL, F06FIL, PCHFIL
+      USE IOUNT1, ONLY                :  BUG   , ERR   , F04   , F06   , OP2   , PCH    ,SC1, WRT_LOG,                             &
+                                         BUGFIL, ERRFIL, F04FIL, F06FIL, OP2FIL, PCHFIL
 
       USE CLOSE_OUTFILES_USE_IFs
 
@@ -39,6 +39,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: BUG_CLOSE_STAT    ! Input value for close status for BUG
       CHARACTER(LEN=*), INTENT(IN)    :: ERR_CLOSE_STAT    ! Input value for close status for ERR
       CHARACTER(LEN=*), INTENT(IN)    :: F04_CLOSE_STAT    ! Input value for close status for F04
+      CHARACTER(LEN=*), INTENT(IN)    :: OP2_CLOSE_STAT    ! Input value for close status for OP2
       CHARACTER(LEN=*), INTENT(IN)    :: PCH_CLOSE_STAT    ! Input value for close status for PCH
 
 ! **********************************************************************************************************************************
@@ -60,6 +61,10 @@
          ELSE
             CALL FILE_CLOSE ( F04, F04FIL, F04_CLOSE_STAT, 'Y' )
          ENDIF
+      ENDIF
+
+      IF (OP2 /= SC1) THEN
+         CALL FILE_CLOSE ( OP2, OP2FIL, OP2_CLOSE_STAT, 'Y' )
       ENDIF
 
       IF (PCH /= SC1) THEN

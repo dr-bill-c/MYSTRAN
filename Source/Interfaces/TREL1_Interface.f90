@@ -51,6 +51,10 @@
 
       REAL(DOUBLE)                    :: M0                ! An intermediate variable used in calc elem mass, ME
   
+      CHARACTER(LEN=1), PARAMETER     :: MN4T_QD   = 'N'
+      INTEGER(LONG)   , PARAMETER     :: TRIA_NUM  = 1
+      REAL(DOUBLE)    , PARAMETER     :: PSI       = 0.0D0
+
       END SUBROUTINE TREL1
 
    END INTERFACE

@@ -31,7 +31,8 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
 
       USE IOUNT1, ONLY                :  BUGOUT, F04, F06FIL, SC1, WRT_LOG,                                                        &
-                                         BUGSTAT, BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD, PCHSTAT, L1ASTAT 
+                                         BUGSTAT, BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD,                         &
+                                         OP2STAT, PCHSTAT, L1ASTAT 
 
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, LINKNO, WARN_ERR 
       USE TIMDAT, ONLY                :  TSEC
@@ -118,7 +119,7 @@
 
       ENDIF
 
-      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, PCHSTAT )
+      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, OP2STAT, PCHSTAT )
 
       STOP
 

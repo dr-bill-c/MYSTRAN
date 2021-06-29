@@ -32,7 +32,7 @@
 ! and pressure loads are inserted into the system loads array SYS_LOAD.
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_BUG, WRT_ERR, WRT_FIJ, WRT_LOG
+      USE IOUNT1, ONLY                :  ERR, F04, F06, F21, F21FIL, F21_MSG, SC1, WRT_BUG, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_P_T_BIT, ELDT_F21_P_T_BIT, IBIT, LINKNO, MBUG, MELDOF, NCORD,      &
                                          NELE, NGRID, NSUB, NTSUB
       USE CONSTANTS_1, ONLY           :  ZERO
@@ -40,8 +40,8 @@
       USE TIMDAT, ONLY                :  TSEC
       USE DOF_TABLES, ONLY            :  TDOF, TDOF_ROW_START
       USE SUBR_BEGEND_LEVELS, ONLY    :  EPTL_BEGEND
-      USE MODEL_STUF, ONLY            :  ELDOF, ELDT, GRID, GRID_ID, CORD, AGRID, ELGP, NUM_EMG_FATAL_ERRS, PLY_NUM, PPE, PTE,     &
-                                         SYS_LOAD, TYPE, SUBLOD
+      USE MODEL_STUF, ONLY            :  ELDOF, ELDT, GRID, GRID_ID, CORD, AGRID, ELGP, NUM_EMG_FATAL_ERRS, OELDT, PLY_NUM, PPE,   &
+                                         PTE, SYS_LOAD, TYPE, SUBLOD
 
       USE EPTL_USE_IFs
 
@@ -59,6 +59,7 @@
       INTEGER(LONG)                   :: IERROR            ! Local error indicator
       INTEGER(LONG)                   :: L                 ! Counter
       INTEGER(LONG)                   :: NUM_COMPS         ! 6 if GRID_NUM is an physical grid, 1 if an SPOINT
+      INTEGER(LONG)                   :: OUNT(2)           ! File units to write messages to. Input to subr READERR  
       INTEGER(LONG)                   :: ROW_NUM           ! Row no. in array TDOF corresponding to an elem DOF 
       INTEGER(LONG)                   :: ROW_NUM_START     ! Row no. in array TDOF where data begins for AGRID
       INTEGER(LONG)                   :: TCASE2(NSUB)      ! TCASE2(I) gives the internal subcase no. for internal thermal case I
@@ -83,7 +84,12 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Initialize
+! Make units for writing errors the error file and output file
+
+      OUNT(1) = ERR
+      OUNT(2) = F06
+
+!! Initialize
 
       EPS1 = EPSIL(1)
 
@@ -154,14 +160,9 @@
             CYCLE
          ENDIF 
 
-         WRT_FIJ(2) = 0                                    ! Write element thermal, pressure, loads to disk file if requested
-         I1 = IAND(ELDT(I),IBIT(ELDT_F21_P_T_BIT))
+         I1 = IAND(OELDT,IBIT(ELDT_F21_P_T_BIT))           ! Do we need to write elem thermal load matrices to F21 files
          IF (I1 > 0) THEN
-            WRT_FIJ(2) = 1
-         ENDIF
- 
-         IF (WRT_FIJ(2) > 0) THEN
-            CALL WRITE_EOFIL ( 0 )
+            CALL WRITE_FIJFIL ( 1, 0 )
          ENDIF
 
          L = 0                                             ! Generate element DOF'S

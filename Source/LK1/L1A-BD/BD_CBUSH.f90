@@ -308,7 +308,6 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                   WRITE(F06,1180) JCARD(3), NAME, EID
                ENDIF
             ENDIF
-
             EDAT(NEDAT_START+7) = OCID                     ! Slot 7 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
 
             IF      (OCID == -1) THEN                      ! Get components of BUSHOFF
@@ -393,6 +392,9 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
 
  1189 FORMAT(' *ERROR  1189: ',A,A,' MUST HAVE NON-NEGATIVE VALUE FOR CID IF FIELD ',I2,' IS NOT BLANK. VALUE READ WAS ',I8)
  
+
+
+
 ! **********************************************************************************************************************************
 
       END SUBROUTINE BD_CBUSH

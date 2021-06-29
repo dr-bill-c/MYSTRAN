@@ -459,8 +459,8 @@
 !     CCELDT( 7) is CC requests for print to BUGFIL of elem shape fcns and Jacobian matrices
 !     CCELDT( 8) is CC requests for print to BUGFIL of elem strain-displacement matrices
 !     CCELDT( 9) is CC requests for print to BUGFIL of elem checks on strain-displ matrices for RB motion & constant strain
-!     CCELDT(10) is CC requests for write to F22FIL unformatted file of element              : PTE, PPE
-!     CCELDT(11) is CC requests for write to F21FIL unformatted file of element              : ME
+!     CCELDT(10) is CC requests for write to F21FIL unformatted file of element              : PTE, PPE
+!     CCELDT(11) is CC requests for write to F22FIL unformatted file of element              : ME
 !     CCELDT(12) is CC requests for write to F23FIL unformatted file of element              : KE
 !     CCELDT(13) is CC requests for write to F24FIL unformatted file of element              : SEi, STEi, BEi
 !     CCELDT(14) is CC requests for write to F25FIL unformatted file of element              : UEL, PEL (all subcases)
@@ -562,8 +562,8 @@
 !        Bit  7 in ELDT is for print to BUGFIL of elem shape fcns and Jacobian matrices
 !        Bit  8 in ELDT is for print to BUGFIL of elem strain-displacement matrices
 !        Bit  9 in ELDT is for print to BUGFIL of elem checks on strain-displ matrices for RB motion & constant strain
-!        Bit 10 in ELDT is for write to F22FIL unformatted file of element              : PTE, PPE
-!        Bit 11 in ELDT is for write to F21FIL unformatted file of element              : ME
+!        Bit 10 in ELDT is for write to F21FIL unformatted file of element              : PTE, PPE
+!        Bit 11 in ELDT is for write to F22FIL unformatted file of element              : ME
 !        Bit 12 in ELDT is for write to F23FIL unformatted file of element              : KE
 !        Bit 13 in ELDT is for write to F24FIL unformatted file of element              : SEi, STEi, BEi
 !        Bit 14 in ELDT is for write to F25FIL unformatted file of element              : UEL, PEL (all subcases)
@@ -1275,7 +1275,7 @@
                                                              ! If 'SYM' then PCOMP is a symmetric layup, otherwise it is nonsym
 
       CHARACTER(1*BYTE)               :: SHELL_T_MOD         = 'N'
-                                                             ! Reset mto 'Y' if SHELL_T is modified (as for example when
+                                                             ! Reset to 'Y' if SHELL_T is modified (as for example when
                                                              ! INTL_MID(3) = 0 or G1Z, G2Z transverse shear modulii = 0 (in order
                                                              ! to get subrs QPLT2,3 and TPLT2 to work when transv shear flex = 0
 
@@ -1330,6 +1330,8 @@
       INTEGER(LONG)                   :: MTRL_TYPE(MEMATC)   = (/(0, I=1,MEMATC)/)
                                                              ! Material types for this element (1 for MAT1, 8 for MAT8, etc). There
                                                              ! can be diff types for membrane, bending, shear and mem/bend coupling
+                                                             ! Currently the 1st 4 col's are for: 
+                                                             ! 1) membrane, 2) bending, 3) trans shear, 4) membrane/bending coupling
 
       INTEGER(LONG)                   :: NUM_PLIES           = 1
                                                              ! Number of plies in a shell using PCOMP

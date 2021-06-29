@@ -544,8 +544,8 @@
       INTEGER(LONG), PARAMETER :: ELDT_BUG_BMAT_BIT   =   8      ! Bit pos in OELDT, ELDT for elem displ/load print requests
       INTEGER(LONG), PARAMETER :: ELDT_BUG_BCHK_BIT   =   9      ! Bit pos in OELDT, ELDT for elem displ/load print requests
 
-      INTEGER(LONG), PARAMETER :: ELDT_F21_P_T_BIT    =  10      ! Bit pos in OELDT, ELDT for elem press/therm load file requests
-      INTEGER(LONG), PARAMETER :: ELDT_F22_ME_BIT     =  11      ! Bit pos in OELDT, ELDT for elem mass file requests
+      INTEGER(LONG), PARAMETER :: ELDT_F21_P_T_BIT    =  10      ! Bit pos in OELDT, ELDT for elem mass file requests
+      INTEGER(LONG), PARAMETER :: ELDT_F22_ME_BIT     =  11      ! Bit pos in OELDT, ELDT for elem press/therm load file requests
       INTEGER(LONG), PARAMETER :: ELDT_F23_KE_BIT     =  12      ! Bit pos in OELDT, ELDT for elem stiff matrix file requests
       INTEGER(LONG), PARAMETER :: ELDT_F24_SE_BIT     =  13      ! Bit pos in OELDT, ELDT for elem stress rec mat file requests
       INTEGER(LONG), PARAMETER :: ELDT_F25_U_P_BIT    =  14      ! Bit pos in OELDT, ELDT for elem displ/load file requests

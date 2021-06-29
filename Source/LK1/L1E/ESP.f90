@@ -37,7 +37,8 @@
 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, FILE_NAM_MAXLEN, SC1, SCR, WRT_BUG, WRT_ERR, WRT_FIJ, WRT_LOG
+      USE IOUNT1, ONLY                :  ERR, F04, F06, F23, F23FIL, F23_MSG, F24, F24FIL, F24_MSG, FILE_NAM_MAXLEN, SC1, SCR,     &
+                                         WRT_BUG, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_KE_BIT, ELDT_BUG_SE_BIT,                                           &
                                          ELDT_F23_KE_BIT, ELDT_F24_SE_BIT, ELDT_BUG_BCHK_BIT, ELDT_BUG_BMAT_BIT, ELDT_BUG_SHPJ_BIT,&
                                          FATAL_ERR, IBIT, LINKNO, LTERM_KGG, LTERM_KGGD, MBUG, MELDOF, NDOFG, NELE, NGRID,         &
@@ -48,7 +49,7 @@
       USE SUBR_BEGEND_LEVELS, ONLY    :  ESP_BEGEND
       USE DOF_TABLES, ONLY            :  TDOF, TDOF_ROW_START
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
-      USE MODEL_STUF, ONLY            :  AGRID, ELDT, ELDOF, ELGP, GRID_ID, NUM_EMG_FATAL_ERRS, PLY_NUM, KE, KED, TYPE
+      USE MODEL_STUF, ONLY            :  AGRID, ELDT, ELDOF, ELGP, GRID_ID, NUM_EMG_FATAL_ERRS, PLY_NUM, OELDT, KE, KED, TYPE
       USE STF_ARRAYS, ONLY            :  STFKEY, STF3
       USE STF_TEMPLATE_ARRAYS, ONLY   :  CROW, TEMPLATE
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
@@ -220,20 +221,14 @@ elems:DO I=1,NELE
             CYCLE elems
          ENDIF 
 
-         WRT_FIJ(3) = 0                                    ! WRT_FIJ(3) is for disk file output of KE
-         I1 = IAND(ELDT(I),IBIT(ELDT_F23_KE_BIT))
+         I1 = IAND(OELDT,IBIT(ELDT_F23_KE_BIT))           ! Do we need to write elem stiff matrices to F23 files?
          IF (I1 > 0) THEN
-            WRT_FIJ(3) = 1
+            CALL WRITE_FIJFIL ( 3, 0 )
          ENDIF
 
-         WRT_FIJ(4) = 0                                    ! WRT_FIJ(4) is for disk file output of SEi, STEi
-         I1 = IAND(ELDT(I),IBIT(ELDT_F24_SE_BIT))
+         I1 = IAND(OELDT,IBIT(ELDT_F24_SE_BIT))           ! Do we need to write elem stress recovery matrices to F24 files?
          IF (I1 > 0) THEN
-            WRT_FIJ(4) = 1
-         ENDIF
-
-         IF ((WRT_FIJ(3) > 0) .OR. (WRT_FIJ(4) > 0)) THEN
-            CALL WRITE_EOFIL ( 0 )
+            CALL WRITE_FIJFIL ( 4, 0 )
          ENDIF
 
          EDOF_ROW_NUM = 0                                  ! Generate element DOF'S

@@ -531,7 +531,7 @@
          NUMMAT = 1
 
       ELSE IF ((TYPE(1:5) == 'TRIA3') .OR. (TYPE(1:5) == 'QUAD4')) THEN
-                                                           ! For elems that not composites do EMAT in subr SHELL_ABD_MATRICES)
+                                                           ! For elems that are not composites do EMAT in subr SHELL_ABD_MATRICES)
          IF (PCOMP_PROPS == 'N') THEN
 
             INTL_MID(1) = PSHEL(INTL_PID,2)

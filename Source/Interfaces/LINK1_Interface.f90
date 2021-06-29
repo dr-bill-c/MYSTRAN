@@ -45,7 +45,7 @@
       USE IOUNT1, ONLY                :  F21_MSG, F22_MSG, F23_MSG, F24_MSG, L1F_MSG, L1G_MSG, L1I_MSG, L1J_MSG, L1P_MSG, L1S_MSG, &
                                          L1U_MSG, L1W_MSG
 
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, ELDT_F22_ME_BIT, ELDT_F21_P_T_BIT, ELDT_F23_KE_BIT, ELDT_F24_SE_BIT,&
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, ELDT_F21_P_T_BIT, ELDT_F22_ME_BIT, ELDT_F23_KE_BIT, ELDT_F24_SE_BIT,  &
                                          FATAL_ERR, IBIT, LINKNO, LTERM_KGG, LTERM_KGGD, LTERM_MGGE, NDOFM, NFORCE,                &
                                          NGRAV, NMPC, NPLOAD, NRFORCE, NRIGEL, NSLOAD, NTERM_RMG, NTSUB, RESTART, SOL_NAME
 

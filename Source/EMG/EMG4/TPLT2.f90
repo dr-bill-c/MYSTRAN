@@ -24,7 +24,7 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      SUBROUTINE TPLT2 ( OPT, AREA, X2E, X3E, Y3E, CALC_EMATS, IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB )
+      SUBROUTINE TPLT2(OPT, AREA, X2E, X3E, Y3E, CALC_EMATS, IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB, MN4T_QD,TRIA_NUM,PSI)
 
 ! MIN3 triangular thick (Mindlin) plate bending element. This element is based on the following work:
 
@@ -40,14 +40,14 @@
 !  5) KED       = element differen stiff matrix calc   , if OPT(6) = 'Y'
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  F04, F06, WRT_LOG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NSUB, NTSUB
+      USE IOUNT1, ONLY                :  F04, WRT_LOG
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, MEMATC, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  TPLT2_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE
-      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, EID, FCONV_SHEAR_THICK, EB, ET, ELDOF,                      &
-                                         ERR_SUB_NAM, FCONV, KE, INTL_MID, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE,                    &
-                                         PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T, SHELL_PROP_ALP, SHRSUM, STE2, TYPE
+      USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE, CONV_RAD_DEG
+      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, ET, ELDOF, FCONV, KE, MTRL_TYPE,&
+                                         PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T,  &
+                                         SHRSUM, STE2
       USE PARAMS, ONLY                :  EPSIL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
@@ -58,8 +58,10 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'TPLT2'
       CHARACTER(1*BYTE), INTENT(IN)   :: CALC_EMATS        ! 'Y'/'N' flags for whether to calc certain elem matrices
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices
+      CHARACTER(LEN=*) , INTENT(IN)   :: MN4T_QD           ! Arg used to say whether the triangular elem is part of a QUAD4
 
       INTEGER(LONG), INTENT(OUT)      :: IERROR            ! Local error indicator
+      INTEGER(LONG), INTENT(IN)       :: TRIA_NUM          ! Tria number (1, 2, 3 or 4) for the subtriangles of a MIN4T QUAD4
       INTEGER(LONG)                   :: I,J               ! DO loop indices
       INTEGER(LONG), PARAMETER        :: ID(9) =   (/ 3, & ! ID(1) =  3 means virgin 9x9 elem DOF 1 is MYSTRAN 18x18 elem DOF  3
                                                       9, & ! ID(2) =  9 means virgin 9x9 elem DOF 2 is MYSTRAN 18x18 elem DOF  9
@@ -73,6 +75,7 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = TPLT2_BEGEND
   
       REAL(DOUBLE) , INTENT(IN)       :: AREA              ! Element area
+      REAL(DOUBLE) , INTENT(IN)       :: PSI               ! Angle to rotate orthotropic mat'l matrix of a sub-tria to align w QUAD
       REAL(DOUBLE) , INTENT(IN)       :: X2E               ! x coord of elem node 2
       REAL(DOUBLE) , INTENT(IN)       :: X3E               ! x coord of elem node 3
       REAL(DOUBLE) , INTENT(IN)       :: Y3E               ! y coord of elem node 3
@@ -84,7 +87,10 @@
       REAL(DOUBLE) , INTENT(OUT)      :: PTV(9,NTSUB)      ! The 9xNTSUB virgin pressure load matrix for MIN3
       REAL(DOUBLE) , INTENT(OUT)      :: S2V(3,9)          ! Stress recovery matrix for virgin DOF's for bending
       REAL(DOUBLE) , INTENT(OUT)      :: S3V(3,9)          ! Stress recovery matrix for virgin DOF's for transverse shear
-      REAL(DOUBLE)                    :: ALP(3)            ! Col of ALPVEC
+      REAL(DOUBLE)                    :: ALP_TRIA(3)       ! Col of ALPVEC_TRIA
+
+      REAL(DOUBLE)                    :: ALPVEC_TRIA(6,MEMATC) 
+
       REAL(DOUBLE)                    :: A(3)              ! 3 diffs in two x coords of the triangle (some x coords are 0)
       REAL(DOUBLE)                    :: A4                ! 4*AREA
       REAL(DOUBLE)                    :: A42               ! 4*AREA**2
@@ -102,7 +108,16 @@
       REAL(DOUBLE)                    :: DUM4(3,3)         ! Intermadiate result in calc KE elem stiffness
       REAL(DOUBLE)                    :: DUM5(3,9)         ! Intermadiate result in calc SEi stress recovery matrices
       REAL(DOUBLE)                    :: DUM6(2,9)         ! Intermadiate result in calc SEi stress recovery matrices
-      REAL(DOUBLE)                    :: EALP(3)           ! Intermed var used in calc STEi therm stress coeffs
+      REAL(DOUBLE)                    :: DUM22(2,2)        ! Intermediate matrix
+      REAL(DOUBLE)                    :: DUM33(3,3)        ! Intermediate matrix
+      REAL(DOUBLE)                    :: DUM64(6,4)        ! Intermediate matrix
+      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
+      REAL(DOUBLE)                    :: EB_TRIA(3,3)
+      REAL(DOUBLE)                    :: EBM_TRIA(3,3)
+      REAL(DOUBLE)                    :: ET_TRIA(2,2)
+      REAL(DOUBLE)                    :: EB0(3,3)          ! Plane stress matl matrix for bending before coord transformation
+      REAL(DOUBLE)                    :: EBM0(3,3)         ! Bend/membr coupling matl matrix before coord transformation
+      REAL(DOUBLE)                    :: ET0(2,2)          ! 2D transverse shear matl matrix before coord transformation
       REAL(DOUBLE)                    :: EPS1              ! A small number to compare to real zero
       REAL(DOUBLE)                    :: FXX(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxx)
       REAL(DOUBLE)                    :: FXY(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxy)
@@ -119,10 +134,16 @@
       REAL(DOUBLE)                    :: T2(3,3)           ! Intermadiate result in calc shear stiffness, KS
       REAL(DOUBLE)                    :: T3(3,3)           ! Intermadiate result in calc shear stiffness, KS
       REAL(DOUBLE)                    :: T4(3,3)           ! Intermadiate result in calc shear stiffness, KS
+      REAL(DOUBLE)                    :: TF(6,6)           ! Transforms 6 stress and 6x6 material mats from material to element axes
+!                                                            (TF' transforms strains)
+      REAL(DOUBLE)                    :: TME(3,3)          ! Coord transf matrix which will rotate a vector in local element coord
+!                                                            system to a vector in the MIN4T QUAD4 matl coord system (Um = TME*Ue)
+      REAL(DOUBLE)                    :: TF_MB(3,3)        ! Portion of TF: transforms 3x3 EM, EB, EBM from material to elem axes
+      REAL(DOUBLE)                    :: TF_TS(2,2)        ! Portion of TF: transforms 3x3 ET from material to elem axes
       REAL(DOUBLE)                    :: XI(3)
  
       INTRINSIC DABS
-  
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -149,7 +170,83 @@
          ENDDO
       ENDDO
 
-!! ********************************************************************************************************************************
+! **********************************************************************************************************************************
+! If this subr is being called because the triangular shell element is part of a MIN4T QUAD4 with orthotropic mat'l properties then
+! we need to re-orient those ortho material properties to be aligned with the quad. 
+
+      DO I=1,3                                             ! Set init vals before coord transform NOTE: Only needed for DEBUG(53)
+         DO J=1,3
+            EB0(I,J)  = EB(I,J)
+            EBM0(I,J) = EBM(I,J)
+         ENDDO
+      ENDDO
+
+      DO I=1,2
+         DO J=1,2
+            ET0(I,J)  = ET(I,J)
+         ENDDO
+      ENDDO
+
+      DO I=1,3
+         DO J=1,3
+            EB_TRIA(I,J)  = EB(I,J)
+            EBM_TRIA(I,J) = EBM(I,J)
+         ENDDO
+      ENDDO
+
+      DO I=1,2
+         DO J=1,2
+            ET_TRIA(I,J)  = ET(I,J)
+         ENDDO
+      ENDDO
+
+      DO I=1,6
+         DO J=1,MEMATC
+            ALPVEC_TRIA(I,J) = ALPVEC(I,J)
+         ENDDO
+      ENDDO
+
+                                                           ! The following 3 conditions have to be met before we look at mat'l props
+      IF ((MN4T_QD == 'Y') .AND. (TRIA_NUM >= 1) .AND. (TRIA_NUM <= 4)) THEN
+                                                           ! If either bending or transverse shear props are ortho we need TF matrix
+         IF ((MTRL_TYPE(2) == 8) .OR. (MTRL_TYPE(3) == 8)) THEN
+
+            CALL PLANE_COORD_TRANS_21 ( PSI, TME, SUBR_NAME )
+            CALL MATL_TRANSFORM_MATRIX ( TME, TF )
+                                                        ! TF_MB is for Sxx, Syy, Sxy which are rows and cols 1,2,4 from TF
+            TF_MB(1,1) = TF(1,1)     ;     TF_MB(1,2) = TF(1,2)     ;     TF_MB(1,3) = TF(1,4)
+            TF_MB(2,1) = TF(2,1)     ;     TF_MB(2,2) = TF(2,2)     ;     TF_MB(2,3) = TF(2,4)
+            TF_MB(3,1) = TF(4,1)     ;     TF_MB(3,2) = TF(4,2)     ;     TF_MB(3,3) = TF(4,4)
+
+                                                        ! TF_ET is for Syz, Szx which are rows and cols 5,6 from TF
+            TF_TS(1,1) = TF(5,5)     ;     TF_TS(1,2) = TF(5,6)
+            TF_TS(2,1) = TF(6,5)     ;     TF_TS(2,2) = TF(6,6)
+
+            IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN   ! Transform bending material matrix
+                                         CALL MATMULT_FFF   ( EB_TRIA , TF_MB  , 3, 3, 3, DUM33)
+               CALL MATMULT_FFF_T ( TF_MB   , DUM33  , 3, 3, 3, EB_TRIA)
+            ENDIF
+
+            IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN   ! Transform transverse shear material matrix
+               CALL MATMULT_FFF   ( ET_TRIA , TF_TS  , 2, 2, 2, DUM22)
+               CALL MATMULT_FFF_T ( TF_TS   , DUM22  , 2, 2, 2, ET_TRIA)
+            ENDIF
+
+            CALL MATMULT_FFF_T (TF, ALPVEC_TRIA, 6, 6, MEMATC, DUM64 )    ! Transform CTE matrix
+            DO I=1,6
+               DO J=1,MEMATC
+                  ALPVEC_TRIA(I,J) = DUM64(I,J)
+               ENDDO
+            ENDDO
+
+            IF (DEBUG(53) > 0) THEN
+               CALL DEBUG_ROT_AXES_2
+            ENDIF
+
+         ENDIF
+
+      ENDIF
+! **********************************************************************************************************************************
       A(1) =  X3E - X2E
       A(2) = -X3E
       A(3) =  X2E
@@ -469,7 +566,7 @@
             ENDDO
          ENDDO
 
-         CALL MATMULT_FFF ( EB, BB, 3, 3, 9, DUM5 )        ! Generate SE2 in element coords (at this point EB is elem coords)
+         CALL MATMULT_FFF ( EB_TRIA, BB, 3, 3, 9, DUM5 )   ! Generate SE2 in element coords (at this point EB is elem coords)
          DO I=1,3
             DO J=1,9
                S2V(I,J)       = DUM5(I,J)
@@ -477,19 +574,19 @@
             ENDDO   
          ENDDO
 
-         ALP(1) = ALPVEC(1,1)
-         ALP(2) = ALPVEC(2,1)
-         ALP(3) = ALPVEC(3,1)
+         ALP_TRIA(1) = ALPVEC_TRIA(1,1)
+         ALP_TRIA(2) = ALPVEC_TRIA(2,1)
+         ALP_TRIA(3) = ALPVEC_TRIA(3,1)
 
-         CALL MATMULT_FFF ( EB, ALP, 3, 3, 1, EALP )       ! Mult EM (ply coords) times ALP (ply coords)
+         CALL MATMULT_FFF ( EB_TRIA, ALP_TRIA, 3, 3, 1, EALP_TRIA )  ! Mult EB (ply coords) times ALP (ply coords)
 
          DO J=1,NTSUB                                      ! Thermal stress terms
             DO I=1,3
-               STE2(I,J,1) = EALP(I)*DT(4,J)
+               STE2(I,J,1) = EALP_TRIA(I)*DT(4,J)
             ENDDO   
          ENDDO 
 
-         CALL MATMULT_FFF ( ET, BS, 2, 2, 9, DUM6 )
+         CALL MATMULT_FFF ( ET_TRIA, BS, 2, 2, 9, DUM6 )
          DO I=1,2
             DO J=1,9
                S3V(I,J)       = PHI_SQ*DUM6(I,J)
@@ -571,6 +668,134 @@
 
       RETURN
 
-! **********************************************************************************************************************************
+! ##################################################################################################################################
  
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE DEBUG_ROT_AXES_2 
+
+      USE IOUNT1, ONLY                :  F06
+      USE MODEL_STUF, ONLY            :  EID
+
+      IMPLICIT NONE
+
+      CHARACTER(LEN=100)              :: MI(9)             ! Messages to be written out
+
+! **********************************************************************************************************************************
+      DO I=1,9
+         MI(I)(1:) = ' '
+      ENDDO
+
+! Write outputs
+
+      WRITE(F06,98720)
+
+      write(f06,'(a,i2,a,i8,a,1es14.6,a)') ' Data for TRIA_NUM ', tria_num,' of MIN4T QUAD4 elem ', eid, ' which is to be rotated',&
+                                          conv_rad_deg*psi,' deg'
+      write(f06,55566)
+
+      MI(1) = ' Transforms 6 stress and 6x6 matl matrices from tria to quad axes (TF transpose transforms strains)'
+      write(f06,99664) 'TF', MI(1)
+      do i=1,3
+         write(f06,99667) (tf(i,j),j=1,6)
+      enddo
+      write(f06,*)
+      do i=4,6
+         write(f06,99667) (tf(i,j),j=1,6)
+      enddo
+      write(f06,*)
+
+      MI(2) = ' Portion of TF: transforms 3x3 EB_TRIA, EBM_TRIA from tria to quad axes'
+      write(f06,99664) 'TF_MB', MI(2)
+      do i=1,3
+         write(f06,99668) (tf_mb(i,j),j=1,3)
+      enddo
+      write(f06,*)
+
+      MI(3) = '  Portion of TF: transforms 2x2 ET_TRIA from tria to quad axes'
+      write(f06,99664) 'TF_TS', MI(3)
+      do i=1,2
+         write(f06,99669) (tf_ts(i,j),j=1,2)
+      enddo
+      write(f06,*)
+
+      MI(4) = ' Coord transf matrix which will rotate a vector in local elem'
+      MI(5) = ' coord system to a vector in the material coord system (Um = TME*Ue)'
+      write(f06,99664) 'TME', MI(4)   ;   write(f06,99663) MI(5)
+      do i=1,3
+         write(f06,99668) (tme(i,j),j=1,3)
+      enddo
+      write(f06,*)
+
+
+bend: IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN
+
+         write(f06,99665) 'EB_TRIA '
+         do i=1,3
+            write(f06,99668) (eb0(i,j),j=1,3), (eb_tria(i,j),j=1,3)
+         enddo
+         write(f06,*)   ;   write(f06,*)
+
+      ENDIF bend
+
+tshr: IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
+
+         write(f06,99665) 'ET_TRIA '
+         do i=1,2
+            write(f06,99669) (et0(i,j),j=1,2), (et_tria(i,j),j=1,2)
+         enddo
+         write(f06,*)   ;   write(f06,*)
+
+      ENDIF tshr
+
+mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
+
+         write(f06,99665) 'EBM_TRIA'
+         do i=1,3
+            write(f06,99668) (ebm0(i,j),j=1,3), (ebm_tria(i,j),j=1,3)
+         enddo
+         write(f06,*)   ;   write(f06,*)
+
+      ENDIF mbend
+
+      WRITE(F06,*)
+
+      WRITE(F06,98799)
+ 
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+55566 format(1x,'------------------------------------------------------------------------------------------',/)
+
+67549 format(6(1es14.6))                                                                                                            
+
+99663 format(1x,a)
+
+99664 format('  Transformation matrix ',2a)
+
+99665 format(20x,'Material matrix ',a8,' before/after TF transformation',/,                                                        &
+             19x,'before',41x,'after',/,'  ----------------------------------------      ----------------------------------------')
+ 
+99667 format(3(1es14.6), 4x,3(1es14.6))                                                                                            
+
+99668 format(3(1es14.6), 4x,3(1es14.6))                                                                                                            
+
+99669 format(7x,2(1es14.6),18x,2(1es14.6))                                                                                                            
+
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' ::::::::::::::::::::::::::::::::::::START DEBUG(53) OUTPUT FROM SUBROUTINE ROT_AXES_MATL_TO_LOC:::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' :::::::::::::::::::::::::::::::::::::END DEBUG(53) OUTPUT FROM SUBROUTINE ROT_AXES_MATL_TO_LOC::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE DEBUG_ROT_AXES_2
+
       END SUBROUTINE TPLT2

@@ -69,10 +69,15 @@
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
 
-      USE IOUNT1, ONLY                :  F06FIL, IN0, IN1, IN0_MSG, IN1_MSG, IN0FIL, INFILE, LEN_INPUT_FNAME, LEN_RESTART_FNAME,   &
-                                         LINK1A, SC1, WRT_LOG, BUG, ERR, F04, F06, L1A, L1A_MSG, BUGOUT, BUGSTAT, ERRSTAT, F04STAT,&
-                                         NEU, NEUFIL, PCHSTAT, RESTART_FILNAM,                                                     &
-                                         BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD
+      USE IOUNT1, ONLY                :  BUG, ERR, F04, F06, IN0, IN1, L1A, NEU, SC1 
+
+      USE IOUNT1, ONLY                :  F06FIL, IN0FIL, INFILE, NEUFIL 
+
+      USE IOUNT1, ONLY                :  IN0_MSG, IN1_MSG, L1A_MSG 
+
+      USE IOUNT1, ONLY                :  BUGSTAT, BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD, PCHSTAT, OP2STAT
+
+      USE IOUNT1, ONLY                :  LEN_INPUT_FNAME, LEN_RESTART_FNAME,LINK1A, WRT_LOG, BUGOUT, RESTART_FILNAM
 
       USE SCONTR, ONLY                :  COMM, FATAL_ERR, LINKNO_START, LSETLN, LSETS, LSUB, NDOFL, NSETS, NSUB, NTSUB,            &
                                          PROG_NAME, RESTART, SETLEN, SOL_NAME, WARN_ERR
@@ -402,7 +407,7 @@ iters:      DO
          CALL FILE_INQUIRE ( 'near end of MAIN' )
       ENDIF
 
-      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, PCHSTAT )
+      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, OP2STAT, PCHSTAT )
 
 ! Close LIJ files
 

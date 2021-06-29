@@ -41,18 +41,18 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, SHORT, LONG, SINGLE, DOUBLE, QUAD
 
       USE IOUNT1, ONLY                :  MOU4, SC1, WRT_BUG, WRT_LOG
-      USE IOUNT1, ONLY                :  ANS, BUG, ERR, F06, IN1, L1B, L1C, L1D, L1F, L1G, L1H, L1I, L1K, L1L, L1N, L1O, L1P, L1Q, &
-                                         L1S, L1T, L1U, L1V , L1W, L1X, L1Y, OU4, SEQ
+      USE IOUNT1, ONLY                :  ANS, BUG, ERR, F06, F21, F22, F23, F24, F25, IN1, L1B, L1C, L1D, L1F, L1G, L1H, L1I, L1K, &
+                                         L1L, L1N, L1O, L1P, L1Q, L1S, L1T, L1U, L1V, L1W, L1X, L1Y, OP2, OU4, SEQ
 
-      USE IOUNT1, ONLY                :  ANSFIL, F04, INFILE, LINK1B, LINK1C, LINK1D, LINK1F, LINK1H, LINK1I, LINK1K, LINK1L,      &
-                                         LINK1N, LINK1O, LINK1P, LINK1Q, LINK1S, LINK1T, LINK1U, LINK1V, LINK1W, LINK1X, LINK1Y,   &
-                                         OU4FIL, SEQFIL
+      USE IOUNT1, ONLY                :  ANSFIL, F04, F21FIL, F22FIL, F23FIL, F24FIL, F25FIL, INFILE, LINK1B, LINK1C, LINK1D,      &
+                                         LINK1F, LINK1H, LINK1I, LINK1K, LINK1L, LINK1N, LINK1O, LINK1P, LINK1Q, LINK1S, LINK1T,   &
+                                         LINK1U, LINK1V, LINK1W, LINK1X, LINK1Y, OP2FIL, OU4FIL, SEQFIL
 
-      USE IOUNT1, ONLY                :  L1LSTAT, L1NSTAT, L1OSTAT, L1QSTAT, L1YSTAT
+      USE IOUNT1, ONLY                :  L1LSTAT, L1NSTAT, L1OSTAT, L1QSTAT, L1YSTAT, OP2STAT
 
-      USE IOUNT1, ONLY                :  L1B_MSG, L1C_MSG, L1D_MSG, L1F_MSG, L1H_MSG, L1I_MSG, L1K_MSG, L1L_MSG, L1N_MSG, L1O_MSG, &
-                                         L1P_MSG, L1Q_MSG, L1S_MSG, L1T_MSG, L1U_MSG, L1V_MSG, L1W_MSG, L1X_MSG, L1Y_MSG, OU4_MSG, &
-                                         SEQ_MSG
+      USE IOUNT1, ONLY                :  F21_MSG, F22_MSG, F23_MSG, F24_MSG, F25_MSG, L1B_MSG, L1C_MSG, L1D_MSG, L1F_MSG, L1H_MSG, &
+                                         L1I_MSG, L1K_MSG, L1L_MSG, L1N_MSG, L1O_MSG, L1P_MSG, L1Q_MSG, L1S_MSG, L1T_MSG, L1U_MSG, &
+                                         L1V_MSG, L1W_MSG, L1X_MSG, L1Y_MSG, OP2_MSG, OU4_MSG, SEQ_MSG
 
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, BANDIT_ERR, CHKPNT, COMM, DEMO_GRID_LIMIT, ENFORCED, EPSIL1_SET, FATAL_ERR, &
                                          IBIT, KMAT_BW, KMAT_DEN, LGRID, LINKNO, MBUG, MELDTS, NAOCARD, NCUSERIN,                  &
@@ -62,7 +62,7 @@
 
       USE SCONTR, ONLY                :  ELDT_BUG_DAT1_BIT, ELDT_BUG_DAT2_BIT, ELDT_BUG_ME_BIT  , ELDT_BUG_P_T_BIT ,               &
                                          ELDT_BUG_SE_BIT  , ELDT_BUG_KE_BIT  , ELDT_BUG_SHPJ_BIT, ELDT_BUG_BMAT_BIT,               &
-                                         ELDT_BUG_BCHK_BIT, ELDT_BUG_U_P_BIT , ELDT_F21_P_T_BIT , ELDT_F22_ME_BIT  ,               &
+                                         ELDT_BUG_BCHK_BIT, ELDT_BUG_U_P_BIT,  ELDT_F21_P_T_BIT , ELDT_F22_ME_BIT  ,               &
                                          ELDT_F23_KE_BIT  , ELDT_F24_SE_BIT  , ELDT_F25_U_P_BIT
       use scontr, only                :  ndofo
       USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
@@ -214,9 +214,9 @@ res11:IF (RESTART == 'N') THEN
 
 ! If nonlinear we need to keep files for iterations
 
-		IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
+      IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
          CALL SET_FILE_CLOSE_STAT ( 'KEEP' )
-		ENDIF
+      ENDIF
 
 ! Processes the Case Control deck and write check-point data to L1Z if this is NOT a restart or verify that the check-pointed data
 ! agrees between the original run and this restart run
@@ -537,9 +537,12 @@ res14:IF (RESTART == 'N') THEN
          CALL ELESORT
          CALL DEALLOCATE_MODEL_STUF ( 'RIGID_ELEM_IDS' )
   
-! Open L1B for writing grid and coord data to.
+! Open L1B, OP2 for writing grid and coord data to.
 
          CALL FILE_OPEN ( L1B, LINK1B, OUNT, 'REPLACE', L1B_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+
+         CALL FILE_OPEN ( OP2, OP2FIL, OUNT, 'REPLACE', OP2_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+         OP2STAT = 'KEEP    '
 
 ! Element processing to convert external PID's to internal.
   
@@ -636,6 +639,26 @@ res14:IF (RESTART == 'N') THEN
       CALL DEALLOCATE_MODEL_STUF ( 'TITLES' )
       CALL DEALLOCATE_MODEL_STUF ( 'SC_xxxx' )
       CALL FILE_CLOSE ( L1D, LINK1D, 'KEEP', 'Y' )
+                                                           ! If we will be writing data to the F2i disk files open them now
+      IF ( IAND(OELDT,IBIT(ELDT_F21_P_T_BIT) ) > 0) THEN
+         CALL FILE_OPEN ( F21, F21FIL, OUNT, 'REPLACE', F21_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+      ENDIF
+
+      IF ( IAND(OELDT,IBIT(ELDT_F22_ME_BIT)  ) > 0) THEN
+         CALL FILE_OPEN ( F22, F22FIL, OUNT, 'REPLACE', F22_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+      ENDIF
+         
+      IF ( IAND(OELDT,IBIT(ELDT_F23_KE_BIT)  ) > 0) THEN
+         CALL FILE_OPEN ( F23, F23FIL, OUNT, 'REPLACE', F23_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+      ENDIF
+
+      IF ( IAND(OELDT,IBIT(ELDT_F24_SE_BIT)  ) > 0) THEN
+         CALL FILE_OPEN ( F24, F24FIL, OUNT, 'REPLACE', F24_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+      ENDIF
+
+      IF ( IAND(OELDT,IBIT(ELDT_F25_U_P_BIT) ) > 0) THEN
+         CALL FILE_OPEN ( F25, F25FIL, OUNT, 'REPLACE', F25_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+      ENDIF
 
 ! Print table showing the elements connected to each grid if requested  
 
@@ -1229,9 +1252,9 @@ res20:IF (RESTART == 'N') THEN
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG
       USE IOUNT1, ONLY                :  WRT_BUG, WRT_FIJ
-      USE SCONTR, ONLY                :  ELDT_BUG_DAT1_BIT, ELDT_BUG_DAT1_BIT, ELDT_BUG_ME_BIT, ELDT_BUG_P_T_BIT ,                 &
+      USE SCONTR, ONLY                :  ELDT_BUG_DAT1_BIT, ELDT_BUG_DAT1_BIT, ELDT_BUG_ME_BIT  , ELDT_BUG_P_T_BIT ,               &
                                          ELDT_BUG_SE_BIT  , ELDT_BUG_KE_BIT  , ELDT_BUG_SHPJ_BIT, ELDT_BUG_BMAT_BIT,               &
-                                         ELDT_BUG_BCHK_BIT, ELDT_F22_ME_BIT, ELDT_F21_P_T_BIT , ELDT_F23_KE_BIT  ,                 &
+                                         ELDT_BUG_BCHK_BIT, ELDT_F21_P_T_BIT , ELDT_F22_ME_BIT  , ELDT_F23_KE_BIT  ,               &
                                          ELDT_F24_SE_BIT  , MBUG, MFIJ, MELDTS
 
       IMPLICIT NONE
@@ -1252,10 +1275,6 @@ res20:IF (RESTART == 'N') THEN
 
       DO II=0,MBUG-1
          WRT_BUG(II) = 0
-      ENDDO
-
-      DO II=1,MFIJ
-         WRT_FIJ(II) = 0
       ENDDO
 
       IF (CHK_ELDT_BIT( 0) > 0) THEN
@@ -1289,38 +1308,22 @@ res20:IF (RESTART == 'N') THEN
 
       IF (CHK_ELDT_BIT( 6) > 0) THEN
          OPT(5)     = 'Y'
-         WRT_BUG(7) = 1
+         WRT_BUG(6) = 1
       ENDIF
 
       IF (CHK_ELDT_BIT( 7) > 0) THEN
          OPT(5)     = 'Y'
-         WRT_BUG(8) = 1
+         WRT_BUG(7) = 1
       ENDIF
 
       IF (CHK_ELDT_BIT( 8) > 0) THEN
          OPT(5)     = 'Y'
-         WRT_BUG(9) = 1
+         WRT_BUG(8) = 1
       ENDIF
 
       IF (CHK_ELDT_BIT( 9) > 0) THEN
-         OPT(1)     = 'Y'
-         WRT_FIJ(1) = 1
-      ENDIF
-
-      IF (CHK_ELDT_BIT(10) > 0) THEN
-         OPT(2)     = 'Y'
          OPT(5)     = 'Y'
-         WRT_FIJ(2) = 1
-      ENDIF
-
-      IF (CHK_ELDT_BIT(11) > 0) THEN
-         OPT(4)     = 'Y'
-         WRT_FIJ(4) = 1
-      ENDIF
-
-      IF (CHK_ELDT_BIT(12) > 0) THEN
-         OPT(3)     = 'Y'
-         WRT_FIJ(3) = 1
+         WRT_BUG(9) = 1
       ENDIF
 
       NUM_EMG_FATAL_ERRS = 0
@@ -1366,7 +1369,7 @@ res20:IF (RESTART == 'N') THEN
             ENDIF
 
             IF ((WRT_FIJ(1) > 0) .OR. (WRT_FIJ(2) > 0) .OR. (WRT_FIJ(3) > 0) .OR. (WRT_FIJ(4) > 0) .OR. (WRT_FIJ(5) > 0)) THEN
-               CALL WRITE_EOFIL ( 0 )
+               CALL WRITE_FIJFIL ( 9999, 0 )
             ENDIF
 
          ENDIF

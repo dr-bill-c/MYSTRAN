@@ -48,7 +48,7 @@
       USE IOUNT1, ONLY                :  F21_MSG, F22_MSG, F23_MSG, F24_MSG, L1F_MSG, L1G_MSG, L1I_MSG, L1J_MSG, L1P_MSG, L1S_MSG, &
                                          L1U_MSG, L1W_MSG
 
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, ELDT_F22_ME_BIT, ELDT_F21_P_T_BIT, ELDT_F23_KE_BIT, ELDT_F24_SE_BIT,&
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, COMM, ELDT_F21_P_T_BIT, ELDT_F22_ME_BIT, ELDT_F23_KE_BIT, ELDT_F24_SE_BIT,  &
                                          FATAL_ERR, IBIT, LINKNO, LTERM_KGG, LTERM_KGGD, LTERM_MGGE, NDOFM, NFORCE,                &
                                          NGRAV, NMPC, NPLOAD, NRFORCE, NRIGEL, NSLOAD, NTERM_RMG, NTSUB, RESTART, SOL_NAME
 
@@ -145,28 +145,6 @@ res19:IF (RESTART == 'N') THEN
 
          CALL ALLOCATE_MODEL_STUF ( 'SYS_LOAD', SUBR_NAME )
 
-! Test to see if we need to open files for writting elem mass and thermal loads, stiff, stress matrices
-  
-         I2 = IAND(OELDT,IBIT(ELDT_F21_P_T_BIT))
-         IF (I2 > 0) THEN
-            CALL FILE_OPEN ( F22, F22FIL, OUNT, 'REPLACE', F22_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
-         ENDIF
-
-         I1 = IAND(OELDT,IBIT(ELDT_F22_ME_BIT))
-         IF (I1 > 0) THEN
-            CALL FILE_OPEN ( F21, F21FIL, OUNT, 'REPLACE', F21_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
-         ENDIF
-
-         I3 = IAND(OELDT,IBIT(ELDT_F23_KE_BIT))
-         IF (I3 > 0) THEN
-            CALL FILE_OPEN ( F23, F23FIL, OUNT, 'REPLACE', F23_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
-         ENDIF
-
-         I4 = IAND(OELDT,IBIT(ELDT_F24_SE_BIT))
-         IF (I4 > 0) THEN
-            CALL FILE_OPEN ( F24, F24FIL, OUNT, 'REPLACE', F24_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
-         ENDIF
-  
 ! Process MPC's and rigid elements.
 
          IF ((NMPC > 0) .OR. (NRIGEL > 0)) THEN
@@ -235,6 +213,12 @@ res19:IF (RESTART == 'N') THEN
                CALL EPTL
             ENDIF
          ENDIF
+         INQUIRE ( FILE=F21FIL, EXIST=LEXIST, OPENED=LOPEN )
+         IF (LOPEN) THEN
+            CALL FILE_CLOSE ( F21, F21FIL, 'KEEP', 'Y' )
+         ELSE
+            CALL FILE_CLOSE ( F21, F21FIL, 'DELETE', 'Y' )
+         ENDIF
 ! Generate G-set mass matrix, MGG
 
          IF (SKIPMGG == 'N') THEN
@@ -264,11 +248,11 @@ res19:IF (RESTART == 'N') THEN
             MODNAM = 'ELEMENT MASS MATRIX PROCESSOR               '
             WRITE(SC1,1092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
             CALL EMP
-            INQUIRE ( FILE=F21FIL, EXIST=LEXIST, OPENED=LOPEN )
+            INQUIRE ( FILE=F22FIL, EXIST=LEXIST, OPENED=LOPEN )
             IF (LOPEN) THEN
-               CALL FILE_CLOSE ( F21, F21FIL, 'KEEP', 'Y' )
+               CALL FILE_CLOSE ( F22, F22FIL, 'KEEP', 'Y' )
             ELSE
-               CALL FILE_CLOSE ( F21, F21FIL, 'DELETE', 'Y' )
+               CALL FILE_CLOSE ( F22, F22FIL, 'DELETE', 'Y' )
             ENDIF
 
 ! Formulate MGGC mass matrix for concentrated masses
@@ -430,14 +414,21 @@ res19:IF (RESTART == 'N') THEN
             CALL DEALLOCATE_MODEL_STUF ( 'GTEMP' )
          ENDIF
 
-         INQUIRE ( FILE=F22FIL, EXIST=LEXIST, OPENED=LOPEN )
+         INQUIRE ( FILE=F23FIL, EXIST=LEXIST, OPENED=LOPEN )
          IF (LOPEN) THEN
-            CALL FILE_CLOSE ( F22, F22FIL, 'KEEP', 'Y' )
+            CALL FILE_CLOSE ( F23, F23FIL, 'KEEP', 'Y' )
          ELSE
-            CALL FILE_CLOSE ( F22, F22FIL, 'DELETE', 'Y' )
+            CALL FILE_CLOSE ( F23, F23FIL, 'DELETE', 'Y' )
          ENDIF
 
          CALL DEALLOCATE_IN4_FILES ( 'IN4FIL' )
+
+         INQUIRE ( FILE=F24FIL, EXIST=LEXIST, OPENED=LOPEN )
+         IF (LOPEN) THEN
+            CALL FILE_CLOSE ( F24, F24FIL, 'KEEP', 'Y' )
+         ELSE
+            CALL FILE_CLOSE ( F24, F24FIL, 'DELETE', 'Y' )
+         ENDIF
 
 ! Convert system stiff matrix from linked list format to sparse format (SPARSE_KGG calls grid singularity check subr)
 
@@ -489,20 +480,6 @@ res19:IF (RESTART == 'N') THEN
             ENDIF
 
             CALL FILE_CLOSE ( L1G, LINK1G, 'KEEP', 'Y' )
-
-            INQUIRE ( FILE=F23FIL, EXIST=LEXIST, OPENED=LOPEN )
-            IF (LOPEN) THEN
-               CALL FILE_CLOSE ( F23, F23FIL, 'KEEP', 'Y' )
-            ELSE
-               CALL FILE_CLOSE ( F23, F23FIL, 'DELETE', 'Y' )
-            ENDIF
-     
-            INQUIRE ( FILE=F24FIL, EXIST=LEXIST, OPENED=LOPEN )
-            IF (LOPEN) THEN
-               CALL FILE_CLOSE ( F24, F24FIL, 'KEEP', 'Y' )
-            ELSE
-               CALL FILE_CLOSE ( F24, F24FIL, 'DELETE', 'Y' )
-            ENDIF
   
          ENDIF
 

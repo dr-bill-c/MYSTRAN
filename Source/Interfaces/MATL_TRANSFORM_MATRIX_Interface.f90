@@ -1,3 +1,4 @@
+! ###############################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -23,10 +24,29 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      MODULE WRITE_EOFIL_USE_IFs
+   MODULE MATL_TRANSFORM_MATRIX_Interface
 
-! USE Interface statements for all subroutines called by SUBROUTINE WRITE_EOFIL
+   INTERFACE
 
-      USE OURTIM_Interface
+      SUBROUTINE MATL_TRANSFORM_MATRIX ( T21, TS )
 
-      END MODULE WRITE_EOFIL_USE_IFs
+
+      USE PENTIUM_II_KIND, ONLY       :  LONG, DOUBLE
+      USE IOUNT1, ONLY                :  F04, F06, WRT_LOG
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM
+      USE TIMDAT, ONLY                :  TSEC
+      USE SUBR_BEGEND_LEVELS, ONLY    :  MATL_TRANSFORM_MATRIX_BEGEND
+
+      IMPLICIT NONE
+
+      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = MATL_TRANSFORM_MATRIX_BEGEND
+
+      REAL(DOUBLE), INTENT(IN)        :: T21(3,3)          ! 3x3 matrix that transforms a vector in coord sys 1 to coord sys 2
+      REAL(DOUBLE), INTENT(OUT)       :: TS(6,6)           ! 6x6 stress transformation matrix
+
+      END SUBROUTINE MATL_TRANSFORM_MATRIX
+
+   END INTERFACE
+
+   END MODULE MATL_TRANSFORM_MATRIX_Interface
+

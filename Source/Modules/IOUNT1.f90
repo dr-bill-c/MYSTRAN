@@ -43,7 +43,7 @@
       INTEGER(LONG)                   :: NUM_IN4_FILES         ! Count of IN4 files specified by user
       INTEGER(LONG)                   :: LNUM_IN4_FILES        ! Max number of IN4 files allowed
       INTEGER(LONG), PARAMETER        :: NUM_OU4_FILES   = 20  ! Number of OU4 files allowable
-      INTEGER(LONG), PARAMETER        :: MAX_FIL         = 71  ! Number of files (except OU4, SCR)
+      INTEGER(LONG), PARAMETER        :: MAX_FIL         = 72  ! Number of files (except OU4, SCR)
 
  
       SAVE
@@ -51,6 +51,8 @@
       CHARACTER(  1*BYTE)             :: BUGOUT  = 'N'         ! Y/N indicator if anything has been written to BUG file
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: DEFDIR                ! User inputs dir of where to find input (and to write output) here
       CHARACTER(  3*BYTE)             :: DEF_INFILE_EXT = 'DAT'! Default extension for input file INFILE
+      CHARACTER( 3*BYTE), PARAMETER   :: OU4_EXT(MOU4) = (/'OU1','OU2','OU3','OU4','OU5','OU6','OU7','OU8','OU9'/)
+      CHARACTER( 3*BYTE), PARAMETER   :: OT4_EXT(MOT4) = (/'OT1','OT2','OT3','OT4','OT5','OT6','OT7','OT8','OT9'/)
 
 ! Following are the variable names for all files (except for units SC1, SCR, which do not have file names) used by Program
 
@@ -131,7 +133,8 @@
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: LINK5A                ! (filename.L5A) Unformatted file , see descr. below
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: LINK5B                ! (filename.L5B) Unformatted file , see descr. below
 
-      CHARACTER(FILE_NAM_MAXLEN*BYTE) :: OU4FIL(MOU4)          ! (filename.OPi) Unformatted file , see descr. below
+      CHARACTER(FILE_NAM_MAXLEN*BYTE) :: OP2FIL                ! (filename.OP2) Unformatted file , see descr. below
+      CHARACTER(FILE_NAM_MAXLEN*BYTE) :: OU4FIL(MOU4)          ! (filename.OUi) Unformatted file , see descr. below
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: OT4FIL(MOT4)          ! (filename.OTi) Formatted file   , see descr. below
 
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: RESTART_FILNAM        ! Name of file to restart 
@@ -217,6 +220,8 @@
       CHARACTER(  8*BYTE)             :: L5ASTAT       = 'DELETE  '  ! close status for file LINK5A 
       CHARACTER(  8*BYTE)             :: L5BSTAT       = 'DELETE  '  ! close status for file LINK5B 
 
+      CHARACTER(  8*BYTE)             :: OP2STAT       = 'KEEP    '  ! close status for file OP2FIL
+   
                                                                      ! close status for file OU4FIL's
       CHARACTER(  8*BYTE)             :: OU4STAT(MOU4) = (/('DELETE', I=1,MOU4)/)
       CHARACTER(  8*BYTE)             :: OT4STAT(MOT4) = (/('DELETE', I=1,MOT4)/)
@@ -245,11 +250,11 @@
       CHARACTER( 64*BYTE)             :: SEQ_MSG       = 'BANDIT SEQGP CARD IMAGES'
       CHARACTER( 64*BYTE)             :: SPC_MSG       = 'SPC1 TEXT FILE'
 
-      CHARACTER( 64*BYTE)             :: F21_MSG       = 'ELEM MASS DISK FILE'
-      CHARACTER( 64*BYTE)             :: F22_MSG       = 'ELEM THERM & PRESS LOADS DISK FILE'
-      CHARACTER( 64*BYTE)             :: F23_MSG       = 'ELEM STIFF MATRIX DISK FILE'
-      CHARACTER( 64*BYTE)             :: F24_MSG       = 'ELEM STRESS RECOVERY MATRICES DISK FILE'
-      CHARACTER( 64*BYTE)             :: F25_MSG       = 'ELEM DISPL & NODAL LOADS DISK FILE'
+      CHARACTER( 64*BYTE)             :: F21_MSG       = 'ELEM THERM & PRESS LOADS DISK FILE - IN LOCAL ELEM COORDS'
+      CHARACTER( 64*BYTE)             :: F22_MSG       = 'ELEM MASS DISK FILE - IN LOCAL ELEM COORDS'
+      CHARACTER( 64*BYTE)             :: F23_MSG       = 'ELEM STIFF MATRIX DISK FILE - IN LOCAL ELEM COORDS'
+      CHARACTER( 64*BYTE)             :: F24_MSG       = 'ELEM STRESS RECOVERY MATRICES DISK FILE - IN LOCAL ELEM COORDS'
+      CHARACTER( 64*BYTE)             :: F25_MSG       = 'ELEM NODAL DISPL & LOADS DISK FILE - IN LOCAL ELEM COORDS'
       CHARACTER( 64*BYTE)             :: L1B_MSG       = 'GRID, GRID SEQ, AND COORD DATA'
       CHARACTER( 64*BYTE)             :: L1C_MSG       = 'DOF TABLES'
       CHARACTER( 64*BYTE)             :: L1D_MSG       = 'SUBCASE DATA'
@@ -303,6 +308,7 @@
       CHARACTER( 64*BYTE)             :: L5A_MSG       = 'UG DISPL VECTORS'
       CHARACTER( 64*BYTE)             :: L5B_MSG       = 'COLS OF PHIXA EXPANDED TO G-SET'
 
+      CHARACTER( 64*BYTE)             :: OP2_MSG       = 'OP2 PROGRAM OUTPUT FILE'
       CHARACTER( 64*BYTE)             :: OU4_MSG(MOU4) = (/'OUTPUT4 FILE 21                                                 ',     &
                                                            'OUTPUT4 FILE 22                                                 ',     &
                                                            'OUTPUT4 FILE 23                                                 ',     &
@@ -406,16 +412,18 @@
       INTEGER(LONG)                   :: L5A           =  501 ! Unit no. for file LINK5A
       INTEGER(LONG)                   :: L5B           =  502 ! Unit no. for file LINK5B
 
-                                                              ! Unit nos. for  scratch files
-      INTEGER(LONG)                   :: SCR(9)        =  (/991,992,993,994,995,996,997,998,999/)
+      INTEGER(LONG)                   :: OP2           =   14 ! Unit no. for file OP2FIL
 
-                                                                      ! Unit nos for OU4FIL files
+                                                              ! Unit no's for OU4FIL files
       INTEGER(LONG)                   :: OU4(MOU4)     = (/21,22,23,24,25,26,27,28,29/)
       INTEGER(LONG)                   :: OT4(MOT4)     = (/31,32,33,34,35,36,37,38,39/)
-      INTEGER(LONG)                   :: OT4_ELM_OTM   = 38 ! OT4 unit above reserved for elem related CB OTM text msgs
-      INTEGER(LONG)                   :: OT4_GRD_OTM   = 39 ! OT4 unit above reserved for grid related CB OTM text msgs
-      INTEGER(LONG)                   :: OU4_ELM_OTM   = 28 ! OU4 unit above reserved for elem related CB OTM values
-      INTEGER(LONG)                   :: OU4_GRD_OTM   = 29 ! OU4 unit above reserved for grid related CB OTM values
+      INTEGER(LONG)                   :: OT4_ELM_OTM   =   38 ! OT4 unit above reserved for elem related CB OTM text msgs
+      INTEGER(LONG)                   :: OT4_GRD_OTM   =   39 ! OT4 unit above reserved for grid related CB OTM text msgs
+      INTEGER(LONG)                   :: OU4_ELM_OTM   =   28 ! OU4 unit above reserved for elem related CB OTM values
+      INTEGER(LONG)                   :: OU4_GRD_OTM   =   29 ! OU4 unit above reserved for grid related CB OTM values
+
+                                                              ! Unit no's. for  scratch files
+      INTEGER(LONG)                   :: SCR(9)        = (/991,992,993,994,995,996,997,998,999/)
 
 ! The following are indicators of whether to write to BUG, ERR, F04
 
@@ -447,6 +455,9 @@
 ! F04FIL is a formatted file containing subr begin/end times (log file)
 
 ! F06FIL is a formatted file containing the normal output from MYSTRAN
+
+! OP2FIL is an unformatted file containing:
+!      the MSC Nastran formatted OP2 (basically the binary version of the F06)
 
 ! F21FIL is an unformatted file containing:
 !      Array ME (element mass) for elements requested in ELDATA Case Control command 

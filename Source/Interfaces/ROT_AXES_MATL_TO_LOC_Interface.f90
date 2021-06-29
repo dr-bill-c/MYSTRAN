@@ -39,6 +39,7 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, CORD, ISOLID, EB, EBM, EM, ES, ET, MTRL_TYPE, NUM_EMG_FATAL_ERRS, QUAD_DELTA,     &
                                          RCORD, TE, THETAM, TYPE
       USE PARAMS, ONLY                :  EPSIL
+      USE DEBUG_PARAMETERS
       USE SUBR_BEGEND_LEVELS, ONLY    :  ROT_AXES_MATL_TO_LOC_BEGEND
 
       IMPLICIT NONE

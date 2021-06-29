@@ -600,12 +600,12 @@
              1X,'*for output set')
 
 ! QUAD4 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1401 FORMAT(1X,A,'  Elem  Location       Fibre       Stresses In Element Coord System      Principal Stresses (Zero Shear)',      &
+ 1401 FORMAT(1X,A,'  Elem  Location       Fibre       Stresses In Element Coord System     Principal Stresses (Zero Shear)',       &
   '               Transverse   Transverse   % Poly',/,1X,A,                                                                        &
   '   ID                 Distance    Normal-X     Normal-Y     Shear-XY     Angle     Major        Minor      von Mises',          &
   '    Shear-XZ     Shear-YZ    Fit Err',/,1X,A,119X,'(max through thickness)')
 
- 1402 FORMAT(1X,A,'Elem  Location         Fibre       Stresses In Element Coord System      Principal Stresses (Zero Shear)',      &
+ 1402 FORMAT(1X,A,'Elem  Location         Fibre       Stresses In Element Coord System     Principal Stresses (Zero Shear)',       &
   '       Max     Transverse   Transverse   % Poly',/,1X,A,                                                                        &
   ' ID                   Distance    Normal-X     Normal-Y     Shear-XY     Angle     Major        Minor      Shear-XY',           &
   '     Shear-XZ     Shear-YZ    Fit Err',/,1X,A,119X,'(max through thickness)')

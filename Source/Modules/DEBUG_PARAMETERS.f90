@@ -76,10 +76,10 @@
 !        DEBUG  18  > 0 print diagnostics in subr QMEM1 regarding checks on the BMEAN matrix satisfying R.B. motion
 !        DEBUG  19  = 1 print output from subr STOKEN (which, among other uses, processes Case Control SET cards)   
 
-!        DEBUG  20  = 1, bypass the simple solution for GMN when RMM is diagonal. Use subr SOLVE_GMN instead
+!        DEBUG  20  = 1 bypass the simple solution for GMN when RMM is diagonal. Use subr SOLVE_GMN instead
  
-!        DEBUG  21  = 0, In subr STIFF_MAT_EQUIL_CHK use MATMULT_SFF to multiply stiffness matrix times rigid body displs
-!                   = 1, In subr STIFF_MAT_EQUIL_CHK use DSBMV       to multiply stiffness matrix times rigid body displs
+!        DEBUG  21  = 0 In subr STIFF_MAT_EQUIL_CHK use MATMULT_SFF to multiply stiffness matrix times rigid body displs
+!                   = 1 In subr STIFF_MAT_EQUIL_CHK use DSBMV       to multiply stiffness matrix times rigid body displs
 
 !        DEBUG  22  = 1 print RBMAT in subr STIFF_MAT_EQUIL_CHK
 !        DEBUG  23  > 0 do equil checks on stiffness matrix even though model has SPOINT's
@@ -118,6 +118,12 @@
 !        DEBUG  48  = 1 do not calculate off-diag terms in generalized mass matrix in LINK 4
 !        DEBUG  49  = 1 print KMSMn in EIG_LANCZOS_ARPACK
 !        DEBUG  50  = 1 print debug info in EIG_LANCZOS_ARPACK
+
+!        DEBUG  51  = 1 print debug info in ROT_AXES_MATL_TO_LOC
+
+!        DEBUG  52  = 1 print debug info in FILE_OPEN
+
+!        DEBUG  53  = 1 print debug info in TPLT2
 
 !        DEBUG  55  = 1 Write PHIXG in full format in EXPAND_PHIXA_TO_PHIXG
 !                   = 2 Write PHIZG in full format in LINK5

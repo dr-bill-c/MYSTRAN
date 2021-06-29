@@ -200,7 +200,7 @@ elems_1: DO J = 1,NELE
                   ENDIF
 
                   IF (WRT_FIJ(5) > 0) THEN
-                     CALL WRITE_EOFIL ( JVEC )
+                     CALL WRITE_FIJFIL ( 5, JVEC )
                   ENDIF
  
                   IF ((SOL_NAME(1:12) == 'GEN CB MODEL') .AND. (JVEC == 1) .AND. (OT4_EROW >= 1)) THEN

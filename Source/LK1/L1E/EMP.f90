@@ -33,7 +33,7 @@
  
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_BUG, WRT_ERR, WRT_FIJ, WRT_LOG
+      USE IOUNT1, ONLY                :  ERR, F04, F06, F22, F22FIL, F22_MSG, SC1, WRT_BUG, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_ME_BIT, ELDT_F22_ME_BIT, FATAL_ERR, IBIT, LINKNO, LTERM_MGGE,   &
                                          MBUG, MELDOF, NDOFG, NELE, NGRID, NTERM_MGGE, NSUB
       USE TIMDAT, ONLY                :  TSEC
@@ -42,7 +42,7 @@
       USE PARAMS, ONLY                :  EPSIL, SPARSTOR
       USE SUBR_BEGEND_LEVELS, ONLY    :  EMP_BEGEND
       USE DOF_TABLES, ONLY            :  TDOF, TDOF_ROW_START
-      USE MODEL_STUF, ONLY            :  AGRID, ELDT, ELDOF, ELGP, GRID_ID, NUM_EMG_FATAL_ERRS, ME, PLY_NUM, TYPE
+      USE MODEL_STUF, ONLY            :  AGRID, ELDT, ELDOF, ELGP, GRID_ID, NUM_EMG_FATAL_ERRS, ME, OELDT, PLY_NUM, TYPE
       USE EMS_ARRAYS, ONLY            :  EMS, EMSCOL, EMSKEY, EMSPNT
  
       USE EMP_USE_IFs
@@ -70,6 +70,7 @@
       INTEGER(LONG)                   :: MGG_ROWJ          ! Another row no. in EMS
       INTEGER(LONG)                   :: MGG_COL           ! A col no. in MGG
       INTEGER(LONG)                   :: NUM_COMPS         ! 6 if GRID is a physical grid, 1 if a scalar point
+      INTEGER(LONG)                   :: OUNT(2)           ! File units to write messages to. Input to subr READERR  
       INTEGER(LONG)                   :: ROW_NUM_START     ! DOF number where TDOF data begins for a grid
       INTEGER(LONG)                   :: TDOF_ROW_NUM      ! Row number in array TDOF
                                                            ! Indicator for output of elem data to BUG file
@@ -90,7 +91,12 @@
 ! **********************************************************************************************************************************
       EPS1 = EPSIL(1)
 
-! Null dummy array DQE used in call to ELEM_TRANSFORM_LBG
+! Make units for writing errors the error file and output file
+
+      OUNT(1) = ERR
+      OUNT(2) = F06
+
+!! Null dummy array DQE used in call to ELEM_TRANSFORM_LBG
 
       DO I=1,MELDOF
          DO J=1,NSUB
@@ -143,18 +149,14 @@ elems:DO I=1,NELE
             CYCLE elems
          ENDIF 
 
-         WRT_FIJ(1) = 0                                    ! WRT_FIJ(1) is for disk file output of ME
-         I1 = IAND(ELDT(I),IBIT(ELDT_F22_ME_BIT))
+         I1 = IAND(OELDT,IBIT(ELDT_F22_ME_BIT))            ! Do we need to write elem mass matrices to F22 files
          IF (I1 > 0) THEN
-            WRT_FIJ(1) = 1
-         ENDIF
-
-         IF (WRT_FIJ(1) > 0) THEN
-            CALL WRITE_EOFIL ( 0 )
+            CALL WRITE_FIJFIL ( 2, 0 )
          ENDIF
 
          EDOF_ROW_NUM = 0                                  ! Generate element DOF'S
          DO J = 1,ELGP
+!           CALL CALC_TDOF_ROW_NUM ( AGRID(J), ROW_NUM_START, 'N' )
             CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID(J), IGRID )
             ROW_NUM_START = TDOF_ROW_START(IGRID)
             CALL GET_GRID_NUM_COMPS ( AGRID(J), NUM_COMPS, SUBR_NAME )
