@@ -40,15 +40,15 @@
 !  5) KED       = element differen stiff matrix calc   , if OPT(6) = 'Y'
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  F04, WRT_LOG
+      USE IOUNT1, ONLY                :  F04, F06, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, MEMATC, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  TPLT2_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE, CONV_RAD_DEG
-      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, ET, ELDOF, FCONV, KE, MTRL_TYPE,&
-                                         PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T,  &
-                                         SHRSUM, STE2
-      USE PARAMS, ONLY                :  EPSIL
+      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
+                                         MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
+                                         SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
+      USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
       USE TPLT2_USE_IFs
@@ -89,8 +89,6 @@
       REAL(DOUBLE) , INTENT(OUT)      :: S3V(3,9)          ! Stress recovery matrix for virgin DOF's for transverse shear
       REAL(DOUBLE)                    :: ALP_TRIA(3)       ! Col of ALPVEC_TRIA
 
-      REAL(DOUBLE)                    :: ALPVEC_TRIA(6,MEMATC) 
-
       REAL(DOUBLE)                    :: A(3)              ! 3 diffs in two x coords of the triangle (some x coords are 0)
       REAL(DOUBLE)                    :: A4                ! 4*AREA
       REAL(DOUBLE)                    :: A42               ! 4*AREA**2
@@ -102,6 +100,7 @@
       REAL(DOUBLE)                    :: BB(3,9)           ! Bending strain-displ matrix for the MIN3 elem (from subr BBMIN3)
       REAL(DOUBLE)                    :: BS(2,9)           ! Shear strain-displ matrix for the MIN3 elem (from subr BSMIN3)
       REAL(DOUBLE)                    :: DUM0(9)           ! Intermediate variables used in calc PTE, PPE (thermal, pressure loads)
+      REAL(DOUBLE)                    :: DUM31(3)          ! Intermadiate result in calc KE elem stiffness
       REAL(DOUBLE)                    :: DUM1(3,3)         ! Intermadiate result in calc KE elem stiffness
       REAL(DOUBLE)                    :: DUM2(3,3)         ! Intermadiate result in calc KE elem stiffness
       REAL(DOUBLE)                    :: DUM3(3,3)         ! Intermadiate result in calc KE elem stiffness
@@ -111,13 +110,6 @@
       REAL(DOUBLE)                    :: DUM22(2,2)        ! Intermediate matrix
       REAL(DOUBLE)                    :: DUM33(3,3)        ! Intermediate matrix
       REAL(DOUBLE)                    :: DUM64(6,4)        ! Intermediate matrix
-      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
-      REAL(DOUBLE)                    :: EB_TRIA(3,3)
-      REAL(DOUBLE)                    :: EBM_TRIA(3,3)
-      REAL(DOUBLE)                    :: ET_TRIA(2,2)
-      REAL(DOUBLE)                    :: EB0(3,3)          ! Plane stress matl matrix for bending before coord transformation
-      REAL(DOUBLE)                    :: EBM0(3,3)         ! Bend/membr coupling matl matrix before coord transformation
-      REAL(DOUBLE)                    :: ET0(2,2)          ! 2D transverse shear matl matrix before coord transformation
       REAL(DOUBLE)                    :: EPS1              ! A small number to compare to real zero
       REAL(DOUBLE)                    :: FXX(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxx)
       REAL(DOUBLE)                    :: FXY(3,3)          ! Intermadiate result in calc BB (Alex Tessler matrix fxy)
@@ -142,6 +134,30 @@
       REAL(DOUBLE)                    :: TF_TS(2,2)        ! Portion of TF: transforms 3x3 ET from material to elem axes
       REAL(DOUBLE)                    :: XI(3)
  
+! Following  are matl matrices used when sub-trias of a MIN4T QUAD4 need to be transformed to align with orthotropic matl angles
+
+      REAL(DOUBLE)                    :: ALPVEC_TRIA(6,MEMATC) 
+      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
+      REAL(DOUBLE)                    :: EB0(3,3)          ! Plane stress matl matrix for bending before coord transformation
+      REAL(DOUBLE)                    :: EBM0(3,3)         ! Bend/membr coupling matl matrix before coord transformation
+      REAL(DOUBLE)                    :: ET0(2,2)          ! 2D transverse shear matl matrix before coord transformation
+      REAL(DOUBLE)                    :: EB_TRIA(3,3)      ! Plane stress matl matrix for bending after coord transformation
+      REAL(DOUBLE)                    :: EBM_TRIA(3,3)     ! Bend/membr coupling matl matrix before after transformation
+      REAL(DOUBLE)                    :: ET_TRIA(2,2)      ! 2D transverse shear matl matrix before after transformation
+
+      REAL(DOUBLE)                    :: SHELL_B0_TRIA(3,3)! SHELL_B_TRIA before coord transformation
+      REAL(DOUBLE)                    :: SHELL_D0_TRIA(3,3)! SHELL_D_TRIA before coord transformation
+      REAL(DOUBLE)                    :: SHELL_T0_TRIA(2,2)! SHELL_T_TRIA before coord transformation
+      REAL(DOUBLE)                    :: SHELL_B_TRIA(3,3) ! SHELL_B_TRIA after  coord transformation
+      REAL(DOUBLE)                    :: SHELL_D_TRIA(3,3) ! SHELL_D_TRIA after  coord transformation
+      REAL(DOUBLE)                    :: SHELL_T_TRIA(2,2) ! SHELL_T_TRIA after  coord transformation
+
+                                                           ! SHELL_D_TRIA before coord transformation
+      REAL(DOUBLE)                    :: SHELL_DALP0_TRIA(3)
+
+                                                           ! SHELL_D_TRIA after  coord transformation
+      REAL(DOUBLE)                    :: SHELL_DALP_TRIA(3)
+
       INTRINSIC DABS
 
 ! **********************************************************************************************************************************
@@ -174,29 +190,39 @@
 ! If this subr is being called because the triangular shell element is part of a MIN4T QUAD4 with orthotropic mat'l properties then
 ! we need to re-orient those ortho material properties to be aligned with the quad. 
 
-      DO I=1,3                                             ! Set init vals before coord transform NOTE: Only needed for DEBUG(53)
+! Set initial values before coord transform (NOTE: Only needed for DEBUG(53)
+
+      DO I=1,3
+         SHELL_DALP0_TRIA(I) = SHELL_DALP(I)
          DO J=1,3
-            EB0(I,J)  = EB(I,J)
-            EBM0(I,J) = EBM(I,J)
+            EB0(I,J)           = EB(I,J)
+            SHELL_D0_TRIA(I,J) = SHELL_D(I,J) 
+            EBM0(I,J)          = EBM(I,J)
+            SHELL_B0_TRIA(I,J) = SHELL_B(I,J) 
          ENDDO
       ENDDO
 
       DO I=1,2
          DO J=1,2
-            ET0(I,J)  = ET(I,J)
+            ET0(I,J)           = ET(I,J)
+            SHELL_T0_TRIA(I,J) = SHELL_T(I,J) 
          ENDDO
       ENDDO
 
       DO I=1,3
+         SHELL_DALP_TRIA(I) = SHELL_DALP(I)
          DO J=1,3
-            EB_TRIA(I,J)  = EB(I,J)
-            EBM_TRIA(I,J) = EBM(I,J)
+            EB_TRIA(I,J)      = EB(I,J)
+            SHELL_D_TRIA(I,J) = SHELL_D(I,J) 
+            EBM_TRIA(I,J)     = EBM(I,J)
+            SHELL_B_TRIA(I,J) = SHELL_B(I,J) 
          ENDDO
       ENDDO
 
       DO I=1,2
          DO J=1,2
-            ET_TRIA(I,J)  = ET(I,J)
+            ET_TRIA(I,J)      = ET(I,J)
+            SHELL_T_TRIA(I,J) = SHELL_T(I,J) 
          ENDDO
       ENDDO
 
@@ -209,6 +235,7 @@
                                                            ! The following 3 conditions have to be met before we look at mat'l props
       IF ((MN4T_QD == 'Y') .AND. (TRIA_NUM >= 1) .AND. (TRIA_NUM <= 4)) THEN
                                                            ! If either bending or transverse shear props are ortho we need TF matrix
+         CBMIN4T = CBMIN3
          IF ((MTRL_TYPE(2) == 8) .OR. (MTRL_TYPE(3) == 8)) THEN
 
             CALL PLANE_COORD_TRANS_21 ( PSI, TME, SUBR_NAME )
@@ -222,22 +249,50 @@
             TF_TS(1,1) = TF(5,5)     ;     TF_TS(1,2) = TF(5,6)
             TF_TS(2,1) = TF(6,5)     ;     TF_TS(2,2) = TF(6,6)
 
+!           ------------------------------------------------------------------------------------------------------------------------
             IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN   ! Transform bending material matrix
-                                         CALL MATMULT_FFF   ( EB_TRIA , TF_MB  , 3, 3, 3, DUM33)
+               CALL MATMULT_FFF   ( EB_TRIA , TF_MB  , 3, 3, 3, DUM33)
                CALL MATMULT_FFF_T ( TF_MB   , DUM33  , 3, 3, 3, EB_TRIA)
             ENDIF
 
+            IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN   ! Transform SHELL_D matrix
+               CALL MATMULT_FFF   ( SHELL_D_TRIA , TF_MB  , 3, 3, 3, DUM33)
+               CALL MATMULT_FFF_T ( TF_MB        , DUM33  , 3, 3, 3, SHELL_D_TRIA)
+            ENDIF
+!           ------------------------------------------------------------------------------------------------------------------------
             IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN   ! Transform transverse shear material matrix
                CALL MATMULT_FFF   ( ET_TRIA , TF_TS  , 2, 2, 2, DUM22)
                CALL MATMULT_FFF_T ( TF_TS   , DUM22  , 2, 2, 2, ET_TRIA)
             ENDIF
 
-            CALL MATMULT_FFF_T (TF, ALPVEC_TRIA, 6, 6, MEMATC, DUM64 )    ! Transform CTE matrix
+            IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN   ! Transform SHELL_T matrix
+               CALL MATMULT_FFF   ( SHELL_T_TRIA , TF_TS  , 2, 2, 2, DUM22)
+               CALL MATMULT_FFF_T ( TF_TS        , DUM22  , 2, 2, 2, SHELL_T_TRIA)
+            ENDIF
+!           ------------------------------------------------------------------------------------------------------------------------
+            IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN   ! Transform coupled bending/membrane material matrix
+               CALL MATMULT_FFF   ( EBM_TRIA, TF_MB  , 3, 3, 3, DUM33)
+               CALL MATMULT_FFF_T ( TF_MB   , DUM33  , 3, 3, 3, EBM_TRIA)
+            ENDIF
+
+            IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN   ! Transform SHELL_B matrix
+               CALL MATMULT_FFF   ( SHELL_B_TRIA , TF_MB  , 3, 3, 3, DUM33)
+               CALL MATMULT_FFF_T ( TF_MB        , DUM33  , 3, 3, 3, SHELL_B_TRIA)
+            ENDIF
+!           ------------------------------------------------------------------------------------------------------------------------
+
+            CALL MATMULT_FFF_T (TF, ALPVEC_TRIA, 6,6, MEMATC, DUM64) ! Transform CTE matrix
             DO I=1,6
                DO J=1,MEMATC
                   ALPVEC_TRIA(I,J) = DUM64(I,J)
                ENDDO
             ENDDO
+
+            CALL MATMULT_FFF_T (TF_MB, SHELL_DALP_TRIA, 3, 3, 1, DUM31) ! Transform SHELL_DALP matrix
+            DO I=1,3
+               SHELL_DALP_TRIA(I) = DUM31(I)
+            ENDDO
+!           ------------------------------------------------------------------------------------------------------------------------
 
             IF (DEBUG(53) > 0) THEN
                CALL DEBUG_ROT_AXES_2
@@ -256,7 +311,6 @@
   
       A4  = FOUR*AREA
       A42 = A4*AREA
-  
 ! BB is used in several places below:
 
       CALL BBMIN3 ( A, B, AREA, '(bending strains)', 'Y', BB )
@@ -299,23 +353,23 @@
                FXY(I,J) = B(I)*A(J)/A42
             ENDDO   
          ENDDO 
-  
          DO I=1,3
             DO J=1,3
-               KB(I+3,J+3) = AREA*(SHELL_D(2,2)*FYY(I,J) + SHELL_D(2,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D(3,3)*FXX(I,J)) 
+               KB(I+3,J+3)= AREA*(SHELL_D_TRIA(2,2)*FYY(I,J) + SHELL_D_TRIA(2,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D_TRIA(3,3)*FXX(I,J)) 
             ENDDO   
          ENDDO 
   
          DO I=1,3
             DO J=1,3
-               KB(I+3,J+6) = -AREA*(SHELL_D(1,2)*FXY(J,I) + SHELL_D(2,3)*FYY(I,J) + SHELL_D(1,3)*FXX(I,J) + SHELL_D(3,3)*FXY(I,J))
+               KB(I+3,J+6) = -AREA*(SHELL_D_TRIA(1,2)*FXY(J,I) + SHELL_D_TRIA(2,3)*FYY(I,J) + SHELL_D_TRIA(1,3)*FXX(I,J) +         &
+                                    SHELL_D_TRIA(3,3)*FXY(I,J))
                KB(J+6,I+3) = KB(I+3,J+6)
             ENDDO   
          ENDDO 
   
          DO I=1,3
             DO J=1,3
-               KB(I+6,J+6) = AREA*(SHELL_D(1,1)*FXX(I,J) + SHELL_D(1,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D(3,3)*FYY(I,J))
+               KB(I+6,J+6)= AREA*(SHELL_D_TRIA(1,1)*FXX(I,J) + SHELL_D_TRIA(1,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D_TRIA(3,3)*FYY(I,J))
             ENDDO   
          ENDDO 
   
@@ -323,7 +377,6 @@
          DO I=4,9
             BENSUM = BENSUM + KB(I,I)
          ENDDO 
-  
 ! Shear stress terms (KS)
   
          DO I=1,9
@@ -416,16 +469,16 @@
 
          DO I=1,3
             DO J=1,3
-               T1(I,J) = (SHELL_T(1,1)*B2(I,J) + SHELL_T(1,2)*S1(I,J))
-               T2(I,J) = (SHELL_T(1,2)*B2(I,J) + SHELL_T(2,2)*S1(I,J))
-               T3(I,J) = (SHELL_T(1,1)*S2(I,J) + SHELL_T(1,2)*A1(I,J))
-               T4(I,J) = (SHELL_T(1,2)*S2(I,J) + SHELL_T(2,2)*A1(I,J))
+               T1(I,J) = (SHELL_T_TRIA(1,1)*B2(I,J) + SHELL_T_TRIA(1,2)*S1(I,J))
+               T2(I,J) = (SHELL_T_TRIA(1,2)*B2(I,J) + SHELL_T_TRIA(2,2)*S1(I,J))
+               T3(I,J) = (SHELL_T_TRIA(1,1)*S2(I,J) + SHELL_T_TRIA(1,2)*A1(I,J))
+               T4(I,J) = (SHELL_T_TRIA(1,2)*S2(I,J) + SHELL_T_TRIA(2,2)*A1(I,J))
             ENDDO   
-         ENDDO 
+         ENDDO
                                                         ! 3x3 KS-11 Partition
          DO I=1,3
             DO J=1,3
-               KS(I,J) = AREA*(SHELL_T(1,1)*FXX(I,J) + SHELL_T(1,2)*(FXY(I,J) + FXY(J,I)) + SHELL_T(2,2)*FYY(I,J)) 
+               KS(I,J) = AREA*(SHELL_T_TRIA(1,1)*FXX(I,J) + SHELL_T_TRIA(1,2)*(FXY(I,J) + FXY(J,I)) + SHELL_T_TRIA(2,2)*FYY(I,J)) 
             ENDDO   
          ENDDO 
                                                         ! 3x3 KS-12, 21 Partition
@@ -482,15 +535,13 @@
          DO I=4,9
             SHRSUM = SHRSUM + KS(I,I)
          ENDDO 
-  
-! Now calculate the finite elem shear factor, PHI_SQ  
+  ! Now calculate the finite elem shear factor, PHI_SQ  
 
          IF (SHRSUM > EPS1) THEN
             CALL CALC_PHI_SQ ( IERROR )
          ELSE
             PHI_SQ = ZERO
          ENDIF
-
 ! Return if IERROR > 0
 
          IF (IERROR > 0) RETURN
@@ -503,10 +554,21 @@
                ENDIF
             ENDDO   
          ENDDO 
+         IF (DEBUG(54) == 1) THEN
+            IF (MN4T_QD == 'Y') THEN
+               WRITE(F06,'(A,I2,A,A,I8))') ' KV, in TPLT2 for MIN4T QUAD4: tria ', TRIA_NUM, ' of 4 for ',TRIM(TYPE), EID
+            ELSE
+               WRITE(F06,'(A,I8)') ' KV in TPLT2 for TRIA3 ', EID
+            ENDIF
+            WRITE(F06,*) '    Column  3      Column  4      Column  5      Column  9      Column 10      Column 11      Column 15',&
+                       '      Column 16      Column 17'
+            DO I=1,9
+               WRITE(F06,'(9ES15.6)') (KV(I,J),J=1,9)
+            ENDDO
+            WRITE(F06,*)
+         ENDIF
   
-
 ! Set lower triangular partition equal to upper partition
-
          IF (CALC_EMATS == 'Y') THEN
             DO I=2,ELDOF
                DO J=1,I-1
@@ -516,7 +578,6 @@
          ENDIF 
   
          FCONV(3) = FCONV_SHEAR_THICK                      ! NOTE: PHI_SQ removed as multiplier based on error found on 10/12/11
-
       ENDIF
   
 ! **********************************************************************************************************************************
@@ -738,6 +799,12 @@ bend: IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN
          enddo
          write(f06,*)   ;   write(f06,*)
 
+         write(f06,99665) 'SHELL_D_TRIA'
+         do i=1,3
+            write(f06,99668) (shell_d0_tria(i,j),j=1,3), (shell_d_tria(i,j),j=1,3)
+         enddo
+         write(f06,*)
+
       ENDIF bend
 
 tshr: IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
@@ -748,6 +815,12 @@ tshr: IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
          enddo
          write(f06,*)   ;   write(f06,*)
 
+         write(f06,99665) 'SHELL_T_TRIA'
+         do i=1,2
+            write(f06,99669) (shell_t0_tria(i,j),j=1,2), (shell_t_tria(i,j),j=1,2)
+         enddo
+         write(f06,*)
+
       ENDIF tshr
 
 mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
@@ -757,6 +830,12 @@ mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
             write(f06,99668) (ebm0(i,j),j=1,3), (ebm_tria(i,j),j=1,3)
          enddo
          write(f06,*)   ;   write(f06,*)
+
+         write(f06,99665) 'SHELL_B_TRIA'
+         do i=1,3
+            write(f06,99668) (shell_b0_tria(i,j),j=1,3), (shell_b_tria(i,j),j=1,3)
+         enddo
+         write(f06,*)
 
       ENDIF mbend
 
@@ -775,7 +854,7 @@ mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
 
 99664 format('  Transformation matrix ',2a)
 
-99665 format(20x,'Material matrix ',a8,' before/after TF transformation',/,                                                        &
+99665 format(16x,'Material matrix ',a12,' before/after TF transformation',/,                                                       &
              19x,'before',41x,'after',/,'  ----------------------------------------      ----------------------------------------')
  
 99667 format(3(1es14.6), 4x,3(1es14.6))                                                                                            

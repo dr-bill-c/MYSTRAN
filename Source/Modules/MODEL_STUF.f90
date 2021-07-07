@@ -1337,7 +1337,7 @@
                                                              ! Number of plies in a shell using PCOMP
 
       INTEGER(LONG)                   :: PLY_NUM             = 1
-                                                             ! The ply number in a composit layup defined by a PCOMP
+                                                             ! The ply number in a composite layup defined by a PCOMP
 
       REAL(DOUBLE)                    :: ALPVEC(6,MEMATC)    = RESHAPE ( (/(ZERO, I=1,6*MEMATC)/), (/6,MEMATC/) )
                                                              ! Vector of CTE's.

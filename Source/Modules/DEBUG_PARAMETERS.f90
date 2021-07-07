@@ -125,6 +125,8 @@
 
 !        DEBUG  53  = 1 print debug info in TPLT2
 
+!        DEBUG  54  = 1 print element stiffness matrix to f06 file
+
 !        DEBUG  55  = 1 Write PHIXG in full format in EXPAND_PHIXA_TO_PHIXG
 !                   = 2 Write PHIZG in full format in LINK5
 !                   = 3 Write both

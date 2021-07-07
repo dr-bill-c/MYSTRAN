@@ -160,6 +160,7 @@
             IF (TOKEN_BEG <= STRNG_LEN) THEN 
                THRU   = 'OFF'
                EXCEPT = 'OFF'
+
                CALL STOKEN ( SUBR_NAME, TOKSTR, TOKEN_BEG, STRNG_LEN, NTOKEN, IERROR, TOKTYP, TOKEN, ERRTOK, THRU, EXCEPT )
                IF (IERROR == 1) THEN
                   FATAL_ERR = FATAL_ERR + 1

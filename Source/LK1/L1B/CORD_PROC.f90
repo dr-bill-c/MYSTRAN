@@ -1375,9 +1375,9 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
          WRITE(F06,4110) (II,II=1,NCORD)
          WRITE(F06,4111) (CORD_NAME(II),II=1,NCORD)
          WRITE(F06,4112) (' --------',II=1,NCORD)
-         WRITE(F06,4104) (CASCADE_PROC_ARRAY(1,I),I=1,NCORD)
-         WRITE(F06,4105) (CASCADE_PROC_ARRAY(2,I),I=1,NCORD)
-         WRITE(F06,4106) (CASCADE_PROC_ARRAY(3,I),I=1,NCORD)
+         WRITE(F06,4104) (CASCADE_PROC_ARRAY(1,II),II=1,NCORD)
+         WRITE(F06,4105) (CASCADE_PROC_ARRAY(2,II),II=1,NCORD)
+         WRITE(F06,4106) (CASCADE_PROC_ARRAY(3,II),II=1,NCORD)
          WRITE(F06,*)
          WRITE(F06,4107)
          WRITE(F06,4108)
@@ -1412,7 +1412,7 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
          WRITE(F06,*) '  ----'
          WRITE(F06,6301) (CORD_NAME(II),II=1,NCORD)
          WRITE(F06,6302) (CORD(II,2),II=1,NCORD)
-         WRITE(F06,6303) (TRANS_DONE(I),I=1,NCORD)
+         WRITE(F06,6303) (TRANS_DONE(II),II=1,NCORD)
          WRITE(F06,*)
          WRITE(F06,*)
 
@@ -1492,7 +1492,7 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
          WRITE(F06,*) '----'
          WRITE(F06,6301) (CORD_NAME(II),II=1,NCORD)
          WRITE(F06,6302) (CORD(II,2),II=1,NCORD)
-         WRITE(F06,6303) (TRANS_DONE(I),I=1,NCORD)
+         WRITE(F06,6303) (TRANS_DONE(II),II=1,NCORD)
          WRITE(F06,*)
          WRITE(F06,*)
 

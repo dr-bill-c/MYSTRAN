@@ -32,15 +32,15 @@
 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  F04, WRT_LOG
+      USE IOUNT1, ONLY                :  F04, F06, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, MEMATC, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  TPLT2_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE, CONV_RAD_DEG
-      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, ET, ELDOF, FCONV, KE, MTRL_TYPE,&
-                                         PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T,  &
-                                         SHRSUM, STE2
-      USE PARAMS, ONLY                :  EPSIL
+      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
+                                         MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
+                                         SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
+      USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
       IMPLICIT NONE 
@@ -81,8 +81,9 @@
       REAL(DOUBLE)                    :: B1(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Beta*a)
       REAL(DOUBLE)                    :: B2(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Beta*b)
       REAL(DOUBLE)                    :: DUM0(9)           ! Intermediate variables used in calc PTE, PPE (thermal, pressure loads)
-      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
       REAL(DOUBLE)                    :: QCONS             ! = AREA/24, used in calc PPE pressure loads
+      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
+
       END SUBROUTINE TPLT2
 
    END INTERFACE
