@@ -134,8 +134,8 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 1133 FORMAT(' *ERROR  1133: INVALID COMPONEMT NUMBER = ',I8,' IN FIELD ',I2,' ON CELAS1 ID = ',A8,' .MUST BE SINGLE DIGIT 1-6')
+ 1133 FORMAT(' *ERROR  1133: INVALID COMPONENT NUMBER = ',I8,' IN FIELD ',I2,' ON CELAS1 ID = ',A8,' .MUST BE SINGLE DIGIT 1-6')
 
 ! **********************************************************************************************************************************
- 
+
       END SUBROUTINE BD_CELAS1

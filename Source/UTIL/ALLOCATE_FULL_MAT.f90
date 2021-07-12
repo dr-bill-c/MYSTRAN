@@ -51,8 +51,8 @@
       CHARACTER(LEN=*), INTENT(IN)    :: CALLING_SUBR      ! Array name of the matrix to be allocated in sparse format
       CHARACTER(14*BYTE)              :: NAMEL             ! First 14 bytes of NAME
  
-      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Nunber of rows in array NAME being allocated
-      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Nunber of cols in array NAME being allocated
+      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Number of rows in array NAME being allocated
+      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Number of cols in array NAME being allocated
       INTEGER(LONG)                   :: I,J               ! DO loop indices
       INTEGER(LONG)                   :: IERR              ! STAT from DEALLOCATE
       INTEGER(LONG)                   :: JERR              ! Local error indicator

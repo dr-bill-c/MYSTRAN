@@ -84,7 +84,7 @@
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
  
 ! First, check that fields 2-9 have the proper data type (we are going to have to rearrange the fields prior to calling ELEPRO).
-! If any erors, return
+! If any errors, return
 
       IERR = 0
 
@@ -173,8 +173,8 @@
       RETURN
 
 ! **********************************************************************************************************************************
- 1133 FORMAT(' *ERROR  1133: INVALID COMPONEMT NUMBER = ',I8,' IN FIELD ',I2,' ON CELAS2 ID = ',A8,' .MUST BE SINGLE DIGIT 1-6')
+ 1133 FORMAT(' *ERROR  1133: INVALID COMPONENT NUMBER = ',I8,' IN FIELD ',I2,' ON CELAS2 ID = ',A8,' .MUST BE SINGLE DIGIT 1-6')
 
 ! **********************************************************************************************************************************
- 
+
       END SUBROUTINE BD_CELAS2

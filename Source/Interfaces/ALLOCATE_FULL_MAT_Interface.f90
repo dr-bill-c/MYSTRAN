@@ -50,8 +50,8 @@
       CHARACTER(LEN=*), INTENT(IN)    :: NAME              ! Array name (used for output error message)
       CHARACTER(LEN=*), INTENT(IN)    :: CALLING_SUBR      ! Array name of the matrix to be allocated in sparse format
  
-      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Nunber of rows in array NAME being allocated
-      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Nunber of cols in array NAME being allocated
+      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Number of rows in array NAME being allocated
+      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Number of cols in array NAME being allocated
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ALLOCATE_FULL_MAT_BEGEND
  
       END SUBROUTINE ALLOCATE_FULL_MAT

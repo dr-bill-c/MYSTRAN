@@ -47,7 +47,7 @@
       INTEGER(LONG)                   :: I,J               ! DO loop indices 
       INTEGER(LONG)                   :: IERR              ! STAT from DEALLOCATE
       INTEGER(LONG)                   :: JERR              ! Local error indicator
-      INTEGER(LONG)                   :: NROWS             ! Nunber of rows in array NAME being allocated
+      INTEGER(LONG)                   :: NROWS             ! Number of rows in array NAME being allocated
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ALLOCATE_TEMPLATE_BEGEND
 
       REAL(DOUBLE)                    :: CUR_MB_ALLOCATED  ! MB of memory that is currently allocated to ARRAY_NAME when subr

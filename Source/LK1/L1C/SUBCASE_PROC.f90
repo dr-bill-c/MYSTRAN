@@ -1400,7 +1400,7 @@ outer:DO
  
          TOKSTR(1:) = ' '
  
-         POSN = INDEX(SETCHR(SET_1_BEG+1:),'SET')          ! Find next occurrance of 'SET' so we can find SET definition in between
+         POSN = INDEX(SETCHR(SET_1_BEG+1:),'SET')          ! Find next occurrence of 'SET' so we can find SET definition in between
          IF (POSN == 0) THEN
             SET_2_BEG = SETLEN + 1                         ! There is no other SET, so make "starting" posn > SETLEN
          ELSE

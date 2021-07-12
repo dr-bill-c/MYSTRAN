@@ -100,7 +100,7 @@
 ! NOTES:
  
 ! If fields 3, 6-8 are blank, they are loaded with the data from  the BAROR/BEAMOR entry (these will remain blank if
-! no BAROR/BEAMOR card exists). If V-vector is specfied via a grid point then EDAT(nedat+5) is set to that grid number.
+! no BAROR/BEAMOR card exists). If V-vector is specified via a grid point then EDAT(nedat+5) is set to that grid number.
 ! If V-vector is specified via an actual vector, the vector is loaded into array VVEC(NVVEC,J) (J=1,2,3) unless
 ! a vector equal to it has been put in VVEC. EDAT(nedat+5) is set equal to -NVVEC, where NVVEC is the row number
 ! in array VVEC.

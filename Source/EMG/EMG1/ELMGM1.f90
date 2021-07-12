@@ -106,7 +106,7 @@
          VX(I) = ZERO
       ENDDO
 
-      DO_IT = 'Y'                                          ! Used to decide if some blocks of code wil get executed or not
+      DO_IT = 'Y'                                          ! Used to decide if some blocks of code will get executed or not
       IF (TYPE == 'BUSH    ') THEN                         ! DO_IT = 'Y' except when BUSH elem has a defined CID in field 9 of CBUSH
          IF (BUSH_CID >= 0) THEN                           ! in which case the TE matrix for BUSH is obtained from CID
             DO_IT = 'N'

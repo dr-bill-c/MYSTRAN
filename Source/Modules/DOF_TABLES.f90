@@ -26,7 +26,7 @@
 
       MODULE DOF_TABLES
 
-! Arrays used to describe the MYSTRAN DOF set. These are used extensively throught the program.
+! Arrays used to describe the MYSTRAN DOF set. These are used extensively throughout the program.
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE SCONTR, ONLY                :  TSET_CHR_LEN

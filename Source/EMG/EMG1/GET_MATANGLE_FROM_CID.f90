@@ -50,7 +50,7 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = GET_MATANGLE_FROM_CID_BEGEND
  
       REAL(DOUBLE)                    :: DOT_XM            ! Dot product of VEC_XE and VEC_ME
-      REAL(DOUBLE)                    :: EPS1              ! A small number to comapre to zero
+      REAL(DOUBLE)                    :: EPS1              ! A small number to compare to zero
       REAL(DOUBLE)                    :: MAG2_XE           ! Magnitude squared of VEC_XE
       REAL(DOUBLE)                    :: MAG2_ME           ! Magnitude squared of VEC_ME
       REAL(DOUBLE)                    :: MAG_XE            ! Magnitude of VEC_XE

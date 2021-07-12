@@ -257,8 +257,8 @@
                            ' OR "BOTH".'                                                                                           &
                     ,/,14X,' ENTRY = ',A8,' NOT RECOGNIZED')
 
- 1285 FORMAT(' *WARNING    : ERROR READING ELDATA CASE CONTROL ENTRY:',/,15X,A,/,15X,'DATA BETWEEN PARENS FOLOWING INTEGER SHOULD',&
-                           ' ONLY BE ONE OF: "PRINT", "FIJFIL" OR "BOTH". FIRST ENTRY, ',A,', WILL BE USED')
+ 1285 FORMAT(' *WARNING    : ERROR READING ELDATA CASE CONTROL ENTRY:',/,15X,A,/,15X,'DATA BETWEEN PARENS FOLLOWING INTEGER',      &
+                           ' SHOULD ONLY BE ONE OF: "PRINT", "FIJFIL" OR "BOTH". FIRST ENTRY, ',A,', WILL BE USED')
 
 12344 format('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 

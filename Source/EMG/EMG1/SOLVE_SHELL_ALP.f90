@@ -52,7 +52,7 @@
       REAL(DOUBLE)                    :: B(3)              ! Solution for a col of SHELL_ALP
       REAL(DOUBLE)                    :: C(3)              ! One of the matrices SHELL_AALP, SHELL_DALP, SHELL_TALP, SHELL_BALP
       REAL(DOUBLE)                    :: DETA              ! Determinant of A = SHELL_A
-      REAL(DOUBLE)                    :: EPS1              ! Small number with which to comapre zero
+      REAL(DOUBLE)                    :: EPS1              ! Small number with which to compare zero
 
 ! **********************************************************************************************************************************
       EPS1 = EPSIL(1)

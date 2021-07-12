@@ -29,7 +29,7 @@
 ! Isoparametric membrane quadrilateral. Default iorq1s = 1 gives reduced integration for shear terms. User can override
 ! this with Bulk Data PARAM iorq1s 2. Element can be nonplanar. HBAR is the dist that the nodes are away from the mean
 ! plane (+/-). If HBAR is small, the virgin element has 8 DOF (2 displ DOF's/node) and is expanded to MYSTRAN 24 DOF
-! (6 DOF/node) using array ID1. If HBAR is larger than MXWARP, then matrix BMEANT (from subr ELMGM2) is used to acount
+! (6 DOF/node) using array ID1. If HBAR is larger than MXWARP, then matrix BMEANT (from subr ELMGM2) is used to account
 ! for the non-planarity. If debug(4) = 0 then, in this case, array ID2 will expand the virgin element to MYSTRAN 24 DOF (6 DOF/node)
 
 ! Subroutine calculates:

@@ -117,7 +117,7 @@
          IF (IOCHK /= 0) THEN
             REC_NO = 1
             CALL READERR ( IOCHK, FILNAM, MESSAG, REC_NO, OUNT, 'Y' )
-            CALL OUTA_HERE ( 'Y' )                                 ! Can't read NUM_TERMS fro file, so quit
+            CALL OUTA_HERE ( 'Y' )                                 ! Can't read NUM_TERMS from file, so quit
          ENDIF
          IF (NUM_TERMS /= NTERMS) THEN
             WRITE(ERR, 924) SUBR_NAME, NAME,NUM_TERMS, NTERMS, FILNAM

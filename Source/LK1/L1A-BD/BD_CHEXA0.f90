@@ -59,7 +59,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! This element must have at least 1 continuation card since there must be at leas 8 grids defined (all corner nodes). The parent
+! This element must have at least 1 continuation card since there must be at least 8 grids defined (all corner nodes). The parent
 ! card has the element ID, property ID and the first 6 grids. The first continuation card must contain nodes 7 and 8 (in fields
 ! 2 and 3) but can also define any or all of nodes 9 thru 14 (in fields 4 - 9). If there is a 2nd continuation card it can define
 ! any or all of nodes 15 thru 20 (in fields 2 - 7). If we find any more than the mandatory 8 nodes we will assume a full complement

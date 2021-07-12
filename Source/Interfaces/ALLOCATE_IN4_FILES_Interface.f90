@@ -45,8 +45,8 @@
       CHARACTER(LEN=*), INTENT(IN)    :: NAME_IN           ! Array name (used for output error message)
       CHARACTER(LEN=LEN(NAME_IN))     :: NAME              ! Specific array name used for output error message
  
-      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Nunber of rows in array NAME_IN being allocated
-      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Nunber of cols in array NAME_IN being allocated
+      INTEGER(LONG), INTENT(IN)       :: NROWS             ! Number of rows in array NAME_IN being allocated
+      INTEGER(LONG), INTENT(IN)       :: NCOLS             ! Number of cols in array NAME_IN being allocated
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ALLOCATE_IN4_FILES_BEGEND
 
       END SUBROUTINE ALLOCATE_IN4_FILES

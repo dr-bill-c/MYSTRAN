@@ -984,7 +984,7 @@ cont_cards: DO                                             ! Top of loop for rea
 
       IELEM = 0
 
-! First convert EID to interal value
+! First convert EID to internal value
  
       CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, EID, IELEM )
  

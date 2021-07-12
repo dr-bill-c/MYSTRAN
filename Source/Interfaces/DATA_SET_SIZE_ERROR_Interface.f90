@@ -39,7 +39,7 @@
 
       CHARACTER(LEN=*), INTENT(IN)    :: DATA_SET_NAME     ! Name of data set read from FILNAM
       CHARACTER(LEN=*), INTENT(IN)    :: DATA_NAME         ! Name of data variable that should have been read
-      CHARACTER(LEN=*), INTENT(IN)    :: FILNAM            ! Nmae of file data was read from
+      CHARACTER(LEN=*), INTENT(IN)    :: FILNAM            ! Name of file data was read from
 
       INTEGER(LONG)   , INTENT(IN)    :: INT1              ! Size of data variable that should have been read
       INTEGER(LONG)   , INTENT(IN)    :: INT2              ! Size of data variable read

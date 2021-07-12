@@ -159,7 +159,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Process the elements: Asume each is has a stiffness matrix that is completely full
+! Process the elements: Assume each is has a stiffness matrix that is completely full
  
 
       LTERM = 0

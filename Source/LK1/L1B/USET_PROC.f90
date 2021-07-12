@@ -28,7 +28,7 @@
  
 ! USET is a table that specifies which grid/component pairs are ones defined by the user on Bulk Data USET or USET1 entries.
 ! The table has NGRID rows and 6 columns (1 col for each of the 6 components of displ at a grid). The table can have entries that
-! are either 'U1' or 'U2' (i.e. user set U1 or U2). The table is constructed like tha TSET table (see explanation in subr TSET_PROC)
+! are either 'U1' or 'U2' (i.e. user set U1 or U2). The table is constructed like the TSET table (see explanation in subr TSET_PROC)
 ! An example of a USET table written to the F06 file is shown below:
 
 

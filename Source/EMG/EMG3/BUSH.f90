@@ -234,7 +234,7 @@ off:  IF (EOFF(INT_ELEM_ID) == 'Y') THEN
       ENDIF
 
 ! Calc stress and strain recovery matrices. The stress recovery coefficients on the PBUSH Bulk Data entry are intended to be
-! multiplied times the element ENGINEERING (NOT NODE) forces to get stresses. In order to calc stresses in the MYSTRAN fasion
+! multiplied times the element ENGINEERING (NOT NODE) forces to get stresses. In order to calc stresses in the MYSTRAN fashion
 ! of multiplying SEi times displacements, the SEi matrices are generated with the aid of the matrix that converts element
 ! nodal forces to element engineering forces. The DUM0 matrix (below), if all of the STRE_RCV numbers were 1.0 is that matrix
 ! (see conversion code in subr OFP3_ELFE_1D. With the STRE_RCV values in DUM0, then DUM0 times KE would be the SE matrices

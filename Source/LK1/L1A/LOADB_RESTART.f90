@@ -60,7 +60,7 @@
       INTEGER(LONG)                   :: DEB_NUM(NUM_DEB)    ! Allowable DEBUG indices in restart
       INTEGER(LONG)                   :: I                   ! DO loop index
       INTEGER(LONG)                   :: INDEX               ! Index
-      INTEGER(LONG)                   :: INT_VAL             ! Integer value read fron a card field
+      INTEGER(LONG)                   :: INT_VAL             ! Integer value read from a card field
       INTEGER(LONG)                   :: IERR                ! Error indicator from subr FFIELD
       INTEGER(LONG)                   :: IOCHK               ! IOSTAT error number when reading Bulk Data cards from unit IN1 
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = LOADB_RESTART_BEGEND
@@ -314,7 +314,7 @@
               ' same as from the'                                                                                               ,/,&
              '$ original run except that any PARAM or DEBUG Bulk Data entries not in this restart deck will revert to their'      ,&
               ' default values.'                                                                                                ,/,&
-             '$ Some PARAM and DEBUG entries may not be processed in this restart. See the MYSTRAN documentaton discussion on'    ,&
+             '$ Some PARAM and DEBUG entries may not be processed in this restart. See the MYSTRAN documentation discussion on'   ,&
               ' restarts.'                                                                                                      ,/,&
              '$')
 

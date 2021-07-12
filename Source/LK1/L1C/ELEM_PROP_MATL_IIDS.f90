@@ -27,7 +27,7 @@
       SUBROUTINE ELEM_PROP_MATL_IIDS
  
 ! Fix up routine for element property and material ID's. When the Bulk Data File was read, element and material property ID's
-! were actual ID values. WE need to convert these to consequetive integer ID's so that the element property and material arrays
+! were actual ID values. WE need to convert these to consecutive integer ID's so that the element property and material arrays
 ! can be accessed sequentially. This subr performs that function. 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE

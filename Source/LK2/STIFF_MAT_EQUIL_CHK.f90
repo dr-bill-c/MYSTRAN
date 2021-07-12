@@ -94,7 +94,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! If NSPOINT > 0 MYSTRAN code, as of 05/05/07, will not accomodate equil check on models with any SPOINT's
+! If NSPOINT > 0 MYSTRAN code, as of 05/05/07, will not accommodate equil check on models with any SPOINT's
 
       IF (NSPOINT > 0) THEN
          WARN_ERR = WARN_ERR + 1

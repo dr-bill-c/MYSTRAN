@@ -26,7 +26,7 @@
 
       SUBROUTINE SOLVE_GMN ( PART_VEC_G_NM, PART_VEC_M )
  
-! Solves the sustem of equations: RMM*GMN = -RMN for matrix GMN which is used in the reduction of the G set stiffness, mass and
+! Solves the system of equations: RMM*GMN = -RMN for matrix GMN which is used in the reduction of the G set stiffness, mass and
 ! load matrices from the G-set to the N, M_sets. If RMM is diagonal, a simple algorithm is used. If it is not, routines
 ! are called to do the decomp of RMM and the forward-backward substitution (FBS) to obtain GMN
  
@@ -200,7 +200,7 @@
 
       ENDIF
 
-! Check to maks sure GMN has nonzero terma
+! Check to make sure GMN has nonzero terma
 
       IF (NTERM_GMN <= 0 )THEN
          WRITE(ERR,2204) SUBR_NAME,NTERM_GMN

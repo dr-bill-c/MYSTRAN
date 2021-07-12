@@ -120,7 +120,7 @@
       ENDDO
 
 ! The PSH rows are from subr SHP2DQ for each of the 4 XEP parametric coord points for the element. 
-! We want the XEA orderd in the same fashion as the element node coords in XEL (namely 1-2-3-4 clockwise around the element).
+! We want the XEA ordered in the same fashion as the element node coords in XEL (namely 1-2-3-4 clockwise around the element).
 
       CALL SHP2DQ ( 1, 1, 4, SUBR_NAME, ' ', IORD, XEP(1,1), XEP(1,2), 'Y', PSH1, DPSHG )
       CALL SHP2DQ ( 2, 1, 4, SUBR_NAME, ' ', IORD, XEP(2,1), XEP(2,2), 'Y', PSH2, DPSHG )

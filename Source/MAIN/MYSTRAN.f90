@@ -106,7 +106,7 @@
 
       INTEGER(LONG)                   :: I,J                ! DO loop indices
       INTEGER(LONG)                   :: I1                 ! Length of file name of LINK1A without the extension 
-      INTEGER(LONG)                   :: ITER_MAX           ! Naximum iterations before quiting 
+      INTEGER(LONG)                   :: ITER_MAX           ! Maximum iterations before quitting 
       INTEGER(LONG)                   :: NUM_INCL_FILES     ! Number of INCLUDE statements found in the Bulk data file
       INTEGER(LONG)                   :: NUM_LOAD_STEPS     ! Number of steps to divide the load into (1 unless SOL is nonlinear)
       INTEGER(LONG)                   :: OUNT(2)            ! File units to write messages to 

@@ -1,5 +1,5 @@
 ! ##################################################################################################################################
-! Begin MIT license text.                                                                                    
+! Begin MIT license text.                                                                                
 ! _______________________________________________________________________________________________________
                                                                                                          
 ! Copyright 2019 Dr William R Case, Jr (dbcase29@gmail.com)                                              
@@ -11,7 +11,7 @@
 ! the following conditions:                                                                              
                                                                                                          
 ! The above copyright notice and this permission notice shall be included in all copies or substantial   
-! portions of the Software and documentation.                                                                              
+! portions of the Software and documentation.                                                            
                                                                                                          
 ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS                                
 ! OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,                            
@@ -21,13 +21,13 @@
 ! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN                              
 ! THE SOFTWARE.                                                                                          
 ! _______________________________________________________________________________________________________
-                                                                                                        
-! End MIT license text.                                                                                      
+                                                                                                         
+! End MIT license text.                                                                                  
 
  
       SUBROUTINE SOLVE_GOA
 
-! Solves the sustem of equations: KOO*GOA = -KAO' for matrix GOA which is used in the reduction of the F set stiffness, mass and
+! Solves the system of equations: KOO*GOA = -KAO' for matrix GOA which is used in the reduction of the F set stiffness, mass and
 ! load matrices from the F-set to the A, O_sets
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE

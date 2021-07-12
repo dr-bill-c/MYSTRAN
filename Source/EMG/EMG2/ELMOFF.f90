@@ -499,7 +499,7 @@
  3006 format(6(1es14.6))
 
  1955 FORMAT(' *ERROR  1955: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURED FOR ELEMENT NUMBER ',I8)
+                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURRED FOR ELEMENT NUMBER ',I8)
 
 ! ##################################################################################################################################
 

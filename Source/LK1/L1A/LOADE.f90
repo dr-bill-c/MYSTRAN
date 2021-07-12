@@ -393,7 +393,7 @@
 
  1102 FORMAT(' *WARNING    : REQUEST FOR RESTART IS NOT ALLOWED IN SOLUTION ',A)
 
- 1103 format(' *INFORMATION: NLSTATIC code not completed so quiting')
+ 1103 format(' *INFORMATION: NLSTATIC code not completed so quitting')
 
  9901 FORMAT(' *WARNING:   : EXEC CONTROL ENTRY "SOL" CANNOT BE "',A,'". SOL ',A,' WILL BE USED')
 

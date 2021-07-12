@@ -448,10 +448,10 @@
 !                                                               j (any other integer) is a defined coord system for output
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  1*BYTE)      :: SUPINFO        =    'Y'    ! 'Y', 'N' indicator to supress info msg's in the F06 file
+      CHARACTER(  1*BYTE)      :: SUPINFO        =    'Y'    ! 'Y', 'N' indicator to suppress info msg's in the F06 file
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  1*BYTE)      :: SUPWARN        =    'Y'    ! 'Y', 'N' indicator to supress warn msg's in the F06 file
+      CHARACTER(  1*BYTE)      :: SUPWARN        =    'Y'    ! 'Y', 'N' indicator to suppress warn msg's in the F06 file
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       REAL(DOUBLE)             :: THRESHK        =  TENTH    !*Actual value used for threshold in deciding whether to equilibrate 

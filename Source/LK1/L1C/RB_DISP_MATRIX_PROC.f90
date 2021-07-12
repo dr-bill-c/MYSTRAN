@@ -29,7 +29,7 @@
 ! Generates a 6 x 6 rigid body displacement matrix in global coords for one grid point via the following procedure:
 !    1) for each grid generate a 6 x 6 rigid body displ matrix in basic coords relative to the reference grid which can be:
 !         a) a grid defined by param (REF_PT_TXT = EQCHK_REF_GRID)
-!         b) basic systen origin (REF_PT_TXT = 'BASIC_ORIGIN')
+!         b) basic system origin (REF_PT_TXT = 'BASIC_ORIGIN')
 !         c) model CG (REF_PT_TXT = 'CG')
 !         d) an arbitrary grid (REF_PT_TXT = 'GRID' and REF_PT = the grid ID)
 !    2) transform to global coords at the grid

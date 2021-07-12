@@ -144,7 +144,7 @@
 ! Get the V vector for this CBUSH. If field 9 is not blank, ignore fields 6-8 since v vector will be defined using CID in field 9
 ! The following sets slots 5 and 6 in EDAT since VVEC can be defined by:
 !   (1) A vector defined in field 6,7,8 (field 6 can be a grid or 6-8 can be a vector), or
-!   (2) CID in field 9. In this case the VVEC will be along the directions defined by CID and wil be determined in a later subr
+!   (2) CID in field 9. In this case the VVEC will be along the directions defined by CID and will be determined in a later subr
 !       If CID is blank then V must be defined by G0 in field 6 or Xi in fields 6-8
 
 vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank so VVEC should be defined in fields 6,7,8

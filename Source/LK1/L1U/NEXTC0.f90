@@ -89,7 +89,7 @@
          FATAL_ERR = FATAL_ERR + 1
       ENDIF
 
-! Remove any comments within the CARD by deleting everything fro $ on (after col 1)
+! Remove any comments within the CARD by deleting everything from $ on (after col 1)
 
       COMMENT_COL = 1
       DO I=2,BD_ENTRY_LEN
