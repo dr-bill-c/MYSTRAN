@@ -24,7 +24,7 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      SUBROUTINE OFP2 ( JVEC, WHAT, SC_OUT_REQ, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW )
+      SUBROUTINE OFP2 ( JVEC, WHAT, SC_OUT_REQ, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 
 ! Processes SPC and MPC force output requests for 1 subcase.
 
@@ -80,6 +80,8 @@
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: SC_OUT_REQ        ! If > 0, then req1uests for WHAT are to be output
       INTEGER(LONG), INTENT(INOUT)    :: OT4_GROW          ! Row number in OT4 file for grid related OTM descriptors
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! 
+      LOGICAL, INTENT(INOUT)          :: NEW_RESULT        ! is this the first result of a table
       INTEGER(LONG)                   :: AGRID             ! An actual grid number
       INTEGER(LONG)                   :: G_SET_COL         ! Col number in TDOF where the G-set DOF's exist
       INTEGER(LONG)                   :: M_SET_COL         ! Col number in TDOF where the M-set DOF's exist
@@ -116,6 +118,8 @@
       REAL(DOUBLE)                    :: QSA_SUM(6)        ! Sum of all QS forces on AUTOSPC'd DOF's
 
       INTRINSIC IAND
+      WRITE(ERR,9000) "OFP2 - SPC and MPC force"
+ 9000 FORMAT(' *DEBUG:    RUNNING=', A)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -140,6 +144,7 @@
 ! ---------------------------------------------------------------------------------------------------------------------------------
 ! Process SPC force requests
 
+      NEW_RESULT = .TRUE.
       IF (WHAT == 'SPCF') THEN
 
          SPCF_MEFM_MPF = 'N'
@@ -276,6 +281,11 @@
                ENDDO
 
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
+
+                  !IF ((SPCF_OUT(1:4) == 'PLOT') .OR. (SPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                     NEW_RESULT = .FALSE.
+                  !ENDIF
 
                   IF ((SPCF_OUT(1:5) == 'PUNCH') .OR. (SPCF_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )
@@ -538,6 +548,11 @@
                ENDDO
 
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
+
+                  !IF ((MPCF_OUT(1:4) == 'PLOT') .OR. (MPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                     NEW_RESULT = .FALSE.
+                  !ENDIF
 
                   IF ((MPCF_OUT(1:5) == 'PUNCH') .OR. (MPCF_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )

@@ -28,7 +28,7 @@
 
    INTERFACE
 
-      SUBROUTINE OFP1 ( JVEC, WHAT, SC_OUT_REQ, FEMAP_SET_ID, ITG, OT4_GROW )
+      SUBROUTINE OFP1 ( JVEC, WHAT, SC_OUT_REQ, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -56,6 +56,8 @@
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: SC_OUT_REQ        ! If > 0, then req1uests for WHAT are to be output
       INTEGER(LONG), INTENT(INOUT)    :: OT4_GROW          ! Row number in OT4 file for grid related OTM descriptors
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! 
+      LOGICAL, INTENT(INOUT)          :: NEW_RESULT        ! is this the first result of a table
       INTEGER(LONG)                   :: NREQ              ! Number of user requested outputs of displ/force
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = OFP1_BEGEND
 

@@ -80,6 +80,10 @@
       REAL(DOUBLE)                    :: MAX_ANS(4)        ! Max for all grids output for each of the 6 disp components
       REAL(DOUBLE)                    :: MIN_ANS(4)        ! Min for all grids output for each of the 6 disp components
 
+      INTEGER(LONG) :: ISUBCASE, ITABLE
+      INTEGER(LONG) :: ELEM_TYPE
+      LOGICAL       :: NEW_RESULT
+      NEW_RESULT = .TRUE.
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -88,6 +92,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+      !CALL OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NEW_RESULT, ITABLE)
       DO I=1,NUM,2
  
          RLINE_F06(1:)  = ' '
@@ -289,3 +294,70 @@
       END SUBROUTINE GET_MAX_MIN_ABS
 
       END SUBROUTINE WRITE_ROD
+!==================================================================================================
+      SUBROUTINE OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NEW_RESULT, ITABLE)
+! writes the CROD/CTUBE/CONROD stress/strain results.
+! Data is first written to character variables and then that character variable is output the F06 and ANS.
+ 
+      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
+      USE IOUNT1, ONLY                :  OP2
+      USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
+      INTEGER(LONG) :: ANALYSIS_CODE
+      INTEGER(LONG) :: ISUBCASE, ITABLE
+      INTEGER(LONG) :: ELEM_TYPE
+      INTEGER(LONG) :: NUM_WIDE
+      INTEGER(LONG) :: DEVICE_CODE
+      INTEGER(LONG) :: STRESS_CODE
+      !INTEGER(LONG) :: NBYTES_PER_WORD, NWORDS, NTOTAL
+      LOGICAL       :: IS_PRINT, IS_PLOT
+      LOGICAL       :: NEW_RESULT
+      ! the subcase id
+      ISUBCASE = 1
+
+      ! TODO: assuming PLOT
+      DEVICE_CODE = 1
+
+!      ELEM_TYPE is the flag for the element
+!       - 1 : CROD
+!       - 3 : CTUBE
+!       - 10 : CONROD
+      ! TODO: assuming CROD
+      ELEM_TYPE = 1
+
+! **********************************************************************************************************************************
+!******OP2
+!     this should encompass all the element types, so should be defined at a higher level
+      !ITABLE = -1
+      if (NEW_RESULT) THEN
+        IF(ITABLE .EQ. -1) THEN
+          CALL WRITE_STRESS_TABLE_HEADER()
+!           CALL WRITE_STRAIN_TABLE_HEADER()
+          ITABLE = -3
+        ENDIF
+      ENDIF
+      CALL WRITE_ITABLE(ITABLE)
+      ITABLE = ITABLE - 1
+!==================================================================================================
+      !ITABLE = -3
+      
+      ! eid, axisl_stress, axial_margin, torsional stress, torsional_margin
+      NUM_WIDE = 5
+      
+      ! dunno???
+      STRESS_CODE = 1
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, NEW_RESULT)
+      !NWORDS = NUM * NUM_WIDE
+      !NTOTAL = NBYTES_PER_WORD * NWORDS
+
+!      TODO: replace with WRITE(OP2)
+      IS_PRINT = .TRUE.
+      IS_PLOT = .TRUE.
+      IF (IS_PLOT) THEN
+        ! write the rod stress/strain data
+        WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, OGEL(I,1), OGEL(I,2), OGEL(I,3), OGEL(I,4), I=1,NUM)
+      ENDIF
+
+!      IF (IS_PRINT) THEN
+!        F06
+!      ENDIF
+      END SUBROUTINE OUTPUT2_WRITE_OES_ROD
