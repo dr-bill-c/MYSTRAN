@@ -42,22 +42,26 @@
       END SUBROUTINE WRITE_OP2_HEADER
 
 !===================================================================================================================================
-      SUBROUTINE  CLOSE_OP2_TABLE(ITABLE)
+      SUBROUTINE  END_OP2_TABLE(ITABLE)
       USE PENTIUM_II_KIND, ONLY       :  LONG
-      USE IOUNT1, ONLY                :  OP2
+      USE IOUNT1, ONLY                :  ERR, OP2
       IMPLICIT NONE
       INTEGER(LONG) :: ITABLE
-      
+      WRITE(ERR,9114) ITABLE
+
+ 9114 FORMAT(" *DEBUG:       END_OP2_TABLE; ITABLE=", I8)
       WRITE(OP2) ITABLE
       WRITE(OP2) 1
       WRITE(OP2) 0
       WRITE(OP2) 0
-      END SUBROUTINE CLOSE_OP2_TABLE
+      END SUBROUTINE END_OP2_TABLE
 
 !===================================================================================================================================
-      SUBROUTINE  CLOSE_OP2()
+      SUBROUTINE  END_OP2_TABLES()
 !      USE PENTIUM_II_KIND, ONLY       :  LONG
-      USE IOUNT1, ONLY                :  OP2
+      USE IOUNT1, ONLY                :  ERR, OP2
       IMPLICIT NONE
+ 9115 FORMAT(" *DEBUG:       END_OP2_TABLES", A)
+      WRITE(ERR,9115) " "
       WRITE(OP2) 0
-      END SUBROUTINE CLOSE_OP2
+      END SUBROUTINE END_OP2_TABLES

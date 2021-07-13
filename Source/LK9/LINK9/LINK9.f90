@@ -834,7 +834,7 @@ j_do: DO JVEC=1,NUM_SOLNS
             CALL OFP1 ( JVEC, 'DISP', SC_DISP_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 !           NEW_RESULT = .FALSE.
          ENDIF
-         CALL CLOSE_OP2_TABLE(ITABLE)
+         !CALL END_OP2_TABLE(ITABLE)
 
 ! Process applied load (OPG1) output requests
          NEW_RESULT = .TRUE.
@@ -851,7 +851,7 @@ j_do: DO JVEC=1,NUM_SOLNS
                ENDIF
             ENDIF
          ENDIF
-         CALL CLOSE_OP2_TABLE(ITABLE)
+         !CALL END_OP2_TABLE(ITABLE)
 
 ! Calc SPC forces and process SPC force output requests, if there are any or if GP force balance, modal effective mass and/or 
 ! participation factor output is requested. Calc anyway if there are any DOF's in the SA (AUTOSPC) set
@@ -920,9 +920,8 @@ j_do: DO JVEC=1,NUM_SOLNS
                CALL OFP2 ( JVEC, 'MPCF', SC_MPCF_OUTPUT, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 !              NEW_RESULT = .FALSE.
             ENDIF
-
          ENDIF
-         CALL CLOSE_OP2_TABLE(ITABLE)
+         !CALL END_OP2_TABLE(ITABLE)
 
 ! Process grid point force balance requests
 
