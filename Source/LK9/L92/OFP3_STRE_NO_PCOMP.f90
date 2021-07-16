@@ -62,6 +62,7 @@
       INTEGER(LONG), INTENT(IN)       :: ITE               ! Unit number for text files for OTM row descriptors 
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(INOUT)    :: OT4_EROW          ! Row number in OT4 file for elem related OTM descriptors
+      LOGICAL                         :: NEW_RESULT
       INTEGER(LONG)                   :: ELOUT_STRE        ! If > 0, there are STRESS   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error count
@@ -92,9 +93,15 @@
                                                            ! Array of output stress values after surface fit
       REAL(DOUBLE)                    :: STRESS_OUT(9,MAX_STRESS_POINTS)
 
+      ! OP2 stuff
+      CHARACTER(8*BYTE)               :: TABLE_NAME   ! name of the op2 table name
+      INTEGER(LONG)                   :: ITABLE       ! the subtable
+
       INTRINSIC IAND
-  
+      ITABLE = 0
+      TABLE_NAME = "OES ERR "
 ! **********************************************************************************************************************************
+      !NEW_RESULT = .TRUE.
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
          WRITE(F04,9001) SUBR_NAME,TSEC
@@ -142,6 +149,8 @@
          ENDDO 
       ENDDO   
  
+ 100  FORMAT("*DEBUG:      ELEMENT_TYPE=",A,"; TABLE_NAME=",A)
+ 101  FORMAT("*DEBUG:      ELEMENT_TYPE_INT=",I8,"; TABLE_NAME=",A)
       OT4_DESCRIPTOR = 'Element stress'
 reqs5:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs5
@@ -255,7 +264,9 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
                   IF (ETYPE(J)(1:5) /='USER1') THEN
                      IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
                         CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                        CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I) )
+                        CALL SET_OES_TABLE_NAME(TYPE, TABLE_NAME, ITABLE)
+                        WRITE(ERR,100) TYPE,TABLE_NAME,ITABLE
+                        CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I), ITABLE )
                         EXIT
                      ENDIF
                   ENDIF
@@ -946,5 +957,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
 ! **********************************************************************************************************************************
 
       END SUBROUTINE GET_STRESS_ITEM_DATA
+
+!====================================================================================================
 
       END SUBROUTINE OFP3_STRE_NO_PCOMP

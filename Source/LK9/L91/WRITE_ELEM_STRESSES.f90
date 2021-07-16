@@ -24,13 +24,13 @@
                                                                                                         
 ! End MIT license text.                                                                                      
   
-      SUBROUTINE WRITE_ELEM_STRESSES ( JSUB, NUM, IHDR, NUM_PTS )
+      SUBROUTINE WRITE_ELEM_STRESSES ( JSUB, NUM, IHDR, NUM_PTS, ITABLE )
   
 ! Writes blocks of element stresses for one subcase and one element type for elements that do not have PCOMP properties, including
 ! all 1-D, 2-D, 3-D elements.
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06, OP2
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, BARTOR, INT_SC_NUM, MAX_NUM_STR, NDOFR, NUM_CB_DOFS,             &
                                          NVEC, SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
@@ -61,6 +61,7 @@
       INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
       INTEGER(LONG), INTENT(IN)       :: NUM_PTS           ! Num diff stress points for one element (3rd dim in arrays SEi, STEi)
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
       INTEGER(LONG)                   :: BDY_COMP          ! Component (1-6) for a boundary DOF in CB analyses
       INTEGER(LONG)                   :: BDY_GRID          ! Grid for a boundary DOF in CB analyses
       INTEGER(LONG)                   :: BDY_DOF_NUM       ! DOF number for BDY_GRID/BDY_COMP
@@ -69,9 +70,26 @@
       INTEGER(LONG)                   :: NCOLS             ! Num of cols to write out
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_ELEM_STRESSES_BEGEND
   
-      REAL(DOUBLE)                    :: ABS_ANS(11)       ! Max ABS for all grids output for each of the 6 disp components
-      REAL(DOUBLE)                    :: MAX_ANS(11)       ! Max for all grids output for each of the 6 disp components
-      REAL(DOUBLE)                    :: MIN_ANS(11)       ! Min for all grids output for each of the 6 disp components
+      REAL(DOUBLE)                    :: ABS_ANS(11)       ! Max ABS for all element output
+      REAL(DOUBLE)                    :: MAX_ANS(11)       ! Max for all element output
+      REAL(DOUBLE)                    :: MIN_ANS(11)       ! Min for all element output
+      
+      ! op2 info
+      CHARACTER( 8*BYTE)              :: TABLE_NAME             ! the name of the op2 table
+      INTEGER(LONG)                   :: NNODES                 ! number of nodes for the element
+
+      ! table -3 info
+      INTEGER(LONG)                   :: ANALYSIS_CODE          ! static/modal/time/etc. flag
+      INTEGER(LONG)                   :: ELEMENT_TYPE           ! the OP2 flag for the element
+      LOGICAL                         :: FIELD_5_INT_FLAG       ! flag to trigger FIELD5_INT_MODE vs. FIELD5_FLOAT_TIME_FREQ
+      INTEGER(LONG)                   :: FIELD5_INT_MODE        ! int value for field 5
+      REAL(DOUBLE)                    :: FIELD5_FLOAT_TIME_FREQ ! float value for field 5
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE      ! float value for field 6
+      CHARACTER( 60*BYTE)             :: TITLEI, STITLEI, LABELI  ! title, subtitle, label for current subcase
+      INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG)                   :: NUM_WIDE     ! the number of "words" for an element
+      INTEGER(LONG)                   :: NVALUES      ! the number of "words" for all the elments
+      INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -79,6 +97,7 @@
          WRITE(F04,9001) SUBR_NAME,TSEC
  9001    FORMAT(1X,A,' BEGN ',F10.3)
       ENDIF
+      DEVICE_CODE = 1  ! PLOT
 
 ! **********************************************************************************************************************************
 ! Initialize
@@ -114,21 +133,33 @@
          WRITE(F06,*)                                                   ;   IF (DEBUG(200) > 0) WRITE(ANS,*)
 
 ! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
-
-         IF    ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
-
+         ANALYSIS_CODE = -1
+         FIELD_5_INT_FLAG = .TRUE.
+         FIELD5_INT_MODE = 0
+         !FIELD5_FLOAT_TIME_FREQ = 0.0
+         FIELD6_EIGENVALUE = 0.0
+         IF    (SOL_NAME(1:7) == 'STATICS') THEN
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
+            WRITE(F06,101) SCNUM(JSUB)                                  ;   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
+         ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
+            ANALYSIS_CODE = 10
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)                                  ;   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-
+            ANALYSIS_CODE = 7
+            FIELD5_INT_MODE = JSUB
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
+            ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
             WRITE(F06,102) JSUB                                         ;   IF (DEBUG(200) > 0) WRITE(ANS,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
@@ -163,7 +194,9 @@
          ENDIF
 
 ! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
-
+         TITLEI = TITLE(INT_SC_NUM)
+         STITLEI = STITLE(INT_SC_NUM)
+         LABELI = LABEL(INT_SC_NUM)
          IF (TITLE(INT_SC_NUM)(1:)  /= ' ') THEN
             WRITE(F06,201) TITLE(INT_SC_NUM)
          ENDIF
@@ -312,13 +345,47 @@
          CALL WRITE_BAR ( NUM, FILL(1:1), FILL(1:16) )
 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN
+         ! 11 : CELAS1
+         ! 12 : CELAS2
+         ! 13 : CELAS3
+         ! 14 : CELAS4
+         IF (TYPE(6:6) == "1") THEN
+             ELEMENT_TYPE = 11
+         ELSE IF (TYPE(6:6) == "2") THEN
+             ELEMENT_TYPE = 12
+         ELSE IF (TYPE(6:6) == "3") THEN
+             ELEMENT_TYPE = 13
+         ELSE IF (TYPE(6:6) == "4") THEN
+             ELEMENT_TYPE = 14
+         ENDIF
+
+         NUM_WIDE = 2 ! eid, spring_stress
+         NVALUES = NUM_WIDE * NUM
+         !WRITE(OP2) NVALUES
+         !WRITE(OP2) (FILL(1:1), EID_OUT_ARRAY(I,1), REAL(OGEL(I,1), 4), I=1,NUM)
+         !CALL END_OP2_TABLE(ITABLE)
+
          WRITE(F06,1103) (FILL(1:1), EID_OUT_ARRAY(I,1), OGEL(I,1),I=1,NUM)
          IF (DEBUG(200) > 0) THEN
             WRITE(ANS,1104) (FILL(1:16), EID_OUT_ARRAY(I,1),OGEL(I,1),I=1,NUM)
          ENDIF
 
       ELSE IF((TYPE(1:4) == 'HEXA') .OR. (TYPE(1:5) == 'PENTA') .OR. (TYPE(1:5) == 'TETRA')) THEN
-
+         ! 39 : CTETRA
+         ! 67 : CHEXA
+         ! 68 : CPENTA
+         IF (TYPE(1:4) == "HEXA") THEN
+             ELEMENT_TYPE = 67
+             NNODES = 9
+         ELSE IF (TYPE(1:5) == "TETRA") THEN
+             ELEMENT_TYPE = 39
+             NNODES = 5
+         ELSE IF (TYPE(1:5) == "PENTA") THEN
+             ELEMENT_TYPE = 68
+             NNODES = 7
+         ENDIF
+         NUM_WIDE = 4 + 21 * NNODES
+         
          IF (STRE_OPT == 'VONMISES') THEN
             NCOLS = 7
          ELSE
@@ -450,34 +517,37 @@
          ENDIF
 
       ELSE IF (TYPE == 'ROD     ') THEN
-         CALL WRITE_ROD ( NUM, FILL(1:1), FILL(1:16) )
+         CALL WRITE_ROD ( NUM, FILL(1:1), FILL(1:16), ITABLE )
 
       ELSE IF (TYPE(1:5) == 'SHEAR') THEN
-
-         DO I=1,NUM,2
-            IF (I+1 <= NUM) THEN
-               WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3), EID_OUT_ARRAY(I+1,1),(OGEL(I+1,J),J=1,3)
-            ELSE
-               WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3)
-            ENDIF
-         ENDDO
-
-         CALL GET_MAX_MIN_ABS_STR ( NUM, 3, 'N', MAX_ANS, MIN_ANS, ABS_ANS )
-
-         WRITE(F06,1604) FILL(1: 0), FILL(1: 0), MAX_ANS(1),MAX_ANS(2),MAX_ANS(3),                                                 &
-                         FILL(1: 0),             MIN_ANS(1),MIN_ANS(2),MIN_ANS(3),                                                 &
-                         FILL(1: 0),             ABS_ANS(1),ABS_ANS(2),ABS_ANS(3)
+         CALL WRITE_CSHEAR ( NUM, ITABLE, TITLEI, STITLEI, LABELI, FILL )
 
       ELSE IF (TYPE(1:5) == 'TRIA3') THEN
+         ! is this right (the j loop)?
+         ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
+         !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
+         !]
+         NUM_WIDE = 17  ! verified
+         NVALUES = NUM * NUM_WIDE
+         !WRITE(OP2) NVALUES
+         !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (OGEL(I,J), J=1,9), I=1,NUM)
+         !CALL END_OP2_TABLE(ITABLE)
+
+! 1702 FORMAT(1X,A,'Element    Location      Fibre        Stresses In Element Coord System       Principal Stresses (Zero Shear)',  &
+!  '      Max      Transverse   Transverse'                                                                                         &
+!          ,/,1X,A,'   ID                   Distance     Normal-X     Normal-Y      Shear-XY     Angle     Major        Minor',     &
+!          '      Shear-XY     Shear-XZ     Shear-YZ',/,1X,123X,'(max through thickness)')
 
          K = 0
          DO I=1,NUM
 
             K = K + 1
             WRITE(F06,*)                                              ; WRITE(ANS,*)
+            ! why does this have a J=1,8 loop here and below a J=1,8 loop
             WRITE(F06,1703) EID_OUT_ARRAY(I,1),(OGEL(K,J),J=1,10)     ; IF (DEBUG(200) > 0) WRITE(ANS,1713) EID_OUT_ARRAY(I,1),    &
                                                                                                               (OGEL(K,J),J=1,10)
             K = K + 1
+            ! why does this have a J=1,8 loop here and then a J=1,10 loop in the debug?
             WRITE(F06,1704) (OGEL(K,J),J=1,8)                         ; IF (DEBUG(200) > 0) WRITE(ANS,1714) (OGEL(K,J),J=1,10)
 
          ENDDO
@@ -495,6 +565,12 @@
          ENDIF
 
       ELSE IF (TYPE == 'BUSH    ') THEN
+          NUM_WIDE = 7
+          NVALUES = NUM * NUM_WIDE
+          !WRITE(OP2) NVALUES
+          !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,(OGEL(I,J),J=1,6), I=1,NUM)
+          !CALL END_OP2_TABLE(ITABLE)
+
          DO I=1,NUM
             WRITE(F06,1802) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,6)      ; IF (DEBUG(200) > 0) WRITE(ANS,1812) EID_OUT_ARRAY(I,1),    &
                                                                                                               (OGEL(I,J),J=1,6)
@@ -656,13 +732,7 @@
           ,/,1X,A,'   ID      Normal-X      Normal-Y      Shear-XY                   ID      Normal-X      Normal-Y'               &
                  ,'      Shear-XY')
   
- 1603 FORMAT(1X,A,I8,3(1ES14.6),13X,I8,3(1ES14.6))
 
- 1604 FORMAT(1X,A,'         ------------- ------------- ------------- ',20X,' ------------- ------------- ------------- ',/,       &
-             1X,A,'MAX* : ',1X,3(ES14.6),/,                                                                                        &
-             1X,A,'MIN* : ',1X,3(ES14.6),//,                                                                                       &
-             1X,A,'ABS* : ',1X,3(ES14.6),/,                                                                                        &
-             1X,A,'*for output set')
 
 ! TRIA3 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
  1701 FORMAT(1X,A,'Element    Location      Fibre        Stresses In Element Coord System       Principal Stresses (Zero Shear)',  &
@@ -717,5 +787,78 @@
                     ,/,14X,' NO OUTPUT FORMAT AVAILABLE FOR ELEMENT TYPE = ',A)
 
 ! **********************************************************************************************************************************
- 
       END SUBROUTINE WRITE_ELEM_STRESSES
+!==============================================================================
+
+      SUBROUTINE WRITE_CSHEAR ( NUM, ITABLE, TITLEI, STITLEI, LABELI, FILL )
+      ! max_shear, avg_shear, margin
+      USE PENTIUM_II_KIND, ONLY     :  BYTE, LONG, DOUBLE
+      USE IOUNT1, ONLY :  F06, OP2
+      USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
+      IMPLICIT NONE
+      !
+      INTEGER(LONG), INTENT(IN)       :: NUM          ! the number of elements
+      CHARACTER( 60*BYTE), INTENT(IN) :: TITLEI, STITLEI, LABELI  ! title, subtitle, label for current subcase
+      CHARACTER(128*BYTE)             :: FILL              ! Padding for output format
+
+      INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
+      INTEGER(LONG)               :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG)               :: NUM_WIDE     ! the number of "words" for an element
+      INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
+      INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
+      INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
+      REAL(DOUBLE)                :: ABS_ANS(3)   ! Max ABS for output
+      REAL(DOUBLE)                :: MAX_ANS(3)   ! Max for output
+      REAL(DOUBLE)                :: MIN_ANS(3)   ! Min for output
+      INTEGER(LONG)               :: I, J         ! DO loop indices
+
+      DEVICE_CODE = 1   ! PLOT
+      ELEMENT_TYPE = 4  ! CSHEAR
+      NUM_WIDE = 4      ! eid, max_shear, avg_shear, margin
+      NVALUES = NUM * NUM_WIDE
+      NTOTAL = NVALUES * 4
+      !WRITE(ERR,100) NUM,NVALUES,NTOTAL
+      !WRITE(OP2) NVALUES
+
+      ! Nastran OP2 requires this write call be a one liner...so it's a little weird...
+      ! translating:
+      !    DO I=1,NUM
+      !        WRITE(OP2) EID_OUT_ARRAY(I,1)*10+DEVICE_CODE  ! Nastran is weird and requires scaling the ELEMENT_ID
+      !
+      !        convert from float64 (double precision) to float32 (single precision)
+      !        RE1 = REAL(OGEL(I,1), 4)
+      !        RE2 = REAL(OGEL(I,2), 4)
+      !        RE3 = REAL(OGEL(I,3), 4)
+      !        
+      !        write the max_shear, avg_shear, 
+      !        WRITE(OP2) RE1, RE2, RE3
+      !    ENDDO
+      !
+      ! write the rod stress/strain data
+      !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), REAL(OGEL(I,2), 4), &
+      !                                               REAL(OGEL(I,3), 4), I=1,NUM)
+      !CALL END_OP2_TABLE(ITABLE)
+      !ITABLE = ITABLE - 1
+
+      DO I=1,NUM,2
+         IF (I+1 <= NUM) THEN
+            WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3), EID_OUT_ARRAY(I+1,1),(OGEL(I+1,J),J=1,3)
+         ELSE
+            WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3)
+         ENDIF
+      ENDDO
+
+      CALL GET_MAX_MIN_ABS_STR ( NUM, 3, 'N', MAX_ANS, MIN_ANS, ABS_ANS )
+
+      WRITE(F06,1604) FILL(1: 0), FILL(1: 0), MAX_ANS(1),MAX_ANS(2),MAX_ANS(3),                                                 &
+                      FILL(1: 0),             MIN_ANS(1),MIN_ANS(2),MIN_ANS(3),                                                 &
+                      FILL(1: 0),             ABS_ANS(1),ABS_ANS(2),ABS_ANS(3)
+
+
+ 1603 FORMAT(1X,A,I8,3(1ES14.6),13X,I8,3(1ES14.6))
+ 1604 FORMAT(1X,A,'         ------------- ------------- ------------- ',20X,' ------------- ------------- ------------- ',/,       &
+             1X,A,'MAX* : ',1X,3(ES14.6),/,                                                                                        &
+             1X,A,'MIN* : ',1X,3(ES14.6),//,                                                                                       &
+             1X,A,'ABS* : ',1X,3(ES14.6),/,                                                                                        &
+             1X,A,'*for output set')
+      END SUBROUTINE WRITE_CSHEAR

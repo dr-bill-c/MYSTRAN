@@ -24,7 +24,7 @@
                                                                                                         
 ! End MIT license text.                                                                                      
  
-      SUBROUTINE WRITE_ROD ( NUM, FILL_F06, FILL_ANS )
+      SUBROUTINE WRITE_ROD ( NUM, FILL_F06, FILL_ANS, ITABLE )
  
 ! Routine for writing output to text files F06 and ANS for ROD element stresses. Up to 2 elements written per line of output.
 ! Data is first written to character variables and then that character variable is output the F06 and ANS.
@@ -45,6 +45,7 @@
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'WRITE_ROD'
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_F06          ! Padding for output format
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_ANS          ! Padding for output format
+      INTEGER(LONG), INTENT(IN)       :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
       CHARACTER(  1*BYTE)             :: MSFLAG            ! If margin is negative, MSFLAG is an *
 
       CHARACTER(118*BYTE)             :: RLINE_F06         ! Result of concatenating char. variables below to make a line of
@@ -80,10 +81,8 @@
       REAL(DOUBLE)                    :: MAX_ANS(4)        ! Max for all grids output for each of the 6 disp components
       REAL(DOUBLE)                    :: MIN_ANS(4)        ! Min for all grids output for each of the 6 disp components
 
-      INTEGER(LONG) :: ISUBCASE, ITABLE
-      INTEGER(LONG) :: ELEM_TYPE
-      LOGICAL       :: NEW_RESULT
-      NEW_RESULT = .TRUE.
+      INTEGER(LONG)                   :: ISUBCASE          ! the current subcase
+      INTEGER(LONG)                   :: ELEM_TYPE         ! should be 1=CROD, 3=CTUBE, 10=CONROD
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -92,7 +91,11 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-      !CALL OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NEW_RESULT, ITABLE)
+      ISUBCASE = 1
+      ELEM_TYPE = 1  ! CROD
+      !ELEM_TYPE = 3  ! CTUBE
+      !ELEM_TYPE = 10  ! CONROD
+      CALL OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, ITABLE)
       DO I=1,NUM,2
  
          RLINE_F06(1:)  = ' '
@@ -295,57 +298,46 @@
 
       END SUBROUTINE WRITE_ROD
 !==================================================================================================
-      SUBROUTINE OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NEW_RESULT, ITABLE)
+      SUBROUTINE OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, ITABLE)
 ! writes the CROD/CTUBE/CONROD stress/strain results.
 ! Data is first written to character variables and then that character variable is output the F06 and ANS.
- 
+!      Parameters
+!      ==========
+!      ELEM_TYPE : int
+!       flag for the element type
+!       - 1 : CROD
+!       - 3 : CTUBE
+!       - 10 : CONROD
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  OP2
+      USE IOUNT1, ONLY                :  OP2, ERR
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
-      INTEGER(LONG) :: ANALYSIS_CODE
-      INTEGER(LONG) :: ISUBCASE, ITABLE
-      INTEGER(LONG) :: ELEM_TYPE
-      INTEGER(LONG) :: NUM_WIDE
-      INTEGER(LONG) :: DEVICE_CODE
-      INTEGER(LONG) :: STRESS_CODE
-      !INTEGER(LONG) :: NBYTES_PER_WORD, NWORDS, NTOTAL
-      LOGICAL       :: IS_PRINT, IS_PLOT
-      LOGICAL       :: NEW_RESULT
-      ! the subcase id
-      ISUBCASE = 1
+      INTEGER(LONG) :: ANALYSIS_CODE        ! static, time, frequency, modal, etc. flag
+      INTEGER(LONG), INTENT(IN) :: ISUBCASE  ! subcase id
+      INTEGER(LONG), INTENT(IN) :: ELEM_TYPE
+      INTEGER(LONG) :: ITABLE       ! the current subtable number
+      INTEGER(LONG) :: NUM_WIDE     ! the number of "words" for a single element
+      INTEGER(LONG) :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG) :: STRESS_CODE  ! flag for what the output result means (e.g., fiber_distance/curvature, max_shear, von_mises)
+      INTEGER(LONG) :: NVALUES      ! the number of "words" for the OP2 data
+      INTEGER(LONG) :: NTOTAL       ! the number of bytes corresponding to nvalues
+      LOGICAL       :: IS_PRINT     ! is this a PRINT result -> F06
+      LOGICAL       :: IS_PLOT      ! is this a PLOT result -> OP2
 
       ! TODO: assuming PLOT
       DEVICE_CODE = 1
 
-!      ELEM_TYPE is the flag for the element
-!       - 1 : CROD
-!       - 3 : CTUBE
-!       - 10 : CONROD
-      ! TODO: assuming CROD
-      ELEM_TYPE = 1
-
 ! **********************************************************************************************************************************
 !******OP2
-!     this should encompass all the element types, so should be defined at a higher level
-      !ITABLE = -1
-      if (NEW_RESULT) THEN
-        IF(ITABLE .EQ. -1) THEN
-          CALL WRITE_STRESS_TABLE_HEADER()
-!           CALL WRITE_STRAIN_TABLE_HEADER()
-          ITABLE = -3
-        ENDIF
-      ENDIF
-      CALL WRITE_ITABLE(ITABLE)
-      ITABLE = ITABLE - 1
+      ! we're already setup for subtable -3
 !==================================================================================================
-      !ITABLE = -3
       
       ! eid, axisl_stress, axial_margin, torsional stress, torsional_margin
       NUM_WIDE = 5
       
       ! dunno???
       STRESS_CODE = 1
-      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, NEW_RESULT)
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE)
+      ! ITABLE = -4, -6, ...
       !NWORDS = NUM * NUM_WIDE
       !NTOTAL = NBYTES_PER_WORD * NWORDS
 
@@ -353,8 +345,33 @@
       IS_PRINT = .TRUE.
       IS_PLOT = .TRUE.
       IF (IS_PLOT) THEN
+ 100    FORMAT("*DEBUG:    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
+        NVALUES = NUM * NUM_WIDE
+        NTOTAL = NVALUES * 4
+        WRITE(ERR,100) NUM,NVALUES,NTOTAL
+        WRITE(OP2) NVALUES
+
+      ! Nastran OP2 requires this write call be a one liner...so it's a little weird...
+      ! translating:
+      !    DO I=1,NUM
+      !        WRITE(OP2) EID_OUT_ARRAY(I,1)*10+DEVICE_CODE  ! Nastran is weird and requires scaling the ELEMENT_ID
+      !
+      !        convert from float64 (double precision) to float32 (single precision)
+      !        RE1 = REAL(OGEL(I,1), 4)
+      !        RE2 = REAL(OGEL(I,2), 4)
+      !        RE3 = REAL(OGEL(I,3), 4)
+      !        RE4 = REAL(OGEL(I,4), 4)
+      !        
+      !        write the axisl_stress, axial_margin, torsional stress, torsional_margin
+      !        WRITE(OP2) RE1, RE2, RE3, RE4
+      !    ENDDO
+      !
         ! write the rod stress/strain data
-        WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, OGEL(I,1), OGEL(I,2), OGEL(I,3), OGEL(I,4), I=1,NUM)
+        !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), REAL(OGEL(I,2), 4), &
+        !                                               REAL(OGEL(I,3), 4), REAL(OGEL(I,4), 4), I=1,NUM)
+        WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), REAL(0.0, 4), &
+                                                       REAL(OGEL(I,2), 4), REAL(0.0, 4), I=1,NUM)
+        CALL END_OP2_TABLE(ITABLE)
       ENDIF
 
 !      IF (IS_PRINT) THEN
