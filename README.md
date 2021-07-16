@@ -70,7 +70,7 @@ sudo apt install gcc
 
 Check if gfortran is installed
 ```
-dpkg-query -l | grep -P "^ii\s+gfortran\s+"
+dpkg --list | grep -P "^ii\s+gfortran\s+"
 ```
 
 If it is not installed, install it.
@@ -159,15 +159,18 @@ Congragulations! You have just installed MYSTRAN.
 
 # Developmental Goals
 
-- Add installation instructions for multiple platforms to the readme.
+- Add installation instructions for Debian Linux and Ubuntu to the README
+- Add installation instructions for Windows to the README
 - The differential stiffness matrix for beam elements is coded in MYSTRAN. Therefore a buckling analysis (SOL 105) can be performed for beam elements. However, the differential stiffness matrix needs to be coded for the shell and solid elements. Also, it would be desirable to add the differential stiffness matrix for the shear and rod elements (lower priority).
 - The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
 - OP2 support is in work, but if you can help with this, please let us know.
+- As a longer term goal, materialistically nonlinear support is desirable.
 - As a longer term goal, geometric nonlinear support is desirable.
 
 # Ways You Can Help
 
 - Join the MYSTRAN forum and/or Discord Channel below
+- Contribute your MYSTRAN runs to the list of demonstration problems by posting on the forums, or in our discord channel below
 
 # Community
 - [Join our Forums](https://mystran.com/forums)
