@@ -80,7 +80,7 @@ sudo apt install gfortran
 
 Check if make is installed
 ```
-dpkg-query -l | grep -P "^ii\s+make\s+"
+dpkg --list | grep -P "^ii\s+make\s+"
 ```
 
 If it is not installed, install it.
@@ -90,7 +90,7 @@ sudo apt install make
 
 Check if git is installed
 ```
-dpkg-query -l | grep -P "^ii\s+git\s+"
+dpkg --list | grep -P "^ii\s+git\s+"
 ```
 
 If it is not installed, install it.
@@ -100,7 +100,7 @@ sudo apt install git
 
 Check if f2c is installed
 ```
-dpkg-query -l | grep -P "^ii\s+f2c\s+"
+dpkg --list | grep -P "^ii\s+f2c\s+"
 ```
 
 If it is not installed, install it.
@@ -111,7 +111,7 @@ sudo apt install f2c
 Check if cmake is installed
 
 ```
-dpkg-query -l | grep -P "^ii\s+cmake\s+"
+dpkg --list | grep -P "^ii\s+cmake\s+"
 ```
 If it is not installed, or it is not version 3.18 or later, you can purge it,
 and aquire the newest version from source.
