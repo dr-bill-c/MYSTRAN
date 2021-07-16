@@ -46,6 +46,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 MYSTRAN relies upon the following dependencies
 
 - gcc
+- g++ (may come with gcc)
 - gfortran
 - make
 - git
@@ -54,8 +55,14 @@ MYSTRAN relies upon the following dependencies
 
 Check if gcc is installed. 
 ```
-dpkg-query -l | grep -P "^ii\s+gcc\s+"
+dpkg --list | grep -P "^ii\s+gcc\s+"
 ```
+
+Check if g++ is installed
+```
+dpkg --list | grep g++
+```
+
 If it is not installed, installed it.
 ```
 sudo apt install gcc
@@ -65,6 +72,7 @@ Check if gfortran is installed
 ```
 dpkg-query -l | grep -P "^ii\s+gfortran\s+"
 ```
+
 If it is not installed, install it.
 ```
 sudo apt install gfortran
@@ -74,6 +82,7 @@ Check if make is installed
 ```
 dpkg-query -l | grep -P "^ii\s+make\s+"
 ```
+
 If it is not installed, install it.
 ```
 sudo apt install make
@@ -83,6 +92,7 @@ Check if git is installed
 ```
 dpkg-query -l | grep -P "^ii\s+git\s+"
 ```
+
 If it is not installed, install it.
 ```
 sudo apt install git
@@ -92,6 +102,7 @@ Check if f2c is installed
 ```
 dpkg-query -l | grep -P "^ii\s+f2c\s+"
 ```
+
 If it is not installed, install it.
 ```
 sudo apt install f2c
