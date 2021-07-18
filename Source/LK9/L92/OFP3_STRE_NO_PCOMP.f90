@@ -149,8 +149,7 @@
          ENDDO 
       ENDDO   
  
- 100  FORMAT("*DEBUG:      ELEMENT_TYPE=",A,"; TABLE_NAME=",A)
- 101  FORMAT("*DEBUG:      ELEMENT_TYPE_INT=",I8,"; TABLE_NAME=",A)
+! 101  FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE_INT=",I8,"; TABLE_NAME=",A)
       OT4_DESCRIPTOR = 'Element stress'
 reqs5:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs5
@@ -264,8 +263,10 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
                   IF (ETYPE(J)(1:5) /='USER1') THEN
                      IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
                         CALL CHK_OGEL_ZEROS ( NUM_OGEL )
+ 100                    FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                        WRITE(ERR,100) "A",TYPE,TABLE_NAME,ITABLE
                         CALL SET_OES_TABLE_NAME(TYPE, TABLE_NAME, ITABLE)
-                        WRITE(ERR,100) TYPE,TABLE_NAME,ITABLE
+                        WRITE(ERR,100) "B",TYPE,TABLE_NAME,ITABLE
                         CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I), ITABLE )
                         EXIT
                      ENDIF
