@@ -85,11 +85,12 @@
       INTEGER(LONG)                   :: FIELD5_INT_MODE        ! int value for field 5
       REAL(DOUBLE)                    :: FIELD5_FLOAT_TIME_FREQ ! float value for field 5
       REAL(DOUBLE)                    :: FIELD6_EIGENVALUE      ! float value for field 6
-      CHARACTER( 60*BYTE)             :: TITLEI, STITLEI, LABELI  ! title, subtitle, label for current subcase
+      CHARACTER(128*BYTE)             :: TITLEI, STITLEI, LABELI  ! title, subtitle, label for current subcase
       INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
       INTEGER(LONG)                   :: NUM_WIDE     ! the number of "words" for an element
       INTEGER(LONG)                   :: NVALUES      ! the number of "words" for all the elments
       INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
+      INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -139,6 +140,7 @@
          FIELD5_INT_MODE = 0
          !FIELD5_FLOAT_TIME_FREQ = 0.0
          FIELD6_EIGENVALUE = 0.0
+         ISUBCASE = SCNUM(JSUB)
          IF    (SOL_NAME(1:7) == 'STATICS') THEN
             ANALYSIS_CODE = 1
             FIELD5_INT_MODE = SCNUM(JSUB)
@@ -518,10 +520,10 @@
          ENDIF
 
       ELSE IF (TYPE == 'ROD     ') THEN
-         CALL WRITE_ROD ( NUM, FILL(1:1), FILL(1:16), ITABLE )
+         CALL WRITE_ROD ( ISUBCASE, NUM, FILL(1:1), FILL(1:16), ITABLE, TITLEI, STITLEI, LABELI )
 
       ELSE IF (TYPE(1:5) == 'SHEAR') THEN
-         CALL WRITE_CSHEAR ( NUM, ITABLE, TITLEI, STITLEI, LABELI, FILL )
+         CALL WRITE_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
 
       ELSE IF (TYPE(1:5) == 'TRIA3') THEN
          ! is this right (the j loop)?
@@ -791,15 +793,21 @@
       END SUBROUTINE WRITE_ELEM_STRESSES
 !==============================================================================
 
-      SUBROUTINE WRITE_CSHEAR ( NUM, ITABLE, TITLEI, STITLEI, LABELI, FILL )
-      ! max_shear, avg_shear, margin
+      SUBROUTINE WRITE_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
+!     TODO: calculate margin
+!
       USE PENTIUM_II_KIND, ONLY     :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY :  F06, OP2
+      USE IOUNT1, ONLY :  F06, OP2, ERR
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
+      USE, INTRINSIC :: IEEE_ARITHMETIC, ONLY: IEEE_Value, IEEE_QUIET_NAN
+      USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: REAL32
       IMPLICIT NONE
       !
-      INTEGER(LONG), INTENT(IN)       :: NUM          ! the number of elements
-      CHARACTER( 60*BYTE), INTENT(IN) :: TITLEI, STITLEI, LABELI  ! title, subtitle, label for current subcase
+      INTEGER(LONG), INTENT(IN)       :: NUM               ! the number of elements
+      INTEGER(LONG), INTENT(IN)       :: ISUBCASE          ! the current subcase
+      CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
+      CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
+      CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
       CHARACTER(128*BYTE)             :: FILL              ! Padding for output format
 
       INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
@@ -808,18 +816,31 @@
       INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
       INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
       INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
+      INTEGER(LONG)               :: STRESS_CODE  ! the OP2 flag for the stress
       REAL(DOUBLE)                :: ABS_ANS(3)   ! Max ABS for output
       REAL(DOUBLE)                :: MAX_ANS(3)   ! Max for output
       REAL(DOUBLE)                :: MIN_ANS(3)   ! Min for output
       INTEGER(LONG)               :: I, J         ! DO loop indices
+      REAL(REAL32)  :: NAN
+      NAN = IEEE_VALUE(NAN, IEEE_QUIET_NAN)
 
       DEVICE_CODE = 1   ! PLOT
       ELEMENT_TYPE = 4  ! CSHEAR
-      NUM_WIDE = 4      ! eid, max_shear, avg_shear, margin
       NVALUES = NUM * NUM_WIDE
       NTOTAL = NVALUES * 4
-      !WRITE(ERR,100) NUM,NVALUES,NTOTAL
-      !WRITE(OP2) NVALUES
+
+      ! eid, max_shear, avg_shear, margin
+      NUM_WIDE = 4
+      
+      ! dunno???
+      STRESS_CODE = 1
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL)
+
+ 100  FORMAT("*DEBUG:    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
+      NVALUES = NUM * NUM_WIDE
+      NTOTAL = NVALUES * 4
+      WRITE(ERR,100) ITABLE,NUM,NVALUES,NTOTAL
+      WRITE(OP2) NVALUES
 
       ! Nastran OP2 requires this write call be a one liner...so it's a little weird...
       ! translating:
@@ -835,10 +856,11 @@
       !        WRITE(OP2) RE1, RE2, RE3
       !    ENDDO
       !
-      ! write the rod stress/strain data
-      !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), REAL(OGEL(I,2), 4), &
-      !                                               REAL(OGEL(I,3), 4), I=1,NUM)
-      !CALL END_OP2_TABLE(ITABLE)
+      ! write the CSHEAR stress/strain data
+      !Normal-X      Normal-Y      Shear-XY -> max_shear, avg_shear, margin
+      WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,3), 4), REAL(OGEL(I,3), 4), &
+                                                     NAN, I=1,NUM)
+      CALL END_OP2_TABLE(ITABLE)
       !ITABLE = ITABLE - 1
 
       DO I=1,NUM,2

@@ -1,23 +1,4 @@
 
-
-!==================================================================================================
-!      SUBROUTINE WRITE_STRESS_TABLE_HEADER()
-!      USE PENTIUM_II_KIND, ONLY       :  LONG, BYTE
-!      !INTEGER(LONG), INTENT(IN) :: ITABLE ! the subtable id
-!      CHARACTER(8*BYTE) :: TABLE_NAME
-!      TABLE_NAME = 'OES1    '
-!      CALL WRITE_TABLE_HEADER(TABLE_NAME)
-!      END SUBROUTINE WRITE_STRESS_TABLE_HEADER
-
-!==================================================================================================
-!      SUBROUTINE WRITE_STRAIN_TABLE_HEADER()
-!      USE PENTIUM_II_KIND, ONLY       :  LONG, BYTE
-      !INTEGER(LONG), INTENT(IN) :: ITABLE ! the subtable id
-!      CHARACTER(8*BYTE) :: TABLE_NAME
-!      TABLE_NAME = 'OSTR1   '
-!      CALL WRITE_TABLE_HEADER(TABLE_NAME)
-!      END SUBROUTINE WRITE_STRAIN_TABLE_HEADER
-
 !==================================================================================================
       SUBROUTINE SET_OES_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE)
       ! initializes the OES table name
@@ -94,7 +75,8 @@
 
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE)
+      SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, & 
+                  TITLE, LABEL, SUBTITLE)
 !
 !      Parameters
 !      ==========
@@ -114,12 +96,15 @@
 !
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(INOUT) :: ITABLE
-      INTEGER(LONG), INTENT(IN) :: ISUBCASE
-      INTEGER(LONG), INTENT(IN) :: DEVICE_CODE
-      INTEGER(LONG), INTENT(IN) :: ELEM_TYPE
-      INTEGER(LONG), INTENT(IN) :: NUM_WIDE
-      INTEGER(LONG), INTENT(IN) :: STRESS_CODE
+      INTEGER(LONG), INTENT(INOUT) :: ITABLE               ! an OP2 subtable counter
+      INTEGER(LONG), INTENT(IN) :: ISUBCASE                ! the subcase ID
+      INTEGER(LONG), INTENT(IN) :: DEVICE_CODE             ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG), INTENT(IN) :: ELEM_TYPE               ! the element type ID
+      INTEGER(LONG), INTENT(IN) :: NUM_WIDE                ! the number of words per element 
+      INTEGER(LONG), INTENT(IN) :: STRESS_CODE             ! flag for von_mises/max_shear/octehedral and fiber_distance/strain_curvature
+      CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
+      CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
+      CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
 
       INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
       INTEGER(LONG) :: FORMAT_CODE, ANALYSIS_CODE
@@ -133,11 +118,13 @@
       FIELD7 = 0
 !      static is real
       FORMAT_CODE = 1
-      CALL WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE)
+      CALL WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE,       &
+                      TITLE, LABEL, SUBTITLE)
       END SUBROUTINE WRITE_OES3_STATIC
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE)
+      SUBROUTINE WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, &
+                            TITLE, LABEL, SUBTITLE)
 !      Parameters
 !      ==========
 !      analysis_code
@@ -147,24 +134,23 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR,OP2
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(INOUT) :: ITABLE
-      INTEGER(LONG), INTENT(IN) :: ANALYSIS_CODE
-      INTEGER(LONG), INTENT(IN) :: ISUBCASE
-      INTEGER(LONG), INTENT(IN) :: DEVICE_CODE
-      INTEGER(LONG), INTENT(IN) :: ELEM_TYPE
+      INTEGER(LONG), INTENT(INOUT) :: ITABLE               ! an OP2 subtable counter
+      INTEGER(LONG), INTENT(IN) :: ANALYSIS_CODE           ! static, modal, time, freq, etc. flag
+      INTEGER(LONG), INTENT(IN) :: ISUBCASE                ! the subcase ID
+      INTEGER(LONG), INTENT(IN) :: DEVICE_CODE             ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG), INTENT(IN) :: ELEM_TYPE               ! the element type ID
       INTEGER(LONG), INTENT(IN) :: FORMAT_CODE
-      INTEGER(LONG), INTENT(IN) :: NUM_WIDE
-      INTEGER(LONG), INTENT(IN) :: STRESS_CODE
+      INTEGER(LONG), INTENT(IN) :: NUM_WIDE                ! the number of words per element 
+      INTEGER(LONG), INTENT(IN) :: STRESS_CODE             ! flag for von_mises/max_shear/octehedral and fiber_distance/strain_curvature
+      CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
+      CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
+      CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
       
       INTEGER(LONG) :: FIELD5, FIELD6, FIELD7, APPROACH_CODE
       INTEGER(LONG) :: TABLE_CODE, LOAD_SET, THERMAL, ACOUSTIC_FLAG
-      CHARACTER(LEN=128) :: TITLE, LABEL, SUBTITLE
  1    FORMAT("WRITE_OES3: ITABLE=",I8)
       WRITE(ERR,1) ITABLE
       WRITE(OP2) 146
-      TITLE    = "Title"
-      LABEL    = "Label"
-      SUBTITLE = "Subtitle"
       ! stress/strain only
       TABLE_CODE = 5
       
