@@ -150,6 +150,11 @@
       CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
  1    FORMAT("WRITE_OES3: ITABLE_START=",I8)
       WRITE(ERR,1) ITABLE
+
+      FIELD5 = 0
+      FIELD6 = 0
+      FIELD7 = 0
+
       WRITE(OP2) 146
       ! stress/strain only
       TABLE_CODE = 5
@@ -164,8 +169,9 @@
       THERMAL = 0
 
       APPROACH_CODE = ANALYSIS_CODE * 10 + DEVICE_CODE
-
+2     FORMAT(" APPROACH_CODE=",I4," TABLE_CODE=",I4," ELEM_TYPE=",I4," ISUBCASE=",I4)
       ! 584 bytes
+      WRITE(ERR,2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE
       WRITE(OP2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE, FIELD5, &
             FIELD6, FIELD7, LOAD_SET, FORMAT_CODE, NUM_WIDE, &
             STRESS_CODE, ACOUSTIC_FLAG, 0, 0, 0, &
@@ -176,8 +182,44 @@
             TITLE, SUBTITLE, LABEL
 
       ITABLE = ITABLE - 1        ! flip it to -4, -6, ... so we don't have to do this later
- 2    FORMAT("WRITE_OES3: ITABLE_END=",I8)
-      WRITE(ERR,2) ITABLE
+ 3    FORMAT("WRITE_OES3: ITABLE_END=",I8)
+      WRITE(ERR,3) ITABLE
       CALL WRITE_ITABLE(ITABLE)
       ITABLE = ITABLE - 1
       END SUBROUTINE WRITE_OES3
+
+
+
+! ##################################################################################################################################
+      SUBROUTINE GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
+      ! bit description
+      ! 1   is_von_mises (vs. is_max_shear)
+      ! 2   is_strain (vs is_stress)
+      ! 3   is_strain_curvature (vs. is_fiber_distance)
+      ! 4   is_strain (vs is_stress)
+      ! 5   material coordinate system flag
+      ! stress_bits[1] = 0 -> is_max_shear=True       isVonMises=False
+      ! stress_bits[1] = 1 -> is_max_shear=False      isVonMises=True
+      ! stress_bits[2] = 0 -> is_stress=True        is_strain=False
+      ! stress_bits[3] = 0 -> isFiberCurvature=True isFiberDistance=False
+      ! stress_bits[4] = 0 -> duplicate of Bit[1] (stress/strain)
+      ! stress_bits[5] = 0 -> material coordinate system flag
+
+      ! s_code =  0 -> stress_bits = [0,0,0,0,0]
+      ! s_code =  1 -> stress_bits = [0,0,0,0,1]
+      ! s_code =  2 -> stress_bits = [0,0,0,1,0]
+      ! s_code =  3 -> stress_bits = [0,0,0,1,1]
+      ! etc.
+      ! s_code = 32 -> stress_bits = [1,1,1,1,1]
+      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
+      IMPLICIT NONE
+      INTEGER(LONG), INTENT(INOUT)          :: STRESS_CODE
+      INTEGER(LONG), INTENT(IN)             :: IS_VON_MISES
+      INTEGER(LONG), INTENT(IN)             :: IS_STRAIN
+      INTEGER(LONG), INTENT(IN)             :: IS_FIBER_DISTANCE
+      INTEGER(LONG)                         :: MATERIAL_FLAG
+      MATERIAL_FLAG = 0
+      STRESS_CODE = IS_VON_MISES + 2*IS_STRAIN + 4*IS_FIBER_DISTANCE + 8*IS_STRAIN + 16*MATERIAL_FLAG
+      END SUBROUTINE GET_STRESS_CODE
+
+! ##################################################################################################################################
