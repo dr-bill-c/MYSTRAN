@@ -66,9 +66,6 @@
           CALL WRITE_TABLE_HEADER(TABLE_NAME)
           ITABLE = -3
         ENDIF
-        WRITE(ERR,2) "writing itable",TABLE_NAME,ITABLE
-        CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
-        ITABLE = ITABLE - 1        ! flip it to -4, -6, ... so we don't have to do this later
       ENDIF
 
 100   END SUBROUTINE SET_OES_TABLE_NAME
@@ -84,6 +81,8 @@
 !         the file pointer
 !      itable : int
 !         the subtable number
+!          - starts as -3, -5, ...
+!          - ends as -4, -6, ...
 !      isubcase : int
 !         the subcase id (from the bulk data deck)
 !      etype : int
@@ -148,7 +147,8 @@
       
       INTEGER(LONG) :: FIELD5, FIELD6, FIELD7, APPROACH_CODE
       INTEGER(LONG) :: TABLE_CODE, LOAD_SET, THERMAL, ACOUSTIC_FLAG
- 1    FORMAT("WRITE_OES3: ITABLE=",I8)
+      CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
+ 1    FORMAT("WRITE_OES3: ITABLE_START=",I8)
       WRITE(ERR,1) ITABLE
       WRITE(OP2) 146
       ! stress/strain only
@@ -175,6 +175,9 @@
             0, 0, 0, 0, &
             TITLE, SUBTITLE, LABEL
 
+      ITABLE = ITABLE - 1        ! flip it to -4, -6, ... so we don't have to do this later
+ 2    FORMAT("WRITE_OES3: ITABLE_END=",I8)
+      WRITE(ERR,2) ITABLE
       CALL WRITE_ITABLE(ITABLE)
       ITABLE = ITABLE - 1
       END SUBROUTINE WRITE_OES3

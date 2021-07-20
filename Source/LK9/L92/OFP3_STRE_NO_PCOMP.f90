@@ -279,7 +279,11 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDDO elems_5
  
       ENDDO reqs5
- 
+
+      IF (TABLE_NAME .NE. "OES ERR ") THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
+!===========================
       IF ((POST /= 0) .AND. (ANY_STRE_OUTPUT > 0)) THEN
 
          NDUM = 0

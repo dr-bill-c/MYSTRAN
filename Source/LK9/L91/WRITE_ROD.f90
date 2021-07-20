@@ -388,7 +388,8 @@
         !                                               REAL(OGEL(I,3), 4), REAL(OGEL(I,4), 4), I=1,NUM)
         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), NAN, &
                                                        REAL(OGEL(I,2), 4), NAN, I=1,NUM)
-        CALL END_OP2_TABLE(ITABLE)
+ 102    FORMAT("*DEBUG: WRITE_CROD      ITABLE=",I8," (should be -5, -7,...)")
+        WRITE(ERR,102) ITABLE
       ENDIF
 
 !      IF (IS_PRINT) THEN

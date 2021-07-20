@@ -836,7 +836,8 @@
       STRESS_CODE = 1
       CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL)
 
- 100  FORMAT("*DEBUG:    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
+ 100  FORMAT("*DEBUG: WRITE_CSHEAR    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
+ 101  FORMAT("*DEBUG: WRITE_CSHEAR    ITABLE=",I8," (should be -5, -7,...)")
       NVALUES = NUM * NUM_WIDE
       NTOTAL = NVALUES * 4
       WRITE(ERR,100) ITABLE,NUM,NVALUES,NTOTAL
@@ -860,9 +861,22 @@
       !Normal-X      Normal-Y      Shear-XY -> max_shear, avg_shear, margin
       WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,3), 4), REAL(OGEL(I,3), 4), &
                                                      NAN, I=1,NUM)
-      CALL END_OP2_TABLE(ITABLE)
+      WRITE(ERR,100) ITABLE
+      
+      ! ITABLE = -5, -7, ...
+      !CALL END_OP2_TABLE(ITABLE)
+      !CALL WRITE_ITABLE(TABLE_NAME)  ! writing a -5
       !ITABLE = ITABLE - 1
 
+      ! -3: start
+      !   - CSHEAR header
+      ! -4:
+      !   - CSHEAR data
+      ! -5: start
+      !   - CROD header
+      ! -6:
+      !   - CROD data
+      ! -7 end
       DO I=1,NUM,2
          IF (I+1 <= NUM) THEN
             WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3), EID_OUT_ARRAY(I+1,1),(OGEL(I+1,J),J=1,3)
