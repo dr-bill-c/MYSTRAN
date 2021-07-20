@@ -53,9 +53,9 @@
 !     CHARACTER(LEN=1)                 :: G_OR_S            ! 'G' if a grid point or 'S' if a scalar point
 !     CHARACTER(LEN=19)                :: OUTNAM            ! An output name for a header for the PCH file
       CHARACTER(LEN=8)                 :: TABLE_NAME        ! Name of the op2 table that we're writing
-      CHARACTER(LEN=61)                :: TITLEI            ! Solution title
-      CHARACTER(LEN=61)                :: STITLEI           ! Subcase subtitle
-      CHARACTER(LEN=61)                :: LABELI            ! Subcase label
+      CHARACTER(LEN=128)                :: TITLEI            ! Solution title
+      CHARACTER(LEN=128)                :: STITLEI           ! Subcase subtitle
+      CHARACTER(LEN=128)                :: LABELI            ! Subcase label
 
       INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
@@ -95,10 +95,6 @@
       ENDIF
 
 !     Write output headers.
-      TITLEI = TITLE(INT_SC_NUM)(1:61)
-      STITLEI = STITLE(INT_SC_NUM)(1:61)
-      LABELI = LABEL(INT_SC_NUM)(1:61)
-
       THERMAL_FLAG = 0 ! 1 for heat transfer, 0 otherwise
 
       ! TODO: is an eigenvector classified as displacement?
@@ -143,7 +139,12 @@
       ENDIF
       ISUBCASE = SCNUM(JSUB)
       
-      CALL WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, APPROACH_CODE, TABLE_CODE, NEW_RESULT)
+      TITLEI = TITLE(INT_SC_NUM)
+      STITLEI = STITLE(INT_SC_NUM)
+      LABELI = LABEL(INT_SC_NUM)
+      CALL WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, APPROACH_CODE, TABLE_CODE, NEW_RESULT, &
+                             TITLEI, STITLEI, LABELI)
+
       ITABLE = ITABLE - 1
 ! Write accels, displ's, applied forces or SPC forces (also calc TOTALS for forces if that is being output)
 ! TOTALS(J) is summation of G.P. values of applied forces, SPC forces, or MFC forces, for each of the J=1,6 components.

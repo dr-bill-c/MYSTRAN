@@ -1,10 +1,15 @@
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NEW_RESULT)
+      SUBROUTINE WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NEW_RESULT, &
+                                   TITLE, SUBTITLE, LABEL)
       USE PENTIUM_II_KIND, ONLY  :  BYTE, LONG, DOUBLE
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(IN) :: ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE
-      LOGICAL, INTENT(INOUT)    :: NEW_RESULT
-      INTEGER(LONG) :: FORMAT_CODE, NUM_WIDE
+      INTEGER(LONG), INTENT(IN)        :: ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE
+      CHARACTER(LEN=128), INTENT(IN)   :: TITLE            ! Solution title
+      CHARACTER(LEN=128), INTENT(IN)   :: SUBTITLE         ! Subcase subtitle
+      CHARACTER(LEN=128), INTENT(IN)   :: LABEL            ! Subcase label
+      LOGICAL, INTENT(INOUT)           :: NEW_RESULT
+      INTEGER(LONG)                    :: FORMAT_CODE
+      INTEGER(LONG)                    :: NUM_WIDE
 
 !      1 = OP2 is the output file
 !      DEVICE_CODE = 1
@@ -13,11 +18,13 @@
       FORMAT_CODE = 1
       NUM_WIDE = 8
 
-      CALL WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT)
+      CALL WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT, &
+                      TITLE, SUBTITLE, LABEL)
       END SUBROUTINE WRITE_OUG3_STATIC
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT)
+      SUBROUTINE WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT, &
+                            TITLE, SUBTITLE, LABEL)
 !      Parameters
 !      ==========
 !      isubcase : int
@@ -25,18 +32,16 @@
       USE PENTIUM_II_KIND, ONLY  :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY           :  OP2
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(IN) :: ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE
-      LOGICAL, INTENT(INOUT)    :: NEW_RESULT
+      INTEGER(LONG), INTENT(IN)        :: ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE
+      CHARACTER(LEN=128), INTENT(IN)   :: TITLE            ! Solution title
+      CHARACTER(LEN=128), INTENT(IN)   :: SUBTITLE         ! Subcase subtitle
+      CHARACTER(LEN=128), INTENT(IN)   :: LABEL            ! Subcase label
+      LOGICAL, INTENT(INOUT)           :: NEW_RESULT
 
-      CHARACTER(LEN=128) :: TITLE, LABEL, SUBTITLE
       INTEGER(LONG) :: THERMAL, SORT_CODE, &
         RANDOM_CODE, ACOUSTIC_FLAG, OCODE, &
         APPROACH_CODE, TCODE
       INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
-
-      TITLE = "Title"
-      LABEL = "Label"
-      SUBTITLE = "Subtitle"
 
       write(*,*) NEW_RESULT, itable
       IF(NEW_RESULT .AND. (ITABLE .NE. -3)) THEN
