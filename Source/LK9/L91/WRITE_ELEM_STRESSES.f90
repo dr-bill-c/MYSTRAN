@@ -425,18 +425,51 @@
          ENDIF
 
       ELSE IF (TYPE(1:5) == 'QUAD4') THEN
-         !NVALUES = NUM_WIDE * NUM
-         ELEMENT_TYPE = 33
+         !CALL WRITE_CQUAD4 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         1)
-         !CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-         !                       TITLE, SUBTITLE, LABEL)
-         !WRITE(OP2) NVALUES
-         !CALL WRITE_CQUAD4 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         IF (STRE_LOC == 'CENTER  ') THEN
+  2         FORMAT(' *DEBUG:  WRITE_CQUAD4-33:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
+            WRITE(ERR,2) NUM,NUM_PTS,STRE_LOC,ITABLE
+
+            !(eid_device, 
+            ! fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
+            ! fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,) = out; n=17
+            NUM_WIDE = 17
+            ELEMENT_TYPE = 33
+            NVALUES = NUM_WIDE * NUM
+            CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                                   TITLEI, STITLEI, LABELI)
+            !NUM_PTS = 1
+            ! just a copy of the CTRIA3 code
+            ! op2 version of the upper & lower layers all in one call, but without the transverse shear
+            WRITE(OP2) NVALUES
+            WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(2*I-1,J),4), J=1,8), (REAL(OGEL(2*I,J),4), J=1,8), I=1,NUM)
+!         IF (STRE_LOC == 'CORNER  ') THEN
+         ELSE
+ 3          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
+            WRITE(ERR,3) NUM,NUM_PTS,STRE_LOC,ITABLE
+            ELEMENT_TYPE = 144
+            NUM_WIDE = 87 ! 2 + 17 * (4+1)  ! 4 nodes + 1centroid
+            
+            ! TODO: probably wrong...divide NUM by NUM_PTS?
+            NVALUES = NUM_WIDE * NUM
+            !(eid_device, 4,
+            ! grid=0,
+            ! fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
+            ! fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,) = n = 17+2
+            !
+            ! (grid,
+            !  fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
+            !  fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,)*4 = n = 17*4
+            !CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+            !                       TITLE, SUBTITLE, LABEL)
+            !WRITE(OP2) NVALUES
+         ENDIF
 
          K = 0
          DO I=1,NUM,NUM_PTS
-
             K = K + 1
             WRITE(F06,*)                                              ; IF (DEBUG(200) > 0) WRITE(ANS,*)
             WRITE(F06,1403) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(K,J),J=1,10)                                                      
@@ -942,7 +975,7 @@
 !          '      Shear-XY     Shear-XZ     Shear-YZ',/,1X,123X,'(max through thickness)')
 
       ! op2 version of the upper & lower layers all in one call, but without the transverse shear
-      WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(I,J),4), J=1,8), (REAL(OGEL(I+1,J),4), J=1,8), I=1,NUM,2)
+      WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(2*I-1,J),4), J=1,8), (REAL(OGEL(2*I,J),4), J=1,8), I=1,NUM)
 
  1703 FORMAT(1X,I8,4X,'Anywhere',2X,4(1ES13.5),0PF9.3,5(1ES13.5))
 
