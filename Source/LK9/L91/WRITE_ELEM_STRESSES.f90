@@ -96,6 +96,7 @@
       INTEGER(LONG)                   :: NVALUES      ! the number of "words" for all the elments
       INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
       INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
+      INTEGER(LONG)                   :: NELEMENTS
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -430,6 +431,7 @@
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         1)
          IF (STRE_LOC == 'CENTER  ') THEN
+            ! CQUAD4-33
   2         FORMAT(' *DEBUG:  WRITE_CQUAD4-33:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
             WRITE(ERR,2) NUM,NUM_PTS,STRE_LOC,ITABLE
 
@@ -448,29 +450,46 @@
             WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(2*I-1,J),4), J=1,8), (REAL(OGEL(2*I,J),4), J=1,8), I=1,NUM)
 !         IF (STRE_LOC == 'CORNER  ') THEN
          ELSE
+            ! CQUAD4-144
  3          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
             WRITE(ERR,3) NUM,NUM_PTS,STRE_LOC,ITABLE
             ELEMENT_TYPE = 144
             NUM_WIDE = 87 ! 2 + 17 * (4+1)  ! 4 nodes + 1centroid
             
             ! TODO: probably wrong...divide NUM by NUM_PTS?
-            NVALUES = NUM_WIDE * NUM
-            !(eid_device, 4,
-            ! grid=0,
+            NELEMENTS = NUM / NUM_PTS
+            NVALUES = NUM_WIDE * NELEMENTS
+            ! NUM=  10 NUM_PTS=   5
+            !(eid_device, "CEN/", 4, # "CEN/4"
             ! fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
             ! fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,) = n = 17+2
             !
             ! (grid,
             !  fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
             !  fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,)*4 = n = 17*4
-            !CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-            !                       TITLE, SUBTITLE, LABEL)
-            !WRITE(OP2) NVALUES
+            CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                                   TITLEI, STITLE, LABELI)
+            WRITE(OP2) NVALUES
+            ! see the CQUAD4-33 stress/strain (the IF part of this IF-ELSE block)
+            ! writing before trying to understand this...
+            !
+            ! basically a one-liner version of the F06 writing
+            ! we broke out the L=1,NUM_PTS-1 loop to 4 lines (the GID_OUT_ARRAY lines)
+            ! to avoid an additional hard to write loop
+            WRITE(OP2) (EID_OUT_ARRAY(5*I+1,1)*10+DEVICE_CODE, "CEN/", 4,                                           &
+                                                (REAL(OGEL(10*I+1,J),4), J=1,8), (REAL(OGEL(10*I+2,  J),4), J=1,8), &
+                        GID_OUT_ARRAY(5*I+1,2), (REAL(OGEL(10*I+3,J),4), J=1,8), (REAL(OGEL(10*I+4,  J),4), J=1,8), &
+                        GID_OUT_ARRAY(5*I+1,3), (REAL(OGEL(10*I+5,J),4), J=1,8), (REAL(OGEL(10*I+6,  J),4), J=1,8), &
+                        GID_OUT_ARRAY(5*I+1,4), (REAL(OGEL(10*I+7,J),4), J=1,8), (REAL(OGEL(10*I+8,  J),4), J=1,8), &
+                        GID_OUT_ARRAY(5*I+1,5), (REAL(OGEL(10*I+9,J),4), J=1,8), (REAL(OGEL(10*(I+1),J),4), J=1,8), &
+                        I=0,NELEMENTS-1)
          ENDIF
-
+         
          K = 0
          DO I=1,NUM,NUM_PTS
+ 4          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  I=',I4, " K=", I4)
             K = K + 1
+            WRITE(ERR,4) I,K
             WRITE(F06,*)                                              ; IF (DEBUG(200) > 0) WRITE(ANS,*)
             WRITE(F06,1403) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(K,J),J=1,10)                                                      
                                                                       ; IF (DEBUG(200) > 0) WRITE(ANS,1413) EID_OUT_ARRAY(I,1),    &
@@ -480,8 +499,8 @@
 
 
             DO L=1,NUM_PTS-1
-            
                K = K + 1
+               WRITE(ERR,4) I,K       
                WRITE(F06,*)                                           ; IF (DEBUG(200) > 0) WRITE(ANS,*)
                IF (DABS(POLY_FIT_ERR(I+L)) >= 0.01D0) THEN
                   WRITE(F06,1405) FILL(1: 0), GID_OUT_ARRAY(I,L+1),(OGEL(K,J),J=1,10), POLY_FIT_ERR(I+L), POLY_FIT_ERR_INDEX(I+L)
