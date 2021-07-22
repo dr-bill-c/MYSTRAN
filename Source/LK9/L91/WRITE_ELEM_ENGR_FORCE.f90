@@ -534,7 +534,7 @@ headr:IF (IHDR == 'Y') THEN
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
 
             WRITE(F06,101) SCNUM(JSUB)
-/
+
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
 
             WRITE(F06,102) JSUB

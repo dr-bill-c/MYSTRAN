@@ -195,10 +195,16 @@ do_plies_4:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                         NUM_LINES = NUM_LINES + 1
                         EID_OUT_ARRAY(NUM_LINES,1) = EID
                         EID_OUT_ARRAY(NUM_LINES,2) = M        ! Ply number for EID
-                        IF (ETYPE(J)(1:5) /='USER1') THEN
+                        IF ((ETYPE(J)(1:5) =='TRIA3') .OR. (ETYPE(J)(1:5) == "QUAD4")) THEN
                            IF (NUM_LINES == NELREQ(I)) THEN
                               CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                              CALL WRITE_PLY_STRESSES ( JVEC, NUM_LINES, IHDR )
+
+ 100                          FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                              WRITE(ERR,100) "OES_PCOMP",TYPE,TABLE_NAME,ITABLE
+                              CALL SET_OESC_TABLE_NAME(TABLE_NAME, ITABLE)
+                              WRITE(ERR,100) "OES_PCOMP",ETYPE(J)(1:8),TABLE_NAME,ITABLE
+                        
+                              CALL WRITE_PLY_STRESSES ( JVEC, NUM_LINES, IHDR, ETYPE(J)(1:8), ITABLE )
                               EXIT
                            ENDIF
                         ENDIF
@@ -215,6 +221,12 @@ do_plies_4:          DO M=1,NUM_PLIES                         ! Cycle over numbe
  
       ENDDO reqs4
  
+  10   FORMAT("*DEBUG:      OES_PCOMP_END:    TABLE_NAME",A)
+      WRITE(ERR,10) TABLE_NAME
+      IF (ITABLE < 0) THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
+
       IF ((POST /= 0) .AND. (ANY_STRE_OUTPUT > 0)) THEN
 
          NDUM = 0

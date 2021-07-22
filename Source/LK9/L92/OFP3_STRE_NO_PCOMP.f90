@@ -280,7 +280,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
  
       ENDDO reqs5
 
-      IF (TABLE_NAME .NE. "OES ERR ") THEN
+      IF ((TABLE_NAME .NE. "OES ERR ") .AND. (ITABLE < 0)) THEN
         CALL END_OP2_TABLE(ITABLE)
       ENDIF
 !===========================

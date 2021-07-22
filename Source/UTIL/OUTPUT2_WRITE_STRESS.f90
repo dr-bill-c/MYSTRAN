@@ -72,6 +72,27 @@
 
 
 ! ##################################################################################################################################
+      SUBROUTINE SET_OESC_TABLE_NAME(TABLE_NAME, ITABLE)
+      ! initializes the OES1C table name
+      ! updates ITABLE and TABLE_NAME
+      !
+      ! TODO: mak sure the TABLE_NAME_NEW is correct...
+      !
+      USE PENTIUM_II_KIND, ONLY        :  BYTE, LONG
+      !USE IOUNT1, ONLY                 :  ERR
+
+      !CHARACTER(8*BYTE), INTENT(IN)    :: ETYPE          ! name of element type
+      CHARACTER(8*BYTE), INTENT(INOUT) :: TABLE_NAME     ! name of the op2 table name
+      !CHARACTER(8*BYTE)                :: TABLE_NAME_NEW ! name of the op2 table name
+      INTEGER(LONG)                    :: ITABLE         ! the subtable
+      !LOGICAL                          :: RETURN_FLAG    ! return from the subroutine early
+      IF (ITABLE == 0) THEN
+          CALL WRITE_TABLE_HEADER(TABLE_NAME)
+          ITABLE = -3
+      ENDIF
+      END SUBROUTINE SET_OESC_TABLE_NAME
+
+! ##################################################################################################################################
       SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, & 
                                    TITLE, LABEL, SUBTITLE)
 !
