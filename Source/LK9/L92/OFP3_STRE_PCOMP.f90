@@ -71,8 +71,16 @@
       INTEGER(LONG)                   :: NUM_OTM_ENTRIES   ! Number of entries in OGEL for a particular element type
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = OFP3_STRE_PCOMP_BEGEND
  
+      INTEGER(LONG)                   :: ITABLE           ! the op2 subtable number
+      CHARACTER(8*BYTE)               :: TABLE_NAME       ! the op2 table name
+      LOGICAL                         :: IS_RESULT        ! is there a result
+
       INTRINSIC IAND
-  
+! **********************************************************************************************************************************
+      ! initial values
+      IS_RESULT = .FALSE.
+      TABLE_NAME = "OES1C"
+      ITABLE = 0
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -106,6 +114,7 @@
                      IF (ELOUT_STRE > 0) THEN
                         CALL GET_ELEM_NUM_PLIES ( J )
                         NELREQ(I) = NELREQ(I) + NUM_PLIES
+                        IS_RESULT = .TRUE.
                      ENDIF
                   ENDIF
                ENDIF

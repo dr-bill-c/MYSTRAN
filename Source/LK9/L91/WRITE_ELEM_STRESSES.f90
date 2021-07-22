@@ -104,10 +104,10 @@
          WRITE(F04,9001) SUBR_NAME,TSEC
  9001    FORMAT(1X,A,' BEGN ',F10.3)
       ENDIF
-      DEVICE_CODE = 1  ! PLOT
 
 ! **********************************************************************************************************************************
 ! Initialize
+      DEVICE_CODE = 1  ! PLOT
       STRESS_CODE = 0
  1    FORMAT("WRITE F06/OP2; ITABLE=",I8," (should be -4, -6, ...)")
       WRITE(ERR,1) ITABLE

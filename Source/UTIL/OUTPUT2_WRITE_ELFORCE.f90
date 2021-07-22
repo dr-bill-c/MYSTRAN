@@ -1,7 +1,7 @@
 
 !==================================================================================================
-      SUBROUTINE SET_OES_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE)
-      ! initializes the OES table name
+      SUBROUTINE SET_OEF_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE)
+      ! initializes the OEF table name
       ! updates ITABLE and TABLE_NAME
       !
       ! TODO: mak sure the TABLE_NAME_NEW is correct...
@@ -15,28 +15,28 @@
       INTEGER(LONG)                    :: ITABLE         ! the subtable
       LOGICAL                          :: RETURN_FLAG    ! return from the subroutine early
 
- 1    FORMAT("*DEBUG:      OUTPUT2_WRITE_STRESS: ", A)
- 2    FORMAT("*DEBUG:      OUTPUT2_WRITE_STRESS: ", A, "; TABLE_NAME= ", A,";ITABLE=", I8)
- 3    FORMAT("*DEBUG:      OUTPUT2_WRITE_STRESS: ", A, " ",A)
+ 1    FORMAT("*DEBUG:      OUTPUT2_WRITE_FORCE:  ", A)
+ 2    FORMAT("*DEBUG:      OUTPUT2_WRITE_FORCE:  ", A, "; TABLE_NAME= ", A,";ITABLE=", I8)
+ 3    FORMAT("*DEBUG:      OUTPUT2_WRITE_FORCE:  ", A, " ",A)
       RETURN_FLAG = .TRUE.
       IF      ((ETYPE == 'BAR     ') .OR. (ETYPE == 'BEAM    ')) THEN
-        TABLE_NAME_NEW= "OES1X   "
+        TABLE_NAME_NEW= "OEF1X   "
         RETURN_FLAG = .FALSE.
       ELSE IF ((ETYPE == 'ELAS1   ') .OR. (ETYPE == 'ELAS2   ') .OR. (ETYPE == 'ELAS3   ') .OR. (ETYPE == 'ELAS4   ') .OR.         &
                (ETYPE == 'BUSH    ') .OR. (ETYPE == 'ROD     ') .OR.                                                               &
                (ETYPE == 'TRIA3   ') .OR. (ETYPE == 'QUAD4   ') .OR. (ETYPE == 'SHEAR   ') .OR.                                    &
                (ETYPE == 'HEXA8   ') .OR. (ETYPE == 'PENTA6  ') .OR. (ETYPE == 'TETRA4  ') .OR.                                    &
                (ETYPE == 'HEXA20  ') .OR. (ETYPE == 'PENTA15 ') .OR. (ETYPE == 'TETRA10 ')) THEN                                     
-        TABLE_NAME_NEW= "OES1X1  "
-        WRITE(ERR,3) "OES1X1 found",ETYPE
+        TABLE_NAME_NEW= "OEF1X   "
+        WRITE(ERR,3) "OEF1X found",ETYPE
         RETURN_FLAG = .FALSE.
       ELSE
         WRITE(ERR,3) "ERROR STATE",ETYPE
         ! we're now in an error state
         ! also let's close the old table
-        TABLE_NAME_NEW= "OES ERR "
+        TABLE_NAME_NEW= "OEF ERR "
         IF (ITABLE < -1) THEN
-          WRITE(ERR,2) "closing stress table", TABLE_NAME,ITABLE
+          WRITE(ERR,2) "closing force table", TABLE_NAME,ITABLE
           CALL END_OP2_TABLE(ITABLE)   ! close the previous
         ENDIF
 !        WRITE(ERR,2) "invalidated tableA",TABLE_NAME,ITABLE
@@ -51,28 +51,28 @@
         IF (TABLE_NAME /= TABLE_NAME_NEW) THEN
         ! first let's find out if we need to close off the previous table
           IF (ITABLE < -1) THEN
-            WRITE(ERR,2) "closing stress table",TABLE_NAME,ITABLE
+            WRITE(ERR,2) "closing force table",TABLE_NAME,ITABLE
             CALL END_OP2_TABLE(ITABLE)   ! close the previous
           ENDIF
           ! we're now at the beginning
           TABLE_NAME = TABLE_NAME_NEW
           ITABLE = -1
-          WRITE(ERR,2) "will create stress table",TABLE_NAME,ITABLE
+          WRITE(ERR,2) "will create force table",TABLE_NAME,ITABLE
         ENDIF
         
         ! if we started/restarted, we need to write the TABLE_NAME
         IF (ITABLE == -1) THEN
-          WRITE(ERR,2) "creating stress table",TABLE_NAME,ITABLE
+          WRITE(ERR,2) "creating force table",TABLE_NAME,ITABLE
           CALL WRITE_TABLE_HEADER(TABLE_NAME)
           ITABLE = -3
         ENDIF
       ENDIF
 
-100   END SUBROUTINE SET_OES_TABLE_NAME
+100   END SUBROUTINE SET_OEF_TABLE_NAME
 
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, & 
+      SUBROUTINE WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, & 
                                    TITLE, LABEL, SUBTITLE)
 !
 !      Parameters
@@ -89,9 +89,6 @@
 !         element type
 !      num_wide : int
 !         the number of fields in each element
-!      stress_code : int
-!         0 : stress???
-!         1 : strain???
 !
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       IMPLICIT NONE
@@ -100,7 +97,6 @@
       INTEGER(LONG), INTENT(IN) :: DEVICE_CODE             ! PLOT, PRINT, PUNCH flag
       INTEGER(LONG), INTENT(IN) :: ELEM_TYPE               ! the element type ID
       INTEGER(LONG), INTENT(IN) :: NUM_WIDE                ! the number of words per element 
-      INTEGER(LONG), INTENT(IN) :: STRESS_CODE             ! flag for von_mises/max_shear/octehedral and fiber_distance/strain_curvature
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
@@ -117,12 +113,12 @@
       FIELD7 = 0
 !      static is real
       FORMAT_CODE = 1
-      CALL WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE,       &
+      CALL WRITE_OEF3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE,       &
                       TITLE, LABEL, SUBTITLE)
-      END SUBROUTINE WRITE_OES3_STATIC
+      END SUBROUTINE WRITE_OEF3_STATIC
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, &
+      SUBROUTINE WRITE_OEF3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, &
                             TITLE, LABEL, SUBTITLE)
 !      Parameters
 !      ==========
@@ -140,7 +136,8 @@
       INTEGER(LONG), INTENT(IN) :: ELEM_TYPE               ! the element type ID
       INTEGER(LONG), INTENT(IN) :: FORMAT_CODE
       INTEGER(LONG), INTENT(IN) :: NUM_WIDE                ! the number of words per element 
-      INTEGER(LONG), INTENT(IN) :: STRESS_CODE             ! flag for von_mises/max_shear/octehedral and fiber_distance/strain_curvature
+      !INTEGER(LONG), INTENT(IN) :: STRESS_CODE             ! flag for von_mises/max_shear/octehedral and fiber_distance/strain_curvature
+
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
@@ -148,7 +145,7 @@
       INTEGER(LONG) :: FIELD5, FIELD6, FIELD7, APPROACH_CODE
       INTEGER(LONG) :: TABLE_CODE, LOAD_SET, THERMAL, ACOUSTIC_FLAG
       CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
- 1    FORMAT("WRITE_OES3: ITABLE_START=",I8)
+ 1    FORMAT("WRITE_OEF3: ITABLE_START=",I8)
       WRITE(ERR,1) ITABLE
 
       FIELD5 = 0
@@ -156,8 +153,8 @@
       FIELD7 = 0
 
       WRITE(OP2) 146
-      ! stress/strain only
-      TABLE_CODE = 5
+      ! force only
+      TABLE_CODE = 4
       
       ! ???
       LOAD_SET = 1
@@ -174,7 +171,7 @@
       WRITE(ERR,2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE
       WRITE(OP2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE, FIELD5, &
             FIELD6, FIELD7, LOAD_SET, FORMAT_CODE, NUM_WIDE, &
-            STRESS_CODE, ACOUSTIC_FLAG, 0, 0, 0, &
+            0, ACOUSTIC_FLAG, 0, 0, 0, &
             0, 0, 0, 0, 0, &
             0, 0, THERMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
@@ -182,44 +179,12 @@
             TITLE, SUBTITLE, LABEL
 
       ITABLE = ITABLE - 1        ! flip it to -4, -6, ... so we don't have to do this later
- 3    FORMAT("WRITE_OES3: ITABLE_END=",I8)
+ 3    FORMAT("WRITE_OEF3: ITABLE_END=",I8)
       WRITE(ERR,3) ITABLE
       CALL WRITE_ITABLE(ITABLE)
       ITABLE = ITABLE - 1
-      END SUBROUTINE WRITE_OES3
+      END SUBROUTINE WRITE_OEF3
 
 
-
-! ##################################################################################################################################
-      SUBROUTINE GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
-      ! bit description
-      ! 1   is_von_mises (vs. is_max_shear)
-      ! 2   is_strain (vs is_stress)
-      ! 3   is_strain_curvature (vs. is_fiber_distance)
-      ! 4   is_strain (vs is_stress)
-      ! 5   material coordinate system flag
-      ! stress_bits[1] = 0 -> is_max_shear=True       isVonMises=False
-      ! stress_bits[1] = 1 -> is_max_shear=False      isVonMises=True
-      ! stress_bits[2] = 0 -> is_stress=True        is_strain=False
-      ! stress_bits[3] = 0 -> isFiberCurvature=True isFiberDistance=False
-      ! stress_bits[4] = 0 -> duplicate of Bit[1] (stress/strain)
-      ! stress_bits[5] = 0 -> material coordinate system flag
-
-      ! s_code =  0 -> stress_bits = [0,0,0,0,0]
-      ! s_code =  1 -> stress_bits = [0,0,0,0,1]
-      ! s_code =  2 -> stress_bits = [0,0,0,1,0]
-      ! s_code =  3 -> stress_bits = [0,0,0,1,1]
-      ! etc.
-      ! s_code = 32 -> stress_bits = [1,1,1,1,1]
-      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      IMPLICIT NONE
-      INTEGER(LONG), INTENT(INOUT)          :: STRESS_CODE
-      INTEGER(LONG), INTENT(IN)             :: IS_VON_MISES
-      INTEGER(LONG), INTENT(IN)             :: IS_STRAIN
-      INTEGER(LONG), INTENT(IN)             :: IS_FIBER_DISTANCE
-      INTEGER(LONG)                         :: MATERIAL_FLAG
-      MATERIAL_FLAG = 0
-      STRESS_CODE = IS_VON_MISES + 2*IS_STRAIN + 4*IS_FIBER_DISTANCE + 8*IS_STRAIN + 16*MATERIAL_FLAG
-      END SUBROUTINE GET_STRESS_CODE
 
 ! ##################################################################################################################################
