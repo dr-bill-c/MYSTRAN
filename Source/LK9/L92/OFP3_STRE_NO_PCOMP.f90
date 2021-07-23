@@ -564,7 +564,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
             CALL WRITE_FEMAP_STRE_VECS ( 'TRIA3   ', 'N', NUM_FROWS, FEMAP_SET_ID )
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
-
+                     
          NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4K stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4K, 22, SUBR_NAME )
@@ -626,7 +626,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
             CALL WRITE_FEMAP_STRE_VECS ( 'QUAD4   ', 'N', NUM_FROWS, FEMAP_SET_ID )
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
-
+                     
          NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA8 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA8, 12, SUBR_NAME )
@@ -873,7 +873,6 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
  9199 FORMAT(' ')
 
  9201 FORMAT(' *ERROR  9201: DUE TO ABOVE LISTED ERRORS, CANNOT CALCULATE ',A,' REQUESTS FOR ',A,' ELEMENT ID = ',I8)
-
 
 ! ##################################################################################################################################
 

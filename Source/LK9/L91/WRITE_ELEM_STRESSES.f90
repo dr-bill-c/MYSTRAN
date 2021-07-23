@@ -109,7 +109,7 @@
 ! Initialize
       DEVICE_CODE = 1  ! PLOT
       STRESS_CODE = 0
- 1    FORMAT("WRITE F06/OP2; ITABLE=",I8," (should be -4, -6, ...)")
+ 1    FORMAT("WRITE OES F06/OP2; ITABLE=",I8," (should be -4, -6, ...)")
       WRITE(ERR,1) ITABLE
       FILL(1:) = ' '
 
@@ -426,7 +426,7 @@
          ENDIF
 
       ELSE IF (TYPE(1:5) == 'QUAD4') THEN
-         !CALL WRITE_CQUAD4 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         !CALL WRITE_OES_CQUAD4 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
 
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         1)
@@ -454,7 +454,7 @@
  3          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
             WRITE(ERR,3) NUM,NUM_PTS,STRE_LOC,ITABLE
             ELEMENT_TYPE = 144
-            NUM_WIDE = 87 ! 2 + 17 * (4+1)  ! 4 nodes + 1centroid
+            NUM_WIDE = 87 ! 2 + 17 * (4+1)  ! 4 nodes + 1 centroid
             
             ! TODO: probably wrong...divide NUM by NUM_PTS?
             NELEMENTS = NUM / NUM_PTS
@@ -593,10 +593,10 @@
          CALL WRITE_ROD ( ISUBCASE, NUM, FILL(1:1), FILL(1:16), ITABLE, TITLEI, STITLEI, LABELI )
 
       ELSE IF (TYPE(1:5) == 'SHEAR') THEN
-         CALL WRITE_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         CALL WRITE_OES_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
 
       ELSE IF (TYPE(1:5) == 'TRIA3') THEN
-         CALL WRITE_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         CALL WRITE_OES_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
 
       ELSE IF (TYPE == 'BUSH    ') THEN
          ELEMENT_TYPE = 102 ! CBUSH
@@ -772,7 +772,6 @@
                  ,'      Shear-XY')
   
 
-
 ! TRIA3 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
  1701 FORMAT(1X,A,'Element    Location      Fibre        Stresses In Element Coord System       Principal Stresses (Zero Shear)',  &
                 '               Transverse   Transverse'                                                                           &
@@ -829,7 +828,7 @@
       END SUBROUTINE WRITE_ELEM_STRESSES
 !==============================================================================
 
-      SUBROUTINE WRITE_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_OES_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
 !     TODO: calculate margin
 !
       USE PENTIUM_II_KIND, ONLY     :  BYTE, LONG, DOUBLE
@@ -934,16 +933,14 @@
              1X,A,'MIN* : ',1X,3(ES14.6),//,                                                                                       &
              1X,A,'ABS* : ',1X,3(ES14.6),/,                                                                                        &
              1X,A,'*for output set')
-      END SUBROUTINE WRITE_CSHEAR
+      END SUBROUTINE WRITE_OES_CSHEAR
 
 !==============================================================================
-      SUBROUTINE WRITE_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_OES_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ANS, ERR, F06, OP2
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
-      !USE, INTRINSIC :: IEEE_ARITHMETIC, ONLY: IEEE_Value, IEEE_QUIET_NAN
-      !USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: REAL32
       IMPLICIT NONE
       !
       INTEGER(LONG), INTENT(IN)       :: NUM               ! the number of elements
@@ -964,9 +961,7 @@
       REAL(DOUBLE)                :: MAX_ANS(11)   ! Max for output
       REAL(DOUBLE)                :: MIN_ANS(11)   ! Min for output
       INTEGER(LONG)               :: I, J, K       ! DO loop indices
-      !REAL(REAL32)  :: NAN
 
-      ! is this right (the j loop)?
       ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
       !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
       !]
@@ -1037,7 +1032,7 @@
                          MIN_ANS(2),MIN_ANS(3),MIN_ANS(4),MIN_ANS(6),MIN_ANS(7),MIN_ANS(8),MIN_ANS(9),MIN_ANS(10),              &
                          ABS_ANS(2),ABS_ANS(3),ABS_ANS(4),ABS_ANS(6),ABS_ANS(7),ABS_ANS(8),ABS_ANS(9),ABS_ANS(10)
       ENDIF
-      END SUBROUTINE WRITE_CTRIA3
+      END SUBROUTINE WRITE_OES_CTRIA3
 
 !==============================================================================
       SUBROUTINE GET_SPRING_OP2_ELEMENT_TYPE(ELEMENT_TYPE)

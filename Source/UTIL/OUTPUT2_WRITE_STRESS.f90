@@ -1,7 +1,27 @@
 
 !==================================================================================================
+      SUBROUTINE SET_OST_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE)
+      ! strain table writer
+      USE PENTIUM_II_KIND, ONLY        :  BYTE, LONG
+      CHARACTER(8*BYTE), INTENT(IN)    :: ETYPE          ! name of element type
+      CHARACTER(8*BYTE), INTENT(INOUT) :: TABLE_NAME     ! name of the op2 table name
+      INTEGER(LONG),INTENT(INOUT)      :: ITABLE         ! the subtable
+      CALL SET_OES_OST_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE, "OSTR1X  ", "OSTR1X  ")
+      END SUBROUTINE SET_OST_TABLE_NAME
+!==================================================================================================
+
       SUBROUTINE SET_OES_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE)
-      ! initializes the OES table name
+      ! stress table writer
+      USE PENTIUM_II_KIND, ONLY        :  BYTE, LONG
+      CHARACTER(8*BYTE), INTENT(IN)    :: ETYPE          ! name of element type
+      CHARACTER(8*BYTE), INTENT(INOUT) :: TABLE_NAME     ! name of the op2 table name
+      INTEGER(LONG),INTENT(INOUT)      :: ITABLE         ! the subtable
+      CALL SET_OES_OST_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE, "OES1X   ", "OES1X1  ")
+      END SUBROUTINE SET_OES_TABLE_NAME
+!==================================================================================================
+
+      SUBROUTINE SET_OES_OST_TABLE_NAME (ETYPE, TABLE_NAME, ITABLE, TABLE_NAME_BAR, TABLE_NAME_SHELL_SOLID)
+      ! initializes the OES/OST table name
       ! updates ITABLE and TABLE_NAME
       !
       ! TODO: mak sure the TABLE_NAME_NEW is correct...
@@ -11,8 +31,10 @@
 
       CHARACTER(8*BYTE), INTENT(IN)    :: ETYPE          ! name of element type
       CHARACTER(8*BYTE), INTENT(INOUT) :: TABLE_NAME     ! name of the op2 table name
+      CHARACTER(8*BYTE), INTENT(IN)    :: TABLE_NAME_BAR ! name of table for bars
+      CHARACTER(8*BYTE), INTENT(IN)    :: TABLE_NAME_SHELL_SOLID ! name of table for shells and solids
+      INTEGER(LONG),INTENT(INOUT)      :: ITABLE         ! the subtable
       CHARACTER(8*BYTE)                :: TABLE_NAME_NEW ! name of the op2 table name
-      INTEGER(LONG)                    :: ITABLE         ! the subtable
       LOGICAL                          :: RETURN_FLAG    ! return from the subroutine early
 
  1    FORMAT("*DEBUG:      OUTPUT2_WRITE_STRESS: ", A)
@@ -20,14 +42,14 @@
  3    FORMAT("*DEBUG:      OUTPUT2_WRITE_STRESS: ", A, " ",A)
       RETURN_FLAG = .TRUE.
       IF      ((ETYPE == 'BAR     ') .OR. (ETYPE == 'BEAM    ')) THEN
-        TABLE_NAME_NEW= "OES1X   "
+        TABLE_NAME_NEW= TABLE_NAME_BAR !"OES1X   "
         RETURN_FLAG = .FALSE.
       ELSE IF ((ETYPE == 'ELAS1   ') .OR. (ETYPE == 'ELAS2   ') .OR. (ETYPE == 'ELAS3   ') .OR. (ETYPE == 'ELAS4   ') .OR.         &
                (ETYPE == 'BUSH    ') .OR. (ETYPE == 'ROD     ') .OR.                                                               &
                (ETYPE == 'TRIA3   ') .OR. (ETYPE == 'QUAD4   ') .OR. (ETYPE == 'SHEAR   ') .OR.                                    &
                (ETYPE == 'HEXA8   ') .OR. (ETYPE == 'PENTA6  ') .OR. (ETYPE == 'TETRA4  ') .OR.                                    &
                (ETYPE == 'HEXA20  ') .OR. (ETYPE == 'PENTA15 ') .OR. (ETYPE == 'TETRA10 ')) THEN                                     
-        TABLE_NAME_NEW= "OES1X1  "
+        TABLE_NAME_NEW= TABLE_NAME_SHELL_SOLID !"OES1X1  "
         WRITE(ERR,3) "OES1X1 found",ETYPE
         RETURN_FLAG = .FALSE.
       ELSE
@@ -68,7 +90,7 @@
         ENDIF
       ENDIF
 
-100   END SUBROUTINE SET_OES_TABLE_NAME
+100   END SUBROUTINE SET_OES_OST_TABLE_NAME
 
 
 ! ##################################################################################################################################
