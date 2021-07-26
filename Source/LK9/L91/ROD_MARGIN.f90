@@ -118,7 +118,7 @@
          ENDIF
  
       ENDIF
-                   
+
       S2M = DABS(S2)                                       ! ROD torsional margin (positive or negative torsional stress)
  
       IF (S2M < EPS5) THEN

@@ -552,6 +552,9 @@
             ENDDO
          ENDIF
 
+      ELSE IF (TYPE == 'ROD     ') THEN
+         CALL WRITE_ROD ( ISUBCASE, NUM, FILL(1:1), FILL(1:16), ITABLE, TITLEI, STITLEI, LABELI )
+
       ELSE IF (TYPE(1:5) == 'SHEAR') THEN
          CALL WRITE_OST_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
 
@@ -631,7 +634,7 @@
       ,/,1X,A,'   ID        SB1           SB2           SB3           SB4          Strain        SB-Max        SB-Min      M.S.-C')
 
 ! ELAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1201 FORMAT(1X,A,'Element     Stress     Element     Strain     Element     Strain     Element     Strain     Element     Strain' &
+ 1201 FORMAT(1X,A,'Element     Strain     Element     Strain     Element     Strain     Element     Strain     Element     Strain' &
           ,/,1X,A,'   ID                     ID                     ID                     ID                     ID')
   
  1103 FORMAT(5(A,I8,1ES14.6))

@@ -126,6 +126,7 @@
          IF((ELMTYP(I)(1:5) == 'TRIA3') .OR. (ELMTYP(I)(1:5) == 'QUAD4') .OR. (ELMTYP(I)(1:5) == 'SHEAR') .OR.                     &
             (ELMTYP(I)(1:4) == 'HEXA' ) .OR. (ELMTYP(I)(1:5) == 'PENTA') .OR. (ELMTYP(I)(1:5) == 'TETRA') .OR.                     &
             (ELMTYP(I)(1:4) == 'BUSH' )) THEN
+!            (ELMTYP(I)(1:4) == 'BUSH' ) .OR. (ELMTYP(I)(1:3) == 'ROD') .OR. (ELMTYP(I)(1:4) == 'ELAS')) THEN
             DO J=1,NELE
                CALL IS_ELEM_PCOMP_PROPS ( J )
                IF (PCOMP_PROPS == 'N') THEN
