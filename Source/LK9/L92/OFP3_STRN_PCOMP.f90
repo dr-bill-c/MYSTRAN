@@ -71,8 +71,16 @@
       INTEGER(LONG)                   :: NUM_OTM_ENTRIES   ! Number of entries in OGEL for a particular element type
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = OFP3_STRN_PCOMP_BEGEND
  
+      INTEGER(LONG)                   :: ITABLE           ! the op2 subtable number
+      CHARACTER(8*BYTE)               :: TABLE_NAME       ! the op2 table name
+      LOGICAL                         :: IS_RESULT        ! is there a result
+
       INTRINSIC IAND
-  
+! **********************************************************************************************************************************
+      ! initial values
+      IS_RESULT = .FALSE.
+      TABLE_NAME = "OSTR1C"
+      ITABLE = 0
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -106,6 +114,7 @@
                      IF (ELOUT_STRN > 0) THEN
                         CALL GET_ELEM_NUM_PLIES ( J )
                         NELREQ(I) = NELREQ(I) + NUM_PLIES
+                        IS_RESULT = .TRUE.
                      ENDIF
                   ENDIF
                ENDIF
@@ -186,10 +195,16 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                         NUM_LINES = NUM_LINES + 1
                         EID_OUT_ARRAY(NUM_LINES,1) = EID
                         EID_OUT_ARRAY(NUM_LINES,2) = M        ! Ply number for EID
-                        IF (ETYPE(J)(1:5) /='USER1') THEN
+                        IF ((ETYPE(J)(1:5) =='TRIA3') .OR. (ETYPE(J)(1:5) == "QUAD4")) THEN
                            IF (NUM_LINES == NELREQ(I)) THEN
                               CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                              CALL WRITE_PLY_STRAINS ( JVEC, NUM_LINES, IHDR )
+
+ 100                          FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                              WRITE(ERR,100) "OSTR1C_PCOMP",TYPE,TABLE_NAME,ITABLE
+                              CALL SET_OESC_TABLE_NAME(TABLE_NAME, ITABLE)
+                              WRITE(ERR,100) "OSTR1C_PCOMP",ETYPE(J)(1:8),TABLE_NAME,ITABLE
+                        
+                              CALL WRITE_PLY_STRAINS ( JVEC, NUM_LINES, IHDR, ETYPE(J)(1:8), ITABLE  )
                               EXIT
                            ENDIF
                         ENDIF
@@ -206,6 +221,12 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
  
       ENDDO reqs6
  
+  10   FORMAT("*DEBUG:      OSTR_PCOMP_END:    TABLE_NAME",A)
+      WRITE(ERR,10) TABLE_NAME
+      IF (ITABLE < 0) THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
+
       IF ((POST /= 0) .AND. (ANY_STRN_OUTPUT > 0)) THEN
 
          NDUM = 0
@@ -237,7 +258,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                      DO M=1,NUM_PLIES
                         PLY_NUM = M                        ! 'N' in call to EMG means do not write to BUG file
                         CALL EMG ( J   , OPT, 'N', SUBR_NAME, 'N' )
-                        NUM_FROWS= NUM_FROWS+ 1
+                        NUM_FROWS = NUM_FROWS+ 1
                         FEMAP_EL_NUMS(NUM_FROWS,1) = EID
                         FEMAP_EL_NUMS(NUM_FROWS,2) = M
                         IF (NUM_EMG_FATAL_ERRS > 0) THEN
@@ -339,7 +360,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                      DO M=1,NUM_PLIES
                         PLY_NUM = M                        ! 'N' in call to EMG means do not write to BUG file
                         CALL EMG ( J   , OPT, 'N', SUBR_NAME, 'N' )
-                        NUM_FROWS= NUM_FROWS+ 1
+                        NUM_FROWS = NUM_FROWS+ 1
                         FEMAP_EL_NUMS(NUM_FROWS,1) = EID
                         FEMAP_EL_NUMS(NUM_FROWS,2) = M
                         IF (NUM_EMG_FATAL_ERRS > 0) THEN

@@ -250,7 +250,7 @@ do_plies_4:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                IF (PCOMP_PROPS == 'Y') THEN
                   EID   = EDAT(EPNT(J))
                   TYPE  = ETYPE(J)
-                  IF (ETYPE(J)(1:6) == 'TRIA3 ') THEN
+                  IF (ETYPE(J)(1:5) == 'TRIA3') THEN
                      CALL GET_ELEM_NUM_PLIES ( J )
                      DO K=0,MBUG-1
                         WRT_BUG(K) = 0
@@ -301,7 +301,7 @@ do_plies_4:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                IF (PCOMP_PROPS == 'Y') THEN
                   EID   = EDAT(EPNT(J))
                   TYPE  = ETYPE(J)
-                  IF (ETYPE(J)(1:6) == 'QUAD4 ') THEN
+                  IF (ETYPE(J)(1:5) == 'QUAD4') THEN
                      CALL GET_ELEM_NUM_PLIES ( J )
                      NUM_FROWS = NUM_FROWS+ 1
                      DO K=0,MBUG-1
@@ -352,7 +352,7 @@ do_plies_4:          DO M=1,NUM_PLIES                         ! Cycle over numbe
                IF (PCOMP_PROPS == 'Y') THEN
                   EID   = EDAT(EPNT(J))
                   TYPE  = ETYPE(J)
-                  IF (ETYPE(J)(1:6) == 'SHEAR ') THEN
+                  IF (ETYPE(J)(1:5) == 'SHEAR') THEN
                      CALL GET_ELEM_NUM_PLIES ( J )
                      DO K=0,MBUG-1
                         WRT_BUG(K) = 0
