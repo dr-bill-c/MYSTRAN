@@ -97,6 +97,8 @@
       INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
       INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
       INTEGER(LONG)                   :: NELEMENTS
+      INTEGER(LONG)                   :: CID          ! coordinate system
+      CHARACTER(4*BYTE)               :: CEN_WORD     ! the word "CEN/" (we need to cast the length)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -367,11 +369,43 @@
 
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            1,         0)
-         !CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-         !                       TITLE, SUBTITLE, LABEL)
-         !WRITE(OP2) NVALUES
-         !WRITE(OP2) (EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS), I=1,NUM)
+         CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                                TITLEI, STITLEI, LABELI)
+         WRITE(OP2) NVALUES
+         CEN_WORD = "CEN/"
+
+        ! See the CHEXA, CPENTA, or CTETRA entry for the definition of the element coordinate systems.
+        ! The material coordinate system (CORDM) may be the basic system (0 or blank), any defined system
+        ! (Integer > 0), or the standard internal coordinate system of the element designated as:
+        ! -1: element coordinate system (-1)
+        ! -2: element system based on eigenvalue techniques to insure non bias in the element formulation.
+
+        ! TODO hardcoded
+         CID = -1
+
+        ! setting:
+        !  - CTETRA: [element_device, cid, 'CEN/', 4]
+        !  - CPYRAM: [element_device, cid, 'CEN/', 5]
+        !  - CPENTA: [element_device, cid, 'CEN/', 6]
+        !  - CHEXA:  [element_device, cid, 'CEN/', 8]
+
+         !                 1             2             3            4            5               6             7                 
+         !  Element    Sigma-xx      Sigma-yy      Sigma-zz       Tau-xy        Tau-yz        Tau-zx      von Mises
+         !     ID
          
+         ! TODO: we repeat the center node N times because the corner results have not been calculated
+         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, CID, CEN_WORD, NNODES-1,                                                   &
+                      ! grid_id
+                      ! 21
+                     (GID_OUT_ARRAY(I,J),                                                                                          &
+                      ! oxx             txy                s1                  a1  a2  a3  p                   ovm
+                     REAL(OGEL(I,1),4), REAL(OGEL(I,4),4), REAL(OGEL(I,9), 4), 0., 0., 0., REAL(OGEL(I,12),4), REAL(OGEL(I,7),4),  &
+                      ! syy             tyz                s2                  b1  b2  b3
+                     REAL(OGEL(I,2),4), REAL(OGEL(I,5),4), REAL(OGEL(I,10),4), 0., 0., 0.,                                         &
+                      ! szz             txz                s3                  c1  c2  c3
+                     REAL(OGEL(I,3),4), REAL(OGEL(I,6),4), REAL(OGEL(I,11),4), 0., 0., 0.,                                         &
+                     J=1,NNODES), I=1,NUM)
+
          IF (STRN_OPT == 'VONMISES') THEN
             NCOLS = 7
          ELSE
@@ -379,8 +413,8 @@
          ENDIF
 
          DO I=1,NUM
-            WRITE(F06,1303) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS)    ; IF (DEBUG(200) > 0) WRITE(ANS,1313) EID_OUT_ARRAY(I,1),  &
-                                                                                                              (OGEL(I,J),J=1,NCOLS)
+            WRITE(F06,1303) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS)  ; IF (DEBUG(200) > 0) WRITE(ANS,1313) EID_OUT_ARRAY(I,1),    &
+                                                                                                            (OGEL(I,J),J=1,NCOLS)
          ENDDO
 
          CALL GET_MAX_MIN_ABS_STR ( NUM, NCOLS, 'N', MAX_ANS, MIN_ANS, ABS_ANS )
@@ -408,6 +442,7 @@
             NVALUES = NUM_WIDE * NUM
             CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
                                    TITLEI, STITLEI, LABELI)
+            !NUM_PTS = 1
             ! just a copy of the CTRIA3 code
             ! op2 version of the upper & lower layers all in one call, but without the transverse shear
             WRITE(OP2) NVALUES
@@ -453,18 +488,18 @@
  4          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  I=',I4, " K=", I4)
             K = K + 1
             WRITE(ERR,4) I,K
-            WRITE(F06,*)                                                ; IF (DEBUG(200) > 0) WRITE(ANS,*)
+            WRITE(F06,*)                                              ; IF (DEBUG(200) > 0) WRITE(ANS,*)
             WRITE(F06,1403) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(K,J),J=1,10)                                                      
-                                                                        ; IF (DEBUG(200) > 0) WRITE(ANS,1413) EID_OUT_ARRAY(I,1),  &
+                                                                      ; IF (DEBUG(200) > 0) WRITE(ANS,1413) EID_OUT_ARRAY(I,1),    &
                                                                                                               (OGEL(K,J),J=1,10)
             K = K + 1
-            WRITE(F06,1404) FILL(1: 0), (OGEL(K,J),J=1,8)               ; IF (DEBUG(200) > 0) WRITE(ANS,1414) (OGEL(K,J),J=1,8)
+            WRITE(F06,1404) FILL(1: 0), (OGEL(K,J),J=1,8)             ; IF (DEBUG(200) > 0) WRITE(ANS,1414) (OGEL(K,J),J=1,8)
 
 
             DO L=1,NUM_PTS-1
                K = K + 1
                WRITE(ERR,4) I,K       
-               WRITE(F06,*)                                             ; IF (DEBUG(200) > 0) WRITE(ANS,*)
+               WRITE(F06,*)                                           ; IF (DEBUG(200) > 0) WRITE(ANS,*)
                IF (DABS(POLY_FIT_ERR(I+L)) >= 0.01D0) THEN
                   WRITE(F06,1405) FILL(1: 0), GID_OUT_ARRAY(I,L+1),(OGEL(K,J),J=1,10), POLY_FIT_ERR(I+L), POLY_FIT_ERR_INDEX(I+L)
                   WRT_ERR_INDEX_NOTE(POLY_FIT_ERR_INDEX(I+L)) = 'Y'
@@ -476,7 +511,7 @@
                ENDIF
 
                K = K + 1
-               WRITE(F06,1407) FILL(1: 0), (OGEL(K,J),J=1,8)            ; IF (DEBUG(200) > 0) WRITE(ANS,1417) (OGEL(K,J),J=1,8)
+               WRITE(F06,1407) FILL(1: 0), (OGEL(K,J),J=1,8)          ; IF (DEBUG(200) > 0) WRITE(ANS,1417) (OGEL(K,J),J=1,8)
 
             ENDDO
 

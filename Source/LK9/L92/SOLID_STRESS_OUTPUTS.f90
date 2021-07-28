@@ -92,6 +92,10 @@
                OGEL(NUM1,7) = SIG_OCT
                OGEL(NUM1,8) = TAU_OCT
             ENDIF
+            OGEL(NUM1,9) = PRINCIPAL_STRESS(1)
+            OGEL(NUM1,10) = PRINCIPAL_STRESS(2)
+            OGEL(NUM1,11) = PRINCIPAL_STRESS(3)
+            OGEL(NUM1,12) = MEAN
          ENDIF
          IF ((POST /= 0) .AND. (WRITE_FEMAP == 'Y')) THEN
             DO J=1,6

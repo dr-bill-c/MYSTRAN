@@ -97,6 +97,8 @@
       INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
       INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
       INTEGER(LONG)                   :: NELEMENTS
+      INTEGER(LONG)                   :: CID          ! coordinate system
+      CHARACTER(4*BYTE)               :: CEN_WORD     ! the word "CEN/" (we need to cast the length)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -395,11 +397,43 @@
 
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         0)
-         !CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-         !                       TITLE, SUBTITLE, LABEL)
-         !WRITE(OP2) NVALUES
-         !WRITE(OP2) (EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,NCOLS), I=1,NUM)
+         CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                                TITLEI, STITLEI, LABELI)
+         WRITE(OP2) NVALUES
+         CEN_WORD = "CEN/"
+
+        ! See the CHEXA, CPENTA, or CTETRA entry for the definition of the element coordinate systems.
+        ! The material coordinate system (CORDM) may be the basic system (0 or blank), any defined system
+        ! (Integer > 0), or the standard internal coordinate system of the element designated as:
+        ! -1: element coordinate system (-1)
+        ! -2: element system based on eigenvalue techniques to insure non bias in the element formulation.
+
+        ! TODO hardcoded
+         CID = -1
+
+        ! setting:
+        !  - CTETRA: [element_device, cid, 'CEN/', 4]
+        !  - CPYRAM: [element_device, cid, 'CEN/', 5]
+        !  - CPENTA: [element_device, cid, 'CEN/', 6]
+        !  - CHEXA:  [element_device, cid, 'CEN/', 8]
+
+         !                 1             2             3            4            5               6             7                 
+         !  Element    Sigma-xx      Sigma-yy      Sigma-zz       Tau-xy        Tau-yz        Tau-zx      von Mises
+         !     ID
          
+         ! TODO: we repeat the center node N times because the corner results have not been calculated
+         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, CID, CEN_WORD, NNODES-1,                                                   &
+                      ! grid_id
+                      ! 21
+                     (GID_OUT_ARRAY(I,J),                                                                                          &
+                      ! oxx             txy                s1                  a1  a2  a3  p                   ovm
+                     REAL(OGEL(I,1),4), REAL(OGEL(I,4),4), REAL(OGEL(I,9), 4), 0., 0., 0., REAL(OGEL(I,12),4), REAL(OGEL(I,7),4),  &
+                      ! syy             tyz                s2                  b1  b2  b3
+                     REAL(OGEL(I,2),4), REAL(OGEL(I,5),4), REAL(OGEL(I,10),4), 0., 0., 0.,                                         &
+                      ! szz             txz                s3                  c1  c2  c3
+                     REAL(OGEL(I,3),4), REAL(OGEL(I,6),4), REAL(OGEL(I,11),4), 0., 0., 0.,                                         &
+                     J=1,NNODES), I=1,NUM)
+
          IF (STRE_OPT == 'VONMISES') THEN
             NCOLS = 7
          ELSE
@@ -448,7 +482,6 @@
             ! op2 version of the upper & lower layers all in one call, but without the transverse shear
             WRITE(OP2) NVALUES
             WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(2*I-1,J),4), J=1,8), (REAL(OGEL(2*I,J),4), J=1,8), I=1,NUM)
-!         IF (STRE_LOC == 'CORNER  ') THEN
          ELSE
             ! CQUAD4-144
  3          FORMAT(' *DEBUG:  WRITE_CQUAD4-144:  NUM=',I4, " NUM_PTS=", I4, " STRE_LOC=",A,"ITABLE=",I4)
@@ -898,20 +931,6 @@
                                                      NAN, I=1,NUM)
       WRITE(ERR,100) ITABLE
       
-      ! ITABLE = -5, -7, ...
-      !CALL END_OP2_TABLE(ITABLE)
-      !CALL WRITE_ITABLE(TABLE_NAME)  ! writing a -5
-      !ITABLE = ITABLE - 1
-
-      ! -3: start
-      !   - CSHEAR header
-      ! -4:
-      !   - CSHEAR data
-      ! -5: start
-      !   - CROD header
-      ! -6:
-      !   - CROD data
-      ! -7 end
       DO I=1,NUM,2
          IF (I+1 <= NUM) THEN
             WRITE(F06,1603) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,3), EID_OUT_ARRAY(I+1,1),(OGEL(I+1,J),J=1,3)
