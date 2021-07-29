@@ -40,6 +40,7 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
                                          MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
                                          SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
+      use model_stuf, only            :  psi_hat                                                                                  !?
       USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 

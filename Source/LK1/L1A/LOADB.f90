@@ -47,7 +47,6 @@
                                          MPCSET, MPC_SIDS, MPCSIDS, MPCADD_SIDS, PBAR, RPCOMP, PRESS_SIDS, RFORCE_SIDS,            &
                                          RPBAR, SLOAD_SIDS, SPC_SIDS, SPC1_SIDS, SPCADD_SIDS, SPCSET, CC_EIGR_SID, SCNUM, SUBLOD
  
-
       USE LOADB_USE_IFs
 
       IMPLICIT NONE
@@ -272,12 +271,16 @@ bdf:  DO
                   CARD2(1:8) = CARD1(73:80)
                ENDIF
 
-               CALL FFIELD2 ( CARD1, CARD2, CARD, IERR )
-
             ENDIF
 
             IF (IERR /= 0) THEN
                FATAL_ERR = FATAL_ERR + 1
+!!!!!!         WRITE(ERR,101) CARD
+!!!!!!         WRITE(ERR,1003)
+!!!!!!         IF (ECHO == 'NONE  ') THEN
+!!!!!!            WRITE(F06,101) CARD
+!!!!!!         ENDIF
+!!!!!!         WRITE(F06,1003)
                CYCLE
             ENDIF 
 
@@ -667,7 +670,9 @@ bdf:  DO
              ' ++                            * * * * * * * * * *  |  \|   \___/     |     |____  * * * * * * * * * *' ,28X,'++',/  &
              ' ++',127X,'++',/,                                                                                                    &
              ' ++',127X,'++',/,                                                                                                    &
-   ' ++', 6X,' B U C K L I N G   &   D I F F E R E N   S O L   a r e   o n l y   c o d e d   f o r   t h e   BAR   a n d   BEAM',  &
+   ' ++', 6X,' B U C K L I N G   &   D I F F E R E N   S O L   a r e   o n l y   c o d e d   f o r   e l e m e n t s:',18X,'++',/  &
+             ' ++',127X,'++',/,                                                                                                    &
+   ' ++', 6X,'                                            BAR,  HEXA,  PENTA,  TETRA', 51X, '++'                                   &
    8X,'++',/,' ++',127X,'++',/                                                                                                     &
    ' ++', 6X,'   A l l   o t h e r   e l e m s   i g n o r e d   i n   t h e  d i f f e r e n t i a l   s t i f f   c a l c s',    &
   10X,'++',/,' ++',127X,'++',/                                                                                                     &
@@ -915,7 +920,6 @@ j_do2:            DO J=2,LMPCADDC
                ENDIF
             ENDDO
 
-
 ! (d) Check for duplicate MPC set ID's on MPCADD. There was a check on each MPCADD entry read in subr BD_MPCADD but no check was
 !     made across duplicate MPCADD entries (i.e. there may be more than 1 MPCADD entry with the same set ID and we need to make
 !     sure that an MPC set ID on the 2nd, etc, is not the same as one on the 1st, etc)
@@ -990,8 +994,6 @@ j_do2:            DO J=2,LMPCADDC
             ENDIF
          ENDDO
       ENDDO   
-
-
 
 ! Write message regarding max number of elem grids/DOF's
 
@@ -1090,12 +1092,6 @@ j_do2:            DO J=2,LMPCADDC
                     ,/,14X,'    f) If CONMi''s are connected to SPOINT''s the offset and moment of inertia terms are ignored'      &
                     ,/,14X,'    g) Terms in matrix RBGLOBAL (rigid body displ matrix) for SPOINT''s are zero which will probably'  &
                     ,/,14x,'       result in incorrect stiffness matrix equilibrium checks for models with SPOINT''s') 
-
-
-
-
-
-! **********************************************************************************************************************************
 
 ! ##################################################################################################################################
  

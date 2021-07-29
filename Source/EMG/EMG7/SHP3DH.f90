@@ -183,7 +183,6 @@
             DPSHG(1,I) = XI(I)*(ONE + SSJ*ET(I))*(ONE + SSK*ZI(I))/EIGHT
             DPSHG(2,I) = ET(I)*(ONE + SSI*XI(I))*(ONE + SSK*ZI(I))/EIGHT
             DPSHG(3,I) = ZI(I)*(ONE + SSI*XI(I))*(ONE + SSJ*ET(I))/EIGHT
-            PSH(I) = (ONE + SSI*XI(I))*(ONE + SSJ*ET(I))*(ONE + SSK*ZI(I))/EIGHT
          ENDDO 
 
 ! **********************************************************************************************************************************

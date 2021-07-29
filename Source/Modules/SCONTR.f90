@@ -473,7 +473,7 @@
 !                                                                  (ACCE, DISP, OLOA, SPCF, GPFO, MPCF)
       INTEGER(LONG), PARAMETER :: MMATL               =   2      ! No. cols allowed in dimensioning array MATL
       INTEGER(LONG), PARAMETER :: MMSPRNT             =   3      ! No. cols allowed in dimensioning array MSPRNT
-      INTEGER(LONG), PARAMETER :: MOGEL               =  10      ! No. cols allowed in dimensioning array OGEL
+      INTEGER(LONG), PARAMETER :: MOGEL               =  14      ! No. cols allowed in dimensioning array OGEL
       INTEGER(LONG), PARAMETER :: MPDAT_PLOAD1        =   2      ! No. pressures on PLOAD1 Bulk Data card
       INTEGER(LONG), PARAMETER :: MPDAT_PLOAD2        =   1      ! No. pressures on PLOAD2 Bulk Data card 
       INTEGER(LONG), PARAMETER :: MPDAT_PLOAD4        =   4      ! No. pressuresa on PLOAD4 Bulk Data card 

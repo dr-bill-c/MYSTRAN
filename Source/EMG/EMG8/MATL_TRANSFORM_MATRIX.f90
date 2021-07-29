@@ -86,7 +86,7 @@
 ! where ei are strains and Ei is the material matrix in coord sys 1 and 2. Eqn 6 shows how to transform stresses. It is
 ! the same for strains so that eqns (7) can be written:
 
-!                                                  S2 = TS*S1 = TS*E1*e1                                                       (8)
+!                                                  S2 = TS*S1 = TS*E1*e1                                               (8)
 
 ! but e1 in terms of e2, using the same logic in eqn(6) is
 

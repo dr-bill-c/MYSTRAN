@@ -353,7 +353,7 @@
 
 99000 FORMAT(' *INFORMATION: ASTERISK INDICATES ' ,I8, ' NEGATIVE EIGENVALUES. MYSTRAN TOOK THE ABSOLUTE VALUES OF THESE TO CALC', &
                                   ' RADIAN FREQUENCY.',/,                                                                          &
-                    '               USER SHOULD VERIFY THAT THESE ARE SMALL NUMBERS. IF NOT, THESE EIGENVALUES ARE IN ERROR',/,    &
+                    '               IF NEGATIVE EIGENVALUES ARE NOT SMALL THEY MAY BE IN ERROR',/,                                 &
                     '               (NOTE THAT LARGE EIGENVALUE MAGNITUDES IN MGIV WILL RESULT IF THERE ARE MASSLESS DOF''s IN THE'&
                                   ,' A-SET)')
 

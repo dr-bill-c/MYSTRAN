@@ -35,6 +35,8 @@
       USE B3D_ISOPARAMETRIC_Interface
       USE MATMULT_FFF_T_Interface
       USE OUTA_HERE_Interface
+      USE ELMDIS_Interface
+      USE ELEM_STRE_STRN_ARRAYS_Interface
       USE JAC2D_Interface
 
       END MODULE HEXA_USE_IFs

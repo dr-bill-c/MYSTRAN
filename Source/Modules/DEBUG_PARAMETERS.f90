@@ -212,7 +212,7 @@
 
 !        DEBUG 177  > 0 print BAR, ROD margins of safety whether or not they would otherwise be
 
-!        DEBUG 178  > 0 1 print G-set differential stiffness matrix
+!        DEBUG 178  > 0 print G-set differential stiffness matrix
 
 !        DEBUG 179  = 1 print blank space at beg of lines of output for CUSERIN entries in the F06 file
 

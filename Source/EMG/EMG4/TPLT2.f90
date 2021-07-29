@@ -48,6 +48,7 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
                                          MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
                                          SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
+      use model_stuf, only            :  psi_hat                                                                                  !?
       USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
@@ -301,6 +302,7 @@
          ENDIF
 
       ENDIF
+
 ! **********************************************************************************************************************************
       A(1) =  X3E - X2E
       A(2) = -X3E
@@ -311,6 +313,7 @@
   
       A4  = FOUR*AREA
       A42 = A4*AREA
+
 ! BB is used in several places below:
 
       CALL BBMIN3 ( A, B, AREA, '(bending strains)', 'Y', BB )
@@ -353,6 +356,7 @@
                FXY(I,J) = B(I)*A(J)/A42
             ENDDO   
          ENDDO 
+
          DO I=1,3
             DO J=1,3
                KB(I+3,J+3)= AREA*(SHELL_D_TRIA(2,2)*FYY(I,J) + SHELL_D_TRIA(2,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D_TRIA(3,3)*FXX(I,J)) 
@@ -377,6 +381,7 @@
          DO I=4,9
             BENSUM = BENSUM + KB(I,I)
          ENDDO 
+
 ! Shear stress terms (KS)
   
          DO I=1,9
@@ -535,6 +540,7 @@
          DO I=4,9
             SHRSUM = SHRSUM + KS(I,I)
          ENDDO 
+
   ! Now calculate the finite elem shear factor, PHI_SQ  
 
          IF (SHRSUM > EPS1) THEN
@@ -542,6 +548,7 @@
          ELSE
             PHI_SQ = ZERO
          ENDIF
+
 ! Return if IERROR > 0
 
          IF (IERROR > 0) RETURN
@@ -569,6 +576,7 @@
          ENDIF
   
 ! Set lower triangular partition equal to upper partition
+
          IF (CALC_EMATS == 'Y') THEN
             DO I=2,ELDOF
                DO J=1,I-1
@@ -578,6 +586,7 @@
          ENDIF 
   
          FCONV(3) = FCONV_SHEAR_THICK                      ! NOTE: PHI_SQ removed as multiplier based on error found on 10/12/11
+
       ENDIF
   
 ! **********************************************************************************************************************************
@@ -753,89 +762,89 @@
 
       WRITE(F06,98720)
 
-      write(f06,'(a,i2,a,i8,a,1es14.6,a)') ' Data for TRIA_NUM ', tria_num,' of MIN4T QUAD4 elem ', eid, ' which is to be rotated',&
+      WRITE(F06,'(A,I2,A,I8,A,1ES14.6,A)') ' Data for TRIA_NUM ', tria_num,' of MIN4T QUAD4 elem ', eid, ' which is to be rotated',&
                                           conv_rad_deg*psi,' deg'
-      write(f06,55566)
+      WRITE(F06,55566)
 
       MI(1) = ' Transforms 6 stress and 6x6 matl matrices from tria to quad axes (TF transpose transforms strains)'
-      write(f06,99664) 'TF', MI(1)
-      do i=1,3
-         write(f06,99667) (tf(i,j),j=1,6)
-      enddo
-      write(f06,*)
-      do i=4,6
-         write(f06,99667) (tf(i,j),j=1,6)
-      enddo
-      write(f06,*)
+      WRITE(F06,99664) 'TF', MI(1)
+      DO I=1,3
+         WRITE(F06,99667) (TF(I,J),J=1,6)
+      ENDDO
+      WRITE(F06,*)
+      DO I=4,6
+         WRITE(F06,99667) (TF(I,J),J=1,6)
+      ENDDO
+      WRITE(F06,*)
 
       MI(2) = ' Portion of TF: transforms 3x3 EB_TRIA, EBM_TRIA from tria to quad axes'
-      write(f06,99664) 'TF_MB', MI(2)
-      do i=1,3
-         write(f06,99668) (tf_mb(i,j),j=1,3)
-      enddo
-      write(f06,*)
+      WRITE(F06,99664) 'TF_MB', MI(2)
+      DO I=1,3
+         WRITE(F06,99668) (TF_MB(I,J),J=1,3)
+      ENDDO
+      WRITE(F06,*)
 
       MI(3) = '  Portion of TF: transforms 2x2 ET_TRIA from tria to quad axes'
-      write(f06,99664) 'TF_TS', MI(3)
-      do i=1,2
-         write(f06,99669) (tf_ts(i,j),j=1,2)
-      enddo
-      write(f06,*)
+      WRITE(F06,99664) 'TF_TS', MI(3)
+      DO I=1,2
+         WRITE(F06,99669) (TF_TS(I,J),J=1,2)
+      ENDDO
+      WRITE(F06,*)
 
       MI(4) = ' Coord transf matrix which will rotate a vector in local elem'
       MI(5) = ' coord system to a vector in the material coord system (Um = TME*Ue)'
-      write(f06,99664) 'TME', MI(4)   ;   write(f06,99663) MI(5)
-      do i=1,3
-         write(f06,99668) (tme(i,j),j=1,3)
-      enddo
-      write(f06,*)
+      WRITE(F06,99664) 'TME', MI(4)   ;   WRITE(F06,99663) MI(5)
+      DO I=1,3
+         WRITE(F06,99668) (TME(I,J),J=1,3)
+      ENDDO
+      WRITE(F06,*)
 
 
 bend: IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN
 
-         write(f06,99665) 'EB_TRIA '
-         do i=1,3
-            write(f06,99668) (eb0(i,j),j=1,3), (eb_tria(i,j),j=1,3)
-         enddo
-         write(f06,*)   ;   write(f06,*)
+         WRITE(F06,99665) 'EB_TRIA '
+         DO I=1,3
+            WRITE(F06,99668) (EB0(I,J),J=1,3), (EB_TRIA(I,J),J=1,3)
+         ENDDO
+         WRITE(F06,*)   ;   WRITE(F06,*)
 
-         write(f06,99665) 'SHELL_D_TRIA'
-         do i=1,3
-            write(f06,99668) (shell_d0_tria(i,j),j=1,3), (shell_d_tria(i,j),j=1,3)
-         enddo
-         write(f06,*)
+         WRITE(F06,99665) 'SHELL_D_TRIA'
+         DO I=1,3
+            WRITE(F06,99668) (SHELL_D0_TRIA(I,J),J=1,3), (SHELL_D_TRIA(I,J),J=1,3)
+         ENDDO
+         WRITE(F06,*)
 
       ENDIF bend
 
 tshr: IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
 
-         write(f06,99665) 'ET_TRIA '
-         do i=1,2
-            write(f06,99669) (et0(i,j),j=1,2), (et_tria(i,j),j=1,2)
-         enddo
-         write(f06,*)   ;   write(f06,*)
+         WRITE(F06,99665) 'ET_TRIA '
+         DO I=1,2
+            WRITE(F06,99669) (ET0(I,J),J=1,2), (ET_TRIA(I,J),J=1,2)
+         ENDDO
+         WRITE(F06,*)   ;   WRITE(F06,*)
 
-         write(f06,99665) 'SHELL_T_TRIA'
-         do i=1,2
-            write(f06,99669) (shell_t0_tria(i,j),j=1,2), (shell_t_tria(i,j),j=1,2)
-         enddo
-         write(f06,*)
+         WRITE(F06,99665) 'SHELL_T_TRIA'
+         DO I=1,2
+            WRITE(F06,99669) (SHELL_T0_TRIA(I,J),J=1,2), (SHELL_T_TRIA(I,J),J=1,2)
+         ENDDO
+         WRITE(F06,*)
 
       ENDIF tshr
 
 mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
 
-         write(f06,99665) 'EBM_TRIA'
-         do i=1,3
-            write(f06,99668) (ebm0(i,j),j=1,3), (ebm_tria(i,j),j=1,3)
-         enddo
-         write(f06,*)   ;   write(f06,*)
+         WRITE(F06,99665) 'EBM_TRIA'
+         DO I=1,3
+            WRITE(F06,99668) (EBM0(I,J),J=1,3), (EBM_TRIA(I,J),J=1,3)
+         ENDDO
+         WRITE(F06,*)   ;   WRITE(F06,*)
 
-         write(f06,99665) 'SHELL_B_TRIA'
-         do i=1,3
-            write(f06,99668) (shell_b0_tria(i,j),j=1,3), (shell_b_tria(i,j),j=1,3)
-         enddo
-         write(f06,*)
+         WRITE(F06,99665) 'SHELL_B_TRIA'
+         DO I=1,3
+            WRITE(F06,99668) (SHELL_B0_TRIA(I,J),J=1,3), (SHELL_B_TRIA(I,J),J=1,3)
+         ENDDO
+         WRITE(F06,*)
 
       ENDIF mbend
 
@@ -846,22 +855,22 @@ mbend:IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
       WRITE(F06,*)
 
 ! **********************************************************************************************************************************
-55566 format(1x,'------------------------------------------------------------------------------------------',/)
+55566 FORMAT(1X,'------------------------------------------------------------------------------------------',/)
 
-67549 format(6(1es14.6))                                                                                                            
+67549 FORMAT(6(1ES14.6))                                                                                                            
 
-99663 format(1x,a)
+99663 FORMAT(1X,A)
 
-99664 format('  Transformation matrix ',2a)
+99664 FORMAT('  Transformation matrix ',2a)
 
-99665 format(16x,'Material matrix ',a12,' before/after TF transformation',/,                                                       &
-             19x,'before',41x,'after',/,'  ----------------------------------------      ----------------------------------------')
+99665 FORMAT(16x,'Material matrix ',a12,' before/after TF transformation',/,                                                       &
+             19x,'before',41X,'after',/,'  ----------------------------------------      ----------------------------------------')
  
-99667 format(3(1es14.6), 4x,3(1es14.6))                                                                                            
+99667 FORMAT(3(1ES14.6), 4X,3(1ES14.6))                                                                                            
 
-99668 format(3(1es14.6), 4x,3(1es14.6))                                                                                                            
+99668 FORMAT(3(1ES14.6), 4X,3(1ES14.6))                                                                                                            
 
-99669 format(7x,2(1es14.6),18x,2(1es14.6))                                                                                                            
+99669 FORMAT(7X,2(1ES14.6),18X,2(1ES14.6))                                                                                                            
 
 98720 FORMAT(' __________________________________________________________________________________________________________________',&
              '_________________'                                                                                               ,//,&

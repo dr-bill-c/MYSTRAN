@@ -145,6 +145,8 @@
 ! ----------------------------------------------------------------------------------------------------------------------------------
       INTEGER(LONG)            :: GRDPNT         =    -1     ! Ref grid for GPWG (neg integer so 0 can be interp as basic origin)
 
+      INTEGER(LONG)            :: GRDPNT_IN      =    -1     ! Value of GRDPNT read in the Bulk Data File
+
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  8*BYTE)      :: GRIDSEQ        ='BANDIT  ' ! Method for sequencing grids:
 !                                                              BANDIT for bandit auto grid swquencing
@@ -419,9 +421,9 @@
 !                                                              stiffness will be reset from infinite (zero flexibility) to
 !                                                              SHRFXFAC times the average of the bending stiffnesses in the 2 planes
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  1*BYTE)      :: SKIPMGG        =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG, KGG
-!                                                               in which case MGG, KGG will be read from previously generated,
-!                                                               and saved, files (LINK1L for KGG, LINK1R for MGG)
+      CHARACTER(  1*BYTE)      :: SKIPMGG        =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG
+!                                                               in which case MGG will be read from previously generated,
+!                                                               and saved, files (LINK1R for MGG)
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  8*BYTE)      :: SOLLIB         = 'SPARSE  '! If 'BANDED  ', use LAPACK and ARPACK for eqn soln and eigens.

@@ -105,7 +105,7 @@
            - JAC(1,2)*(JAC(2,1)*JAC(3,3)  - JAC(2,3)*JAC(3,1))                                                                     &
            + JAC(1,3)*(JAC(2,1)*JAC(3,2)  - JAC(2,2)*JAC(3,1))
  
-       IF ((WRT_BUG_THIS_TIME == 'Y') .AND. (WRT_BUG(7) > 0)) THEN
+      IF ((WRT_BUG_THIS_TIME == 'Y') .AND. (WRT_BUG(7) > 0)) THEN
          WRITE(BUG,1101) SSI, SSJ, SSK
          WRITE(BUG,1102)
          DO I=1,3
@@ -116,7 +116,7 @@
          WRITE(BUG,1104) DETJ
          WRITE(BUG,*)
          WRITE(BUG,*)
-       ENDIF
+      ENDIF
 
 ! If DETJ is not zero, continue. Else, write error and return:
  

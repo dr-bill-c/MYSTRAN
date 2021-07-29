@@ -89,8 +89,8 @@
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
-         WRITE(F04,9001) SUBR_NAME,TSEC
- 9001    FORMAT(1X,A,' BEGN ',F10.3)
+         WRITE(F04,9001) SUBR_NAME,TSEC, ' STR_PT_NUM = ', STR_PT_NUM
+ 9001    FORMAT(1X,A,' BEGN ',F10.3, A, I8)
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -294,8 +294,8 @@
       ELSE IF ((TYPE(1:4) == 'HEXA') .OR. (TYPE(1:5) == 'PENTA') .OR. (TYPE(1:5) == 'TETRA')) THEN
 
          DO I=1,6
-            STRESS_MECH  = ZERO
-            STRESS_THERM = ZERO
+            STRESS_MECH(I)  = ZERO
+            STRESS_THERM(I) = ZERO
          ENDDO
 
          DO I=1,3
@@ -321,6 +321,7 @@
          ENDIF
 
          CALL MATADD_FFF  ( STRESS_MECH, STRESS_THERM, 6, 1, ONE, -ONE, 0, STRESS )
+
 
       ENDIF
 

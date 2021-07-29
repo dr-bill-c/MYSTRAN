@@ -272,78 +272,76 @@
          IF (DABS(MATL_AXES_ROTATE) > EPS1) THEN
 
             MI(1) = ' Transforms 6 stress and 6x6 matl matrices from matl to elem axes (T1 transpose transforms strains)'
-            write(f06,99664) 'T1', MI(1)
-            do i=1,3
-               write(f06,99667) (t1(i,j),j=1,6)
-            enddo
-            write(f06,*)
-            do i=4,6
-               write(f06,99667) (t1(i,j),j=1,6)
-            enddo
-            write(f06,*)
+            WRITE(F06,99664) 'T1', MI(1)
+            DO I=1,3
+               WRITE(F06,99667) (T1(I,J),J=1,6)
+            ENDDO
+            WRITE(F06,*)
+            DO I=4,6
+               WRITE(F06,99667) (T1(I,J),J=1,6)
+            ENDDO
+            WRITE(F06,*)
    
             MI(2) = ' Portion of T1: transforms 3x3 EM, EB, EBM from matl to elem axes'
-            write(f06,99664) 'T1_MB', MI(2)
-            do i=1,3
-               write(f06,99668) (t1_mb(i,j),j=1,3)
-            enddo
-            write(f06,*)
+            WRITE(F06,99664) 'T1_MB', MI(2)
+            DO I=1,3
+               WRITE(F06,99668) (T1_MB(I,J),J=1,3)
+            ENDDO
+            WRITE(F06,*)
 
             MI(3) = '  Portion of T1: transforms 2x2 ET from material to elem axes'
-            write(f06,99664) 'T1_TS', MI(3)
-            do i=1,2
-               write(f06,99669) (t1_ts(i,j),j=1,2)
-            enddo
-            write(f06,*)
-
+            WRITE(F06,99664) 'T1_TS', MI(3)
+            DO I=1,2
+               WRITE(F06,99669) (T1_TS(I,J),J=1,2)
+            ENDDO
+            WRITE(F06,*)
 
             MI(4) = ' Coord transf matrix which will rotate a vector in local elem'
             MI(5) = ' coord system to a vector in the material coord system (Um = TME*Ue)'
-            write(f06,99664) 'TME', MI(4)   ;   write(f06,99663) MI(5)
-            do i=1,3
-               write(f06,99668) (tme(i,j),j=1,3)
-            enddo
-            write(f06,*)
-
+            WRITE(F06,99664) 'TME', MI(4)   ;   WRITE(F06,99663) MI(5)
+            DO I=1,3
+               WRITE(F06,99668) (TME(I,J),J=1,3)
+            ENDDO
+            WRITE(F06,*)
 
 mem:        IF      ((MTRL_TYPE(1) == 2) .OR. (MTRL_TYPE(1) == 8)) THEN
 
-               write(f06,99665) 'EM '
-               do i=1,3
-                  write(f06,99668) (em0(i,j),j=1,3), (em(i,j),j=1,3)
-               enddo
-               write(f06,*)   ;   write(f06,*)
+               WRITE(F06,99665) 'EM '
+               DO I=1,3
+                  WRITE(F06,99668) (EM0(I,J),J=1,3), (EM(I,J),J=1,3)
+               ENDDO
+               WRITE(F06,*)   ;   WRITE(F06,*)
 
-               write(f06,99665) 'EB '
+               WRITE(F06,99665) 'EB '
 
             ENDIF mem
 
 bend:       IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN
 
-               do i=1,3
-                  write(f06,99668) (eb0(i,j),j=1,3), (eb(i,j),j=1,3)
-               enddo
-               write(f06,*)   ;   write(f06,*)
+               DO I=1,3
+                  WRITE(F06,99668) (EB0(I,J),J=1,3), (EB(I,J),J=1,3)
+               ENDDO
+               WRITE(F06,*)   ;   WRITE(F06,*)
 
             ENDIF bend
 
 tr_shr:     IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
 
-               write(f06,99665) 'ET '
-               do i=1,2
-                  write(f06,99669) (et0(i,j),j=1,2), (et(i,j),j=1,2)
-               enddo
-               write(f06,*)   ;   write(f06,*)
+               WRITE(F06,99665) 'ET '
+               DO I=1,2
+                  WRITE(F06,99669) (ET0(I,J),J=1,2), (ET(I,J),J=1,2)
+               ENDDO
+               WRITE(F06,*)   ;   WRITE(F06,*)
 
             ENDIF tr_shr
 
 mem_bend:   IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
 
-               write(f06,99665) 'EBM'
-               do i=1,3
-                  write(f06,99668) (ebm0(i,j),j=1,3), (ebm(i,j),j=1,3)
-               enddo
-               write(f06,*)   ;   write(f06,*)
+               WRITE(F06,99665) 'EBM'
+               DO I=1,3
+                  WRITE(F06,99668) (EBM0(I,J),J=1,3), (EBM(I,J),J=1,3)
+               ENDDO
+               WRITE(F06,*)   ;   WRITE(F06,*)
 
             ENDIF mem_bend
 
@@ -351,19 +349,19 @@ mem_bend:   IF ((MTRL_TYPE(4) == 2) .OR. (MTRL_TYPE(4) == 8)) THEN
 
       ELSE IF ((TYPE(1:4) == 'HEXA') .OR. (TYPE(1:5) == 'PENTA') .OR. (TYPE(1:5) == 'TETRA')) THEN
 
-         write(f06,'()') 'ISOLID(3) = ',isolid(3)
-         write(f06,'()') 'Matl matrix ES before coord transformation = '
-         do i=1,6
-            write(f06,67549) (es0(i,j),j=1,6)
-         enddo
-         write(f06,*)
+         WRITE(F06,'()') 'ISOLID(3) = ',ISOLID(3)
+         WRITE(F06,'()') 'MATL MATRIX ES BEFORE COORD TRANSFORMATION = '
+         DO I=1,6
+            WRITE(F06,67549) (ES0(I,J),J=1,6)
+         ENDDO
+         WRITE(F06,*)
 
          IF (ISOLID(3) /= -1) THEN                         ! If -1 ES already in elem coords, else transf ES from basic to elem axes
-            write(f06,'()') 'Matl matrix ES before coord transformation = '                                   
-            do i=1,6
-               write(f06,67549) (es(i,j),j=1,6)
-            enddo
-            write(f06,*)
+            WRITE(F06,'()') 'MATL MATRIX ES BEFORE COORD TRANSFORMATION = '                                   
+            DO I=1,6
+               WRITE(F06,67549) (ES(I,J),J=1,6)
+            ENDDO
+            WRITE(F06,*)
          ENDIF
 
       ENDIF

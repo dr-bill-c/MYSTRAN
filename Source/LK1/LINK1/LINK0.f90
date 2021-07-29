@@ -67,7 +67,7 @@
       use scontr, only                :  ndofo
       USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
-      USE PARAMS, ONLY                :  CHKGRDS, EPSIL, EQCHK_OUTPUT, GRDPNT, GRIDSEQ, MEFMGRID, MEFMLOC, PRTCONN,                &
+      USE PARAMS, ONLY                :  CHKGRDS, EPSIL, EQCHK_OUTPUT, GRDPNT, GRDPNT_IN, GRIDSEQ, MEFMGRID, MEFMLOC, PRTCONN,     &
                                          PRTBASIC, PRTCORD, PRTDOF, PRTTSET, PRTSTIFD, PRTSTIFF, SETLKTK, SETLKTM, SUPINFO,        &
                                          SUPWARN, WTMASS
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
@@ -873,9 +873,7 @@ res16:IF (RESTART == 'N') THEN
          CALL ALLOCATE_RBGLOBAL ( 'G ', SUBR_NAME )
          RBG_GSET_ALLOCATED = 'Y'
 
-!zzzz    I1 = IAND(OELDT,IBIT(ELDT_BUG_ME_BIT))
-!zzzz    IF ((GRDPNT >= 0) .OR. (MEFFMASS_CALC == 'Y') .OR. (I1 > 0)) THEN
-         IF ((GRDPNT >= 0) .OR. (MEFFMASS_CALC == 'Y')) THEN
+         IF ((GRDPNT_IN >= 0) .OR. (MEFFMASS_CALC == 'Y')) THEN
 
             CALL OURTIM
             MODNAM = 'GRID POINT WEIGHT GENERATOR              '

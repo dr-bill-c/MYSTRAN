@@ -60,7 +60,7 @@
       use scontr, only                :  ndofo
       USE TIMDAT, ONLY                :  YEAR, MONTH, DAY, HOUR, MINUTE, SEC, SFRAC, STIME, TSEC
       USE DOF_TABLES, ONLY            :  TDOFI
-      USE PARAMS, ONLY                :  CHKGRDS, EPSIL, EQCHK_OUTPUT, GRDPNT, GRIDSEQ, MEFMGRID, MEFMLOC, PRTCONN,                &
+      USE PARAMS, ONLY                :  CHKGRDS, EPSIL, EQCHK_OUTPUT, GRDPNT, GRDPNT_IN, GRIDSEQ, MEFMGRID, MEFMLOC, PRTCONN,     &
                                          PRTBASIC, PRTCORD, PRTDOF, PRTTSET, PRTSTIFD, PRTSTIFF, SETLKTK, SETLKTM, SUPINFO,        &
                                          SUPWARN, WTMASS
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP

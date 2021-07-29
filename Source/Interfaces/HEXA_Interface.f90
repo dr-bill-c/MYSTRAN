@@ -35,12 +35,14 @@
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, MAX_ORDER_GAUSS, MELDOF, MPLOAD4_3D_DATA, NPLOAD4_3D, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
-      USE CONSTANTS_1, ONLY           :  QUARTER, ZERO, ONE, EIGHT
+      USE CONSTANTS_1, ONLY           :  QUARTER, HALF, ZERO, ONE, EIGHT
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE SUBR_BEGEND_LEVELS, ONLY    :  HEXA_BEGEND
       USE PARAMS, ONLY                :  EPSIL
-      USE MODEL_STUF, ONLY            :  AGRID, ALPVEC, BE1, BE2, DT, EID, ELGP, NUM_EMG_FATAL_ERRS, ES, KE, ME,                   &
-                                         NUM_EMG_FATAL_ERRS, PLOAD4_3D_DATA, PPE, PRESS, PTE, RHO, SE1, SE2, STE1, TREF, TYPE, XEL
+      USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
+      USE MODEL_STUF, ONLY            :  AGRID, ALPVEC, BE1, BE2, DT, EID, ELGP, NUM_EMG_FATAL_ERRS, ES, KE, KED, ME,              &
+                                         NUM_EMG_FATAL_ERRS, PLOAD4_3D_DATA, PPE, PRESS, PTE, RHO, SE1, SE2, STE1, STRESS, TREF,   &
+                                         TYPE, XEL
  
       IMPLICIT NONE 
   
@@ -55,12 +57,14 @@
       INTEGER(LONG)                   :: GAUSS_PT               ! Gauss point number (used for DEBUG output in subr SHP3DH
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = HEXA_BEGEND
   
+      REAL(DOUBLE)                    :: CBAR(3,3*ELGP)         ! Derivatives of shape fcns wrt x,y,z used in diff stiff matrix
       REAL(DOUBLE)                    :: DUM0(3*ELGP)           ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: DUM1(3*ELGP)           ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: DUM2(6,3*ELGP)         ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: DUM3(3*ELGP,3*ELGP)    ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: DUM4(6,3*ELGP)         ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: DUM5(3*ELGP,3*ELGP)    ! Intermediate matrix used in solving for KE elem matrices
+      REAL(DOUBLE)                    :: DUM6(3,3*ELGP)         ! Intermediate matrix used in solving for elem matrices
       REAL(DOUBLE)                    :: EALP(6)                ! Variable used in calc PTE therm loads & STEi therm stress coeffs
 
       REAL(DOUBLE)                    :: M0                     ! An intermediate variable used in calc elem mass, ME

@@ -157,7 +157,7 @@ res19:IF (RESTART == 'N') THEN
                MODNAM = 'MPC PROCESSOR                               '
                WRITE(SC1,1092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
                CALL MPC_PROC
-               CALL FILE_CLOSE ( L1S, LINK1S, L1SSTAT, 'Y' )
+               CALL FILE_CLOSE ( L1S, LINK1S, 'KEEP', 'Y' )
             ENDIF
 
             IF (NRIGEL > 0) THEN                           ! Process rigid elements.
@@ -166,7 +166,7 @@ res19:IF (RESTART == 'N') THEN
                MODNAM = 'RIGID ELEMENT PROCESSOR                     '
                WRITE(SC1,1092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
                CALL RIGID_ELEM_PROC
-               CALL FILE_CLOSE ( L1F, LINK1F, L1FSTAT, 'Y' )
+               CALL FILE_CLOSE ( L1F, LINK1F, 'KEEP', 'Y' )
             ENDIF
 
             CALL FILE_CLOSE ( L1J, LINK1J, 'KEEP', 'Y' )   ! Subr SPARSE_RMG will reopen LINK1S
@@ -454,7 +454,7 @@ res19:IF (RESTART == 'N') THEN
 
          CALL OURTIM
          MODNAM = 'WRITE DOF TABLES TO FILE AND DEALLOCATE     '
-         write(sc1,*) cr13
+         WRITE(SC1,*) CR13
          WRITE(SC1,1092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
          CALL WRITE_DOF_TABLES
          CALL FILE_CLOSE ( L1C, LINK1C, 'KEEP', 'Y' )
