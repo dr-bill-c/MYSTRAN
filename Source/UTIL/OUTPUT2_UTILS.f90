@@ -69,8 +69,21 @@
       SUBROUTINE WRITE_OP2_GEOM()
       USE PENTIUM_II_KIND, ONLY       :  LONG, BYTE
       USE IOUNT1, ONLY                :  ERR, OP2
+      
+      ! GEOM1 - GRID/COORDs
       USE SCONTR, ONLY                :  NGRID, NCORD
       USE MODEL_STUF, ONLY            :  GRID_ID, GRID, RGRID, CORD, RCORD
+      
+      ! GEOM2 - elements
+      !USE MODEL_STUF, ONLY : ELAS1, ELAS2, ELAS3, ELAS4, ROD, TETRA4, TETRA10
+      USE SCONTR, ONLY : NCTETRA4, NCTETRA10, NCPENTA6, NCPENTA15, NCHEXA8, NCHEXA20
+      USE SCONTR, ONLY : NCQUAD4, NCQUAD4K, NCSHEAR, NCTRIA3, NCTRIA3K
+      USE SCONTR, ONLY : NCROD, NCBAR, NCBEAM, NCBUSH, NCELAS1, NCELAS2, NCELAS3, NCELAS4
+      USE SCONTR, ONLY : NCMASS, NCONM2
+
+      USE SCONTR, ONLY     : NELE, NEDAT
+      USE MODEL_STUF, ONLY : ETYPE, EOFF, EPNT
+
       IMPLICIT NONE
       INTEGER(LONG)                    :: ITABLE                        ! the subtable counter
       INTEGER(LONG)                    :: SEID                          ! superelment id
@@ -79,11 +92,27 @@
       INTEGER(LONG)                    :: NGRID_ACTUAL, NSPOINT_ACTUAL  ! number of GRID, SPOINTs; corrects for oversizing
       INTEGER(LONG), DIMENSION(NGRID)  :: GRID_INDEX, SPOINT_INDEX      ! oversized, but mehhh
       LOGICAL                          :: IS_GEOM1                      ! do we need to write the table
+      LOGICAL                          :: IS_GEOM2                      ! do we need to write the table
+      LOGICAL                          :: IS_GEOM3                      ! do we need to write the table
+      LOGICAL                          :: IS_GEOM4                      ! do we need to write the table
       INTEGER(LONG)                    :: NUM_WIDE, NVALUES             ! helper flags
       INTEGER(LONG) :: NCORD1R, NCORD1C, NCORD1S, NCORD2R, NCORD2C, NCORD2S
       INTEGER(LONG), DIMENSION(NCORD)  :: CORD1R_INDEX, CORD1C_INDEX, CORD1S_INDEX, CORD2R_INDEX, CORD2C_INDEX, CORD2S_INDEX      ! oversized, but mehhh
 
-      ! initialize
+      INTEGER(LONG)  :: NCTETRA, NCPENTA, NCHEXA
+      INTEGER(LONG), DIMENSION(NCELAS1, 6)  :: CELAS1
+      INTEGER(LONG), DIMENSION(NCELAS2, 6)  :: CELAS2
+      INTEGER(LONG), DIMENSION(NCELAS3, 4)  :: CELAS3
+      INTEGER(LONG), DIMENSION(NCELAS4, 4)  :: CELAS4
+      INTEGER(LONG), DIMENSION(NCROD, 4)    :: CROD
+      INTEGER(LONG), DIMENSION(NCTRIA3, 4)  :: CTRIA3
+      INTEGER(LONG), DIMENSION(NCQUAD4, 4)  :: CQUAD4
+      INTEGER(LONG), DIMENSION(NCSHEAR, 4)   :: CSHEAR
+!      INTEGER(LONG), DIMENSION(:, :), allocatable :: CTETRA
+!      INTEGER(LONG), DIMENSION(:, :), allocatable :: CPENTA
+!      INTEGER(LONG), DIMENSION(:, :), allocatable  :: CHEXA
+
+      ! initialize - GEOM1
       IS_GEOM1 = .FALSE.
       SEID = 0
       NGRID_ACTUAL = 0
@@ -94,9 +123,27 @@
       NCORD2R = 0
       NCORD2C = 0
       NCORD2S = 0
+
+      ! initialize - GEOM2
+      IS_GEOM2 = .FALSE.
       
+      ! initialize - GEOM2
+      IS_GEOM3 = .FALSE.
+      
+      ! initialize - GEOM2
+      IS_GEOM4 = .FALSE.
+      
+      !---------------------------------------------------------------------------------------------
       IF(NGRID > 0) THEN
         IS_GEOM1 = .TRUE.
+      ENDIF
+
+      IF((NCELAS1 > 0) .OR. (NCELAS2 > 0) .OR. (NCELAS3 > 0) .OR. (NCELAS4 > 0) .OR.        &
+         (NCROD > 0) .OR. (NCBAR > 0) .OR. (NCBEAM > 0) .OR. (NCBUSH > 0) .OR.              &
+         (NCSHEAR > 0) .OR. (NCTRIA3 > 0) .OR. (NCQUAD4 > 0) .OR.                           &
+         (NCTETRA4 > 0) .OR. (NCTETRA10 > 0) .OR. (NCPENTA6 > 0) .OR. (NCPENTA15 > 0) .OR.  & 
+         (NCHEXA8 > 0) .OR. (NCHEXA20 > 0)) THEN
+        IS_GEOM2 = .TRUE.
       ENDIF
 
 ! Each row of GRID is for one grid point and contains:
@@ -162,7 +209,7 @@
           !
           WRITE(OP2) NVALUES + 3
           !           nid, cp, x, y, z, cd, ps, seid
-          WRITE(OP2) 4501, 45, 1,                                                                                     &
+          WRITE(OP2) 4501, 45, 1,                                                                                   &
                       (GRID_ID(GRID_INDEX(J)),         GRID(GRID_INDEX(J),2),                                         &
                       REAL(RGRID(GRID_INDEX(J),1),4), REAL(RGRID(GRID_INDEX(J),2),4), REAL(RGRID(GRID_INDEX(J),3),4), &
                       GRID(GRID_INDEX(J),3), GRID(GRID_INDEX(J),4), SEID, J=1,NGRID_ACTUAL)
@@ -302,7 +349,305 @@
         !ENDDO
         CALL END_OP2_GEOM_TABLE(ITABLE)
       ENDIF
+      
+      !CHARACTER( 8*BYTE), ALLOCATABLE :: ETYPE(:)    ! NELE  x 1 array of elem types
+      !CHARACTER( 1*BYTE), ALLOCATABLE :: EOFF(:)     ! NELE  x 1 array of 'Y' for elem offsets or 'N' if not
+
+      !INTEGER(LONG)     , ALLOCATABLE :: EDAT(:)     ! NEDAT x 1 array of elem connection data
+      !INTEGER(LONG)     , ALLOCATABLE :: EPNT(:)     ! NELE  x 1 array of pointers to EDAT where data begins for an elem
+      
+      !DO I=1,NEDAT
+      !ENDDO
+
+      NCTETRA = NCTETRA4 + NCTETRA10
+      NCPENTA = NCPENTA6 + NCPENTA15
+      NCHEXA = NCHEXA8 + NCHEXA20
+
+      IF (IS_GEOM2) THEN
+!        ALLOCATE ( CTETRA(NCTETRA,12) )      
+!        ALLOCATE ( CPENTA(NCPENTA,17) )      
+!        ALLOCATE ( CHEXA(NCHEXA,22) )      
+        
+        CALL GET_GEOM2(CELAS1, CELAS2, CELAS3, CELAS4, &
+                       CROD,                           &
+                       CTRIA3, CQUAD4, CSHEAR,         &
+!                       CTETRA, CPENTA, CHEXA,          &
+                       NCTETRA, NCPENTA, NCHEXA)
+
+        TABLE_NAME = "GEOM2"
+        CALL WRITE_OP2_GEOM_HEADER(TABLE_NAME, ITABLE)
+
+        !IF (NCROD > 0) THEN
+        !  NUM_WIDE = 4
+        !  NVALUES = NUM_WIDE * NCROD
+        !  WRITE(OP2) NVALUES + 3
+        !
+        !  ! ROD  4 words: (all read by call to subr ELEPO from subr BD_ROD1)
+        !  !   1) Elem ID
+        !  !   2) Prop ID
+        !  !   3) Grid A
+        !  !   4) Grid B
+        !  WRITE(OP2) 3001, 30, 48, ((CROD(I,J), J=1,4), I=1,NCROD)
+        !  ITABLE = ITABLE - 1
+        !  WRITE(OP2) ITABLE
+        !  WRITE(OP2) 1
+        !  WRITE(OP2) 0
+        !ENDIF
+      
+        IF (NCELAS1 > 0) THEN
+          NUM_WIDE = 6
+          NVALUES = NUM_WIDE * NCELAS1
+          WRITE(OP2) NVALUES + 3
+      
+          ! ELAS1  6 words: (all read by call to subr ELEPO from subr BD_CELAS1)
+          !   1) Elem ID
+          !   2) Prop ID
+          !   3) Grid A
+          !   4) Grid B
+          !   5) Components at Grid A
+          !   6) Components at Grid B
+          WRITE(OP2) 601, 6, 73, ((CELAS1(I,J), J=1,6), I=1,NCELAS1)
+          ITABLE = ITABLE - 1
+          WRITE(OP2) ITABLE
+          WRITE(OP2) 1
+          WRITE(OP2) 0
+        ENDIF
+      
+        IF (NCELAS2 > 0) THEN
+          NUM_WIDE = 6
+          NVALUES = NUM_WIDE * NCELAS2
+          WRITE(OP2) NVALUES + 3
+      
+          ! ELAS2  6 words: (all read by call to subr ELEPO from subr BD_CELAS2)
+          !   1) Elem ID
+          !   2) Prop ID which is set to -EID since real props are on the CELAS2 entry
+          !   3) Grid A
+          !   4) Grid B
+          !   5) Components at Grid A
+          !   6) Components at Grid B
+          WRITE(OP2) 701, 7, 74, ((CELAS2(I,J), J=1,6), I=1,NCELAS2)
+          ITABLE = ITABLE - 1
+          WRITE(OP2) ITABLE
+          WRITE(OP2) 1
+          WRITE(OP2) 0
+        ENDIF
+      
+        IF (NCELAS3 > 0) THEN
+          NUM_WIDE = 4
+          NVALUES = NUM_WIDE * NCELAS3
+          WRITE(OP2) NVALUES + 3
+      
+          ! ELAS3  4 words: (all read by call to subr ELEPO from subr BD_CELAS3)
+          !   1) Elem ID
+          !   2) Prop ID
+          !   3) Scalar point A
+          !   4) Scalar point B
+          WRITE(OP2) 801, 8, 75, ((CELAS3(I,J), J=1,4), I=1,NCELAS3)
+          ITABLE = ITABLE - 1
+          WRITE(OP2) ITABLE
+          WRITE(OP2) 1
+          WRITE(OP2) 0
+        ENDIF
+      
+        IF (NCELAS4 > 0) THEN
+          NUM_WIDE = 4
+          NVALUES = NUM_WIDE * NCELAS4
+          WRITE(OP2) NVALUES + 3
+      
+          ! ELAS4  4 words: (all read by call to subr ELEPO from subr BD_CELAS4)
+          !   1) Elem ID
+          !   2) Prop ID which is set to -EID since real props are on the CELAS2 entry
+          !   3) Scalar point A
+          !   4) Scalar point B
+          WRITE(OP2) 901, 9, 76, ((CELAS4(I,J), J=1,4), I=1,NCELAS4)
+          ITABLE = ITABLE - 1
+          WRITE(OP2) ITABLE
+          WRITE(OP2) 1
+          WRITE(OP2) 0
+        ENDIF
+      
+        !IF (NCTETRA4+NCTETRA10 > 0) THEN
+        !  NUM_WIDE = 12
+        !  NVALUES = NUM_WIDE * (NCTETRA4 + NCTETRA10)
+        !  WRITE(OP2) NVALUES + 3
+        !  
+        !  ! TETRA4   6 words: (read by 1 or more calls to subr ELEPO from subr BD_TETRA)
+        !  !   1) Elem ID
+        !  !   2) Prop ID
+        !  !   3) etc, Grids 1-4
+        !
+        !  ! TETRA10  2 words: (read by 1 or more calls to subr ELEPO from subr BD_TETRA)
+        !  !   1) Elem ID
+        !  !   2) Prop ID
+        !  !   3) etc, Grids 1-10
+        !  WRITE(OP2) 5508, 55, 217, ((CTETRA(I,J), J=1,12), I=1,NCTETRA10)
+        !  !WRITE(OP2) 5508, 55, 217, & 
+        !  !           ((TETRA4(I,J),  J=1,6), 0, 0, 0, 0, 0, 0, I=1,NCTETRA4), &
+        !  !           ((TETRA10(I,J), J=1,12), I=1,NCTETRA10)
+        !  ITABLE = ITABLE - 1
+        !  WRITE(OP2) ITABLE
+        !  WRITE(OP2) 1
+        !  WRITE(OP2) 0
+        !ENDIF
+      
+!       CORD2S_INDEX(1000000)   ! intentional crash
+        CALL END_OP2_GEOM_TABLE(ITABLE)
+!        DEALLOCATE (CTETRA)
+!        DEALLOCATE (CPENTA)
+!        DEALLOCATE (CHEXA)
+      ENDIF
+
+      !  PELAS  = Array of integer data from PELAS Bulk Data entries. Each row is for one PELAS entry read in B.D. and contains:
+      !             ( 1) Col  1: Property ID
+      !
+      !  RPELAS = Array of real data from PELAS Bulk Data entries. Each row is for one PELAS entry read in B.D. and contains:
+      !             ( 1) Col  1: Spring rate, K
+      !             ( 2) Col  2: Damping coefficient, GE
+      !             ( 3) Col  3: Stress recovery coefficient, S
+
+
+      !  PROD   = Array of integer data from PROD  Bulk Data entries. Each row is for one PROD  entry read in B.D. and contains:
+      !             ( 1) Col  1: Property ID
+      !             ( 2) Col  2: Material ID
+      !
+      !  RPROD  = Array of real data from PROD  Bulk Data entries. Each row is for one PROD  entry read in B.D. and contains:
+      !             ( 1) Col  1: Cross sectional area, A
+      !             ( 2) Col  2: Torsion constant, J
+      !             ( 3) Col  3: Torsion stress recov. coeff, C
+      !             ( 4) Col  4: Non structural mass, NSM
       END SUBROUTINE WRITE_OP2_GEOM
+
+!===================================================================================================================================
+      SUBROUTINE GET_GEOM2(CELAS1, CELAS2, CELAS3, CELAS4, &
+                     CROD,                                 &
+                     CTRIA3, CQUAD4, CSHEAR,               &
+!                     CTETRA, CPENTA, CHEXA,                &
+                     NCTETRA, NCPENTA, NCHEXA)
+      USE PENTIUM_II_KIND, ONLY       :  LONG, BYTE
+      USE IOUNT1, ONLY                :  ERR, OP2
+      USE SCONTR, ONLY : NCTETRA4, NCTETRA10, NCPENTA6, NCPENTA15, NCHEXA8, NCHEXA20
+      USE SCONTR, ONLY : NCQUAD4, NCQUAD4K, NCSHEAR, NCTRIA3, NCTRIA3K
+      USE SCONTR, ONLY : NCROD, NCBAR, NCBEAM, NCBUSH, NCELAS1, NCELAS2, NCELAS3, NCELAS4
+      USE SCONTR, ONLY : NCMASS, NCONM2
+      USE SCONTR, ONLY     : NELE, NEDAT
+      USE MODEL_STUF, ONLY : ETYPE, EOFF, EPNT, EDAT
+
+      IMPLICIT NONE
+      INTEGER(LONG)  :: NCTETRA, NCPENTA, NCHEXA
+      INTEGER(LONG) :: I = 0               ! counter
+      INTEGER(LONG) :: J                   ! counter
+
+      INTEGER(LONG) :: ICELAS1 = 0         ! loop counter
+      INTEGER(LONG) :: ICELAS2 = 0         ! loop counter
+      INTEGER(LONG) :: ICELAS3 = 0         ! loop counter
+      INTEGER(LONG) :: ICELAS4 = 0         ! loop counter
+
+      INTEGER(LONG) :: ICROD = 0           ! loop counter
+      INTEGER(LONG) :: ICBAR = 0           ! loop counter
+      INTEGER(LONG) :: ICBEAM = 0          ! loop counter
+
+      INTEGER(LONG) :: ICQUAD4 = 0         ! loop counter
+      INTEGER(LONG) :: ICTRIA3 = 0         ! loop counter
+      INTEGER(LONG) :: ICSHEAR = 0         ! loop counter
+
+      INTEGER(LONG) :: ICTETRA = 0         ! loop counter
+      INTEGER(LONG) :: ICPENTA = 0         ! loop counter
+      INTEGER(LONG) :: ICHEXA = 0          ! loop counter
+      INTEGER(LONG)  :: EPNTK
+
+      INTEGER(LONG), DIMENSION(NCELAS1, 6)  :: CELAS1
+      INTEGER(LONG), DIMENSION(NCELAS2, 6)  :: CELAS2
+      INTEGER(LONG), DIMENSION(NCELAS3, 4)  :: CELAS3
+      INTEGER(LONG), DIMENSION(NCELAS4, 4)  :: CELAS4
+      INTEGER(LONG), DIMENSION(NCROD, 4)    :: CROD
+
+      INTEGER(LONG), DIMENSION(NCTRIA3, 4)  :: CTRIA3
+      INTEGER(LONG), DIMENSION(NCQUAD4, 4)  :: CQUAD4
+      INTEGER(LONG), DIMENSION(NCSHEAR, 4)   :: CSHEAR
+
+!      INTEGER(LONG), DIMENSION(NCTETRA, 12) :: CTETRA
+!      INTEGER(LONG), DIMENSION(NCPENTA, 17) :: CPENTA
+!      INTEGER(LONG), DIMENSION(NCHEXA, 22)  :: CHEXA
+
+ 3    FORMAT(i8, "; ETYPE=", A, "; EOFF=",A, "; EPNT=", i8)
+ 4    FORMAT("  4 int fields: ", A, 4(" ", i4))
+ 6    FORMAT("  6 int fields: ", A, 6(" ", i4))
+ 8    FORMAT("  8 int fields: ", A, 8(" ", i4))
+10    FORMAT(" 10 int fields: ", A, 10(" ", i4))
+12    FORMAT(" 12 int fields: ", A, 12(" ", i4))
+      DO I=1,NELE
+        WRITE(ERR,3) I, ETYPE(I), EOFF(I), EPNT(I)
+        EPNTK = EPNT(I)
+
+        !EID  = EDAT(EPNTK)
+        !PID  = EDAT(EPNTK+1)
+        IF      (ETYPE(I)(1:5) .EQ. 'ELAS1') THEN  
+          WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,5)
+          ! 6 fields
+          ICELAS1 = ICELAS1 + 1
+          DO J=1,5
+            CELAS1(ICELAS1, I) = EDAT(EPNTK-1+J)
+          ENDDO
+        ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS2') THEN
+          ! 6 fields
+          ICELAS2 = ICELAS2 + 1
+          DO J=1,6
+            CELAS2(ICELAS2, I) = EDAT(EPNTK-1+J)
+          ENDDO
+          WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,5)
+
+        ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS3') THEN  
+          ! 4 fields
+          ICELAS3 = ICELAS3 + 1
+          DO J=1,4
+            CELAS3(ICELAS3, I) = EDAT(EPNTK-1+J)
+          ENDDO
+          WRITE(ERR,4) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,3)
+        ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS4') THEN  
+          ! 4 fields
+          ICELAS4 = ICELAS4 + 1
+          DO J=1,4
+            CELAS4(ICELAS4, I) = EDAT(EPNTK-1+J)
+          ENDDO
+          WRITE(ERR,4) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,3)
+
+!        ELSE IF (ETYPE(I)(1:3) .EQ. 'ROD') THEN  
+!          ! 4 fields
+!          ICROD = ICROD + 1
+!          DO J=1,4
+!            CROD(ICROD, I) = EDAT(EPNTK-1+J)
+!          ENDDO
+!          WRITE(ERR,4) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,3)
+
+        !ELSE IF (ETYPE(I)(1:5) .EQ. 'SHEAR') THEN  
+        !  ! 6 fields
+        !  ICSHEAR = ICSHEAR + 1
+        !  DO J=1,4
+        !    CSHEAR(ICSHEAR, I) = EDAT(EPNTK-1+J)
+        !  ENDDO
+        !  WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,3)
+
+!        ELSE IF (ETYPE(I)(1:5) .EQ. 'TETRA4') THEN  
+!          ! 6 fields
+!          ICTETRA = ICTETRA + 1
+!          DO J=1,6
+!            CTETRA(ICTETRA, I) = EDAT(EPNTK-1+J)
+!          ENDDO
+!          DO J=7,12
+!            CTETRA(ICTETRA, I) = 0
+!          ENDDO
+!          WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,11)
+!        ELSE IF (ETYPE(I)(1:5) .EQ. 'TETRA10') THEN
+!          ! 12 fields
+!          ICTETRA = ICTETRA + 1
+!          DO J=1,12
+!            CTETRA(ICTETRA, I) = EDAT(EPNTK-1+J)
+!          ENDDO
+!          WRITE(ERR,12) ETYPE(I)(1:5), (EDAT(EPNTK+J), J=0,11)  
+        ENDIF
+        !EPNT(I)
+      ENDDO
+      END SUBROUTINE GET_GEOM2
 
 !===================================================================================================================================
       SUBROUTINE WRITE_OP2_CORD1(ITABLE, NCORD1, CORD1_INDEX, RCS_INT, CODEA, CODEB, CODEC)
@@ -336,8 +681,8 @@
 
       ! [cid, coord_rcs_int, coord_int, g1, g2, g3]
       ! TODO: is this g1 or g1.rid ???
-      WRITE(OP2) CODEA, CODEB, CODEC,                                                         &
-                  (CORD(CORD1_INDEX(J),2), RCS_INT, COORD_INT,                               &
+      WRITE(OP2) CODEA, CODEB, CODEC,                                                      &
+                  (CORD(CORD1_INDEX(J),2), RCS_INT, COORD_INT,                             &
                   CORD(CORD1_INDEX(J),3), CORD(CORD1_INDEX(J),3), CORD(CORD1_INDEX(J),3),  &
                   J=1,NCORD1)
       ! -4
@@ -349,6 +694,7 @@
 
 !===================================================================================================================================
       SUBROUTINE WRITE_OP2_CORD2(ITABLE, NCORD2, CORD2_INDEX, RCS_INT, CODEA, CODEB, CODEC)
+      ! needs a docstring
       USE PENTIUM_II_KIND, ONLY       :  LONG
       USE IOUNT1, ONLY                :  OP2
       USE SCONTR, ONLY                :  NCORD
