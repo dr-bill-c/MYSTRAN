@@ -194,16 +194,16 @@
       USE SCONTR, ONLY                :  NCORD
       USE MODEL_STUF, ONLY            :  CORD, RCORD
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(INOUT)                 :: ITABLE                        ! the subtable counter
-      INTEGER(LONG), INTENT(IN)                    :: NCORD1                        ! the number of CORD1x cards
-      INTEGER(LONG), DIMENSION(NCORD), INTENT(IN)  :: CORD1_INDEX                   ! oversized, but mehhh
-      INTEGER(LONG), INTENT(IN)                    :: RCS_INT                       ! R, C, or S
-      INTEGER(LONG), INTENT(IN)                    :: CODEA, CODEB, CODEC           ! the CORD2x codes
-      INTEGER(LONG)                                :: I,J                           ! counter
+      INTEGER(LONG), INTENT(INOUT)                 :: ITABLE                  ! the subtable counter
+      INTEGER(LONG), INTENT(IN)                    :: NCORD1                  ! the number of CORD1x cards
+      INTEGER(LONG), DIMENSION(NCORD), INTENT(IN)  :: CORD1_INDEX             ! oversized, but mehhh
+      INTEGER(LONG), INTENT(IN)                    :: RCS_INT                 ! R, C, or S
+      INTEGER(LONG), INTENT(IN)                    :: CODEA, CODEB, CODEC     ! the CORD2x codes
+      INTEGER(LONG)                                :: I,J                     ! counter
 
-      INTEGER(LONG)                                :: NVALUES                       ! helper flag
-      INTEGER(LONG), PARAMETER                     :: NUM_WIDE = 6                  ! helper flag
-      INTEGER(LONG), PARAMETER                     :: COORD_INT = 1                 ! CORD1x
+      INTEGER(LONG)                                :: NVALUES                 ! helper flag
+      INTEGER(LONG), PARAMETER                     :: NUM_WIDE = 6            ! helper flag
+      INTEGER(LONG), PARAMETER                     :: COORD_INT = 1           ! CORD1x
 
       ! if there are NCORD1Rs
       NVALUES = NUM_WIDE * NCORD1
@@ -238,15 +238,15 @@
       USE SCONTR, ONLY                :  NCORD
       USE MODEL_STUF, ONLY            :  CORD, RCORD
       IMPLICIT NONE
-      INTEGER(LONG), INTENT(INOUT)                 :: ITABLE                        ! the subtable counter
-      INTEGER(LONG), INTENT(IN)                    :: NCORD2                        ! the number of CORD2x cards
-      INTEGER(LONG), DIMENSION(NCORD), INTENT(IN)  :: CORD2_INDEX                   ! oversized, but mehhh
-      INTEGER(LONG), INTENT(IN)                    :: RCS_INT                       ! R, C, or S
-      INTEGER(LONG), INTENT(IN)                    :: CODEA, CODEB, CODEC           ! the CORD2x codes
-      INTEGER(LONG)                                :: I                             ! counter
-      INTEGER(LONG)                                :: NVALUES                       ! helper flag
-      INTEGER(LONG), PARAMETER                     :: NUM_WIDE = 13                 ! helper flag
-      INTEGER(LONG), PARAMETER                     :: COORD_INT = 2                 ! CORD2x
+      INTEGER(LONG), INTENT(INOUT)                 :: ITABLE                 ! the subtable counter
+      INTEGER(LONG), INTENT(IN)                    :: NCORD2                 ! the number of CORD2x cards
+      INTEGER(LONG), DIMENSION(NCORD), INTENT(IN)  :: CORD2_INDEX            ! oversized, but mehhh
+      INTEGER(LONG), INTENT(IN)                    :: RCS_INT                ! R, C, or S
+      INTEGER(LONG), INTENT(IN)                    :: CODEA, CODEB, CODEC    ! the CORD2x codes
+      INTEGER(LONG)                                :: I                      ! counter
+      INTEGER(LONG)                                :: NVALUES                ! helper flag
+      INTEGER(LONG), PARAMETER                     :: NUM_WIDE = 13          ! helper flag
+      INTEGER(LONG), PARAMETER                     :: COORD_INT = 2          ! CORD2x
 
       ! if there are CORD2Rs
       NVALUES = NUM_WIDE * NCORD2

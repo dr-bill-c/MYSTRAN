@@ -88,17 +88,17 @@
       CHARACTER(LEN=128)              :: TITLEI                 ! the model TITLE
       CHARACTER(LEN=128)              :: STITLEI                ! the subcase SUBTITLE
       CHARACTER(LEN=128)              :: LABELI                 ! the subcase LABEL
-      INTEGER(LONG)                   :: STRESS_CODE            ! flag for type of stress; see GET_STRESS_CODE
+      INTEGER(LONG)                   :: STRESS_CODE = 0        ! flag for type of stress; see GET_STRESS_CODE
 
 !     op2 specific flags
-      INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
-      INTEGER(LONG)                   :: NUM_WIDE     ! the number of "words" for an element
-      INTEGER(LONG)                   :: NVALUES      ! the number of "words" for all the elments
-      INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
-      INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
-      INTEGER(LONG)                   :: NELEMENTS
-      INTEGER(LONG)                   :: CID          ! coordinate system
-      CHARACTER(4*BYTE)               :: CEN_WORD     ! the word "CEN/" (we need to cast the length)
+      INTEGER(LONG)                   :: DEVICE_CODE = 0  ! PLOT, PRINT, PUNCH flag; set as PLOT
+      INTEGER(LONG)                   :: NUM_WIDE         ! the number of "words" for an element
+      INTEGER(LONG)                   :: NVALUES          ! the number of "words" for all the elments
+      INTEGER(LONG)                   :: NTOTAL           ! the number of bytes for all NVALUES
+      INTEGER(LONG)                   :: ISUBCASE         ! the subcase ID
+      INTEGER(LONG)                   :: NELEMENTS        
+      INTEGER(LONG)                   :: CID              ! coordinate system
+      CHARACTER(4*BYTE)               :: CEN_WORD         ! the word "CEN/" (we need to cast the length)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -109,8 +109,6 @@
 
 ! **********************************************************************************************************************************
 ! Initialize
-      DEVICE_CODE = 1  ! PLOT
-      STRESS_CODE = 0
  1    FORMAT("WRITE OES F06/OP2; ITABLE=",I8," (should be -4, -6, ...)")
       WRITE(ERR,1) ITABLE
       FILL(1:) = ' '
@@ -878,30 +876,24 @@
       CHARACTER(LEN=128), INTENT(IN)  :: LABEL             ! the subcase LABEL
       CHARACTER(128*BYTE)             :: FILL              ! Padding for output format
 
-      INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
-      INTEGER(LONG)               :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
-      INTEGER(LONG)               :: NUM_WIDE     ! the number of "words" for an element
-      INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
-      INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
-      INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
-      INTEGER(LONG)               :: STRESS_CODE  ! the OP2 flag for the stress
-      REAL(DOUBLE)                :: ABS_ANS(3)   ! Max ABS for output
-      REAL(DOUBLE)                :: MAX_ANS(3)   ! Max for output
-      REAL(DOUBLE)                :: MIN_ANS(3)   ! Min for output
-      INTEGER(LONG)               :: I, J         ! DO loop indices
+      INTEGER(LONG), INTENT(INOUT) :: ITABLE          ! the current subtable number
+      INTEGER(LONG), PARAMETER    :: DEVICE_CODE = 1  ! PLOT, PRINT, PUNCH flag; plot
+      INTEGER(LONG)               :: NUM_WIDE = 4     ! the number of "words" for an element
+      INTEGER(LONG)               :: NVALUES          ! the number of "words" for all the elments
+      INTEGER(LONG)               :: NTOTAL           ! the number of bytes for all NVALUES
+      INTEGER(LONG)               :: ELEMENT_TYPE = 4 ! the OP2 flag for the element
+      INTEGER(LONG)               :: STRESS_CODE      ! the OP2 flag for the stress
+      REAL(DOUBLE)                :: ABS_ANS(3)       ! Max ABS for output
+      REAL(DOUBLE)                :: MAX_ANS(3)       ! Max for output
+      REAL(DOUBLE)                :: MIN_ANS(3)       ! Min for output
+      INTEGER(LONG)               :: I, J             ! DO loop indices
       REAL(REAL32)  :: NAN
       NAN = IEEE_VALUE(NAN, IEEE_QUIET_NAN)
 
-      DEVICE_CODE = 1   ! PLOT
-      ELEMENT_TYPE = 4  ! CSHEAR
       NVALUES = NUM * NUM_WIDE
       NTOTAL = NVALUES * 4
 
       ! eid, max_shear, avg_shear, margin
-      NUM_WIDE = 4
-      
-      ! dunno???
-      STRESS_CODE = 1
       CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL)
 
  100  FORMAT("*DEBUG: WRITE_CSHEAR    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
@@ -969,26 +961,22 @@
       CHARACTER(LEN=128), INTENT(IN)  :: LABEL             ! the subcase LABEL
       CHARACTER(128*BYTE)             :: FILL              ! Padding for output format
 
-      INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
-      INTEGER(LONG)               :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
-      INTEGER(LONG)               :: NUM_WIDE     ! the number of "words" for an element
-      INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
-      INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
-      INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
-      INTEGER(LONG)               :: STRESS_CODE  ! the OP2 flag for the stress
-      REAL(DOUBLE)                :: ABS_ANS(11)   ! Max ABS for output
-      REAL(DOUBLE)                :: MAX_ANS(11)   ! Max for output
-      REAL(DOUBLE)                :: MIN_ANS(11)   ! Min for output
-      INTEGER(LONG)               :: I, J, K       ! DO loop indices
+      INTEGER(LONG), INTENT(INOUT) :: ITABLE           ! the current subtable number
+      INTEGER(LONG)               :: DEVICE_CODE = 1   ! PLOT, PRINT, PUNCH flag; set as PLOT
+      INTEGER(LONG), PARAMETER    :: NUM_WIDE = 17     ! the number of "words" for an element
+      INTEGER(LONG)               :: NVALUES           ! the number of "words" for all the elments
+      INTEGER(LONG)               :: NTOTAL            ! the number of bytes for all NVALUES
+      INTEGER(LONG)               :: ELEMENT_TYPE = 74 ! the OP2 flag for the element
+      INTEGER(LONG)               :: STRESS_CODE = 1   ! the OP2 flag for the stress; preallocate
+      REAL(DOUBLE)                :: ABS_ANS(11)       ! Max ABS for output
+      REAL(DOUBLE)                :: MAX_ANS(11)       ! Max for output
+      REAL(DOUBLE)                :: MIN_ANS(11)       ! Min for output
+      INTEGER(LONG)               :: I, J, K = 0       ! DO loop indices
 
       ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
       !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
       !]
-      STRESS_CODE = 1 ! initial value; will be overwritten
-      NUM_WIDE = 17
-      ELEMENT_TYPE = 74
       NVALUES = NUM * NUM_WIDE
-      DEVICE_CODE = 1 ! plot
 
  100  FORMAT("*DEBUG: WRITE_CTRIA3    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
 !101  FORMAT("*DEBUG: WRITE_CTRIA3    ITABLE=",I8," (should be -5, -7,...)")
@@ -1028,7 +1016,6 @@
              1X,'MIN (for output set): ',15X,3(ES14.6),14X,5(ES14.6),//,                                                           &
              1X,'ABS (for output set): ',15X,3(ES14.6),14X,5(ES14.6),/)
 
-      K = 0
       DO I=1,NUM
          K = K + 1
          WRITE(F06,*)                                         ; WRITE(ANS,*)
