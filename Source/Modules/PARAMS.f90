@@ -29,8 +29,8 @@
 ! Variables that can be set by Bulk Data PARAM cards. Most are actual PARAM names; however, a few are variables set on a PARAM card.
 
       USE PENTIUM_II_KIND, ONLY :  BYTE, LONG, DOUBLE
-      USE CONSTANTS_1, ONLY     :  ZERO, QUARTER, ONEPM15, onepm14, ONEPM5, ONEPM6, TENTH, ONE, TWO, THREEP6, FIVE, SIX, ONEPP6,   &
-                                   ONEPP7, ONE_THOUSAND 
+      USE CONSTANTS_1, ONLY     :  ONEPM5, ONEPM6, ONEPM8, ONEPM15, ONEPM14, ZERO, QUARTER, TENTH, ONE, TWO, THREEP6, FIVE, SIX,   &
+                                   ONEPP6, ONEPP7, ONE_THOUSAND 
       USE SCONTR, ONLY          :  MEPSIL, TSET_CHR_LEN
 
       IMPLICIT NONE
@@ -60,7 +60,7 @@
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  1*BYTE)      :: AUTOSPC        =    'Y'    ! 'Y'/'N' indicates whether to use automatic SPC for singular DOF's
-      REAL(DOUBLE)             :: AUTOSPC_RAT    =   ONEPM6  
+      REAL(DOUBLE)             :: AUTOSPC_RAT    =   ONEPM8  
                                                              !*For each of the 2 3x3 (K33) stiffness matrices for a grid, the ratio
 !                                                              of each of the 3 eigenvalues of K33 to the max eigenvalue is calc'd.
 !                                                              For any ratio <= AUTOSPC_RAT, a component will be AUTOSPC'd. The

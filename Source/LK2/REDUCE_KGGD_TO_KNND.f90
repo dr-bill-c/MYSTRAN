@@ -149,6 +149,9 @@
 ! If PARAM MATSPARS = 'Y', then we use sparse matrix operations (multiply/add/transpose). If not, use full matrix operations
 
 
+         IF (.NOT. ALLOCATED(GMN)) THEN
+            CALL ALLOCATE_SPARSE_MAT ( 'GMN' , NDOFN, NTERM_GMN, SUBR_NAME )
+         ENDIF
          CALL ALLOCATE_SPARSE_MAT ( 'GMNt', NDOFN, NTERM_GMN, SUBR_NAME )
          CALL MATTRNSP_SS ( NDOFM, NDOFN, NTERM_GMN, 'GMN', I_GMN, J_GMN, GMN, 'GMNt', I_GMNt, J_GMNt, GMNt )
 

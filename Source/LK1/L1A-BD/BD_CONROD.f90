@@ -67,7 +67,7 @@
  
 !   FIELD   ITEM           ARRAY ELEMENT
 !   -----   ------------   -------------
-!    1      Element type   ETYPE(nele) =R1 for CROD
+!    1      Element type   ETYPE(nele) = 'ROD     '
 !    2      Element ID     EDAT(nedat+1)
 !           Property ID    EDAT(nedat+2) (fictitous property PID = -EID)
 !    3      Grid A         EDAT(nedat+3)

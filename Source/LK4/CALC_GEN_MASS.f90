@@ -104,7 +104,7 @@
          ENDIF
 
          GEN_MASS(I) = DDOT ( NDOFL, OUTVECI, 1, ZVEC, 1 )
-
+         GEN_MASS(I) = ABS(GEN_MASS(I))
          IF (DEBUG(48) == 0) THEN                          ! Calc off-diag terms
 
             DO J=1,I-1

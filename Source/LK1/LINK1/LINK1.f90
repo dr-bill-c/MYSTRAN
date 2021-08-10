@@ -220,7 +220,6 @@ res19:IF (RESTART == 'N') THEN
             CALL FILE_CLOSE ( F21, F21FIL, 'DELETE', 'Y' )
          ENDIF
 ! Generate G-set mass matrix, MGG
-
          IF (SKIPMGG == 'N') THEN
 
             CALL OURTIM

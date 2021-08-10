@@ -39,7 +39,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ROD1_BEGEND
       USE CONSTANTS_1, ONLY           :  TWO
-      USE MODEL_STUF, ONLY            :  DT, KE, PTE, SE1, STE1
+      USE MODEL_STUF, ONLY            :  DT, KE, KED, PEL, PTE, SE1, STE1, UEL
 
       USE ROD1_USE_IFs
 
@@ -47,8 +47,7 @@
  
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'ROD1'
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices
-
-      INTEGER(LONG)                   :: J
+      INTEGER(LONG)                   :: J                 ! Do loop index
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ROD1_BEGEND
  
       REAL(DOUBLE) , INTENT(IN)       :: ALPHA             ! Coefficient of thermal expansion
@@ -62,6 +61,8 @@
       REAL(DOUBLE)                    :: C01               ! Intermediate variable used in calc terms for the stiff matrix, KE
       REAL(DOUBLE)                    :: C02               ! Intermediate variable used in calc terms for the stiff matrix, KE
       REAL(DOUBLE)                    :: CT0               ! Intermediate variable used in calc thermal loads, PTE
+      REAL(DOUBLE)                    :: Fx                ! Axizl load in the ROD element as a result of the applied loads
+      REAL(DOUBLE)                    :: KD0               ! Intermediate variable used in calc KED
       REAL(DOUBLE)                    :: TBAR              ! Average elem temperature 
   
 ! **********************************************************************************************************************************
@@ -86,7 +87,7 @@
 ! **********************************************************************************************************************************
 ! Calculate SE matrix (2 x 12) for stress data recovery.
  
-      IF (OPT(3) == 'Y') THEN
+      IF ((OPT(3) == 'Y') .OR. (OPT(6) == 'Y')) THEN
          SE1(1, 1,1) = -E/L
          SE1(1, 7,1) =  E/L
          SE1(2, 4,1) = -SCOEFF*G/L                         ! SCOEFF*G/L = (SCOEFF/J)*KE(7,7)
@@ -100,7 +101,7 @@
 ! **********************************************************************************************************************************
 ! Calculate element stiffness matrix KE(12,12).
  
-      IF (OPT(4) == 'Y') THEN
+      IF ((OPT(4) == 'Y') .OR. (OPT(6) == 'Y')) THEN
          C01 = AREA*E/L
          C02 = JTOR*G/L
          KE( 1, 1) = C01
@@ -111,6 +112,27 @@
          KE(10, 4) = KE( 4,10)
          KE( 7, 7) = C01
          KE(10,10) = C02
+      ENDIF
+  
+! **********************************************************************************************************************************
+! Calculate element differential stiffness matrix KED(12,12).
+ 
+      IF (OPT(6) == 'Y') THEN
+
+         CALL ELMDIS
+         CALL CALC_ELEM_NODE_FORCES
+         Fx = -PEL(1)                                      ! Fx  (axial force for BAR or ROD) - NASTRAN Fx
+         KD0 = Fx/L
+
+         KED( 2, 2) =  KD0
+         KED( 2, 8) = -KD0
+         KED( 3, 3) =  KD0
+         KED( 3, 9) = -KD0
+
+         KED( 8, 2) =  KED( 2, 8)
+         KED( 8, 8) =  KED( 2, 2)
+         KED( 9, 3) =  KED( 3, 9)
+         KED( 9, 9) =  KED( 3, 3)
       ENDIF
   
 ! **********************************************************************************************************************************

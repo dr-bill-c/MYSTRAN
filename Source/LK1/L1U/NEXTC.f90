@@ -80,9 +80,9 @@
 
 ! Read next card.
 
-      OLDTAG = JCARD(10)
+      OLDTAG = JCARD(10)                                   ! OLDTAG is field 10 of the current card coming into this subr
       MESSAG = 'BULK DATA CARD          '
-      READ(IN1,101,IOSTAT=IOCHK) TCARD
+      READ(IN1,101,IOSTAT=IOCHK) TCARD                     ! Read next card
       CARD_IN = TCARD
       IF (IOCHK /= 0) THEN
          REC_NO = -99

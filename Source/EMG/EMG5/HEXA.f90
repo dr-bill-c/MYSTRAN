@@ -35,7 +35,7 @@
 !  3) SEi, STEi = element stress data recovery matrices, if OPT(3) = 'Y'
 !  4) KE        = element linea stiffness matrix       , if OPT(4) = 'Y'
 !  5) PPE       = element pressure load matrix         , if OPT(5) = 'Y'
-!  6) KED       = element differen stiff matrix calc   , if OPT(6) = 'Y' = 'Y'
+!  6) KED       = element differen stiff matrix calc   , if OPT(6) = 'Y'
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06

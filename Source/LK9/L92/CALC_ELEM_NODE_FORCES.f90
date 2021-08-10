@@ -67,7 +67,6 @@
 ! **********************************************************************************************************************************
 ! Calc forces for one element. The ELAS and ROD1 elem have very sparse stiffness matrices, so an explicit form is used
 ! for them. All other element forces are calculated by multiplication of complete stiffness matrix with the displ's.
- 
       IF (TYPE(1:4) == 'ELAS') THEN                        ! Calculate forces for ELAS1-4 elems
  
          I1 = ELAS_COMP(1)
@@ -77,7 +76,6 @@
          PEL(I2) = KE(I2,I1)*UEL(I1) + KE(I2,I2)*UEL(I2)
  
       ELSE IF (TYPE == 'ROD     ') THEN                    ! Calculate forces for ROD1 elem
- 
          IF (SUBLOD(INT_SC_NUM,2) > 0) THEN
             PEL(1) = -PTE(1,JTSUB)
             PEL(7) = -PTE(7,JTSUB)
