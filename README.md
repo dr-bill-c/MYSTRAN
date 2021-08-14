@@ -164,6 +164,7 @@ Congragulations! You have just installed MYSTRAN.
 - The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
 - OP2 support is in work, but if you can help with this, please let us know.
 - Creating easier ways to aquire mystran would be nice. This would include, but is not limited to, entry into the Arch Linux User Repository (AUR), the Debian Advanced Package Manager (apt), the snapcraft store (snap), the chocolatey package manager for Windows, an appimage, or flatpak.
+- Creation of a more comprehensive testing suite would be nice. Current method uses VBA and Microsoft excel. New testing methods should ideally include correlation to other solvers, previous versions of mystran, industry standard demonstration problems, and continuum mechanics/direct solutions.
 - As a longer term goal, materialistically nonlinear support is desirable.
 - As a longer term goal, geometric nonlinear support is desirable.
 
