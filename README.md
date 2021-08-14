@@ -160,7 +160,7 @@ Congragulations! You have just installed MYSTRAN.
 # Developmental Goals
 
 - Add detailed installation instructions for Windows to the README
-- The differential stiffness matrix for beam elements, rod elements, and solid elements is coded in MYSTRAN. Therefore a buckling analysis (SOL 105) can be performed for beam elements, rod elements, and solid elements. However, the differential stiffness matrix needs to be coded for the shell elements.
+- The differential stiffness matrix for bar elements, rod elements, and solid elements is coded in MYSTRAN. However, the differential stiffness matrix needs to be coded for the shell elements.
 - The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
 - OP2 support is in work, but if you can help with this, please let us know.
 - Creating easier ways to aquire mystran would be nice. This would include, but is not limited to, entry into the Arch Linux User Repository (AUR), the Debian Advanced Package Manager (apt), the snapcraft store (snap), the chocolatey package manager for Windows, an appimage, or flatpak.
