@@ -114,7 +114,13 @@ Check if cmake is installed
 dpkg --list | grep -P "^ii\s+cmake\s+"
 ```
 If it is not installed, or it is not version 3.18 or later, you can purge it,
-and aquire the newest version from source.
+and aquire the newest version from source, or from the snapcraft store. Using snap is reccomended.
+```
+sudo snap install cmake
+```
+   
+Alternatively, if you do not want to use snap, you can aquire the newest version from source.
+   
 ```
 sudo apt purge cmake
 git clone "https://gitlab.kitware.com/cmake/cmake.git"
