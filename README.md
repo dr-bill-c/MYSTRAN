@@ -41,7 +41,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 ### For Linux
 
 <details>
-<summary> Debian/Ubuntu (using apt)</summary>
+<summary> Debian/Ubuntu </summary>
 <br>
 MYSTRAN relies upon the following dependencies
 
