@@ -58,7 +58,7 @@
       ENDIF
 
 
-      !IS_GEOM2 = .FALSE.
+      IS_GEOM2 = .FALSE.
       IF (IS_GEOM2) THEN
 !        ALLOCATE ( CTETRA(NCTETRA,12) )      
 !        ALLOCATE ( CPENTA(NCPENTA,17) )      
@@ -153,11 +153,10 @@
 !      INTEGER(LONG), INTENT(INOUT), DIMENSION(NCHEXA, 22)  :: CHEXA
       INTEGER(LONG) :: IPROD
       
-      DO I=1,NPROD
-      !A,J,C,NMS
-2       FORMAT("PROD: I=",i4, "; PID=", i8, "; MID=", i8, "; A=",f8.4,"; J=",f8.4)
-        WRITE(ERR,2) I, PROD(I,1), PROD(I,2), RPROD(I,1), RPROD(I,2)
-      ENDDO
+ 1    FORMAT(A)
+      WRITE(ERR,1) "STARTING GET_GEOM2"
+      FLUSH(ERR)
+2     FORMAT("PROD: I=",i4, "; PID=", i8, "; MID=", i8, "; A=",f8.4,"; J=",f8.4)
 
  3    FORMAT(i8, "; ETYPE=", A, "; EOFF=",A, "; EPNT=", i8)
  4    FORMAT("  4 int fields: ", A, 4(" ", i4))
@@ -165,6 +164,18 @@
  8    FORMAT("  8 int fields: ", A, 8(" ", i4))
 10    FORMAT(" 10 int fields: ", A, 10(" ", i4))
 12    FORMAT(" 12 int fields: ", A, 12(" ", i4))
+100   FORMAT(" ROD: ", A, " ", 3(A, i8, " "))
+101   FORMAT(" ROD: ", A, i8)
+
+      WRITE(1, 101) "NPROD=", NPROD
+      DO I=1,NPROD
+      !A,J,C,NMS
+        WRITE(ERR,2) I, PROD(I,1), PROD(I,2), RPROD(I,1), RPROD(I,2)
+        FLUSH(ERR)
+      ENDDO
+      WRITE(ERR,1) "FINISHED WRITING PROD"
+      WRITE(ERR, 101) "NELE=", NELE
+
       DO I=1,NELE
         WRITE(ERR,3) I, ETYPE(I), EOFF(I), EPNT(I)
         EPNTK = EPNT(I)
@@ -173,18 +184,20 @@
         !PID  = EDAT(EPNTK+1)
         IF      (ETYPE(I)(1:5) .EQ. 'ELAS1') THEN
           WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK-1+J), J=1,6)
+          FLUSH(ERR)
           ! 6 fields
           DO J=1,6
             CELAS1(ICELAS1, J) = EDAT(EPNTK-1+J)
           ENDDO
           ICELAS1 = ICELAS1 + 1
-        IF (ETYPE(I)(1:5) .EQ. 'ELAS2') THEN
+        ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS2') THEN
           ! 6 fields
           ! TODO: ge, s
           DO J=1,6
             CELAS2(ICELAS2, J) = EDAT(EPNTK-1+J)
           ENDDO
           !WRITE(ERR,6) ETYPE(I)(1:5), (EDAT(EPNTK-1+J), J=1,6)
+          FLUSH(ERR)
           ICELAS2 = ICELAS2 + 1
 
         ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS3') THEN  
@@ -193,6 +206,7 @@
             CELAS3(ICELAS3, J) = EDAT(EPNTK-1+J)
           ENDDO
           !WRITE(ERR,4) ETYPE(I)(1:5), (EDAT(EPNTK-1+J), J=1,4)
+          FLUSH(ERR)
           ICELAS3 = ICELAS3 + 1
 
         ELSE IF (ETYPE(I)(1:5) .EQ. 'ELAS4') THEN  
@@ -201,6 +215,7 @@
             CELAS4(ICELAS4, J) = EDAT(EPNTK-1+J)
           ENDDO
           !WRITE(ERR,4) ETYPE(I)(1:5), (EDAT(EPNTK-1+J), J=1,4)
+          FLUSH(ERR)
           ICELAS4 = ICELAS4 + 1
 
         ELSE IF (ETYPE(I)(1:3) .EQ. 'ROD') THEN  
@@ -215,17 +230,25 @@
           ! PROD: I=   1; PID=      20; MID=       1; A=  1.0000; J=  0.0000
           ! PROD: I=   2; PID=     -23; MID=       1; A=  2.0000; J=  0.1000
           IF (PROD(IPROD,1) > 0) THEN
-          !  ! pid > 0
-            NCROD_ACTUAL = NCROD_ACTUAL + 1
-            CROD_INDEX(NCROD_ACTUAL) = ICROD
+            ! pid > 0
+            ! ncrod_actual starts at 0
+            ! noncrod_actual starts at 0
+            ! icrod starts at 1
             WRITE(ERR,4) "CROD", (EDAT(EPNTK-1+J), J=1,4)
+            FLUSH(ERR)
+            NCROD_ACTUAL = NCROD_ACTUAL + 1
+            WRITE(ERR,100) "CROD", "ICROD=",ICROD,"NCROD_ACTUAL=",NCROD_ACTUAL
+            FLUSH(ERR)
+            CROD_INDEX(NCROD_ACTUAL) = ICROD  
           ELSE
-          !  ! eid, pid, ga, gb
-            NCONROD_ACTUAL = NCONROD_ACTUAL + 1
-            CONROD_INDEX(NCONROD_ACTUAL) = ICROD
             WRITE(ERR,4) "CONROD", (EDAT(EPNTK-1+J), J=1,4)
+            FLUSH(ERR)
+            ! eid, pid, ga, gb
+            NCONROD_ACTUAL = NCONROD_ACTUAL + 1
+            WRITE(ERR,100) "CONROD", "ICROD=",ICROD,"NCONROD_ACTUAL=",NCONROD_ACTUAL
+            FLUSH(ERR)
+            CONROD_INDEX(NCONROD_ACTUAL) = ICROD
           ENDIF
-          FLUSH(ERR)
           ICROD = ICROD + 1
           
 
@@ -257,6 +280,8 @@
         ENDIF
         !EPNT(I)
       ENDDO
+      WRITE(ERR,1) "FINISHED GET_GEOM2"
+      FLUSH(ERR)
       END SUBROUTINE GET_GEOM2
 
 !===================================================================================================================================
@@ -278,9 +303,13 @@
       INTEGER(LONG), INTENT(IN), DIMENSION(NCROD)    :: CROD_INDEX, CONROD_INDEX      ! flags where the CROD and CONRODs are in CROD
       LOGICAL                                        :: WRITE_OP2 = .FALSE.
       LOGICAL                                        :: WRITE_ERR = .TRUE.
- 1    FORMAT(" **WRITE_OP2_GEOM2_CROD: ", 4(i8, " "))
+      FLUSH(ERR)
+ 1    FORMAT(A)
+ 2    FORMAT(" **WRITE_OP2_GEOM2_CROD: ", 4(i8, " "))
+      WRITE(ERR,1) "STARTING WRITE_OP2_GEOM_CROD"
+      FLUSH(ERR)
       DO I=1,NCROD
-        WRITE(ERR) CROD(I,1), CROD(I,2), CROD(I,3), CROD(I,4)
+        WRITE(ERR,2) CROD(I,1), CROD(I,2), CROD(I,3), CROD(I,4)
         FLUSH(ERR)
       ENDDO
       IF (NCROD_ACTUAL > 0) THEN
@@ -294,13 +323,16 @@
         !   4) Grid B
         IF (WRITE_ERR) THEN
  4        FORMAT(" **WRITE_OP2_GEOM2_CROD-B4: ", 5(i8, " "))
- 5        FORMAT(" **WRITE_OP2_GEOM2_CROD-B5: ", 5(i8, " "))
           FLUSH(ERR)
           DO I=1,NCROD_ACTUAL
             J = CROD_INDEX(I)
             WRITE(ERR,4) J, CROD(J,1), CROD(J,2), CROD(J,3), CROD(J,4)
             FLUSH(ERR)
+          ENDDO
 
+ 5        FORMAT(" **WRITE_OP2_GEOM2_CROD-B5: ", 5(i8, " "))
+          DO I=1,NCROD_ACTUAL
+            J = CROD_INDEX(I)
             IPID = CROD(J,2)
             WRITE(ERR,5) J, CROD(J,1), PROD(IPID,1), CROD(J,3), CROD(J,4)
             FLUSH(ERR)
