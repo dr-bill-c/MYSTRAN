@@ -50,6 +50,7 @@
       CHARACTER(LEN=*), INTENT(INOUT) :: CARD              ! A Bulk Data card
       CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP     ! If 'Y', CARD is large field format
       CHARACTER(LEN(CARD))            :: CHILD             ! "Child" card read in subr NEXTC, called herein
+      CHARACTER(1*BYTE)               :: FOUND_RCV = 'N'   ! 'Y' if RCV continuation entry is present
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
  
       INTEGER(LONG)                   :: I4INP             ! An integer value read from a field on this BD entry
@@ -127,7 +128,7 @@
          CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,0,0,0,0,0 )
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,5,6,7,8,9 )
       ELSE IF (JCARD(3)(1:3) == 'RCV') THEN
-         OFFSET      = 13
+         OFFSET      = 18
          NUM_ENTRIES = 4
          CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,0,0 )
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,0,8,9 )
@@ -148,7 +149,8 @@
 
 ! Read and check data on 3 optional con't entries
 
-      DO I=1,4
+      FOUND_RCV = 'N'
+pcont:DO I=1,4
 
          IF (LARGE_FLD_INP == 'N') THEN
             CALL NEXTC  ( CARD, ICONT, IERR )
@@ -177,6 +179,7 @@
                CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,0,0,0,0,0 )
                CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,5,6,7,8,9 )
             ELSE IF (JCARD(3)(1:3) == 'RCV') THEN
+               FOUND_RCV = 'Y'
                OFFSET      = 18
                NUM_ENTRIES = 4
                CALL BD_IMBEDDED_BLANK   ( JCARD,2,0,4,5,6,7,0,0 )
@@ -201,15 +204,19 @@
  
             CALL CRDERR ( CARD )
 
-         ELSE                                              ! If no con't entries, default stress/strain RCV's to 1.0
+         ELSE
 
-            DO J=19,22
-               RPBUSH(NPBUSH,J) = ONE
-            ENDDO
+            EXIT pcont
 
          ENDIF
 
-      ENDDO
+      ENDDO pcont
+
+      IF (FOUND_RCV == 'N') THEN
+         DO J=19,22                                     ! If no RCV con't entry, default stress/strain RCV's to 1.0
+            RPBUSH(NPBUSH,J) = ONE
+         ENDDO
+      ENDIF
 
 
 ! **********************************************************************************************************************************

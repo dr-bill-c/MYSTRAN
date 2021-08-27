@@ -60,7 +60,7 @@
       INTEGER(LONG)                   :: ELOUT_STRN        ! If > 0, there are STRAIN   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR       = 0  ! Local error count
-      INTEGER(LONG)                   :: NDUM      = 0     ! Dummy valye needed in call to CALC_ELEM_ENFR_FORCES
+      INTEGER(LONG)                   :: NDUM              ! Dummy valye needed in call to CALC_ELEM_ENFR_FORCES
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NUM_FROWS         ! No. elems processed for FEMAP
       INTEGER(LONG)                   :: NUM_LINES         ! No. lines of output for ply stresses
@@ -208,6 +208,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
  
       IF ((POST /= 0) .AND. (ANY_STRN_OUTPUT > 0)) THEN
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TRIA3 strains
          DO J=1,NELE 
             CALL IS_ELEM_PCOMP_PROPS ( J )
@@ -258,6 +259,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
             CALL DEALLOCATE_FEMAP_DATA
          ENDIF
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4 strains
          DO J=1,NELE 
             CALL IS_ELEM_PCOMP_PROPS ( J )
@@ -308,6 +310,7 @@ do_plies_6:          DO M=1,NUM_PLIES                         ! Cycle over numbe
             CALL DEALLOCATE_FEMAP_DATA
          ENDIF
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out SHEAR strains
          DO J=1,NELE 
             CALL IS_ELEM_PCOMP_PROPS ( J )

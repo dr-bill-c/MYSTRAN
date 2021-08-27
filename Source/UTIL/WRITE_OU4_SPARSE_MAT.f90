@@ -48,7 +48,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: SYM               ! 'Y' if input matrix is symmetric
       CHARACTER(LEN(MAT_NAME))        :: CCS_MAT_NAME      ! Name for CCS form of MAT
       CHARACTER(LEN(MAT_NAME))        :: CRS_MAT_NAME      ! Name for CRS form of MAT
-      character(len_input_fname+3)    :: filnam
+      CHARACTER(LEN_INPUT_FNAME+3)    :: FILNAM
       CHARACTER(16*BYTE)              :: MAT_OUT_NAME      ! 16 chars of MAT_NAME (or padded w/ blanks)
 
       INTEGER(LONG), INTENT(IN)       :: FORM              ! NASTRAN matrix FORM (not really used in MYSTRAN but needed for OUTPUT4)

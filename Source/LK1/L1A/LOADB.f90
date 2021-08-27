@@ -667,7 +667,9 @@ bdf:  DO
              ' ++                            * * * * * * * * * *  |  \|   \___/     |     |____  * * * * * * * * * *' ,28X,'++',/  &
              ' ++',127X,'++',/,                                                                                                    &
              ' ++',127X,'++',/,                                                                                                    &
-   ' ++', 6X,' B U C K L I N G   &   D I F F E R E N   S O L   a r e   o n l y   c o d e d   f o r   t h e   BAR   a n d   BEAM',  &
+   ' ++', 6X,' B U C K L I N G   &   D I F F E R E N   S O L   a r e   o n l y   c o d e d   f o r   e l e m e n t s:',18X,'++',/  &
+             ' ++',127X,'++',/,                                                                                                    &
+   ' ++', 6X,'                                            BAR,  HEXA,  PENTA,  TETRA', 51X, '++'                                   &
    8X,'++',/,' ++',127X,'++',/                                                                                                     &
    ' ++', 6X,'   A l l   o t h e r   e l e m s   i g n o r e d   i n   t h e  d i f f e r e n t i a l   s t i f f   c a l c s',    &
   10X,'++',/,' ++',127X,'++',/                                                                                                     &

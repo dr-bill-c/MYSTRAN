@@ -69,10 +69,15 @@
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
 
-      USE IOUNT1, ONLY                :  F06FIL, IN0, IN1, IN0_MSG, IN1_MSG, IN0FIL, INFILE, LEN_INPUT_FNAME, LEN_RESTART_FNAME,   &
-                                         LINK1A, SC1, WRT_LOG, BUG, ERR, F04, F06, L1A, L1A_MSG, BUGOUT, BUGSTAT, ERRSTAT, F04STAT,&
-                                         NEU, NEUFIL, PCHSTAT, RESTART_FILNAM,                                                     &
-                                         BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD
+      USE IOUNT1, ONLY                :  BUG, ERR, F04, F06, IN0, IN1, L1A, NEU, SC1 
+
+      USE IOUNT1, ONLY                :  F06FIL, IN0FIL, INFILE, NEUFIL 
+
+      USE IOUNT1, ONLY                :  IN0_MSG, IN1_MSG, L1A_MSG 
+
+      USE IOUNT1, ONLY                :  BUGSTAT, BUGSTAT_OLD, ERRSTAT, ERRSTAT_OLD, F04STAT, F04STAT_OLD, PCHSTAT, OP2STAT
+
+      USE IOUNT1, ONLY                :  LEN_INPUT_FNAME, LEN_RESTART_FNAME,LINK1A, WRT_LOG, BUGOUT, RESTART_FILNAM
 
       USE SCONTR, ONLY                :  COMM, FATAL_ERR, LINKNO_START, LSETLN, LSETS, LSUB, NDOFL, NSETS, NSUB, NTSUB,            &
                                          PROG_NAME, RESTART, SETLEN, SOL_NAME, WARN_ERR
@@ -131,6 +136,10 @@
 
       CALL TIME_INIT
 
+! Read data in initialization file, MYSTRAN.INI, if it exists.
+
+      CALL READ_INI ( INI_EXIST )
+
 ! Write logo and copyright notice to screen. Then write MYSTRAN start time/date
 
       WRITE(SC1,117) PROG_NAME, MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR, MYSTRAN_AUTHOR
@@ -147,10 +156,6 @@
       START_DAY    = DAY
 
       STIME = (10**8)*MONTH+(10**6)*DAY+(10**4)*HOUR+(10**2)*MINUTE+SEC
-
-! Read data in initialization file, MYSTRAN.INI, if it exists.
-
-      CALL READ_INI ( INI_EXIST )
 
 ! Read input data filename (from command line) and calc LEN_INPUT_FNAME.
 
@@ -402,7 +407,7 @@ iters:      DO
          CALL FILE_INQUIRE ( 'near end of MAIN' )
       ENDIF
 
-      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, PCHSTAT )
+      CALL CLOSE_OUTFILES ( BUGSTAT, ERRSTAT, F04STAT, OP2STAT, PCHSTAT )
 
 ! Close LIJ files
 
@@ -447,7 +452,7 @@ iters:      DO
 
   152 FORMAT(/,' >> MYSTRAN END    : ',I2,'/',I2,'/',I4,' at ',I2,':',I2,':',I2,'.',I3)
 
-  155 FORMAT(' MYSTRAN terminated normally. Total CPU time = ',1ES9.2,' seconds')
+  155 FORMAT(' MYSTRAN terminated normally. Total CPU time = ',1ES9.2,' seconds',/,'                    ========')
 
   156 FORMAT(' Check F06 output file for ',I8,' warning messages')
 

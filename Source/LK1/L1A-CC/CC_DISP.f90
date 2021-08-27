@@ -29,7 +29,7 @@
 ! Processes Case Control DISP cards for requests for grid point displacement outputs
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_LOG, F04
+      USE IOUNT1, ONLY                :  WRT_LOG, F04, PCHSTAT
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, CC_CMD_DESCRIBERS, LSUB, NSUB, NCCCD 
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  CC_DISP_BEGEND
@@ -72,8 +72,8 @@
 
       DISP_OUT(1:) = ' '
       IF ((FOUND_PRINT == 'Y') .AND. (FOUND_PUNCH == 'N')) DISP_OUT(1:5) = 'PRINT'
-      IF ((FOUND_PRINT == 'N') .AND. (FOUND_PUNCH == 'Y')) DISP_OUT(1:5) = 'PUNCH'
-      IF ((FOUND_PRINT == 'Y') .AND. (FOUND_PUNCH == 'Y')) DISP_OUT(1:4) = 'BOTH'
+      IF ((FOUND_PRINT == 'N') .AND. (FOUND_PUNCH == 'Y')) DISP_OUT(1:5) = 'PUNCH'  ;  PCHSTAT = 'KEEP    '
+      IF ((FOUND_PRINT == 'Y') .AND. (FOUND_PUNCH == 'Y')) DISP_OUT(1:4) = 'BOTH'   ;  PCHSTAT = 'KEEP    '
       IF ( DISP_OUT(1:) == ' ') DISP_OUT(1:5) = 'PRINT'    ! Neither PRINT or PUNCH found so default to PRINT
 
 ! Set CASE CONTROL output request variable to SETID

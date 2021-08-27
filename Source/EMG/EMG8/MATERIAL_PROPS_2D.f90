@@ -83,29 +83,6 @@
       EPS1   = EPSIL(1)
   
 ! **********************************************************************************************************************************
-! Once the MIN4T QUAD4 problem with Orthotropic elements is fized remove the lower case code below:
-
-      ierror = 0
-      if ((type(1:5) == 'QUAD4 ') .and. (quad4typ(1:5) == 'MIN4T')) then
-ortho:   do i=1,mematc
-            if (mtrl_type(i) == 8) then
-               ierror = ierror + 1
-               exit ortho
-            endif
-         enddo ortho
-         if (ierror > 0) then
-            write(err,1998) type, eid
-            write(f06,1998) type, eid
-            if (debug(248) == 1) then
-               write(err,1999)
-               write(f06,1999)
-            else
-               num_emg_fatal_errs = num_emg_fatal_errs + 1
-               call outa_here ( 'Y' )
-            endif
-         endif
-      endif
-      ierror = 0
 
 ! Initialize arrays
 

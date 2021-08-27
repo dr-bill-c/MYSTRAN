@@ -44,7 +44,7 @@
                                          L1V,     L1W,     L1X,     L1Y,     L1Z,                                                  &
                                          L2A,     L2B,     L2C,     L2D,     L2E,     L2F,     L2G,     L2H,     L2I,     L2J,     &
                                          L2K,     L2L,     L2M,     L2N,     L2O,     L2P,     L2Q,     L2R,     L2S,     L2T,     &
-                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OU4
+                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OP2,     OU4
 
       USE IOUNT1, ONLY                :  WRT_BUG, WRT_ERR, WRT_LOG, ANSSTAT, BUGSTAT, ERRSTAT, F04STAT, F06STAT, IN0STAT, IN1STAT, &
                                          L1ASTAT, NEUSTAT, SEQSTAT, SPCSTAT,                                                       &
@@ -54,7 +54,7 @@
                                          L1VSTAT, L1WSTAT, L1XSTAT, L1YSTAT, L1ZSTAT,                                              &
                                          L2ASTAT, L2BSTAT, L2CSTAT, L2DSTAT, L2ESTAT, L2FSTAT, L2GSTAT, L2HSTAT, L2ISTAT, L2JSTAT, &
                                          L2KSTAT, L2LSTAT, L2MSTAT, L2NSTAT, L2OSTAT, L2PSTAT, L2QSTAT, L2RSTAT, L2SSTAT, L2TSTAT, &
-                                         L3ASTAT, L4ASTAT, L4BSTAT, L4CSTAT, L4DSTAT, L5ASTAT, L5BSTAT
+                                         L3ASTAT, L4ASTAT, L4BSTAT, L4CSTAT, L4DSTAT, L5ASTAT, L5BSTAT, OP2STAT, OU4STAT
 
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ECHO, IERRFL, INI_ENTRY_LEN, JF, LINKNO_START, PRINTENV,                    &
                                          PROG_NAME
@@ -429,6 +429,9 @@
 
                ELSE IF (CARD(1:3) == 'L5B') THEN           ! 62
                   CALL READ_INI_LINE ( 'L5B', L5B, L5BSTAT, WRT_HDR, WRT_CARD, FLD_ERR_MSG )
+
+               ELSE IF (CARD(1:3) == 'OP2') THEN           ! 63
+                  CALL READ_INI_LINE ( 'OP2', OP2, OP2STAT, WRT_HDR, WRT_CARD, FLD_ERR_MSG )
 
                ELSE
                   IF (WRT_HDR == 'N') THEN
@@ -1072,7 +1075,7 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
  
       IMPLICIT NONE
  
-      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 5     ! Number of messages to write
+      INTEGER(LONG), PARAMETER        :: NUM_MSGS    = 2     ! Number of messages to write
 
       CHARACTER( 1*BYTE), INTENT(IN)  :: WHICH_MSG           ! Which message to write to screen
       CHARACTER(79*BYTE)              :: MSG(NUM_MSGS)       ! Message to write
@@ -1084,26 +1087,11 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
          MSG(I)(1:) = ' '
       ENDDO
 
-      IF      (INIFIL_NAME_LEN <=  79) THEN
-         WRITE(SC1,1001) INIFIL(1: 79)
-
-      ELSE IF ((INIFIL_NAME_LEN >  79) .AND. (INIFIL_NAME_LEN <= 159)) THEN
-         WRITE(SC1, 1002) INIFIL(1:159)
-
-      ELSE IF ((INIFIL_NAME_LEN > 159) .AND. (INIFIL_NAME_LEN <= 239)) THEN
-         WRITE(SC1, 1003) INIFIL(1:239)
-
-      ELSE IF (INIFIL_NAME_LEN > 239) THEN
-         WRITE(SC1, 1004) INIFIL(1:FILE_NAM_MAXLEN)
-
-      ENDIF
+      WRITE(SC1,1001) TRIM(INIFIL)
 
       IF      (WHICH_MSG == '1') THEN
-         MSG(1) = 'does not exist. Internal defaults will be used.'
-         MSG(2) = 'This could be due to not setting the DOS environment variable'
-         MSG(3) = 'MYSTRAN_directory with the DOS command: SET MYSTRAN_directory=xxxxx'
-         MSG(4) = 'where xxxxx is the directory where MYSTRAN.exe resides.'
-         MSG(5) = 'See the MYSTRAN Install and Run Manual for help'
+         MSG(1) = 'does not exist. Internal defaults will be used instead.'
+         MSG(2) = 'If you want to use the INI file, see the MYSTRAN Installation and Run Manual'
          DO I=1,NUM_MSGS
             WRITE(SC1,2000) MSG(I)
          ENDDO
@@ -1113,13 +1101,7 @@ j_do:       DO J=1,8                                       ! CYCLE through 8 cha
       ENDIF
 
 ! **********************************************************************************************************************************
- 1001 FORMAT(' Initialization file: ',/,1X,A)
-
- 1002 FORMAT(' Initialization file: ',/,1X,A)
-
- 1003 FORMAT(' Initialization file: ',/,1X,A)
-
- 1004 FORMAT(' Initialization file: ',/,1X,A)
+ 1001 FORMAT(' Optional Initialization file: ',/,1X,A)
 
  2000 FORMAT(1X,A)
 

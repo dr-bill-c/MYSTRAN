@@ -65,7 +65,7 @@
       INTEGER(LONG)                   :: ELOUT_STRE        ! If > 0, there are STRESS   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error count
-      INTEGER(LONG)                   :: NDUM      = 0     ! Dummy value needed in call to CALC_ELEM_STRESSES
+      INTEGER(LONG)                   :: NDUM              ! Value initialized to zero and used in call to CALC_ELEM_STRESSES
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NUM_OGEL_ROWS     ! No. elems processed prior to writing results to F06 file
       INTEGER(LONG)                   :: NUM_FROWS         ! No. elems processed for FEMAP
@@ -133,7 +133,7 @@
                   ENDIF
                ENDIF
             ENDIF
-         ENDDO  
+         ENDDO
       ENDDO 
  
       DO I=1,MAXREQ
@@ -270,6 +270,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
  
       IF ((POST /= 0) .AND. (ANY_STRE_OUTPUT > 0)) THEN
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out BUSH stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCBUSH, 6, SUBR_NAME )
          DO J=1,NELE
@@ -300,6 +301,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out ELAS1 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS1, 2, SUBR_NAME )
          DO J=1,NELE
@@ -330,6 +332,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out ELAS2 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS2, 2, SUBR_NAME )
          DO J=1,NELE
@@ -360,6 +363,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out ELAS3 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS3, 2, SUBR_NAME )
          DO J=1,NELE
@@ -390,6 +394,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out ELAS4 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS4, 2, SUBR_NAME )
          DO J=1,NELE
@@ -420,6 +425,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out ROD stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCROD, 4, SUBR_NAME )
          DO J=1,NELE
@@ -450,6 +456,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out BAR stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCBAR, 12, SUBR_NAME )
          DO J=1,NELE
@@ -480,6 +487,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TRIA3K stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTRIA3K, 22, SUBR_NAME )
          DO J=1,NELE
@@ -510,6 +518,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TRIA3 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTRIA3, 22, SUBR_NAME )
          DO J=1,NELE 
@@ -540,6 +549,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4K stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4K, 22, SUBR_NAME )
          DO J=1,NELE
@@ -570,6 +580,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4, 22, SUBR_NAME )
          DO J=1,NELE
@@ -600,6 +611,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA8 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA8, 12, SUBR_NAME )
          DO J=1,NELE
@@ -630,6 +642,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
                      
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA20 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA20, 12, SUBR_NAME )
          DO J=1,NELE
@@ -660,6 +673,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out PENTA6 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCPENTA6, 12, SUBR_NAME )
          DO J=1,NELE
@@ -690,6 +704,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out PENTA15 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCPENTA15, 12, SUBR_NAME )
          DO J=1,NELE
@@ -720,6 +735,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TETRA4 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTETRA4, 12, SUBR_NAME )
          DO J=1,NELE
@@ -750,6 +766,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out TETRA10 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCTETRA10, 12, SUBR_NAME )
          DO J=1,NELE
@@ -780,6 +797,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! Write out SHEAR stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCSHEAR, 22, SUBR_NAME )
          DO J=1,NELE

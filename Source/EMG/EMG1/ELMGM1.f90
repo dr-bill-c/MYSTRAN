@@ -38,7 +38,7 @@
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE PARAMS, ONLY                :  EPSIL
       USE MODEL_STUF, ONLY            :  BGRID, BUSH_CID, BUSH_OCID, CAN_ELEM_TYPE_OFFSET, CORD, EID, ELEM_LEN_12, ELEM_LEN_AB,    &
-                                         ELGP, NUM_EMG_FATAL_ERRS, EOFF, GRID, OFFDIS, RCORD, TE, TE_IDENT, TYPE, XEB, XEL
+                                         ELGP, NUM_EMG_FATAL_ERRS, EOFF, GRID, OFFDIS, OFFDIS_B, RCORD, TE, TE_IDENT, TYPE, XEB, XEL
  
       USE ELMGM1_USE_IFs
 
@@ -67,7 +67,6 @@
       REAL(DOUBLE)                    :: LX(3)              ! Distances
       REAL(DOUBLE)                    :: MAGY               ! Magnitude of vector VY
       REAL(DOUBLE)                    :: MAGZ               ! Magnitude of vector VZ
-      REAL(DOUBLE)                    :: OFFDIS_B(MOFFSET,3)! Offset distances for this element in basic coords
       REAL(DOUBLE)                    :: OFFDIS_G(MOFFSET,3)! Offset distances for this element in global coords (needed for BUSH)
       REAL(DOUBLE)                    :: PHID, THETAD       ! Outputs from subr GEN_T0L
       REAL(DOUBLE)                    :: T0G(3,3)           ! Matrix to transform offsets from global to basic  coords 
@@ -151,6 +150,7 @@
                ENDIF
             ENDDO   
             IF (CORD_FND == 'N') THEN
+               NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
                FATAL_ERR = FATAL_ERR + 1
                WRITE(ERR,1822) 'COORD SYSTEM ', BUSH_CID, TYPE, EID
                WRITE(F06,1822) 'COORD SYSTEM ', BUSH_CID, TYPE, EID
@@ -182,8 +182,9 @@
 ! NOTE: This is NOT transforming the offsets to basic. It is merely calculating the value of the offsets in basic coords so that
 !       they can be used below to find the element axes in basic coords
 
-!xxx  IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
-      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'ROD     ')) THEN
+      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
+!xxxx IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'ROD     ')) THEN
+
          IF (EOFF(INT_ELEM_ID) == 'Y') THEN
             DO I=1,ELGP
                ACID_G = GRID(BGRID(I),3)                   ! Get global coord sys for this grid
@@ -225,25 +226,24 @@
 !  (2)  a positive number indicating a coord system number
 
       IF (TYPE == 'BUSH    ') THEN
-
          IF (EOFF(INT_ELEM_ID) == 'Y') THEN
 
             CORD_FND = 'N'
             IF (BUSH_OCID > 0) THEN                        ! Don't transform offsets here when BUSH_OCID = -1 (local axes offsets)
                ICID = 0
                DO J=1,NCORD
-                  IF (BUSH_OCID == CORD(J,2)) THEN         ! BUSH_OCID coord system exists. It was checked in CORDP_PROC
+                  IF (BUSH_OCID == CORD(J,2)) THEN         ! BUSH_OCID coord system exists. It was checked in CORD_PROC
                      CORD_FND = 'Y'
                      ICID = J
                      EXIT
                   ENDIF
                ENDDO   
-               IF (CORD_FND == 'N') THEN                   ! Coord sys ID on CONM2 undefined
+               IF (CORD_FND == 'N') THEN                   ! Coord sys OCID on CBUSH undefined
+                  NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
                   FATAL_ERR = FATAL_ERR + 1
                   WRITE(ERR,1822) 'COORD SYSTEM ', BUSH_OCID, TYPE, EID
                   WRITE(F06,1822) 'COORD SYSTEM ', BUSH_OCID, TYPE, EID
                ENDIF
-
                IF (CORD_FND == 'Y') THEN
                   CALL GEN_T0L ( BGRID(1), ICID, THETAD, PHID, T0I )
                   DO J=1,3
@@ -325,8 +325,7 @@
 ! NOTE: BUSH is a zero length element and the vector in the element x direction is determined from either:
 !       (1) CID 
 
-!xxx  IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
-      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR. (TYPE == 'ROD     ')) THEN
+      IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
          VX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
          VX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
          VX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
@@ -339,39 +338,38 @@
       LX(2) = VX(2)
       LX(3) = VX(3)
                                                            ! When there is no BUSH_CID the x axis is along line between the 2 grids
-!xxx  IF (TYPE == 'BUSH    ') THEN
-!xxx     VX(1) = XEB(2,1) - XEB(1,1)
-!xxx     VX(2) = XEB(2,2) - XEB(1,2)
-!xxx     VX(3) = XEB(2,3) - XEB(1,3)
-!xxx     LX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
-!xxx     LX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
-!xxx     LX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
-!xxx  ENDIF
+      IF (TYPE == 'BUSH    ') THEN
+         VX(1) = XEB(2,1) - XEB(1,1)
+         VX(2) = XEB(2,2) - XEB(1,2)
+         VX(3) = XEB(2,3) - XEB(1,3)
+         LX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
+         LX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
+         LX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
+      ENDIF
 
 ! Length of element between ends is:
 
       ELEM_LEN_AB = DSQRT( LX(1)*LX(1) + LX(2)*LX(2) + LX(3)*LX(3) )
 
-
 ! If ELEM_LEN_AB is equal to zero (for all but BUSH) then write error and return. If BUSH elem length NOT zero, then error also
 
-!xxx  IF (TYPE /= 'BUSH    ') THEN
-!        IF (ELEM_LEN_AB <= EPS1) THEN
-!           WRITE(ERR,1904) TYPE, EID, ELEM_LEN_AB
-!           WRITE(F06,1904) TYPE, EID, ELEM_LEN_AB
-!           NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
-!           FATAL_ERR = FATAL_ERR + 1
-!           RETURN
-!        ENDIF
-!xxx  ELSE
-!xxx     IF (ELEM_LEN_AB > .0001D0) THEN
-!xxx        WRITE(ERR,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
-!xxx        WRITE(F06,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
-!xxx        NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
-!xxx        FATAL_ERR = FATAL_ERR + 1
-!xxx        RETURN
-!xxx     ENDIF
-!xxx  ENDIF
+      IF (TYPE /= 'BUSH    ') THEN
+         IF (ELEM_LEN_AB <= EPS1) THEN
+            WRITE(ERR,1904) TYPE, EID, ELEM_LEN_AB
+            WRITE(F06,1904) TYPE, EID, ELEM_LEN_AB
+            NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
+            FATAL_ERR = FATAL_ERR + 1
+            RETURN
+         ENDIF
+      ELSE
+         IF (ELEM_LEN_AB > .0001D0) THEN
+            WRITE(ERR,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
+            WRITE(F06,1959) SUBR_NAME, TYPE, EID, ELEM_LEN_AB
+            NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
+            FATAL_ERR = FATAL_ERR + 1
+            RETURN
+         ENDIF
+      ENDIF
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
 ! Unit vector in element X direction except for BUSH element with CID >= 0 (i.e. when BUSH does not have a V vector)
@@ -602,6 +600,10 @@
       IMPLICIT NONE
 
 ! **********************************************************************************************************************************
+
+      WRITE(F06,*)
+      WRITE(F06,98720)
+
       IF (BUSH_CID >= 0) THEN
          WRITE(F06,'(A,I8)') '    The element coordinate system will be BUSH_CID coord system   ',bush_cid
          WRITE(F06,*)
@@ -630,6 +632,20 @@
 
       WRITE(F06,'(A,3(1ES14.6))') '    ELEM_LEN_AB                             = ',ELEM_LEN_AB
       WRITE(F06,'(A,3(1ES14.6))') '    ELEM_LEN_12                             = ',ELEM_LEN_12
+
+      WRITE(F06,98799)
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' ::::::::::::::::::::::::::::::::::::::::::START DEBUG(110) OUTPUT FROM SUBROUTINE ELMGM1::::::::::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' :::::::::::::::::::::::::::::::::::::::::::END DEBUG(204) OUTPUT FROM SUBROUTINE ELMGM1:::::::::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
 
 ! **********************************************************************************************************************************
 

@@ -29,10 +29,11 @@
 ! Converts matrices in sparse compressed row storage format to full format 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, F04
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO
+      USE DEBUG_PARAMETERS
       USE SUBR_BEGEND_LEVELS, ONLY    :  SPARSE_CRS_TO_FULL_BEGEND
  
       USE SPARSE_CRS_TO_FULL_USE_IFs
@@ -101,6 +102,7 @@
          ENDDO 
       ENDIF
 
+      IF( DEBUG(205) > 0) CALL DEBUG_CRS_TO_FULL
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -111,6 +113,96 @@
 
       RETURN
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE DEBUG_CRS_TO_FULL
+ 
+      IMPLICIT NONE
+ 
+      CHARACTER(14*BYTE)              :: MATOUT_CHAR(NCOLS) ! Character representation of the real data in one row of REAL_VAR
+
+      INTEGER                         :: II,JJ,KK,LL        ! DO loop indices or counters
+      INTEGER                         :: NGC                ! If NCOLS is divisible by 6, NGC is that number
+      INTEGER                         :: NGR                ! If NROWS is divisible by 6, NGR is that number
+
 ! **********************************************************************************************************************************
+      WRITE(F06,98720)
+
+      WRITE(F06,9300) MATIN_NAME
+
+      NGC = 0
+icols:DO II=1,NROWS
+         IF (6*II == NROWS) THEN
+            NGC = II
+            EXIT icols
+         ENDIF
+      ENDDO icols
+
+      NGR = 0
+irows:DO II=1,NROWS
+         IF (6*II == NROWS) THEN
+            NGR = II
+            EXIT irows
+         ENDIF
+      ENDDO irows
+
+      IF ((NGC > 0) .AND. (NGR > 0)) THEN
+
+         DO II=1,NGR
+            DO KK=1,6
+               CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, 6*(II-1)+KK, MATOUT_CHAR )
+               DO JJ=1,NGC
+                  IF (JJ < NGC) THEN
+                     WRITE(F06,9206,ADVANCE='NO') (MATOUT_CHAR(6*(JJ-1)+LL),LL=1,6)
+                  ELSE
+                     WRITE(F06,9207,ADVANCE='YES') (MATOUT_CHAR(6*(JJ-1)+LL),LL=1,6)
+                  ENDIF
+               ENDDO
+            ENDDO
+            IF (II < NGR) WRITE(F06,9208,ADVANCE='YES')
+         ENDDO
+
+      ELSE
+
+         DO II=1,NROWS
+            CALL WRT_REAL_TO_CHAR_VAR ( MATOUT, NROWS, NCOLS, II, MATOUT_CHAR )
+            WRITE(F06,9206) (MATOUT_CHAR(JJ),JJ=1,NCOLS)
+         ENDDO
+
+      ENDIF
+
+      WRITE(F06,*)
+
+      WRITE(F06,98799)
+ 
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+ 9206 FORMAT(6A14,' |')
+
+ 9207 FORMAT(6A14)
+
+ 9208 FORMAT('  -----------------------------------------------------------------------------------------------------------------',&
+             '-------------------------------------------------------')
+
+ 9300 FORMAT(65X, 'Matrix ', A, ' displayed in full format',/,65X,'----------------------------------------',/) 
+
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' ::::::::::::::::::::::::::::::::::::START DEBUG(205) OUTPUT FROM SUBROUTINE SPARSE_CRS_TO_FULL::::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' ::::::::::::::::::::::::::::::::::::::END DEBUG(205) OUTPUT FROM SUBROUTINE SPARSE_CRS_TO_FULL::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE DEBUG_CRS_TO_FULL
  
       END SUBROUTINE SPARSE_CRS_TO_FULL

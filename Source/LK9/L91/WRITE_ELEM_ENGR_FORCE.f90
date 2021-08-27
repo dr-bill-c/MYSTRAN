@@ -226,7 +226,6 @@ headr:IF (IHDR == 'Y') THEN
 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN                   ! Engr force for ELAS was put into OGEL(I,1)
 
-!!!      WRITE(F06,1202) FILL(1: 0), (EID_OUT_ARRAY(I,1),OGEL(I,1),I=1,NUM)
          J1 = 1
          DO I=1,NUM,5
             IF (J1+4 <= NUM) THEN
@@ -378,10 +377,10 @@ headr:IF (IHDR == 'Y') THEN
  
  1402 FORMAT(1X,A,2(I8,3(1ES14.6),1X))
  
- 1403 FORMAT(1X,A,'         ------------- ------------- -------------',/,                   &
-             1X,A,'MAX* :  ',3ES14.6,/,                                                   &
-             1X,A,'MIN* :  ',3ES14.6,//,                                                  &
-             1X,A,'ABS* :  ',3ES14.6,/,                                                   &
+ 1403 FORMAT(1X,A,'         ------------- ------------- -------------',/,                                                          &
+             1X,A,'MAX* :  ',3ES14.6,/,                                                                                            &
+             1X,A,'MIN* :  ',3ES14.6,//,                                                                                           &
+             1X,A,'ABS* :  ',3ES14.6,/,                                                                                            &
              1X,A,'*for output set')
 
 ! SHELL >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -529,10 +529,6 @@
 
 ! Determine if we need to open F25 to write element disp, loads to unformatted file
  
-      ANY_U_P_OUTPUT = IAND(OELDT,IBIT(ELDT_F25_U_P_BIT))
-      IF (ANY_U_P_OUTPUT > 0) THEN
-         CALL FILE_OPEN ( F25, F25FIL, OUNT, 'REPLACE', F25_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
-      ENDIF
   
 ! Open data files for reading displacements (will be read below in loop over number of subcases/vectors)
  

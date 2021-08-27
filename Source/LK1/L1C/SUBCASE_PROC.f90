@@ -793,16 +793,16 @@ token_loop2:   DO                                          ! Call STOKEN in a DO
 
 ! Bit  0 in OELDT, ELDT is for print to BUGFIL of elem geometric data
 ! Bit  1 in OELDT, ELDT is for print to BUGFIL of elem property and material info
-! Bit  4 in OELDT, ELDT is for print to BUGFIL of elem thermal and pressure matrices    : PTE, PPE
-! Bit  2 in OELDT, ELDT is for print to BUGFIL of elem mass matrix                      : ME
-! Bit  3 in OELDT, ELDT is for print to BUGFIL of elem stiffness matrix                 : KE
+! Bit  2 in OELDT, ELDT is for print to BUGFIL of elem thermal and pressure matrices    : PTE, PPE
+! Bit  3 in OELDT, ELDT is for print to BUGFIL of elem mass matrix                      : ME
+! Bit  4 in OELDT, ELDT is for print to BUGFIL of elem stiffness matrix                 : KE
 ! Bit  5 in OELDT, ELDT is for print to BUGFIL of elem stress & strain recovery matrices: SEi, STEi, BEi
 ! Bit  6 in OELDT, ELDT is for print to BUGFIL of elem displacement and load matrices   : UEL, PEL (all subcases)
 ! Bit  7 in OELDT, ELDT is for print to BUGFIL of elem shape fcns and Jacobian matrices
 ! Bit  8 in OELDT, ELDT is for print to BUGFIL of elem strain-displacement matrices
 ! Bit  9 in OELDT, ELDT is for print to BUGFIL of elem checks on strain-displ matrices for RB motion & constant strain
-! Bit 10 in OELDT, ELDT is for write to F22FIL unformatted file of element              : PTE, PPE
-! Bit 11 in OELDT, ELDT is for write to F21FIL unformatted file of element              : ME
+! Bit 10 in OELDT, ELDT is for write to F21FIL unformatted file of element              : PTE, PPE
+! Bit 11 in OELDT, ELDT is for write to F22FIL unformatted file of element              : ME
 ! Bit 12 in OELDT, ELDT is for write to F23FIL unformatted file of element              : KE
 ! Bit 13 in OELDT, ELDT is for write to F24FIL unformatted file of element              : SEi, STEi, BEi
 ! Bit 14 in OELDT, ELDT is for write to F25FIL unformatted file of element              : UEL, PEL (all subcases)
@@ -1650,7 +1650,7 @@ i_loop2: DO I=SID_BEG,SID_END
 
  1012 FORMAT(32X,'CASE CONTROL GRID POINT OUTPUT REQUESTS',/)
 
- 1013 FORMAT(76X,'D  F  S  M  G  A',/,76X,'I  O  P  P  P  C',/,76X,'S  R  C  C  F  C' ,/,76X,'P  C  F  F  O  E',/)
+ 1013 FORMAT(76X,'D  O  S  M  G  A',/,76X,'I  L  P  P  P  C',/,76X,'S  O  C  C  F  C' ,/,76X,'P  A  F  F  O  E',/)
 
  1014 FORMAT(10X,' Grid   point ',I8,' output requests for subcase ',I8,' are:',8(2X,A1))
 
@@ -1658,7 +1658,7 @@ i_loop2: DO I=SID_BEG,SID_END
 
  1016 FORMAT(1X                                                                                                                 ,/,&
              ' DISP indicates grid point displacement output requests'                                                          ,/,&
-             ' FORC indicates grid point applied load output requests'                                                          ,/,&
+             ' OLOA indicates grid point applied load output requests'                                                          ,/,&
              ' SPCF indicates grid point forces of single point constraint output requests'                                     ,/,&
              ' MPCF indicates grid point forces of multi  point constraint output requests'                                     ,/,&
              ' GPFO indicates grid point force balance output requests'                                                         ,/,&

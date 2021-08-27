@@ -140,7 +140,7 @@
 
  9902 FORMAT(' SUPERLU FACTORIZATION OF MATRIX ', A, ' SUCCEEDED IN SUBR ', A)
 
- 9903 FORMAT(' *ERROR  9902: SUPERLU SPARSE SOLVER HAS FAILED WITH INFO = ', I8,' IN SUBR ', A, ' CALLED BY SUBR ', A)
+ 9903 FORMAT(' *ERROR  9903: SUPERLU SPARSE SOLVER HAS FAILED WITH INFO = ', I12,' IN SUBR ', A, ' CALLED BY SUBR ', A)
 
 !***********************************************************************************************************************************
 

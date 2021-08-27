@@ -78,7 +78,7 @@
       INTEGER(LONG)                   :: K                 ! Counter
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = STR_TENSOR_TRANSFORM_BEGEND
 
-      REAL(DOUBLE), INTENT(INOUT)     :: STRESS_TENSOR(3,3)! 2D stress tensor (eqn 4 above)
+      REAL(DOUBLE), INTENT(INOUT)     :: STRESS_TENSOR(3,3)! 2D stress tensor (eqn 6 above)
       REAL(DOUBLE)                    :: DUM33(3,3)        ! Intermediate array used in calc outputs
       REAL(DOUBLE)                    :: TS0(3,3)          ! Transform matrix from basic coords to stress output coords
       REAL(DOUBLE)                    :: T0S(3,3)          ! TS0'

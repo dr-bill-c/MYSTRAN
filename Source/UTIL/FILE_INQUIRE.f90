@@ -29,7 +29,7 @@
 ! Inquires about whether files are opened. Writes results to file F06
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  FILE_NAM_MAXLEN,  MOT4,    MOU4,    WRT_LOG
+      USE IOUNT1, ONLY                :  FILE_NAM_MAXLEN,  MOT4,    MOU4,    OU4_EXT, OT4_EXT, WRT_LOG
 
       USE IOUNT1, ONLY                :  ANS,     BUG,     EIN,     ENF,     ERR,     F04,     F06,     IN0,     IN1,     NEU,     &
                                          PCH,     SEQ,     SC1,     SPC,                                                           &
@@ -39,7 +39,7 @@
                                          L1U,     L1V,     L1W,     L1X,     L1Y,     L1Z,                                         &
                                          L2A,     L2B,     L2C,     L2D,     L2E,     L2F,     L2G,     L2H,     L2I,     L2J,     &
                                          L2K,     L2L,     L2M,     L2N,     L2O,     L2P,     L2Q,     L2R,     L2S,     L2T,     &
-                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OT4,     OU4,              &
+                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OP2,     OT4,     OU4,     &
                                          MAX_FIL
 
       USE IOUNT1, ONLY                :  ANSFIL,  BUGFIL,  EINFIL,  ENFFIL,  ERRFIL,  F04FIL,  F06FIL,  IN0FIL,  INFILE,  NEUFIL,  &
@@ -50,7 +50,7 @@
                                          LINK1U,  LINK1V,  LINK1W,  LINK1X,  LINK1Y,  LINK1Z,                                      &
                                          LINK2A,  LINK2B,  LINK2C,  LINK2D,  LINK2E,  LINK2F,  LINK2G,  LINK2H,  LINK2I,  LINK2J,  &
                                          LINK2K,  LINK2L,  LINK2M,  LINK2N,  LINK2O,  LINK2P,  LINK2Q,  LINK2R,  LINK2S,  LINK2T,  &
-                                         LINK3A,  LINK4A,  LINK4B,  LINK4C,  LINK4D,  LINK5A,  LINK5B,  OT4FIL,  OU4FIL
+                                         LINK3A,  LINK4A,  LINK4B,  LINK4C,  LINK4D,  LINK5A,  LINK5B,  OP2FIL,  OT4FIL,  OU4FIL
 
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR
       USE TIMDAT, ONLY                :  TSEC
@@ -67,7 +67,6 @@
       CHARACTER(LEN=*), INTENT(IN)    :: MESSAGE           ! Message written when this subr is called
       CHARACTER( 3*BYTE)              :: FIL(100)          ! Descriptor of a MYSTRAN file
       CHARACTER(FILE_NAM_MAXLEN*BYTE) :: FILNAM(100)       ! Filename                     
-      CHARACTER( 3*BYTE), PARAMETER   :: OPI(MOU4) = (/'OP1','OP2','OP3','OP4','OP5','OP6','OP7','OP8','OP9'/)
       CHARACTER(14*BYTE)              :: ANSE              ! Message set based on value of LEXIST
       CHARACTER(10*BYTE)              :: ANSO              ! Message set based on value of LOPND
 
@@ -154,7 +153,9 @@
       FIL( 69) = 'L4D'   ;   UNT( 69) =  L4D   ;   FILNAM( 69) = LINK4D
       FIL( 70) = 'L5A'   ;   UNT( 70) =  L5A   ;   FILNAM( 70) = LINK5A
       FIL( 71) = 'L5B'   ;   UNT( 71) =  L5B   ;   FILNAM( 71) = LINK5B
-      IF ( 71 > MAX_FIL) THEN
+      FIL( 72) = 'OP2'   ;   UNT( 72) =  OP2   ;   FILNAM( 71) = OP2FIL
+
+      IF ( 72 > MAX_FIL) THEN
          WRITE(ERR,944) SUBR_NAME, MAX_FIL   
          WRITE(F06,944) SUBR_NAME, MAX_FIL   
          FATAL_ERR = FATAL_ERR + 1
@@ -162,10 +163,10 @@
       ENDIF 
 
       DO I=1,MOU4
-         FIL(MAX_FIL+I)      = 'OPI(I)'   ;   UNT(MAX_FIL+I)      =  OU4(I)   ;   FILNAM(MAX_FIL+I)      = OU4FIL(I)
+         FIL(MAX_FIL+I)      = OU4_EXT(I);   UNT(MAX_FIL+I)      =  OU4(I)   ;   FILNAM(MAX_FIL+I)      = OU4FIL(I)
       ENDDO
       DO I=1,MOT4
-         FIL(MAX_FIL+MOU4+I) = 'OTI(I)'   ;   UNT(MAX_FIL+MOU4+I) =  OT4(I)   ;   FILNAM(MAX_FIL+MOU4+I) = OT4FIL(I)
+         FIL(MAX_FIL+MOU4+I) = OT4_EXT(I);   UNT(MAX_FIL+MOU4+I) =  OT4(I)   ;   FILNAM(MAX_FIL+MOU4+I) = OT4FIL(I)
       ENDDO
 
       WRITE(ERR,1)

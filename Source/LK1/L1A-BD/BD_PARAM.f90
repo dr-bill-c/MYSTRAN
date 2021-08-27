@@ -48,7 +48,7 @@
                                          DELBAN          , EIGESTL         , EIGNORM2        , ELFORCEN        , EPSERR          , &
                                          EQCHK_REF_GRID  , EQCHK_NORM      , EQCHK_OUTPUT    , EQCHK_TINY      ,                   &
                                          EPSIL           , EMP0_PAUSE      , ESP0_PAUSE      , F06_COL_START   ,                   &
-                                         GRDPNT          , GRIDSEQ         , HEXAXIS         ,                                     &
+                                         GRDPNT          , GRDPNT_IN       , GRIDSEQ         , HEXAXIS         ,                   &
                                          IORQ1M          , IORQ1S          , IORQ1B          , IORQ2B          , IORQ2T          , &
                                          ITMAX           , KLLRAT          , KOORAT          , LANCMETH        , MATSPARS        , &
                                          MEMAFAC         , MIN4TRED        , MXALLOCA        , MAXRATIO        ,                   &
@@ -589,7 +589,7 @@
          CALL BD_IMBEDDED_BLANK   ( JCARD,0,3,0,0,0,0,0,0 )! Make sure that there are no imbedded blanks in field 3
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
-
+  
 ! DELBAN, where if it is 1, delete the bandit files left over, if 0, don't.
 
       ELSE IF (JCARD(2)(1:8) == 'DELBAN  ') THEN
@@ -878,6 +878,7 @@
 ! GRDPNT causes the grid point weight generator to be run to calculate mass of the model relative to G.P defined by PARAM GRDPNT.
 
       ELSE IF (JCARD(2)(1:8) == 'GRDPNT  ') THEN
+         GRDPNT_IN = GRDPNT                                ! GRDPNT_IN is used to decide if GPWG is run in LINK0
          PARNAM = 'GRDPNT  '
          CALL I4FLD ( JCARD(3), JF(3), I4PARM )
          IF (IERRFL(3) == 'N') THEN

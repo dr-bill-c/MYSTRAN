@@ -43,11 +43,11 @@
 
       IMPLICIT NONE
  
-      CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'CC_ELDA'
+      CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME   = 'CC_ELDA'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
       CHARACTER(LEN=LEN(CARD))        :: ERRTOK            ! Character string that holds part of an error message from subr STOKEN
       CHARACTER( 3*BYTE)              :: EXCEPT            ! An input/output for subr STOKEN
-      CHARACTER( 1*BYTE)              :: PUNCH_WARN='N'    ! Set to 'Y' if warning message written for PUNCH option
+      CHARACTER( 1*BYTE)              :: FIJFIL_WARN = 'N' ! Set to 'Y' if warning message written for FIJFIL option
       CHARACTER( 3*BYTE)              :: THRU              ! An input/output for subr STOKEN
       CHARACTER( 8*BYTE)              :: TOKEN(3)          ! Char string output from subr STOKEN, called herein
       CHARACTER(LEN=LEN(CARD))        :: TOKSTR            ! Character string to tokenize 
@@ -61,8 +61,8 @@
       INTEGER(LONG)                   :: IOUT              ! Integer number, in ELDATA request, indicating type of output request
       INTEGER(LONG), PARAMETER        :: IOUTMIN_BUG = 0   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA print options)
       INTEGER(LONG), PARAMETER        :: IOUTMAX_BUG = 9   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA print options)
-      INTEGER(LONG), PARAMETER        :: IOUTMIN_FIJ = 1   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
-      INTEGER(LONG), PARAMETER        :: IOUTMAX_FIJ = 5   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
+      INTEGER(LONG), PARAMETER        :: IOUTMIN_FIJ = 2   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
+      INTEGER(LONG), PARAMETER        :: IOUTMAX_FIJ = 6   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
       INTEGER(LONG)                   :: NTOKEN            ! An output from subr STOKEN, called herein
       INTEGER(LONG)                   :: SETID       = 0   ! Set ID on this Case Control card
       INTEGER(LONG)                   :: STRNG_LEN   = 0   ! Length of character string between "()" in the ELDATA card
@@ -83,11 +83,11 @@
  
 ! Processes element debug output or disk file output. Card format is:
 
-!           ELDATA(i,PRINT or PUNCH or BOTH) = NONE or ALL or SETID
+!           ELDATA(i,PRINT or FIJFIL or BOTH) = NONE or ALL or SETID
 
-! where i is 0,1,2,3,4 or 5 and either PRINT or PUNCH or BOTH must be selected. i determines kind of elem output.
+! where i is 0,1,2,3,4 or 5 and either PRINT or FIJFIL or BOTH must be selected. i determines kind of elem output.
  
-! First get i,PRINT,PUNCH between (). CCELDT(j) array will be set equal to:
+! First get i,PRINT, FIJFIL between (). CCELDT(j) array will be set equal to:
 
 !       1)  -1   if "ALL" is requested,
 !       2)   0   if "NONE" is requested, or
@@ -103,8 +103,8 @@
 ! CCELDT( 7) is CC requests for print to BUGFIL of elem shape fcns and Jacobian matrices
 ! CCELDT( 8) is CC requests for print to BUGFIL of elem strain-displacement matrices
 ! CCELDT( 9) is CC requests for print to BUGFIL of elem checks on strain-displ matrices for RB motion & constant strain
-! CCELDT(10) is CC requests for write to F22FIL unformatted file of element              : PTE, PPE
-! CCELDT(11) is CC requests for write to F21FIL unformatted file of element              : ME
+! CCELDT(10) is CC requests for write to F21FIL unformatted file of element              : PTE, PPE
+! CCELDT(11) is CC requests for write to F22FIL unformatted file of element              : ME
 ! CCELDT(12) is CC requests for write to F23FIL unformatted file of element              : KE
 ! CCELDT(13) is CC requests for write to F24FIL unformatted file of element              : SEi, STEi, BEi
 ! CCELDT(14) is CC requests for write to F25FIL unformatted file of element              : UEL, PEL (all subcases)
@@ -112,7 +112,7 @@
 
 ! CCELDT will be processed in subroutine SCPRO to fill in output array ELDAT(k) with elements whose output was
 ! requested by setting bit j-1 in array ELDAT to 1 if CCELDT(j) is nonzero
- 
+
 ! Find out if "NONE", "ALL" or SETID
  
       CALL GET_ANSID ( CARD, SETID )   
@@ -160,6 +160,7 @@
             IF (TOKEN_BEG <= STRNG_LEN) THEN 
                THRU   = 'OFF'
                EXCEPT = 'OFF'
+
                CALL STOKEN ( SUBR_NAME, TOKSTR, TOKEN_BEG, STRNG_LEN, NTOKEN, IERROR, TOKTYP, TOKEN, ERRTOK, THRU, EXCEPT )
                IF (IERROR == 1) THEN
                   FATAL_ERR = FATAL_ERR + 1
@@ -174,11 +175,11 @@
                         RETURN
                      ENDIF
                      CCELDT(IOUT) = SETID
-                  ELSE IF (TOKTYP(1) == 'PUNCH   ') THEN
+                  ELSE IF (TOKTYP(1) == 'FIJFIL  ') THEN
                      IF ((IOUT < IOUTMIN_FIJ) .OR. (IOUT > IOUTMAX_FIJ)) THEN
                         FATAL_ERR = FATAL_ERR + 1
-                        WRITE(ERR,1282) IOUTMIN_FIJ, IOUTMAX_FIJ, 'PUNCH'
-                        WRITE(F06,1282) IOUTMIN_FIJ, IOUTMAX_FIJ, 'PUNCH'
+                        WRITE(ERR,1282) IOUTMIN_FIJ, IOUTMAX_FIJ, 'FIJFIL'
+                        WRITE(F06,1282) IOUTMIN_FIJ, IOUTMAX_FIJ, 'FIJFIL'
                         RETURN
                      ENDIF
                      CCELDT(IOUT+IOFF) = SETID
@@ -200,13 +201,13 @@
             ELSE                                        ! TOKEN_BEG > STRNG_LEN, so quit
                CCELDT(IOUT) = SETID                     ! Default for ELDATA output is PRINT
             ENDIF
-            IF (TOKEN_BEG <= STRNG_LEN) THEN            ! Error: there shouldn't be more than the integer, PRINT, PUNCH or BOTH
+            IF (TOKEN_BEG <= STRNG_LEN) THEN            ! Error: there shouldn't be more than the integer, PRINT, FIJFIL or BOTH
                WARN_ERR = WARN_ERR + 1
                WRITE(ERR,1285) CARD,TOKEN(1)
                IF (SUPWARN == 'N') THEN
                   WRITE(F06,1285) CARD,TOKEN(1)
                ENDIF
-               IF (PUNCH_WARN == 'N') THEN
+               IF (FIJFIL_WARN == 'N') THEN
                   WARN_ERR = WARN_ERR + 1
                ENDIF
             ENDIF 
@@ -252,14 +253,12 @@
  1283 FORMAT(' *ERROR  1283: ENTRIES ON ',A,' CASE CONTROL ENTRY MUST BE <= 8 CHARACTERS. THE FOLLOWING ENTRY EXCEEDS THIS:'       &
                     ,/,15X,A,/)
 
- 1284 FORMAT(' *ERROR  1284: DATA BETWEEN PARENS FOLLOWING INTEGER ON ELFORCE/FORCE CASE CONTROL ENTRY MUST BE "PRINT", "PUNCH",', &
+ 1284 FORMAT(' *ERROR  1284: DATA BETWEEN PARENS FOLLOWING INTEGER ON ELFORCE/FORCE CASE CONTROL ENTRY MUST BE "PRINT", "FIJFIL",',&
                            ' OR "BOTH".'                                                                                           &
                     ,/,14X,' ENTRY = ',A8,' NOT RECOGNIZED')
 
- 1265 FORMAT(' *WARNING    : ELDATA PUNCH OUTPUT NOT ALLOWED FOR OUTPUT TYPE = ',I3,'. PUNCH REQUEST IGNORED.')
-
  1285 FORMAT(' *WARNING    : ERROR READING ELDATA CASE CONTROL ENTRY:',/,15X,A,/,15X,'DATA BETWEEN PARENS FOLOWING INTEGER SHOULD',&
-                           ' ONLY BE ONE OF: "PRINT", "PUNCH" OR "BOTH". FIRST ENTRY, ',A,', WILL BE USED')
+                           ' ONLY BE ONE OF: "PRINT", "FIJFIL" OR "BOTH". FIRST ENTRY, ',A,', WILL BE USED')
 
 12344 format('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 

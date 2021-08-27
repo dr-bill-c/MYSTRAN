@@ -494,7 +494,7 @@ ply_do:  DO K=1,NUM_PLIES_TO_PROC
          SHELL_T(1,2) = ZERO
          SHELL_T(2,1) = ZERO
          WRITE(ERR,9801) EID, SHELL_T(1,1), SHELL_T(2,2)
-         WRITE(F06,9801) EID, SHELL_T(1,1), SHELL_T(2,2)
+!        WRITE(F06,9801) EID, SHELL_T(1,1), SHELL_T(2,2)
          SHELL_T_MOD = 'Y' 
       ENDIF
 

@@ -28,27 +28,30 @@
 
    INTERFACE
 
-      SUBROUTINE TPLT2 ( OPT, AREA, X2E, X3E, Y3E, CALC_EMATS, IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB )
+      SUBROUTINE TPLT2(OPT, AREA, X2E, X3E, Y3E, CALC_EMATS, IERROR, KV, PTV, PPV, B2V, B3V, S2V, S3V, BIG_BB, MN4T_QD,TRIA_NUM,PSI)
 
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  F04, F06, WRT_LOG
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NSUB, NTSUB
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, MEMATC, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  TPLT2_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE
-      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, EID, FCONV_SHEAR_THICK, EB, ET, ELDOF,                      &
-                                         ERR_SUB_NAM, FCONV, KE, INTL_MID, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE,                    &
-                                         PRESS, PTE, SE2, SE3, SHELL_DALP, SHELL_D, SHELL_T, SHELL_PROP_ALP, SHRSUM, STE2, TYPE
-      USE PARAMS, ONLY                :  EPSIL
+      USE CONSTANTS_1, ONLY           :  ZERO, ONE, TWO, THREE, FOUR, SIX, EIGHT, TWELVE, CONV_RAD_DEG
+      USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
+                                         MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
+                                         SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
+      use model_stuf, only            :  psi_hat                                                                                  !?
+      USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
       IMPLICIT NONE 
   
       CHARACTER(1*BYTE), INTENT(IN)   :: CALC_EMATS        ! 'Y'/'N' flags for whether to calc certain elem matrices
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices
+      CHARACTER(LEN=*) , INTENT(IN)   :: MN4T_QD           ! Arg used to say whether the triangular elem is part of a QUAD4
 
       INTEGER(LONG), INTENT(OUT)      :: IERROR            ! Local error indicator
+      INTEGER(LONG), INTENT(IN)       :: TRIA_NUM          ! Tria number (1, 2, 3 or 4) for the subtriangles of a MIN4T QUAD4
       INTEGER(LONG), PARAMETER        :: ID(9) =   (/ 3, & ! ID(1) =  3 means virgin 9x9 elem DOF 1 is MYSTRAN 18x18 elem DOF  3
                                                       9, & ! ID(2) =  9 means virgin 9x9 elem DOF 2 is MYSTRAN 18x18 elem DOF  9
                                                      15, & ! ID(3) = 15 means virgin 9x9 elem DOF 3 is MYSTRAN 18x18 elem DOF 15
@@ -61,6 +64,7 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = TPLT2_BEGEND
   
       REAL(DOUBLE) , INTENT(IN)       :: AREA              ! Element area
+      REAL(DOUBLE) , INTENT(IN)       :: PSI               ! Angle to rotate orthotropic mat'l matrix of a sub-tria to align w QUAD
       REAL(DOUBLE) , INTENT(IN)       :: X2E               ! x coord of elem node 2
       REAL(DOUBLE) , INTENT(IN)       :: X3E               ! x coord of elem node 3
       REAL(DOUBLE) , INTENT(IN)       :: Y3E               ! y coord of elem node 3
@@ -72,14 +76,15 @@
       REAL(DOUBLE) , INTENT(OUT)      :: PTV(9,NTSUB)      ! The 9xNTSUB virgin pressure load matrix for MIN3
       REAL(DOUBLE) , INTENT(OUT)      :: S2V(3,9)          ! Stress recovery matrix for virgin DOF's for bending
       REAL(DOUBLE) , INTENT(OUT)      :: S3V(3,9)          ! Stress recovery matrix for virgin DOF's for transverse shear
+
       REAL(DOUBLE)                    :: A1(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Alpha*a)
       REAL(DOUBLE)                    :: A2(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Alpha*b)
       REAL(DOUBLE)                    :: B1(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Beta*a)
       REAL(DOUBLE)                    :: B2(3,3)           ! Intermediate variables used in calc KS (Alex Tessler's matrix Beta*b)
       REAL(DOUBLE)                    :: DUM0(9)           ! Intermediate variables used in calc PTE, PPE (thermal, pressure loads)
-      REAL(DOUBLE)                    :: EALP(3)           ! Intermed var used in calc STEi therm stress coeffs
       REAL(DOUBLE)                    :: QCONS             ! = AREA/24, used in calc PPE pressure loads
- 
+      REAL(DOUBLE)                    :: EALP_TRIA(3)      ! Intermed var used in calc STEi therm stress coeffs
+
       END SUBROUTINE TPLT2
 
    END INTERFACE

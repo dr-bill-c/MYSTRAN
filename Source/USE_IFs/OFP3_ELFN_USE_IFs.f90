@@ -37,6 +37,6 @@
       USE GET_GRID_NUM_COMPS_Interface
       USE CHK_OGEL_ZEROS_Interface
       USE WRITE_ELEM_NODE_FORCE_Interface
-      USE WRITE_EOFIL_Interface
+      USE WRITE_FIJFIL_Interface
 
       END MODULE OFP3_ELFN_USE_IFs

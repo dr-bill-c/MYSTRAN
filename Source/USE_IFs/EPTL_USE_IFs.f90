@@ -29,7 +29,7 @@
 
       USE OURTIM_Interface
       USE EMG_Interface
-      USE WRITE_EOFIL_Interface
+      USE WRITE_FIJFIL_Interface
       USE GET_ARRAY_ROW_NUM_Interface
       USE GET_GRID_NUM_COMPS_Interface
       USE TDOF_COL_NUM_Interface

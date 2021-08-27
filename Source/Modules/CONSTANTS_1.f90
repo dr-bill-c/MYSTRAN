@@ -38,6 +38,7 @@
       REAL(DOUBLE),  PARAMETER        :: ONEPM16           =    1.0E-16_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONEPM15           =    1.0E-15_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONEPM14           =    1.0E-14_QUAD
+      REAL(DOUBLE),  PARAMETER        :: ONEPM8            =    1.0E-08_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONEPM6            =    1.0E-06_QUAD
       REAL(DOUBLE),  PARAMETER        :: ONEPM5            =    1.0E-05_QUAD 
       REAL(DOUBLE),  PARAMETER        :: ONEPM4            =    1.0E-04_QUAD 

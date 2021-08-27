@@ -492,25 +492,27 @@
 
 
 ! 3D Elems >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1301 FORMAT(A,'Element    Sigma-xx      Sigma-yy      Sigma-zz       Tau-xy        Tau-yz        Tau-zx      von Mises'           &
+ 1301 FORMAT(A,'Element   Epsilon-xx    Epsilon-yy    Epsilon-zz     Gamma-xy      Gamma-yz      Gamma-zx     von Mises'           &
           ,/,A,'   ID')
   
- 1302 FORMAT(A,'Element    Sigma-xx      Sigma-yy      Sigma-zz       Tau-xy        Tau-yz        Tau-zx         ',                &
+ 1302 FORMAT(A,'Element   Epsilon-xx    Epsilon-yy    Epsilon-zz     Gamma-xy      Gamma-yz      Gamma-zx        ',                &
              'Octahedral Strain'                                                                                                   &
           ,/,A,'   ID',91X,'Direct        Shear')
   
  1303 FORMAT(19X,I8,8(1ES14.6))
 
  1304 FORMAT(28X,'------------- ------------- ------------- ------------- ------------- ------------- -------------',/,            &
-             1X,'MAX (for output set):     ',7(ES14.6),/,                                                                          &
-             1X,'MIN (for output set):     ',7(ES14.6),//,                                                                         &
-             1X,'ABS (for output set):     ',7(ES14.6))
+             16X,'MAX* :     ',7(ES14.6),/,                                                                                        &
+             16X,'MIN* :     ',7(ES14.6),//,                                                                                       &
+             16X,'ABS* :     ',7(ES14.6),/                                                                                         &
+             16X,'* for output set')
 
  1305 FORMAT(27X,' ------------- ------------- ------------- ------------- ------------- ------------- -------------',             &
                  ' -------------',/,                                                                                               &
-             1X,'MAX (for output set):     ',8(ES14.6),/,                                                                          &
-             1X,'MIN (for output set):     ',8(ES14.6),//,                                                                         &
-             1X,'ABS (for output set):     ',8(ES14.6))
+             16X,'MAX* :     ',8(ES14.6),/,                                                                                        &
+             16X,'MIN* :     ',8(ES14.6),//,                                                                                       &
+             16X,'ABS* :     ',8(ES14.6),/                                                                                         &
+             16X,'* for output set')
 
  1313 FORMAT(16X,I8,8(1ES14.6))
 

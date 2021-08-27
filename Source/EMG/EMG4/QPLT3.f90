@@ -71,12 +71,11 @@
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, MEFE, MIN4T_QUAD4_TRIA_NO, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  QPLT3_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO, QUARTER, HALF, ONE, TWO, FOUR
-      USE PARAMS, ONLY                :  EPSIL, MIN4TRED
+      USE CONSTANTS_1, ONLY           :  ZERO, QUARTER, HALF, ONE, TWO, FOUR, CONV_RAD_DEG, PI
+      USE PARAMS, ONLY                :  MIN4TRED
       USE MACHINE_PARAMS, ONLY        :  MACH_SFMIN
-      USE MODEL_STUF, ONLY            :  BE2, BE3, BENSUM, DT, EID, ELDOF, EMG_IFE, EMG_RFE, EB, ET, ERR_SUB_NAM,                  &
-                                         NUM_EMG_FATAL_ERRS, FCONV, KE, PHI_SQ, PPE, PSI_HAT, PRESS, PTE, SE2, SE3, SHRSUM,        &
-                                         TE, TYPE, XEB, XEL, XTB, XTL
+      USE MODEL_STUF, ONLY            :  BE2, BE3, DT, EID, ELDOF, EMG_IFE, ERR_SUB_NAM,NUM_EMG_FATAL_ERRS,                        &
+                                         FCONV, KE, PHI_SQ, PPE, PTE, SE2, SE3, TE, XEB, XEL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
  
       USE QPLT3_USE_IFs
@@ -87,6 +86,8 @@
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices.
       CHARACTER(1*BYTE)               :: OPT_MIN4T(6)      ! Values of OPT to use in this subr. We need OPT(4) = 'Y' if the
 !                                                            MIN4T reduction technique is static condensation (MIN4TRED = 'STC')
+
+      CHARACTER(LEN=1), PARAMETER     :: MN4T_QD   = 'Y'   ! Arg used in call to TPLT2 to say the triangular elem is part of a QUAD4
 
       INTEGER(LONG), PARAMETER        :: IDV(9)  = (/ 1, & ! IDV( 1) =  1 means tria elem virgin DOF 1 is MYSTRAN elem DOF  1
                                                       4, & ! IDV( 2) =  4 means tria elem virgin DOF 2 is MYSTRAN elem DOF  4
@@ -115,9 +116,12 @@
 
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices or counters
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error indicator
-      INTEGER(LONG)                   :: NUM_TRIAS = 4     ! Local error indicator
+
+      INTEGER(LONG), PARAMETER        :: NUM_TRIAS = 4     ! DO NOT CHANGE THIS. Num of triangles that subdivide the QUAD4
+!                                                            ------------------
+
       INTEGER(LONG)                   :: PROG_ERR  = 0     ! Local error indicator
-      INTEGER(LONG)                   :: TRIANGLE          ! 1, 2, 3, or 4 designator of a subtriangle of the quad
+      INTEGER(LONG)                   :: TRIA_NUM          ! 1, 2, 3, or 4 designator of a subtriangle of the quad
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = QPLT3_BEGEND
   
       REAL(DOUBLE) , INTENT(IN)       :: AREA_QUAD         ! Element area
@@ -127,7 +131,15 @@
                                                            ! Strain-displ matrix for bending for all DOF's
       REAL(DOUBLE) , INTENT(OUT)      :: BIG_BB(3,ELDOF,4)
 
-      REAL(DOUBLE)                    :: ALPHA             ! Angle (rad) bet side 1-2 of a sub-triangle and side 1-3 of the triangle
+      REAL(DOUBLE)                    :: ALPHA(4)          ! Angle (rad) between side 1-2 of a triangle and side 1-3 of the triangle
+      REAL(DOUBLE)                    :: BETA(4)           ! Angle (rad) between side 1-2 of a triangle and side 2-3 of the triangle
+      REAL(DOUBLE)                    :: GAMMA(4)          ! Angle (rad) between side 1-3 of a triangle and side 2-3 of the triangle
+
+      REAL(DOUBLE)                    :: PSI               ! Angle that one of the triangles needs to be rotated to align with
+!                                                            the QUAD axis. This will be used in subr TPLT2 to rotate orthotropic
+!                                                            mat'l matrices so that ortho mat'l props for all triangles are aligned
+
+      REAL(DOUBLE)                    :: ALPHA_K           ! ALPHA(K)
       REAL(DOUBLE)                    :: AREA              ! Area of all 4 triangles
       REAL(DOUBLE)                    :: AREA_TRIA_(4)     ! Area of a triangle in the quad
       REAL(DOUBLE)                    :: B54(15,12)        ! Matrix to transform 5 node quad to 4 node quad
@@ -390,26 +402,34 @@
 
 ! Get matrices for the triangles (I = 1, 2, 3, 4)
 
-      MIN4T_QUAD4_TRIA_NO = 0
+      DO K=1,NUM_TRIAS
+         ALPHA(K) = ZERO
+         BETA(K)  = ZERO
+         GAMMA(K) = ZERO
+      ENDDO
+
+      PSI = ZERO
+
 trias:DO K=1,NUM_TRIAS
 
-         TRIANGLE = K
-         CALL ELMGM_TRIA ( TRIANGLE, XQB, XQL, V12, V13, L12, L13, ALPHA, THETA, X2TL, X3TL, Y3TL, TE_TRIA )
+         TRIA_NUM = K
+         CALL ELMGM_TRIA ( TRIA_NUM, XQB, XQL, V12, V13, L12, L13, ALPHA, BETA, GAMMA, PSI, THETA, X2TL, X3TL, Y3TL, TE_TRIA )
          IF (PROG_ERR > 0) THEN
             CALL OUTA_HERE ( 'Y' )
          ENDIF
          AREA_TRIA_(K) = X2TL*Y3TL/TWO
+         ALPHA_K = ALPHA(K)
 
-         MIN4T_QUAD4_TRIA_NO = MIN4T_QUAD4_TRIA_NO + 1
+         MIN4T_QUAD4_TRIA_NO = K
          CALL TPLT2 ( OPT_MIN4T, AREA_TRIA_(K), X2TL, X3TL, Y3TL, 'N', IERROR, KV_TT, PTV_TT, PPV_TT, B2V_TT, B3V_TT, S2V_TT,      &
-                      S3V_TT, DUM3 )
+                      S3V_TT, DUM3, MN4T_QD, TRIA_NUM, PSI )
 
          PHI_SQ_TRIA(K) = PHI_SQ
 
          FCONV3_AVG = FCONV3_AVG + FCONV(3)/NUM_TRIAS
          IF (IERROR > 0) THEN
-            WRITE(ERR,99999) TRIANGLE
-            WRITE(F06,99999) TRIANGLE
+            WRITE(ERR,99999) TRIA_NUM
+            WRITE(F06,99999) TRIA_NUM
          ENDIF
 
          DO I=1,9
@@ -746,8 +766,8 @@ trias:DO K=1,NUM_TRIAS
 
          CALL B54_REDUCTION ( XQL, IERROR )
          IF (IERROR > 0) THEN
-            WRITE(ERR,99999) TRIANGLE
-            WRITE(F06,99999) TRIANGLE
+            WRITE(ERR,99999) TRIA_NUM
+            WRITE(F06,99999) TRIA_NUM
             RETURN
          ENDIF
 
@@ -878,8 +898,6 @@ trias:DO K=1,NUM_TRIAS
 
 99999 FORMAT(14X,' THIS ERROR OCCURRED IN SUB-TRIANGLE ',I2,' OF THE QUAD ELEMENT')
 
-
-
 ! **********************************************************************************************************************************
 
       CONTAINS
@@ -994,7 +1012,7 @@ trias:DO K=1,NUM_TRIAS
 
 ! ##################################################################################################################################
  
-      SUBROUTINE ELMGM_TRIA ( TRIANGLE, XQB, XQL, V12, V13, L12, L13, ALPHA, THETA, X2TL, X3TL, Y3TL, TE_TRIA )
+      SUBROUTINE ELMGM_TRIA ( TRIA, XQB, XQL, V12, V13, L12, L13, ALPHA, BETA, GAMMA, PSI, THETA, X2TL, X3TL, Y3TL, TE_TRIA )
  
 ! Generates transformation matrix from one of the sub-triangles of the quad to the quad local coord system
 
@@ -1006,15 +1024,13 @@ trias:DO K=1,NUM_TRIAS
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR
       USE IOUNT1, ONLY                :  ERR, F06
-      USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  EPSIL
-      USE MODEL_STUF, ONLY            :  NUM_EMG_FATAL_ERRS, TE, XEL, XTB, XTL
+      USE MODEL_STUF, ONLY            :  NUM_EMG_FATAL_ERRS, XTB, XTL
  
       IMPLICIT NONE
  
       INTEGER(LONG)                   :: I,J               ! DO loop indices
-      INTEGER(LONG), INTENT(IN)       :: TRIANGLE          ! 1, 2, 3, or 4 designator of a subtriangle of the quad
+      INTEGER(LONG), INTENT(IN)       :: TRIA              ! 1, 2, 3, or 4 designator of a subtriangle of the quad
   
       REAL(DOUBLE), INTENT(IN)        :: XQB(5,3)          ! coords of 5 quad nodes in quad basic coords
       REAL(DOUBLE), INTENT(IN)        :: XQL(5,3)          ! coords of 5 quad nodes in quad local coords
@@ -1022,15 +1038,21 @@ trias:DO K=1,NUM_TRIAS
       REAL(DOUBLE), INTENT(OUT)       :: X3TL              ! X coord of this triangle node 3 in this triangle local coords
       REAL(DOUBLE), INTENT(OUT)       :: Y3TL              ! Y coord of this triangle node 3 in this triangle local coords
       REAL(DOUBLE), INTENT(OUT)       :: TE_TRIA(3,3)      ! Coord transf between tria local and quad coords
-      REAL(DOUBLE), INTENT(OUT)       :: ALPHA             ! Angle (rad) between side 1-2 of a triangle and side 1-3 of the triangle
+      REAL(DOUBLE), INTENT(INOUT)     :: ALPHA(4)          ! Angle (rad) between side 1-2 of a triangle and side 1-3 of the triangle
+      REAL(DOUBLE), INTENT(INOUT)     :: BETA(4)           ! Angle (rad) between side 1-2 of a triangle and side 2-3 of the triangle
+      REAL(DOUBLE), INTENT(INOUT)     :: GAMMA(4)          ! Angle (rad) between side 1-3 of a triangle and side 2-3 of the triangle
+      REAL(DOUBLE), INTENT(OUT)       :: PSI               ! Angle to rotate triangle ortho mat'l props (see declarations in main)
       REAL(DOUBLE)                    :: CALPHA            ! cos(ALPHA)
+      REAL(DOUBLE)                    :: CBETA             ! cos(BETA)
       REAL(DOUBLE), INTENT(OUT)       :: THETA             ! Angle (rad) between side 1-2 of triangle and quad x axis
       REAL(DOUBLE)                    :: CTHETA            ! cos(THETA)
       REAL(DOUBLE)                    :: STHETA            ! sin(THETA)
       REAL(DOUBLE), INTENT(OUT)       :: L12               ! Magnitude of vector V12 (length of side 1-2 of sub-triangle)
       REAL(DOUBLE), INTENT(OUT)       :: L13               ! Magnitude of vector V13 (length of side 1-3 of sub-triangle)
+      REAL(DOUBLE)                    :: L23               ! Magnitude of vector V23 (length of side 2-3 of sub-triangle)
       REAL(DOUBLE), INTENT(OUT)       :: V12(2)            ! Components of a vector along side 1-2 of a sub-triangle
       REAL(DOUBLE), INTENT(OUT)       :: V13(2)            ! Components of a vector along side 1-3 of a sub-triangle
+      REAL(DOUBLE)                    :: V23(2)            ! Components of a vector along side 2-3 of a sub-triangle
 
 ! **********************************************************************************************************************************
 ! Initialize
@@ -1044,13 +1066,16 @@ trias:DO K=1,NUM_TRIAS
 
 ! Calculate a vector from end of tria element at node 1 to end of element at node 2
 
-      IF      (TRIANGLE == 1) THEN
+      IF      (TRIA == 1) THEN                             ! This triangle connects to nodes 1-2-5
 
          V12(1) = XQL(2,1) - XQL(1,1)
          V12(2) = XQL(2,2) - XQL(1,2)
 
          V13(1) = XQL(5,1) - XQL(1,1)
          V13(2) = XQL(5,2) - XQL(1,2)
+
+         V23(1) = XQL(5,1) - XQL(2,1)
+         V23(2) = XQL(5,2) - XQL(2,2)
 
          DO J=1,NTSUB
             DT(1,J) = DT_QUAD(1,J)                         ! Node 1 of tria 1 is node 1 of the quad
@@ -1065,13 +1090,16 @@ trias:DO K=1,NUM_TRIAS
             XTB(3,J) = XQB(5,J)
          ENDDO
 
-      ELSE IF (TRIANGLE == 2) THEN
+      ELSE IF (TRIA == 2) THEN                             ! This triangle connects to nodes 2-3-5
 
          V12(1) = XQL(3,1) - XQL(2,1)
          V12(2) = XQL(3,2) - XQL(2,2)
 
          V13(1) = XQL(5,1) - XQL(2,1)
          V13(2) = XQL(5,2) - XQL(2,2)
+
+         V23(1) = XQL(5,1) - XQL(3,1)
+         V23(2) = XQL(5,2) - XQL(3,2)
 
          DO J=1,NTSUB
             DT(1,J) = DT_QUAD(2,J)                         ! Node 1 of tria 2 is node 2 of the quad
@@ -1086,13 +1114,16 @@ trias:DO K=1,NUM_TRIAS
             XTB(3,J) = XQB(5,J)
          ENDDO
 
-      ELSE IF (TRIANGLE == 3) THEN
+      ELSE IF (TRIA == 3) THEN                             ! This triangle connects to nodes 3-4-5
 
          V12(1) = XQL(4,1) - XQL(3,1)
          V12(2) = XQL(4,2) - XQL(3,2)
 
          V13(1) = XQL(5,1) - XQL(3,1)
          V13(2) = XQL(5,2) - XQL(3,2)
+
+         V23(1) = XQL(5,1) - XQL(4,1)
+         V23(2) = XQL(5,2) - XQL(4,2)
 
          DO J=1,NTSUB
             DT(1,J) = DT_QUAD(3,J)                         ! Node 1 of tria 1 is node 3 of the quad
@@ -1107,13 +1138,16 @@ trias:DO K=1,NUM_TRIAS
             XTB(3,J) = XQB(5,J)
          ENDDO
 
-      ELSE IF (TRIANGLE == 4) THEN
+      ELSE IF (TRIA == 4) THEN                             ! This triangle connects to nodes 4-1-5
 
          V12(1) = XQL(1,1) - XQL(4,1)
          V12(2) = XQL(1,2) - XQL(4,2)
 
          V13(1) = XQL(5,1) - XQL(4,1)
          V13(2) = XQL(5,2) - XQL(4,2)
+
+         V23(1) = XQL(5,1) - XQL(1,1)
+         V23(2) = XQL(5,2) - XQL(1,2)
 
          DO J=1,NTSUB
             DT(1,J) = DT_QUAD(4,J)                         ! Node 1 of tria 1 is node 4 of the quad
@@ -1134,17 +1168,19 @@ trias:DO K=1,NUM_TRIAS
          FATAL_ERR = FATAL_ERR + 1
          PROG_ERR = PROG_ERR + 1
          IF (WRT_ERR > 0) THEN
-            WRITE(ERR,1907) SUBR_NAME, TRIANGLE
-            WRITE(F06,1907) SUBR_NAME, TRIANGLE
+            WRITE(ERR,1907) SUBR_NAME, TRIA
+            WRITE(F06,1907) SUBR_NAME, TRIA
          ELSE
             IF (NUM_EMG_FATAL_ERRS <= MEFE) THEN
                ERR_SUB_NAM(NUM_EMG_FATAL_ERRS) = SUBR_NAME
                EMG_IFE(NUM_EMG_FATAL_ERRS,1) = 1907
-               EMG_IFE(NUM_EMG_FATAL_ERRS,2) = TRIANGLE
+               EMG_IFE(NUM_EMG_FATAL_ERRS,2) = TRIA
             ENDIF
          ENDIF
 
       ENDIF
+
+      L23          = DSQRT(V23(1)*V23(1) + V23(2)*V23(2))
 
       L12          = DSQRT(V12(1)*V12(1) + V12(2)*V12(2))
       CTHETA       = V12(1)/L12
@@ -1154,11 +1190,17 @@ trias:DO K=1,NUM_TRIAS
       TE_TRIA(3,2) =-STHETA   ;   TE_TRIA(3,3) = CTHETA
 
       L13          = DSQRT(V13(1)*V13(1) + V13(2)*V13(2))
-      CALPHA       = (V12(1)*V13(1) + V12(2)*V13(2))/(L12*L13)
-      ALPHA        = ACOS(CALPHA)
+!!    CALPHA       = (V12(1)*V13(1) + V12(2)*V13(2))/(L12*L13)   ! Replace this with Law of Cosines even though it apparently works
+      CALPHA       = (L13*L13 + L12*L12 - L23*L23)/(TWO*L13*L12) ! Calculated using the Law of Cosines
+      ALPHA(TRIA)  = ACOS(CALPHA)
       X3TL         = L13*CALPHA
-      Y3TL         = L13*SIN(ALPHA)
+      Y3TL         = L13*SIN(ALPHA(TRIA))
       X2TL         = L12
+
+      CBETA        = (L23*L23 + L12*L12 - L13*L13)/(TWO*L23*L12)
+      BETA(TRIA)   = ACOS(CBETA)
+
+      GAMMA(TRIA)  = PI - ALPHA(TRIA) - BETA(TRIA)
 
       DO I=1,3
          DO J=1,3
@@ -1169,6 +1211,22 @@ trias:DO K=1,NUM_TRIAS
       XTL(2,1) = X2TL
       XTL(3,1) = X3TL
       XTL(3,2) = Y3TL
+
+! Calculate PSI, angle to rotate ortho mat'l props for this triangle (in subr TPLT2)
+
+      IF      (TRIA == 1) THEN
+         PSI = ZERO
+      ELSE IF (TRIA == 2) THEN
+         PSI = BETA(1) + ALPHA(2)
+      ELSE IF (TRIA == 3) THEN
+         PSI = BETA(1) + ALPHA(2) + BETA(2) + ALPHA(3)
+      ELSE IF (TRIA == 4) THEN
+         PSI = BETA(1) + ALPHA(2) + BETA(2) + ALPHA(3) + BETA(3) + ALPHA(4)
+      ENDIF
+
+
+
+
 
 ! **********************************************************************************************************************************
  1907 FORMAT(' *ERROR  1907: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
@@ -1431,7 +1489,6 @@ trias:DO K=1,NUM_TRIAS
       SUBROUTINE STATIC_CONDENSATION
 
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE PARAMS, ONLY                :  EPSIL
 
       IMPLICIT NONE
 
@@ -1666,8 +1723,6 @@ trias:DO K=1,NUM_TRIAS
                            ' IN SUBR ',A                                                                                           &
                            ,/,14X,' USER CAN OVERRIDE THE PROGRAM ABORTING DUE TO THIS ERROR BY USING BULK DATA DEBUG 188 > 0')
 
-98763 format(4(3(1es14.6),3X))
-
 ! **********************************************************************************************************************************
 
       END SUBROUTINE STATIC_CONDENSATION
@@ -1681,7 +1736,6 @@ trias:DO K=1,NUM_TRIAS
       USE PENTIUM_II_KIND, ONLY       :  BYTE, DOUBLE, LONG
       USE IOUNT1, ONLY                :  F06
       USE CONSTANTS_1, ONLY           :  ZERO, THREE
-      USE PARAMS, ONLY                :  SUPINFO
 
       IMPLICIT NONE
 
@@ -1761,23 +1815,23 @@ trias:DO K=1,NUM_TRIAS
       RETURN
 
 !***********************************************************************************************************************************
- 1001 FORMAT(' Input matrix is A with name =',A,//,' Input matrix A:',/,' --------------')
+!1001 FORMAT(' Input matrix is A with name =',A,//,' Input matrix A:',/,' --------------')
 
- 1002 FORMAT(' AI = inverse of the input matrix :',/,' ---------------------------------')
+!1002 FORMAT(' AI = inverse of the input matrix :',/,' ---------------------------------')
 
- 1003 FORMAT(' IDENT = A*AI :',/,' ------------')
+!1003 FORMAT(' IDENT = A*AI :',/,' ------------')
 
- 2001 FORMAT(5X,3(A,I3))
+!2001 FORMAT(5X,3(A,I3))
 
- 2002 FORMAT(' Row',I3,':',3(1ES14.6))
+!2002 FORMAT(' Row',I3,':',3(1ES14.6))
 
- 3001 FORMAT(' The determinant of A is DETA = ',1ES14.6,/)
+!3001 FORMAT(' The determinant of A is DETA = ',1ES14.6,/)
 
- 4001 FORMAT(' Sum of diagonal terms in IDENT = ',1ES14.6)
+!4001 FORMAT(' Sum of diagonal terms in IDENT = ',1ES14.6)
 
- 4002 FORMAT(' Avg    diagonal term  in IDENT = ',1ES14.6)
+!4002 FORMAT(' Avg    diagonal term  in IDENT = ',1ES14.6)
 
- 4003 FORMAT(' Sum of off diag terms in IDENT = ',1ES14.2,'% of a unity term in an identity matrix (which A*AI should be)')
+!4003 FORMAT(' Sum of off diag terms in IDENT = ',1ES14.2,'% of a unity term in an identity matrix (which A*AI should be)')
 
  9000 FORMAT(' *INFORMATION: KOO MATRIX FOR CENTRAL NODE 5 ON MIN4T QUAD4 ELEMENT ',I8,' CANNOT BE INVERTED, OR THE INVERSE FAILED'&
                         ,/,14X,' THE CHECK THAT KOO TIMES ITS INVERSE IS THE IDENTITY MATRIX, DUE TO THE FOLLOWING:')
@@ -1796,7 +1850,7 @@ trias:DO K=1,NUM_TRIAS
       USE PARAMS, ONLY                 : QUADAXIS
       USE MODEL_STUF, ONLY             : QUAD_DELTA
 
-      CHARACTER(LEN=*) , INTENT(IN)   :: OPT_MIN4T(5)            ! 'Y'/'N' flags for whether certain elem matrices were calc'd
+      CHARACTER(LEN=*) , INTENT(IN)   :: OPT_MIN4T(5)      ! 'Y'/'N' flags for whether certain elem matrices were calc'd
 
       INTEGER(LONG)    , INTENT(IN)   :: WHICH             ! Indicator of which debug output to write in the current call
 
@@ -1846,31 +1900,31 @@ trias:DO K=1,NUM_TRIAS
          Write(f06,*) '------------------------'
          Write(f06,*)
 
-         Write(f06,98712) triangle, (v12(i),i=1,2), l12
-         Write(f06,98713) triangle, (v13(i),i=1,2), l13
+         Write(f06,98712) tria_num, (v12(i),i=1,2), l12
+         Write(f06,98713) tria_num, (v13(i),i=1,2), l13
          Write(f06,*)
-         Write(f06,98714) triangle, (one80/pi)*theta
+         Write(f06,98714) tria_num, conv_rad_deg*theta
          Write(f06,*)
-         Write(f06,98715) triangle, (one80/pi)*alpha
+         Write(f06,98715) tria_num, conv_rad_deg*alpha_k
          Write(f06,*)
-         Write(f06,98716) triangle, x2tl, x3tl, y3tl
+         Write(f06,98716) tria_num, x2tl, x3tl, y3tl
          Write(f06,*)
 
-         Write(f06,*) 'Matrix TE_TRIA for triangle ',triangle
+         Write(f06,*) 'Matrix TE_TRIA for triangle ',tria_num
             Write(f06,*) '------------------------------'
          do i=1,3
             Write(f06,98717) (te_tria(i,j),j=1,3)
          enddo
          Write(f06,*)
 
-         Write(f06,*) 'Matrix TE_STRESS for triangle ',triangle
+         Write(f06,*) 'Matrix TE_STRESS for triangle ',tria_num
             Write(f06,*) '--------------------------------'
          do i=1,3
             Write(f06,98717) (te_stress(i,j),j=1,3)
          enddo
          Write(f06,*)
 
-         Write(f06,*) 'Matrix D  - triangle ', triangle
+         Write(f06,*) 'Matrix D  - triangle ', tria_num
             Write(f06,*) '-----------------------'
          do i=1,9,3
             Write(f06,98761) (d(i  ,j),j=1,9)
@@ -1882,7 +1936,7 @@ trias:DO K=1,NUM_TRIAS
          IF (OPT_MIN4T(2) == 'Y') THEN                                 ! Calculate thermal loads
 
             do j=1,ntsub
-               Write(f06,76859) j,triangle,(dt(i,j),i=1,4)
+               Write(f06,76859) j,tria_num,(dt(i,j),i=1,4)
             enddo
             Write(f06,*)
 
@@ -2376,8 +2430,6 @@ trias:DO K=1,NUM_TRIAS
              ' __________________________________________________________________________________________________________________',&
              '_________________',/)
 
-24680 format(' X5QL = ',1es14.6,'   Y5QL = ',1es14.6)
-
 76859 format(' For internal subcase ',i3,' DT(1-4) for triangle ',i2,' = ',4(1es14.6))
 
 87651 FORMAT('  node 1 = ',2(1ES14.6))
@@ -2405,8 +2457,6 @@ trias:DO K=1,NUM_TRIAS
 98717 format(3(1es14.6))
 
 98761 format(3(3(1es14.6),3X))
-
-98762 format(3(3(1es14.6),3X))
 
 98763 format(5(3(1es14.6),3X))
 

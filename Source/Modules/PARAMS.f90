@@ -1,3 +1,4 @@
+! ##################################################################################################################################
 ! Begin MIT license text.                                                                                    
 ! _______________________________________________________________________________________________________
                                                                                                          
@@ -28,8 +29,8 @@
 ! Variables that can be set by Bulk Data PARAM cards. Most are actual PARAM names; however, a few are variables set on a PARAM card.
 
       USE PENTIUM_II_KIND, ONLY :  BYTE, LONG, DOUBLE
-      USE CONSTANTS_1, ONLY     :  ZERO, QUARTER, ONEPM15, onepm14, ONEPM5, ONEPM6, TENTH, ONE, TWO, THREEP6, FIVE, SIX, ONEPP6,   &
-                                   ONEPP7, ONE_THOUSAND 
+      USE CONSTANTS_1, ONLY     :  ONEPM5, ONEPM6, ONEPM8, ONEPM15, ONEPM14, ZERO, QUARTER, TENTH, ONE, TWO, THREEP6, FIVE, SIX,   &
+                                   ONEPP6, ONEPP7, ONE_THOUSAND 
       USE SCONTR, ONLY          :  MEPSIL, TSET_CHR_LEN
 
       IMPLICIT NONE
@@ -59,7 +60,7 @@
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  1*BYTE)      :: AUTOSPC        =    'Y'    ! 'Y'/'N' indicates whether to use automatic SPC for singular DOF's
-      REAL(DOUBLE)             :: AUTOSPC_RAT    =   ONEPM6  
+      REAL(DOUBLE)             :: AUTOSPC_RAT    =   ONEPM8  
                                                              !*For each of the 2 3x3 (K33) stiffness matrices for a grid, the ratio
 !                                                              of each of the 3 eigenvalues of K33 to the max eigenvalue is calc'd.
 !                                                              For any ratio <= AUTOSPC_RAT, a component will be AUTOSPC'd. The
@@ -143,6 +144,8 @@
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       INTEGER(LONG)            :: GRDPNT         =    -1     ! Ref grid for GPWG (neg integer so 0 can be interp as basic origin)
+
+      INTEGER(LONG)            :: GRDPNT_IN      =    -1     ! Value of GRDPNT read in the Bulk Data File
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  8*BYTE)      :: GRIDSEQ        ='BANDIT  ' ! Method for sequencing grids:
@@ -418,9 +421,9 @@
 !                                                              stiffness will be reset from infinite (zero flexibility) to
 !                                                              SHRFXFAC times the average of the bending stiffnesses in the 2 planes
 ! ----------------------------------------------------------------------------------------------------------------------------------
-      CHARACTER(  1*BYTE)      :: SKIPMGG        =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG, KGG
-!                                                               in which case MGG, KGG will be read from previously generated,
-!                                                               and saved, files (LINK1L for KGG, LINK1R for MGG)
+      CHARACTER(  1*BYTE)      :: SKIPMGG        =    'N'    ! 'Y', 'N' indicator to say whether to skip calculation of MGG
+!                                                               in which case MGG will be read from previously generated,
+!                                                               and saved, files (LINK1R for MGG)
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       CHARACTER(  8*BYTE)      :: SOLLIB         = 'SPARSE  '! If 'BANDED  ', use LAPACK and ARPACK for eqn soln and eigens.

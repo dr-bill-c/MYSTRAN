@@ -345,9 +345,9 @@
       ENDDO
  
       IF (LINES_WRITTEN > 2) THEN
-         WRITE(F06,9700) (MAX_ANS_CHAR(J),J=1,6), (MIN_ANS_CHAR(J),J=1,6), (ABS_ANS_CHAR(J),J=1,6)
+         WRITE(F06,9601) (MAX_ANS_CHAR(J),J=1,6), (MIN_ANS_CHAR(J),J=1,6), (ABS_ANS_CHAR(J),J=1,6)
          IF (DEBUG(200) > 0) THEN
-            WRITE(ANS,9790) (MAX_ANS(J),J=1,6), (MIN_ANS(J),J=1,6), (ABS_ANS(J),J=1,6)
+            WRITE(ANS,9611) (MAX_ANS(J),J=1,6), (MIN_ANS(J),J=1,6), (ABS_ANS(J),J=1,6)
          ENDIF
       ENDIF
 
@@ -452,12 +452,13 @@
  9501 FORMAT(11X,'GRID     COORD      T1            T2            T3            R1            R2            R3',/,                 &
              11X,'          SYS')
 
- 9700 FORMAT(11X,'              ------------- ------------- ------------- ------------- ------------- -------------',/,            &
-             1X,'MAX (for output set):  ',6A14,/,                                                                                  &
-             1X,'MIN (for output set):  ',6A14,//,                                                                                 &
-             1X,'ABS (for output set):  ',6A14)
+ 9601 FORMAT(11X,'              ------------- ------------- ------------- ------------- ------------- -------------',/,            &
+             16X,'MAX* :  ',6A14,/,                                                                                                &
+             16X,'MIN* :  ',6A14,//,                                                                                               &
+             16X,'ABS* :  ',6A14,/,                                                                                                &
+             16X,'*for output set')
 
- 9790 FORMAT(11X,'              ------------- ------------- ------------- ------------- ------------- -------------',/,            &
+ 9611 FORMAT(11X,'              ------------- ------------- ------------- ------------- ------------- -------------',/,            &
              1X,'MAX (for output set):  ',6(ES14.6),/,                                                                             &
              1X,'MIN (for output set):  ',6(ES14.6),//,                                                                            &
              1X,'ABS (for output set):  ',6(ES14.6))

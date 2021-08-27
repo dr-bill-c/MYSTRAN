@@ -46,7 +46,7 @@
       CHARACTER(LEN=*), INTENT(INOUT) :: CARD              ! A Bulk Data card
       CHARACTER(LEN=*), INTENT(IN)    :: LARGE_FLD_INP     ! If 'Y', CARD is large field format
       CHARACTER(LEN(CARD))            :: CHILD             ! "Child" card read in subr NEXTC, called herein
-      CHARACTER(LEN=JCARD_LEN)        :: ELID              ! Field 2 of CBUSH card
+      CHARACTER(LEN=JCARD_LEN)        :: EID               ! Field 2 of CBUSH card
       CHARACTER( 1*BYTE)              :: FOUND     = 'N'   ! 'Y' if the V vec is one that is already stored in array VVEC
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of 8 characters making up CARD
       CHARACTER(LEN=JCARD_LEN)        :: JCARD_EDAT(10)    ! JCARD values sent to subr ELEPRO
@@ -92,10 +92,10 @@
 !    9      CID            EDAT(nedat+6) Elem coord sys identification. 0 is basic. blank means to use G0 or X1,2,3 
 
 ! on optional second card:
-!    2      S              Location of spring/damper (def = 0.5)
+!    2      S              Location of spring/damper (def = 0.5). This is a relative distance = offset/BUSH length
 !    3      OCID           EDAT(nedat+7) Offset coord sys ID
 !   none    NBUSHOFF       EDAT(nedat+8)
-!    4-6    S1,2,3         Offset vector
+!    4-6    S1,2,3         Offset vector. The Si are actual offsets
 
 ! NOTES:
 
@@ -106,14 +106,14 @@
 ! Offsets are in fields 4 - 9 of the first continuation card. If there are no offsets for this element, a zero is entered
 ! in array EDAT(nedat7).
 
-      NEDAT_START    = NEDAT
+      NEDAT_START = NEDAT
       EPS1 = EPSIL(1)
 
 ! Make JCARD from CARD
 
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
       NAME = JCARD(1)
-      ELID = JCARD(2)
+      EID  = JCARD(2)
 
 ! Set JCARD_EDAT to JCARD
 
@@ -121,7 +121,7 @@
          JCARD_EDAT(I) = JCARD(I)
       ENDDO 
 
-! Check property ID field. Set to ELID if blank
+! Check property ID field. Set to EID if blank
 
       IF (JCARD(3)(1:) == ' ') THEN
          JCARD_EDAT(3) = JCARD(2)
@@ -182,8 +182,8 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                   G0 = I4INP
                   IF (G0 < 0) THEN
                      FATAL_ERR = FATAL_ERR + 1
-                     WRITE(ERR,1187) NAME, ELID, G0
-                     WRITE(F06,1187) NAME, ELID, G0
+                     WRITE(ERR,1187) NAME, EID, G0
+                     WRITE(F06,1187) NAME, EID, G0
                   ENDIF
                ELSE
                   VVEC_TYPE = 'ERROR    '                  ! Found error in field 6, so reset VVEC_TYPE
@@ -192,13 +192,13 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                IF ((JCARD(6)(1:) == ' ') .AND. (JCARD(7)(1:) == ' ') .AND. (JCARD(8)(1:) == ' ')) THEN
                   VVEC_TYPE = 'UNDEFINED'
                   FATAL_ERR = FATAL_ERR + 1
-                  WRITE(ERR,1188) NAME, ELID
-                  WRITE(F06,1188) NAME, ELID
+                  WRITE(ERR,1188) NAME, EID
+                  WRITE(F06,1188) NAME, EID
                ELSE
                   VVEC_TYPE = 'ERROR    '
                   FATAL_ERR = FATAL_ERR + 1
-                  WRITE(ERR,1186) NAME, ELID
-                  WRITE(F06,1186) NAME, ELID
+                  WRITE(ERR,1186) NAME, EID
+                  WRITE(F06,1186) NAME, EID
                ENDIF
             ENDIF
          ENDIF
@@ -254,16 +254,16 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                EDAT(NEDAT_START+6) = CID                   ! --- Slot 6 in EDAT is for CID. Use actual value if no read error
             ELSE
                FATAL_ERR = FATAL_ERR + 1
-               WRITE(ERR,1189) NAME, ELID, JF(9), CID
-               WRITE(F06,1189) NAME, ELID, JF(9), CID
+               WRITE(ERR,1189) NAME, EID, JF(9), CID
+               WRITE(F06,1189) NAME, EID, JF(9), CID
             ENDIF
          ENDIF
                                                            ! Issue warning since both 6-8 and 9 are non blank
          IF ((JCARD(6)(1:) /= ' ') .OR. (JCARD(7)(1:) /= ' ') .OR. (JCARD(8)(1:) /= ' ')) THEN
             WARN_ERR = WARN_ERR + 1
-            WRITE(ERR,1002) NAME, ELID
+            WRITE(ERR,1002) NAME, EID
             IF (SUPWARN == 'N') THEN
-               WRITE(F06,1002) NAME, ELID
+               WRITE(F06,1002) NAME, EID
             ENDIF
          ENDIF
 
@@ -287,66 +287,80 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
       ENDIF
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
 
-      EDAT(NEDAT_START+7) = -1                             ! Default values until we see if there is data on a continuation entry
-      NBUSHOFF = NBUSHOFF + 1
-!xxx  EDAT(NEDAT_START+8) = NBUSHOFF
-      EDAT(NEDAT_START+8) = 0
-!xxx  BUSHOFF(NBUSHOFF,1) = HALF
-      BUSHOFF(NBUSHOFF,1) = ZERO
+      OCID = -99                                           ! Initially set OCID = -99 since we will test for -1, >0 below
 
       IF (ICONT == 1) THEN
 
-         WARN_ERR = WARN_ERR + 1
-         WRITE(ERR,1000) 'CBUSH',CARD
-         WRITE(F06,1000) 'CBUSH',CARD
+         IF (CARD(1:) /= ' ') THEN                         ! Only process continuation entries if 1st one is not totally blank
 
-! The following code needs work. Also, value S is not related to offset. It is position of BUSH along the line between ends a and b.
-! The effect of S (field 2 of cont entry) not equal to the default 0.5 value has not been factored into the KE, etc, matrices.
+            IF (JCARD(3)(1:) == ' ') THEN                  ! Get OCID. It will determine whether to use S or S1,2,3 for offset
+               OCID = -1                                   ! OCID = -1 is default and means use elem system and S, not S1,2,3
+            ELSE                                           ! Field 3 not blank so get value to use for OCID
+               CALL I4FLD ( JCARD(3), JF(3), I4INP )
+               IF (IERRFL(2) == 'N') THEN
+                  OCID = I4INP
+               ELSE
+                  OCID = -99                               ! Use OCID = -99 to indicate an error
+               ENDIF
+               IF (OCID < -1) THEN
+                  FATAL_ERR = FATAL_ERR + 1
+                  WRITE(ERR,1180) JCARD(3), NAME, EID
+                  WRITE(F06,1180) JCARD(3), NAME, EID
+               ENDIF
+            ENDIF
+            EDAT(NEDAT_START+7) = OCID                     ! Slot 7 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
 
-!        IF (CARD(1:) /= ' ') THEN                         ! Only process continuation entries if 1st one is not totally blank
-!  
-!           IF (JCARD(3)(1:) == ' ') THEN                  ! Get OCID. It will determine whether to use S or S1,2,3 for offset
-!              OCID = -1                                   ! OCID = -1 is default and means use elem system and S, not S1,2,3
-!           ELSE                                           ! Field 3 not blank so get value to use for OCID
-!              CALL I4FLD ( JCARD(3), JF(3), I4INP )
-!              IF (IERRFL(2) == 'N') THEN
-!                 OCID = I4INP
-!              ELSE
-!                 OCID = -99                               ! Use OCID = -99 to indicate an error
-!              ENDIF
-!              IF (OCID < -1) THEN
-!                 FATAL_ERR = FATAL_ERR + 1
-!                 WRITE(ERR,1180) JCARD(3), NAME, ELID
-!                 WRITE(F06,1180) JCARD(3), NAME, ELID
-!              ENDIF
-!           ENDIF
-!           EDAT(NEDAT_START+7) = OCID                     ! Slot 7 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
-!  
-!           IF      (OCID == -1) THEN                      ! Get components of BUSHOFF
-!              CALL R8FLD ( JCARD(2), JF(2), R8INP )
-!              IF (IERRFL(1) == 'N') THEN
-!                 NBUSHOFF = NBUSHOFF + 1
-!                 EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
-!                 BUSHOFF(NBUSHOFF,1) = R8INP
-!              ENDIF
-!           ELSE IF (OCID >= 0) THEN
-!              NBUSHOFF = NBUSHOFF + 1
-!              EDAT(NEDAT_START+8) = NBUSHOFF              ! Slot 8 in EDAT is for the offset key
-!              DO J=1,3
-!                 CALL R8FLD ( JCARD(J+3), JF(J+3), R8INP )
-!                 IF (IERRFL(J+3) == 'N') THEN
-!                    BUSHOFF(NBUSHOFF,J  ) = R8INP
-!                 ENDIF
-!              ENDDO
-!           ENDIF
-!  
-!           CALL BD_IMBEDDED_BLANK   ( JCARD,2,3,4,5,6,0,0,0 )
-!           CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,7,8,9 )
-!           CALL CRDERR ( CARD )
-!  
-!        ENDIF
+            IF      (OCID == -1) THEN                      ! Get components of BUSHOFF
+               CALL R8FLD ( JCARD(2), JF(2), R8INP )
+               IF (IERRFL(1) == 'N') THEN
+                  NBUSHOFF = NBUSHOFF + 1
+                  EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+                  BUSHOFF(NBUSHOFF,1) = R8INP
+                  BUSHOFF(NBUSHOFF,2) = ZERO
+                  BUSHOFF(NBUSHOFF,3) = ZERO
+               ENDIF
+            ELSE IF (OCID >= 0) THEN
+               NBUSHOFF = NBUSHOFF + 1
+               EDAT(NEDAT_START+8) = NBUSHOFF              ! Slot 8 in EDAT is for the offset key
+               DO J=1,3
+                  CALL R8FLD ( JCARD(J+3), JF(J+3), R8INP )
+                  IF (IERRFL(J+3) == 'N') THEN
+                     BUSHOFF(NBUSHOFF,J  ) = R8INP
+                  ENDIF
+               ENDDO
+            ENDIF
+
+            CALL BD_IMBEDDED_BLANK   ( JCARD,2,3,4,5,6,0,0,0 )
+            CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,7,8,9 )
+            CALL CRDERR ( CARD )
+
+         ELSE
+
+            EDAT(NEDAT_START+7) = -1                       ! Con't entry was blank so default OCID and null offset flag
+            EDAT(NEDAT_START+8) =  0
+
+            NBUSHOFF = NBUSHOFF + 1
+            EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+            BUSHOFF(NBUSHOFF,1) = HALF
+            BUSHOFF(NBUSHOFF,2) = ZERO
+            BUSHOFF(NBUSHOFF,3) = ZERO
+
+         ENDIF
+
+      ELSE
+
+         EDAT(NEDAT_START+7) = -1                          ! There was no con't entry so default OCID and null offset flag
+         EDAT(NEDAT_START+8) =  0
+
+         NBUSHOFF = NBUSHOFF + 1
+         EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+         BUSHOFF(NBUSHOFF,1) = HALF
+         BUSHOFF(NBUSHOFF,2) = ZERO
+         BUSHOFF(NBUSHOFF,3) = ZERO
 
       ENDIF
+
+! Write warnings and errors if any
 
 ! Update NEDAT
 
@@ -362,8 +376,6 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
       RETURN
 
 ! **********************************************************************************************************************************
- 1000 FORMAT(' *WARNING    : FOLLOWING CONTINUATION ENTRY FOR ',A,' NOT PROGRAMMED YET:' ,/,A)
-
  1002 FORMAT(' *WARNING    : ',A,A,' HAS V VEC DEFINED TWO WAYS: FIELDS 6,7,AND/OR 8 AND ALSO FIELD 9. CID IN FIELD 9 WILL BE USED')
 
  1132 FORMAT(' *ERROR  1132: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
@@ -380,6 +392,9 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
 
  1189 FORMAT(' *ERROR  1189: ',A,A,' MUST HAVE NON-NEGATIVE VALUE FOR CID IF FIELD ',I2,' IS NOT BLANK. VALUE READ WAS ',I8)
  
+
+
+
 ! **********************************************************************************************************************************
 
       END SUBROUTINE BD_CBUSH

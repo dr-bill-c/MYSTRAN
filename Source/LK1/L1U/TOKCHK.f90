@@ -40,6 +40,7 @@
 !   TOKTYPE = 'PUNCH   ' if input TOKEN is "PUNCH"
 !   TOKTYPE = 'BOTH    ' if input TOKEN is "BOTH"
 !   TOKTYPE = 'EXCEPT  ' if input TOKEN is "EXCEPT"
+!   TOKTYPE = 'FIJFIL  ' if input TOKEN is "FIJFIL"
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
@@ -250,6 +251,25 @@
                      IF   ((TOKEN(5:5)=='P') .OR. (TOKEN(5:5)=='p')) THEN
                         IF((TOKEN(6:6)=='T') .OR. (TOKEN(6:6)=='t')) THEN
                            TOKTYPE = 'EXCEPT  '
+                           RETURN
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+
+! Check for 'FIJFIL'
+
+      IF (TOKTYPE == 'UNKNOWN') THEN
+         IF               ((TOKEN(1:1)=='F') .OR. (TOKEN(1:1)=='f')) THEN
+            IF            ((TOKEN(2:2)=='I') .OR. (TOKEN(2:2)=='i')) THEN
+               IF         ((TOKEN(3:3)=='J') .OR. (TOKEN(3:3)=='j')) THEN
+                  IF      ((TOKEN(4:4)=='F') .OR. (TOKEN(4:4)=='f')) THEN
+                     IF   ((TOKEN(5:5)=='I') .OR. (TOKEN(5:5)=='i')) THEN
+                        IF((TOKEN(6:6)=='L') .OR. (TOKEN(6:6)=='l')) THEN
+                           TOKTYPE = 'FIJFIL  '
                            RETURN
                         ENDIF
                      ENDIF

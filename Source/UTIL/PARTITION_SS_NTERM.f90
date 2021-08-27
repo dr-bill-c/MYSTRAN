@@ -346,7 +346,7 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
                     ,/,14X,' OUTPUT MATRIX ',A,' WAS REQUESTED TO BE WRITTEN IN SYMMETRIC FORM BUT IT IS NOT SQUARE.'              &
                     ,/,14X,' IT HAS ',I8,' ROWS AND ',I8,' COLS')
 
-12345 format(7X,'Det part. size of ',A4,': row ',I8,' of ',I8,' SYM = ',A,A,3X,I2,':',I2,':',I2,'.',I3,A)
+12345 format(7X,'Det part. size of ',A4,': row ',I8,' of ',I8,' SYM = ',A,A,4X,I2,':',I2,':',I2,'.',I3,A)
 
 ! ##################################################################################################################################
 

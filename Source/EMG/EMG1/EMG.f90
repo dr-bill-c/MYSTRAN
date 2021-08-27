@@ -117,7 +117,7 @@
          CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
       ENDIF
  
-      IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+      IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
 ! **********************************************************************************************************************************
 ! For all elements but ELASi, USERIN, get routine to check element geometry, get element grid point coords in local elem
@@ -174,7 +174,7 @@
  
       ENDIF
  
-      IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+      IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
 ! **********************************************************************************************************************************
 ! Generate element material matrices. Material matrices for shell elements with PCOMP props are generated elsewhere.
@@ -317,7 +317,7 @@
          CALL ELMDAT2 ( INT_ELEM_ID, OPT, WRITE_WARN )
       ENDIF
  
-      IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+      IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
 ! **********************************************************************************************************************************
 ! Now get the individual elem routines to calc the required elem matrices: ME and/or PTE and/or (SE1, SE2, STE1,STE2)
@@ -328,19 +328,19 @@
       
       ELSE IF ((TYPE == 'ROD     ') .OR. (TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ')) THEN
          CALL BREL1 ( OPT, WRITE_WARN )
-         IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+         IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
  	
       ELSE IF (TYPE(1:4) == 'BUSH') THEN
-         CALL BUSH ( OPT, WRITE_WARN )
-         IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+         CALL BUSH ( INT_ELEM_ID, OPT, WRITE_WARN )
+         IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
       ELSE IF (TYPE(1:5) == 'TRIA3') THEN
          CALL TREL1 ( OPT, WRITE_WARN )
-         IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+         IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
       ELSE IF ((TYPE(1:5) == 'QUAD4') .OR. (TYPE == 'SHEAR   ')) THEN
          CALL QDEL1 ( OPT, WRITE_WARN )
-         IF (NUM_EMG_FATAL_ERRS > 0) RETURN
+         IF (NUM_EMG_FATAL_ERRS > 0)   CALL EMG_QUIT
 
       ELSE IF ((TYPE == 'HEXA8   ') .OR. (TYPE == 'HEXA20  ') .OR.                                                                 &
                (TYPE == 'PENTA6  ') .OR. (TYPE == 'PENTA15 ') .OR.                                                                 &
@@ -769,5 +769,23 @@
 ! **********************************************************************************************************************************
 
       END SUBROUTINE EDAT_FIXUP
+
+! ##################################################################################################################################
+
+      SUBROUTINE EMG_QUIT
+
+      IMPLICIT NONE
+
+! **********************************************************************************************************************************
+      WRITE(ERR,9999) NUM_EMG_FATAL_ERRS
+      WRITE(F06,9999) NUM_EMG_FATAL_ERRS
+      CALL OUTA_HERE ( 'Y' )
+
+! **********************************************************************************************************************************
+ 9999 FORMAT(' Stopping processing due to ', I8, ' errors found in subr EMG')
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE EMG_QUIT
 
       END SUBROUTINE EMG

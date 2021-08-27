@@ -93,6 +93,6 @@
       USE CHK_ARRAY_ALLOC_STAT_Interface
       USE WRITE_ALLOC_MEM_TABLE_Interface
       USE FILE_INQUIRE_Interface
-      USE WRITE_EOFIL_Interface
+      USE WRITE_FIJFIL_Interface
 
       END MODULE LINK0_USE_IFs

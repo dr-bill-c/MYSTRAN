@@ -301,7 +301,7 @@
          CALL ALLOCATE_FULL_MAT ('KAA_FULL', NDOFA, NDOFA, SUBR_NAME )
 
          IF (NTERM_KAA > 0) THEN
-            CALL SPARSE_CRS_TO_FULL ( 'KAA       ', NTERM_KAA, NDOFA, NDOFA, SYM_KAA, I_KAA, J_KAA, KAA, KAA_FULL )
+            CALL SPARSE_CRS_TO_FULL ( 'KAA', NTERM_KAA, NDOFA, NDOFA, SYM_KAA, I_KAA, J_KAA, KAA, KAA_FULL )
          ENDIF
 
          IF (NTERM_KAO > 0) THEN                           ! Part 1: calc KAO*GOA and add it & it's transpose to KNN_FULL

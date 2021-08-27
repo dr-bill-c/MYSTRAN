@@ -35,7 +35,7 @@
       USE CONSTANTS_1, ONLY           :  ZERO
       USE SUBR_BEGEND_LEVELS, ONLY    :  DEALLOCATE_MODEL_STUF_BEGEND
 
-      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, KE, KED, KEM, ME, OFFDIS, OFFSET,                &
+      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, KE, KED, KEM, ME, OFFDIS, OFFDIS_B, OFFSET,      &
                                          PEB, PEG, PEL, PPE, PRESS, PTE, SE1, SE2, SE3, STE1, STE2, STE3, UEB, UEG, UEL, UGG,      &
                                          XEB, XEL, XGL
       USE MODEL_STUF, ONLY            :  CMASS, CONM2, PMASS, RPMASS, RCONM2
@@ -1649,6 +1649,19 @@
          NAME = 'OFFDIS'
          IF (ALLOCATED(OFFDIS)) THEN
             DEALLOCATE (OFFDIS,STAT=IERR)
+            IF (IERR == 0) THEN
+               CALL ALLOCATED_MEMORY ( NAME, ZERO, 'DEALLOC', 'Y', CUR_MB_ALLOCATED, SUBR_NAME )
+               CALL WRITE_MEM_SUM_TO_F04 ( NAME, 'DEALLOC', -CUR_MB_ALLOCATED, 0, 0, SUBR_BEGEND )
+            ELSE
+               WRITE(ERR,992) NAME, SUBR_NAME
+               WRITE(F06,992) NAME, SUBR_NAME
+               JERR = JERR + 1
+            ENDIF
+         ENDIF
+
+         NAME = 'OFFDIS_B'
+         IF (ALLOCATED(OFFDIS_B)) THEN
+            DEALLOCATE (OFFDIS_B,STAT=IERR)
             IF (IERR == 0) THEN
                CALL ALLOCATED_MEMORY ( NAME, ZERO, 'DEALLOC', 'Y', CUR_MB_ALLOCATED, SUBR_NAME )
                CALL WRITE_MEM_SUM_TO_F04 ( NAME, 'DEALLOC', -CUR_MB_ALLOCATED, 0, 0, SUBR_BEGEND )

@@ -36,18 +36,19 @@
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, MEFE, MIN4T_QUAD4_TRIA_NO, NSUB, NTSUB
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  QPLT3_BEGEND
-      USE CONSTANTS_1, ONLY           :  ZERO, QUARTER, HALF, ONE, TWO, FOUR
-      USE PARAMS, ONLY                :  EPSIL, MIN4TRED
+      USE CONSTANTS_1, ONLY           :  ZERO, QUARTER, HALF, ONE, TWO, FOUR, CONV_RAD_DEG, PI
+      USE PARAMS, ONLY                :  MIN4TRED
       USE MACHINE_PARAMS, ONLY        :  MACH_SFMIN
-      USE MODEL_STUF, ONLY            :  BE2, BE3, BENSUM, DT, EID, ELDOF, EMG_IFE, EMG_RFE, EB, ET, ERR_SUB_NAM,                  &
-                                         NUM_EMG_FATAL_ERRS, FCONV, KE, PHI_SQ, PPE, PSI_HAT, PRESS, PTE, SE2, SE3, SHRSUM,        &
-                                         TE, TYPE, XEB, XEL, XTB, XTL
+      USE MODEL_STUF, ONLY            :  BE2, BE3, DT, EID, ELDOF, EMG_IFE, ERR_SUB_NAM,NUM_EMG_FATAL_ERRS,                        &
+                                         FCONV, KE, PHI_SQ, PPE, PTE, SE2, SE3, TE, XEB, XEL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
  
       IMPLICIT NONE 
   
       CHARACTER(1*BYTE), INTENT(IN)   :: OPT(6)            ! 'Y'/'N' flags for whether to calc certain elem matrices.
       CHARACTER(1*BYTE)               :: OPT_MIN4T(6)      ! Values of OPT to use in this subr. We need OPT(4) = 'Y' if the
+      CHARACTER(LEN=1), PARAMETER     :: MN4T_QD   = 'Y'   ! Arg used in call to TPLT2 to say the triangular elem is part of a QUAD4
+
       INTEGER(LONG), PARAMETER        :: IDV(9)  = (/ 1, & ! IDV( 1) =  1 means tria elem virgin DOF 1 is MYSTRAN elem DOF  1
                                                       4, & ! IDV( 2) =  4 means tria elem virgin DOF 2 is MYSTRAN elem DOF  4
                                                       7, & ! IDV( 3) =  7 means tria elem virgin DOF 3 is MYSTRAN elem DOF  7
@@ -71,6 +72,7 @@
                                                      22, & ! IDM(11) = 22 means quad elem DOF 11 is MYSTRAN elem DOF 22
                                                      23 /) ! IDM(12) = 23 means quad elem DOF 12 is MYSTRAN elem DOF 23
 
+      INTEGER(LONG), PARAMETER        :: NUM_TRIAS = 4     ! DO NOT CHANGE THIS. Num of triangles that subdivide the QUAD4
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = QPLT3_BEGEND
   
       REAL(DOUBLE) , INTENT(IN)       :: AREA_QUAD         ! Element area

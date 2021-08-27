@@ -43,7 +43,7 @@
                                          L1V,     L1W,     L1X,     L1Y,     L1Z,                                                  &
                                          L2A,     L2B,     L2C,     L2D,     L2E,     L2F,     L2G,     L2H,     L2I,     L2J,     &
                                          L2K,     L2L,     L2M,     L2N,     L2O,     L2P,     L2Q,     L2R,     L2S,     L2T,     &
-                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OU4
+                                         L3A,     L4A,     L4B,     L4C,     L4D,     L5A,     L5B,     OP2,     OU4
 
       USE IOUNT1, ONLY                :  WRT_BUG, WRT_ERR, WRT_LOG, ANSSTAT, BUGSTAT, ERRSTAT, F04STAT, F06STAT, IN0STAT, IN1STAT, &
                                          L1ASTAT, NEUSTAT, SEQSTAT, SPCSTAT,                                                       &
@@ -53,7 +53,7 @@
                                          L1VSTAT, L1WSTAT, L1XSTAT, L1YSTAT, L1ZSTAT,                                              &
                                          L2ASTAT, L2BSTAT, L2CSTAT, L2DSTAT, L2ESTAT, L2FSTAT, L2GSTAT, L2HSTAT, L2ISTAT, L2JSTAT, &
                                          L2KSTAT, L2LSTAT, L2MSTAT, L2NSTAT, L2OSTAT, L2PSTAT, L2QSTAT, L2RSTAT, L2SSTAT, L2TSTAT, &
-                                         L3ASTAT, L4ASTAT, L4BSTAT, L4CSTAT, L4DSTAT, L5ASTAT, L5BSTAT
+                                         L3ASTAT, L4ASTAT, L4BSTAT, L4CSTAT, L4DSTAT, L5ASTAT, L5BSTAT, OP2STAT, OU4STAT
 
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ECHO, IERRFL, INI_ENTRY_LEN, JF, LINKNO_START, PRINTENV,                    &
                                          PROG_NAME

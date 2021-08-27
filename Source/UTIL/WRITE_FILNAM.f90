@@ -47,57 +47,18 @@
 ! **********************************************************************************************************************************
 ! Find actual length of file name
     
-      DO I=LEN(FILNAM),1,-1
-         IF (FILNAM(I:I) == ' ') THEN
-            CYCLE
-         ELSE
-            FLEN = I
-            EXIT
-         ENDIF
-      ENDDO
-
       LEADING_BLANKS(1:) = ' '
 
-! Print filename with a format that depends on FLEN
+! Print filename
 
       IF (UNT == SC1) THEN
-         IF      ((FLEN >   0) .AND. (FLEN <=  63)) THEN
-            WRITE(SC1,1001) LEADING_BLANKS(1:BLEN), FILNAM(1: 79)
-         ELSE IF ((FLEN >  63) .AND. (FLEN <= 143)) THEN
-            WRITE(SC1,1002) LEADING_BLANKS(1:BLEN), FILNAM(1:143)
-         ELSE IF ((FLEN > 143) .AND. (FLEN <= 223)) THEN
-            WRITE(SC1,1003) LEADING_BLANKS(1:BLEN), FILNAM(1:223)
-         ELSE
-            WRITE(SC1,1004) LEADING_BLANKS(1:BLEN), FILNAM
-         ENDIF 
+         WRITE(SC1,1001) LEADING_BLANKS(1:BLEN), TRIM(FILNAM)
       ELSE
-         IF      ((FLEN >   0) .AND. (FLEN <=  79)) THEN
-            WRITE(UNT,1011) LEADING_BLANKS(1:BLEN), FILNAM(1: 79)
-         ELSE IF ((FLEN >  79) .AND. (FLEN <= 158)) THEN
-            WRITE(UNT,1012) LEADING_BLANKS(1:BLEN), FILNAM(1:159)
-         ELSE IF ((FLEN > 159) .AND. (FLEN <= 239)) THEN
-            WRITE(UNT,1013) LEADING_BLANKS(1:BLEN), FILNAM(1:239)
-         ELSE
-            WRITE(UNT,1014) LEADING_BLANKS(1:BLEN), FILNAM
-         ENDIF
+         WRITE(UNT,1001) LEADING_BLANKS(1:BLEN), TRIM(FILNAM)
       ENDIF 
    
 ! **********************************************************************************************************************************
- 1001 FORMAT(A,A63)
-
- 1002 FORMAT(A,A143)
-
- 1003 FORMAT(A,A223)
-
- 1004 FORMAT(A,A256)
-
- 1011 FORMAT(A,A65)
-
- 1012 FORMAT(A,A144)
-
- 1013 FORMAT(A,A223)
-
- 1014 FORMAT(A,A256)
+ 1001 FORMAT(A,A)
 
 ! **********************************************************************************************************************************
   

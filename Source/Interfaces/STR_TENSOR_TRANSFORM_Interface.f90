@@ -44,7 +44,7 @@
       INTEGER(LONG), INTENT(IN)       :: STRESS_CORD_SYS   ! Actual coord system ID for stress/strain/engr force output
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = STR_TENSOR_TRANSFORM_BEGEND
 
-      REAL(DOUBLE), INTENT(INOUT)     :: STRESS_TENSOR(3,3)! 2D stress tensor (eqn 4 above)
+      REAL(DOUBLE), INTENT(INOUT)     :: STRESS_TENSOR(3,3)! 2D stress tensor (eqn 6 above)
       REAL(DOUBLE)                    :: DUM33(3,3)        ! Intermediate array used in calc outputs
 
       END SUBROUTINE STR_TENSOR_TRANSFORM

@@ -32,9 +32,10 @@
 !     (2) called 2nd time (after closing by calling subr) to position at end for subsequent writing after returning
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ANS, F04, IN1, SC1, WRT_ERR, WRT_LOG
+      USE IOUNT1, ONLY                :  ANS, F04, F06, IN1, SC1, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, PROG_NAME
       USE TIMDAT, ONLY                :  STIME, TSEC
+      USE DEBUG_PARAMETERS
       USE MYSTRAN_Version, ONLY       :  MYSTRAN_VER_NUM, MYSTRAN_VER_MONTH, MYSTRAN_VER_DAY, MYSTRAN_VER_YEAR, MYSTRAN_AUTHOR,  &
                                          MYSTRAN_COMMENT
       USE SUBR_BEGEND_LEVELS, ONLY    :  FILE_OPEN_BEGEND
@@ -196,6 +197,11 @@
 
       IERR = 0
       OPEN ( UNIT, FILE=FILNAM, STATUS=STATUS, FORM=FORMAT, ACCESS='SEQUENTIAL', ACTION=ACTION, POSITION=POSITION, IOSTAT=IOCHK )
+
+      IF (DEBUG(52) > 0) THEN
+         CALL DEB_FILE_OPEN
+      ENDIF
+
       IF (IOCHK == 0) THEN
          IF      (RW_STIME == 'READ_STIME') THEN           ! Read and check STIME
             IF (FORMAT == 'FORMATTED') THEN
@@ -260,6 +266,49 @@
 
   118 FORMAT(/,1X,A,' Version',5(1X,A),/)
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE DEB_FILE_OPEN
+
+      IMPLICIT NONE
+
 ! **********************************************************************************************************************************
+      WRITE(F06,98720)
+
+      WRITE(F06,'(A,I8)') ' In file OPEN, UNIT     = ', UNIT
+      WRITE(F06,'(A,A) ') ' In file OPEN, FILE     = ', FILNAM(1:40)
+      WRITE(F06,'(A,A) ') ' In file OPEN, STATUS   = ', STATUS
+      WRITE(F06,'(A,A) ') ' In file OPEN, FORM     = ', FORMAT
+      WRITE(F06,'(A,A) ') ' In file OPEN, ACTION   = ', ACTION
+      WRITE(F06,'(A,A) ') ' In file OPEN, POSITION = ', POSITION
+      WRITE(F06,'(A,I8)') ' In file OPEN, IOCHK    = ', IOCHK
+      WRITE(F06,*)
+      WRITE(F06,*) ' Open ', filnam(1:32), 'RW_STIME, STIME = "', rw_stime, '"   ', stime
+
+      WRITE(F06,*)
+
+      WRITE(F06,98799)
+ 
+      WRITE(F06,*)
+
+! **********************************************************************************************************************************
+98720 FORMAT(' __________________________________________________________________________________________________________________',&
+             '_________________'                                                                                               ,//,&
+             ' :::::::::::::::::::::::::::::::::::::::::START DEBUG(52) OUTPUT FROM SUBROUTINE FILE_OPEN:::::::::::::::::::::::::',&
+             ':::::::::::::::::',/)
+
+98799 FORMAT(' ::::::::::::::::::::::::::::::::::::::::::END DEBUG(52) OUTPUT FROM SUBROUTINE FILE_OPEN::::::::::::::::::::::::::',&
+             ':::::::::::::::::'                                                                                                ,/,&
+             ' __________________________________________________________________________________________________________________',&
+             '_________________',/)
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE DEB_FILE_OPEN 
+
 
       END SUBROUTINE FILE_OPEN

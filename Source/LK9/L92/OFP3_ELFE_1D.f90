@@ -38,8 +38,8 @@
       USE CONSTANTS_1, ONLY           :  ZERO, HALF
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE PARAMS, ONLY                :  OTMSKIP, POST
-      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, EDAT, ELAS_COMP, EPNT, ETYPE, EID, ELMTYP, ELOUT, FCONV, METYPE,         &
-                                         NUM_EMG_FATAL_ERRS, PEL, PLY_NUM, STRESS, TYPE, XEL
+      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, BUSH_DXA, BUSH_DXB, BUSH_DY, BUSH_DZ, EDAT, ELAS_COMP, EPNT, ETYPE, EID, &
+                                         ELMTYP, ELOUT, FCONV, METYPE, NUM_EMG_FATAL_ERRS, PEL, PLY_NUM, STRESS, TYPE, XEL
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, MAXREQ, OGEL
       USE OUTPUT4_MATRICES, ONLY      :  OTM_ELFE, TXT_ELFE
   
@@ -61,8 +61,6 @@
       INTEGER(LONG)                   :: ELOUT_ELFE        ! If > 0, there are ELFORCE(ENGR) requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L           ! DO loop indices
       INTEGER(LONG)                   :: IERROR       = 0  ! Local error count
-!!!   INTEGER(LONG)                   :: IROW_MAT          ! Row number in OTM's
-!!!   INTEGER(LONG)                   :: IROW_TXT          ! Row number in OTM text file
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NDUM              ! An arg passed to CALC_ELEM_STRESSES
       INTEGER(LONG)                   :: NUM_ELEM          ! No. elems processed prior to writing results to F06 file
@@ -75,6 +73,10 @@
  
       REAL(DOUBLE)                    :: DUM0(6,12)        ! Intermediate matrix in a calc
       REAL(DOUBLE)                    :: DUM1(6)           ! Intermediate matrix in a calc
+      REAL(DOUBLE)                    :: DXA               ! Offset dist of BUSH elem from end A in elem Xe dir.
+      REAL(DOUBLE)                    :: DXB               ! Offset dist of BUSH elem from end B in elem Xe dir.=L - DXA
+      REAL(DOUBLE)                    :: DY                ! Offset distance of BUSH elem from Xe axis in elem Ye direction
+      REAL(DOUBLE)                    :: DZ                ! Offset distance of BUSH elem from Xe axis in elem Ze direction
       REAL(DOUBLE)                    :: FORCES(12)        ! Forces at the grid points
       REAL(DOUBLE)                    :: LENGTH
  
@@ -88,8 +90,8 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Process element engineering force requests for ROD, BAR. Use subr CALC_ELEM_NODE_FORCES and then convert the node forces to
-! engineering forces (see equations below after subr CALC_ELEM_NODE_FORCES is called
+! Process element engineering force requests for BAR, BUSH, ELAS, ROD. Use subr CALC_ELEM_NODE_FORCES and then convert the node
+! forces to engineering forces (see equations below after subr CALC_ELEM_NODE_FORCES is called)
  
       OPT(1) = 'N'                                         ! OPT(1) is for calc of ME
       OPT(2) = 'Y'                                         ! OPT(2) is for calc of PTE
@@ -133,9 +135,7 @@
          ENDDO 
       ENDDO   
  
-!!!   IROW_MAT = 0
-!!!   IROW_TXT = 0
-      OT4_DESCRIPTOR = 'Element engineering force'
+      OT4_DESCRIPTOR = 'Element engineering force, ELFO'
 reqs2:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs2
          NUM_ELEM  = 0
@@ -186,42 +186,17 @@ elems_2: DO J = 1,NELE
 
                      IF (ETYPE(J)(1:4) == 'BUSH') THEN
 
-                        DO K=1,6
-                           DO L=1,12
-                              DUM0(K,L) = ZERO
-                           ENDDO
-                        ENDDO
+                       DXA = BUSH_DXA
+                       DXB = BUSH_DXB
+                       DY  = BUSH_DY
+                       DZ  = BUSH_DZ
 
-                        DUM0(1, 1) = -HALF
-                        DUM0(1, 7) =  HALF
-
-                        DUM0(2, 2) = -HALF
-                        DUM0(2, 8) =  HALF
-
-                        DUM0(3, 3) = -HALF
-                        DUM0(3, 9) =  HALF
-
-                        DUM0(4, 4) = -HALF
-                        DUM0(4,10) =  HALF
-
-                        DUM0(5, 5) = -HALF
-                        DUM0(5,11) =  HALF
-
-                        DUM0(6, 6) = -HALF
-                        DUM0(6,12) =  HALF
-
-                        DO K=1,12
-                           FORCES(K) = PEL(K)
-                        ENDDO
-
-                       CALL MATMULT_FFF ( DUM0, FORCES, 6, 12, 1, DUM1 )
-
-                       OGEL(NUM_OGEL,1) = DUM1(1)
-                       OGEL(NUM_OGEL,2) = DUM1(2)
-                       OGEL(NUM_OGEL,3) = DUM1(3)
-                       OGEL(NUM_OGEL,4) = DUM1(4)
-                       OGEL(NUM_OGEL,5) = DUM1(5)
-                       OGEL(NUM_OGEL,6) = DUM1(6)
+                       OGEL(NUM_OGEL,1) = PEL(7)
+                       OGEL(NUM_OGEL,2) = PEL(8)
+                       OGEL(NUM_OGEL,3) = PEL(9)
+                       OGEL(NUM_OGEL,4) = PEL(8)*DZ - PEL(9)*DY  + PEL(10)
+                       OGEL(NUM_OGEL,5) =-PEL(7)*DZ - PEL(9)*DXB + PEL(11)
+                       OGEL(NUM_OGEL,6) = PEL(7)*DY + PEL(8)*DXB + PEL(12)
 
                      ENDIF
 
@@ -373,12 +348,12 @@ elems_2: DO J = 1,NELE
                ENDIF
                CALL ELMDIS
                CALL CALC_ELEM_NODE_FORCES
-               FEMAP_EL_VECS(NUM_FROWS,1) = -PEL(1)
-               FEMAP_EL_VECS(NUM_FROWS,2) = -PEL(2)
-               FEMAP_EL_VECS(NUM_FROWS,3) = -PEL(3)
-               FEMAP_EL_VECS(NUM_FROWS,4) = -PEL(4)
-               FEMAP_EL_VECS(NUM_FROWS,5) = -PEL(5)
-               FEMAP_EL_VECS(NUM_FROWS,6) = -PEL(6)
+               FEMAP_EL_VECS(NUM_FROWS,1) =  PEL(7)                            !  Prior to 2021-06-09 was = -PEL(1)
+               FEMAP_EL_VECS(NUM_FROWS,2) =  PEL(8)                            !  Prior to 2021-06-09 was = -PEL(2)
+               FEMAP_EL_VECS(NUM_FROWS,3) =  PEL(9)                            !  Prior to 2021-06-09 was = -PEL(3)
+               FEMAP_EL_VECS(NUM_FROWS,4) =  PEL(8)*DZ - PEL(9)*DY  + PEL(10)  !  Prior to 2021-06-09 was = -PEL(4)
+               FEMAP_EL_VECS(NUM_FROWS,5) = -PEL(7)*DZ - PEL(9)*DXB + PEL(11)  !  Prior to 2021-06-09 was = -PEL(5)
+               FEMAP_EL_VECS(NUM_FROWS,6) =  PEL(7)*DY + PEL(8)*DXB + PEL(12)  !  Prior to 2021-06-09 was = -PEL(6)
             ENDIF            
          ENDDO
          IF (NUM_FROWS > 0) THEN
@@ -416,6 +391,7 @@ elems_2: DO J = 1,NELE
 
 ! For ELAS we need to calculate elem engr forces from the stresses since there is no "local" elem coord system
 
+         NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS1, 2, SUBR_NAME )
          DO J=1,NELE                                       ! Write out ELAS1 engineering forces
@@ -448,6 +424,7 @@ elems_2: DO J = 1,NELE
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS2, 2, SUBR_NAME )
          DO J=1,NELE                                       ! Write out ELAS2 engineering forces
@@ -480,6 +457,7 @@ elems_2: DO J = 1,NELE
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS3, 2, SUBR_NAME )
          DO J=1,NELE                                       ! Write out ELAS3 engineering forces
@@ -512,6 +490,7 @@ elems_2: DO J = 1,NELE
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+         NDUM = 0
          NUM_FROWS= 0                                      ! 'N' in call to EMG means do not write to BUG file
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS4, 2, SUBR_NAME )
          DO J=1,NELE                                       ! Write out ELAS4 engineering forces

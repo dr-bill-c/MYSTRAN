@@ -32,7 +32,7 @@
 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_BUG, WRT_ERR, WRT_FIJ, WRT_LOG
+      USE IOUNT1, ONLY                :  ERR, F04, F06, F21, F21FIL, F21_MSG, SC1, WRT_BUG, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_P_T_BIT, ELDT_F21_P_T_BIT, IBIT, LINKNO, MBUG, MELDOF, NCORD,      &
                                          NELE, NGRID, NSUB, NTSUB
       USE CONSTANTS_1, ONLY           :  ZERO
@@ -40,8 +40,8 @@
       USE TIMDAT, ONLY                :  TSEC
       USE DOF_TABLES, ONLY            :  TDOF, TDOF_ROW_START
       USE SUBR_BEGEND_LEVELS, ONLY    :  EPTL_BEGEND
-      USE MODEL_STUF, ONLY            :  ELDOF, ELDT, GRID, GRID_ID, CORD, AGRID, ELGP, NUM_EMG_FATAL_ERRS, PLY_NUM, PPE, PTE,     &
-                                         SYS_LOAD, TYPE, SUBLOD
+      USE MODEL_STUF, ONLY            :  ELDOF, ELDT, GRID, GRID_ID, CORD, AGRID, ELGP, NUM_EMG_FATAL_ERRS, OELDT, PLY_NUM, PPE,   &
+                                         PTE, SYS_LOAD, TYPE, SUBLOD
 
       IMPLICIT NONE
  

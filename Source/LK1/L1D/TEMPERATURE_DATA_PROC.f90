@@ -164,7 +164,7 @@
          IERRT = 0
          DO J=1,NTSUB
             DO I=1,NELE
-               IF (ETYPE(I)(1:4) == 'ELAS') THEN
+               IF ((ETYPE(I)(1:4) == 'ELAS') .OR. (ETYPE(I)(1:4) == 'BUSH') .OR. (ETYPE(I)(1:6) == 'PLOTEL')) THEN
                   CETEMP(I,J) = 'N'
                ELSE
                   IF (CETEMP(I,J) /= 'E') THEN

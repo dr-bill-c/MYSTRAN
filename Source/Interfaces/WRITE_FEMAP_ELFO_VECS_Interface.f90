@@ -33,7 +33,8 @@
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, NEU
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, NGRID
+      USE PARAMS, ONLY                :  SUPWARN
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NGRID, WARN_ERR
       USE TIMDAT, ONLY                :  TSEC
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE SUBR_BEGEND_LEVELS, ONLY    :  WRITE_FEMAP_ELFO_VECS_BEGEND

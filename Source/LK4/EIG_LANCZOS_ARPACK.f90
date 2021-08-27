@@ -570,20 +570,21 @@
 
       SUBROUTINE DEBUG_EIG_LANCZOS
 
-      write(f06,'(a,i8)')    ' In EIG_LANCZOS_ARPACK: NUM_EST_EIGENS       = ', num_est_eigens
-      write(f06,'(a,i8)')    '                      : EIG_LANCZOS_NEV_DELT = ', eig_lanczos_nev_delt
-      write(f06,'(a,i8)')    '                      : EIG_N2               = ', eig_n2
-      write(f06,'(a,i8)')    '                      : DARPACK              = ', darpack
-      write(f06,'(a,i8)')    '                      : NDOFL                = ', ndofl
-      if (sol_name(1:8) == 'BUCKLING') then
-         write(f06,'(a,i8)') '                      : NUM_KLLD_DIAG_ZEROS  = ', num_klld_diag_zeros
-      else
-         write(f06,'(a,i8)') '                      : NUM_MLL_DIAG_ZEROS   = ', num_mll_diag_zeros
-      endif
-      write(f06,'(a,i8)')    '                      : NUM1                 = ', num1
-      write(f06,'(a,i8)')    '                      : EIG_NCVFACL          = ', eig_ncvfacl
-      write(f06,'(a,i8)')    '                      : NCV                  = ', ncv
-      write(f06,'(a,i8)')    '                      : NEV                  = ', nev
+      WRITE(F06,'(A,I8)')    ' IN EIG_LANCZOS_ARPACK: NUM_EST_EIGENS       = ', NUM_EST_EIGENS
+      WRITE(F06,'(A,I8)')    '                      : EIG_LANCZOS_NEV_DELT = ', EIG_LANCZOS_NEV_DELT
+      WRITE(F06,'(A,I8)')    '                      : EIG_N2               = ', EIG_N2
+      WRITE(F06,'(A,I8)')    '                      : DARPACK              = ', DARPACK
+      WRITE(F06,'(A,I8)')    '                      : NDOFL                = ', NDOFL
+      IF (SOL_NAME(1:8) == 'BUCKLING') THEN
+         WRITE(F06,'(A,I8)') '                      : NUM_KLLD_DIAG_ZEROS  = ', NUM_KLLD_DIAG_ZEROS
+      ELSE
+         WRITE(F06,'(A,I8)') '                      : NUM_MLL_DIAG_ZEROS   = ', NUM_MLL_DIAG_ZEROS
+      ENDIF
+      WRITE(F06,'(A,I8)')    '                      : NUM1                 = ', NUM1
+      WRITE(F06,'(A,I8)')    '                      : EIG_NCVFACL          = ', EIG_NCVFACL
+      WRITE(F06,'(A,I8)')    '                      : NCV                  = ', NCV
+      WRITE(F06,'(A,I8)')    '                      : NEV                  = ', NEV
+      WRITE(F06,*)
 
 ! **********************************************************************************************************************************
 

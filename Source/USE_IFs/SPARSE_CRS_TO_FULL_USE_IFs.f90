@@ -29,5 +29,6 @@
 
       USE OURTIM_Interface
       USE ARRAY_SIZE_ERROR_1_Interface
+      USE WRT_REAL_TO_CHAR_VAR_Interface
 
       END MODULE SPARSE_CRS_TO_FULL_USE_IFs

@@ -732,7 +732,7 @@ c
                IF (I_KLLDn(I) == I_KLLDn(I+1)) THEN
                   KLLDn_DIAG(I) = ZERO
                ELSE
-                  KLLDn_DIAG(I) = KLLDn(I_MLLn(I))
+                  KLLDn_DIAG(I) = KLLDn(I_KLLDn(I))
                ENDIF
                IF (I_KMSMn(I) == I_KMSMn(I+1)) THEN
                   KMSMn_DIAG(I) = ZERO

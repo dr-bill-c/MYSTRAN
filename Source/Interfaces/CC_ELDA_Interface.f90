@@ -45,8 +45,8 @@
  
       INTEGER(LONG), PARAMETER        :: IOUTMIN_BUG = 0   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA print options)
       INTEGER(LONG), PARAMETER        :: IOUTMAX_BUG = 9   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA print options)
-      INTEGER(LONG), PARAMETER        :: IOUTMIN_FIJ = 1   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
-      INTEGER(LONG), PARAMETER        :: IOUTMAX_FIJ = 5   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
+      INTEGER(LONG), PARAMETER        :: IOUTMIN_FIJ = 2   ! Min val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
+      INTEGER(LONG), PARAMETER        :: IOUTMAX_FIJ = 6   ! Max val of IOUT (=1,2,3,4,5,6,7,8,9 are the ELDATA file  options)
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = CC_ELDA_BEGEND
  
       END SUBROUTINE CC_ELDA

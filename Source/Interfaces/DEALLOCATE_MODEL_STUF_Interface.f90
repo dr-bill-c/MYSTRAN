@@ -38,7 +38,7 @@
       USE CONSTANTS_1, ONLY           :  ZERO
       USE SUBR_BEGEND_LEVELS, ONLY    :  DEALLOCATE_MODEL_STUF_BEGEND
 
-      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, KE, KED, KEM, ME, OFFDIS, OFFSET,                &
+      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, KE, KED, KEM, ME, OFFDIS, OFFDIS_B, OFFSET,      &
                                          PEB, PEG, PEL, PPE, PRESS, PTE, SE1, SE2, SE3, STE1, STE2, STE3, UEB, UEG, UEL, UGG,      &
                                          XEB, XEL, XGL
       USE MODEL_STUF, ONLY            :  CMASS, CONM2, PMASS, RPMASS, RCONM2

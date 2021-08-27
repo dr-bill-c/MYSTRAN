@@ -39,7 +39,7 @@
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE CONSTANTS_1, ONLY           :  CONV_DEG_RAD
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, L1B, SC1
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06, L1B, OP2, SC1
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, DATA_NAM_LEN, FATAL_ERR, MCORD, MRCORD, MGRID, MRGRID, NCORD, NGRID
       USE PARAMS, ONLY                :  PRTBASIC
       USE TIMDAT, ONLY                :  TSEC
@@ -269,14 +269,14 @@ grid_do: DO I=1,NGRID
   
       WRITE(SC1,12345,ADVANCE='NO') '    Write grid data to file                                                 ', CR13 
       DATA_SET_NAME = 'GRID, RGRID'
-      WRITE(L1B) DATA_SET_NAME
-      WRITE(L1B) NGRID
+      WRITE(L1B) DATA_SET_NAME   ;  WRITE(OP2) DATA_SET_NAME
+      WRITE(L1B) NGRID           ;  WRITE(OP2) NGRID
       DO I=1,NGRID
          DO J=1,MGRID
-            WRITE(L1B) GRID(I,J)
+            WRITE(L1B) GRID(I,J) ;  WRITE(OP2) GRID(I,J)
          ENDDO   
          DO J=1,MRGRID
-            WRITE(L1B) RGRID(I,J)
+            WRITE(L1B) RGRID(I,J);  WRITE(OP2) RGRID(I,J)
          ENDDO   
       ENDDO   
  

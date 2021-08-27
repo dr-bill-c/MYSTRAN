@@ -52,7 +52,6 @@
       DO J=1,NCOLS
          CHAR_VAR(J)(1:) = ' '
       ENDDO
-
       DO J=1,NCOLS
          IF (ABS(REAL_VAR(ROW_NUM,J)) == ZERO) THEN
             WRITE(CHAR_VAR(J),'(A)') '  0.0         '

@@ -76,10 +76,10 @@
 !        DEBUG  18  > 0 print diagnostics in subr QMEM1 regarding checks on the BMEAN matrix satisfying R.B. motion
 !        DEBUG  19  = 1 print output from subr STOKEN (which, among other uses, processes Case Control SET cards)   
 
-!        DEBUG  20  = 1, bypass the simple solution for GMN when RMM is diagonal. Use subr SOLVE_GMN instead
+!        DEBUG  20  = 1 bypass the simple solution for GMN when RMM is diagonal. Use subr SOLVE_GMN instead
  
-!        DEBUG  21  = 0, In subr STIFF_MAT_EQUIL_CHK use MATMULT_SFF to multiply stiffness matrix times rigid body displs
-!                   = 1, In subr STIFF_MAT_EQUIL_CHK use DSBMV       to multiply stiffness matrix times rigid body displs
+!        DEBUG  21  = 0 In subr STIFF_MAT_EQUIL_CHK use MATMULT_SFF to multiply stiffness matrix times rigid body displs
+!                   = 1 In subr STIFF_MAT_EQUIL_CHK use DSBMV       to multiply stiffness matrix times rigid body displs
 
 !        DEBUG  22  = 1 print RBMAT in subr STIFF_MAT_EQUIL_CHK
 !        DEBUG  23  > 0 do equil checks on stiffness matrix even though model has SPOINT's
@@ -118,6 +118,14 @@
 !        DEBUG  48  = 1 do not calculate off-diag terms in generalized mass matrix in LINK 4
 !        DEBUG  49  = 1 print KMSMn in EIG_LANCZOS_ARPACK
 !        DEBUG  50  = 1 print debug info in EIG_LANCZOS_ARPACK
+
+!        DEBUG  51  = 1 print debug info in ROT_AXES_MATL_TO_LOC
+
+!        DEBUG  52  = 1 print debug info in FILE_OPEN
+
+!        DEBUG  53  = 1 print debug info in TPLT2
+
+!        DEBUG  54  = 1 print element stiffness matrix to f06 file
 
 !        DEBUG  55  = 1 Write PHIXG in full format in EXPAND_PHIXA_TO_PHIXG
 !                   = 2 Write PHIZG in full format in LINK5
@@ -204,7 +212,7 @@
 
 !        DEBUG 177  > 0 print BAR, ROD margins of safety whether or not they would otherwise be
 
-!        DEBUG 178  > 0 1 print G-set differential stiffness matrix
+!        DEBUG 178  > 0 print G-set differential stiffness matrix
 
 !        DEBUG 179  = 1 print blank space at beg of lines of output for CUSERIN entries in the F06 file
 
@@ -270,6 +278,12 @@
 !        DEBUG 202  > 0 calculate RB and constant strain sanity checks on strain-displacement matrices
 
 !        DEBUG 203  > 0 print debug info in subr BAR1
+
+!        DEBUG 204  = 1, debug BUSH for calculation of the offsets in local element coords
+!                   = 2, debug BUSH for calculation of the stiffness and stress/strain rcovery matrices
+!                   = 9, do all of above in BUSH
+
+!        DEBUG 205  = 1 print MATOUT full matrix in subr SPARSE_CRS_TO_FULL
 
 !        DEBUG 248  > 0 override fatal error and continue with orthotropic material properties for MIN4T QUAD4
 
