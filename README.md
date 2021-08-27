@@ -1,6 +1,5 @@
 MYSTRAN
 =======
-<<<<<<< HEAD
 
 MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
@@ -231,7 +230,6 @@ More detailed instructions can be found here.
 # Ways You Can Help
 
 - Not sure what we want here yet
->>>>>>> Update
 
 # Community
 - [Join our Forums](https://mystran.com/forums)
