@@ -19,7 +19,7 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 # Introduction
 =======
 
-[*Your Structural Analysis* Software](https://mystran.com)
+[*My Structural Analysis* Software](https://mystran.com)
 
 
 ---
