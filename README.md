@@ -10,7 +10,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 [Features](#features) |
 [Compiling Instructions](#compiling-instructions) |
 [Developmental Goals](#developmental-goals) |
-<<<<<<< HEAD
 [Ways You Can Help](#ways-you-can-help) |
 [Community](#community)
 
@@ -19,7 +18,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
 # Introduction
 =======
->>>>>>> Update
 
 [*Your Structural Analysis* Software](https://mystran.com)
 
@@ -30,7 +28,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 [Features](#features) |
 [Installation Instructions](#installation-instructions) |
 =======
->>>>>>> 9e398455afe53eaabaf3a57e27d5f6aa325dae4d
 [Ways You Can Help](#ways-you-can-help) |
 [Community](#community)
 
@@ -48,7 +45,6 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 - NASTRAN compatibility
 - Modal analysis
 - Linear Static Analysis
-<<<<<<< HEAD
 - Support for True Classical Laminate Plate Theory
 - All of our documentation can be found in MYSTRAN forums
 
