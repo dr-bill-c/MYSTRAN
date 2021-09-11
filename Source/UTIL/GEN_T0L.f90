@@ -54,8 +54,8 @@
 !              |UPy| = |sin(THETA)  cos(THETA) 0 ||Utheta|
 !              |UPz|   |     0           0     1 ||Uz    |
  
-! where UPx, UPy, UPz are the displacements in the principal directiona of the cylindrical system and Ur, Utheta, Uz
-! are the cylindrical system displacements at some cordinate location R, THETA, Z in the cylindrical system.
+! where UPx, UPy, UPz are the displacements in the principal directions of the cylindrical system and Ur, Utheta, Uz
+! are the cylindrical system displacements at some coordinate location R, THETA, Z in the cylindrical system.
  
 ! For a spherical system TPL is the matrix in the relationship:
  

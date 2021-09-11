@@ -192,7 +192,7 @@ do_1: DO
       ENDDO do_1
                   
 ! FLDS_I may have some number of 0 entries at the end which should not be counted in NUM_ENTRIES.
-! Scan FLDS_I (from end to begining) to find where last nonzero entry exists. This value is the one we want for NUM_ENTRIES
+! Scan FLDS_I (from end to beginning) to find where last nonzero entry exists. This value is the one we want for NUM_ENTRIES
 
       JE = NUM_ENTRIES
       DO J=JE,1,-1

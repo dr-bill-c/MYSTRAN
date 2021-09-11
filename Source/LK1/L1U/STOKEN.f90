@@ -213,7 +213,7 @@ i_loop2:    DO I = TOKEN_END+1,STRNG_END                   ! just in case we are
                      WRITE(F06,*) '    --------------------------'
                   ENDIF
 
-                  CYCLE outer                              ! CYCLE to read/process 3nd token
+                  CYCLE outer                              ! CYCLE to read/process 3rd token
 
                ELSE
 
@@ -232,7 +232,7 @@ i_loop2:    DO I = TOKEN_END+1,STRNG_END                   ! just in case we are
             TOKEN_BEG = STRNG_END + 1
 
             IF ((NUM_TOK_EXP == 3) .AND. (NTOKEN < 3)) THEN
-               IERROR = 2                                  ! Error: we found 'THRU' but didnt get 3 tokens
+               IERROR = 2                                  ! Error: we found 'THRU' but did not get 3 tokens
             ENDIF
 
             EXIT outer                                     ! Need to exit outer (TOKEN_END > STRNG_END)

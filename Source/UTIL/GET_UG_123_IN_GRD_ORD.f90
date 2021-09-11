@@ -26,7 +26,7 @@
  
       SUBROUTINE GET_UG_123_IN_GRD_ORD ( IERR )
  
-! Gets the 3 translation (T1, T2, T3) displ values fro the G-set displ vector (UG_COL) for 1 subcase and puts those values into an
+! Gets the 3 translation (T1, T2, T3) displ values for the G-set displ vector (UG_COL) for 1 subcase and puts those values into an
 ! NGRID x 3 array where T1 is col1, T2 is col 2 and T3 is col3
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE

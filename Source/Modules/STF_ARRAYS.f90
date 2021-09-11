@@ -123,7 +123,7 @@
 
 !   Therefore, row 1 has -3. in col 5, 5. in col 1 and -2. in col 6 which is what is shown in the K matrix above.
    
-!   When subroutine SPARSE_kgg is run the 1st row of tha G-set stiffness, prior to sorting contains the terms above:
+!   When subroutine SPARSE_kgg is run the 1st row of the G-set stiffness, prior to sorting contains the terms above:
       
 !   KGG value = -3.   5.  -2.    (stiffness values in row 1)
 !   KGG col   =  5    1    6     (column numbers of terms in row 1)

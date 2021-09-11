@@ -34,6 +34,6 @@
    
       SAVE
 
-      REAL(DOUBLE), ALLOCATABLE       :: UG_T123_MAT(:,:)      ! Matrix of UG_COL values for tranlation comps in a NGRID x 3 matrix
+      REAL(DOUBLE), ALLOCATABLE       :: UG_T123_MAT(:,:)      ! Matrix of UG_COL values for translation comps in a NGRID x 3 matrix
    
       END MODULE MISC_MATRICES

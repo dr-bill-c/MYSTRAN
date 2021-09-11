@@ -447,7 +447,7 @@ nerr: IF (IERR == 0) THEN
          WRITE(F06,1026) MYSTRAN_NAME
       ENDIF
 
-! Check if name is a duplicate of one alreay requested
+! Check if name is a duplicate of one already requested
 
       DUPLICATE = 'N'
       DO JJ=1,NUM_OU4_REQUESTS

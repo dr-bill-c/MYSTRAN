@@ -84,7 +84,7 @@
 !    8      Offset         NPLATEOFF (PLATEOFF key) goes in EDAT(nedat+7)
 !                          EDAT(nedat+8)
 ! on optional second card:
-!   4-7     Ti             Membrane thicknes at grids 1-4. These will go into array PLATETHICK
+!   4-7     Ti             Membrane thickness at grids 1-4. These will go into array PLATETHICK
 !                          EDAT(nedat+9) will hold NPLATETHICK the row in PLATETHICK where Ti is located
  
  

@@ -58,7 +58,7 @@
 !  3. row_ptr was left out of the DEALLOCATE statement in routine startup
 !     in version 1.07.
 !  4. In COV, now calls SS if rss_set = .FALSE.  29 August 1997
-!  5. In TOLSET, correction to accomodate negative values of D.  19 August 2002
+!  5. In TOLSET, correction to accommodate negative values of D.  19 August 2002
 
 !  Other changes:
 !  1. Array row_ptr added 18 July 1997.   This points to the first element

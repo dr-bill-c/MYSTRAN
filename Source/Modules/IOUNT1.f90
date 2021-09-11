@@ -680,13 +680,13 @@
 !      LINK3 - for SOL=1, the A-set displacements
 !      LINK4 - for SOL=3, the A-set eigenvectors
 
-! LINK4A is an unformated file containing ULLI, the inverse of the triangular factor of KMSM
+! LINK4A is an unformatted file containing ULLI, the inverse of the triangular factor of KMSM
 
-! LINK4B is an unformated file containing ALL, the symmetric standard eigenproblem matrix
+! LINK4B is an unformatted file containing ALL, the symmetric standard eigenproblem matrix
 
-! LINK5A is an unformated file containing G-set displacement solution data from LINK5
+! LINK5A is an unformatted file containing G-set displacement solution data from LINK5
 
-! LINK5B is an unformated file containing cols of PHIXA expanded to G-set size from LINK5
+! LINK5B is an unformatted file containing cols of PHIXA expanded to G-set size from LINK5
 
 ! NEUFIL is a formatted file containing data for FEMAP
 

@@ -46,7 +46,7 @@
       CHARACTER(WORD_LEN*BYTE)              :: TEMP_CHAR_INT     ! Temporary value of CHAR_INT
 
       INTEGER(LONG), PARAMETER              :: SUBR_BEGEND = GET_FORMATTED_INTEGER_BEGEND
-      INTEGER(LONG), INTENT(IN)             :: INT               ! Integer to be converted to formated value in CHAR_INT
+      INTEGER(LONG), INTENT(IN)             :: INT               ! Integer to be converted to formatted value in CHAR_INT
       INTEGER(LONG), INTENT(OUT)            :: NUM_CHARS         ! Num of non blank chars in CHAR_INT after formatting w/ commas
       INTEGER(LONG), INTENT(OUT)            :: NUM_DIGITS        ! Number of digits in INT
       INTEGER(LONG)                         :: I,J,K             ! DO loop indices or counters

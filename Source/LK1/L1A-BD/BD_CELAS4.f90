@@ -78,7 +78,7 @@
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
  
 ! First, check that fields 2-5 have the proper data type (we are going to have to rearrange the fields prior to calling ELEPRO).
-! If any erors, return
+! If any errors, return
 
       IERR = 0
 

@@ -27,7 +27,7 @@
       SUBROUTINE JAC2D ( SSI, SSJ, XSD, YSD, WRT_BUG_THIS_TIME, JAC, JACI, DETJ )
   
 ! Computes Jacobian for 2D elements with 4 grid points and quadratic serendipity shape functions. Also used for an 8
-! nodel element when the 4 mid side nodes are assumed to be at the middle of the sides (as with the DKQ element which
+! nodal element when the 4 mid side nodes are assumed to be at the middle of the sides (as with the DKQ element which
 ! uses mid side nodes for intermediate calculations)
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE

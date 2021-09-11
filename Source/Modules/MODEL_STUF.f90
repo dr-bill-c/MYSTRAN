@@ -99,7 +99,7 @@
 ! in subroutine BD_CONM2. Array RCONM2 is modified in subroutines CONM2_PROC_1 and CONM2_PROC_2 as described above.
 
 ! **********************************************************************************************************************************
-! Model total mass data (used in modal efective mass output to get percentages)
+! Model total mass data (used in modal effective mass output to get percentages)
 ! ----------------------
 
       REAL(DOUBLE)                    :: MCG(6,6)            ! CG mass matrix (not incl in any other module)

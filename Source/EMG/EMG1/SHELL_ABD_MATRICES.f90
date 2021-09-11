@@ -65,7 +65,7 @@
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = SHELL_ABD_MATRICES_BEGEND
 
       REAL(DOUBLE)                    :: DET_SHELL_T        ! Determinant of SHELL_T
-      REAL(DOUBLE)                    :: EPS1               ! Small number with which to comapre zero
+      REAL(DOUBLE)                    :: EPS1               ! Small number with which to compare zero
       REAL(DOUBLE)                    :: NSM                ! Nonstructural mass
 
 ! Variables for homogeneous shell elements

@@ -108,7 +108,7 @@
 ! **********************************************************************************************************************************
  1001 FORMAT(' *INFORMATION: FOR ',A,'   ',A8,' MOMENT OF INERTIA ',A,' HAS BEEN CHANGED FROM 0 TO A SMALL NUMBER = ',1ES10.3)
 
- 1195 FORMAT(' *ERROR  1195: THE MOMENTS AND PRODUCTS OF INERTIA ON ',A,'   ',A8,' DO NOT SATISIFY THE REQUIREMENT THAT:'          &
+ 1195 FORMAT(' *ERROR  1195: THE MOMENTS AND PRODUCTS OF INERTIA ON ',A,'   ',A8,' DO NOT SATISFY THE REQUIREMENT THAT:'           &
                     ,/,14X,' I12^2  <=  I1*12  WHERE: I1 = ',1ES10.3,', I2 = ',1ES10.3,', I12 = ',1ES10.3)
 
 ! **********************************************************************************************************************************

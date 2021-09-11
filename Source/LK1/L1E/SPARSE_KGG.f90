@@ -176,7 +176,7 @@
          NUM_ASPC_BY_COMP(I) = 0
       ENDDO
 
-      IF (DEBUG(17) > 0) THEN                              ! Write leading seperator for DEBUG output
+      IF (DEBUG(17) > 0) THEN                              ! Write leading separator for DEBUG output
          WRITE(F06,9901) AUTOSPC_RAT
       ENDIF
       KTERM_KGG = 0                                        ! I runs over the number of rows (or grids)
@@ -275,7 +275,7 @@ j_do4:   DO J=1,NIND_GRDS_MPCS                           ! on MPC's since they m
          ENDIF
 
       ENDDO i_do
-      IF (DEBUG(17) > 0) THEN                              ! Write trailing seperator for DEBUG output
+      IF (DEBUG(17) > 0) THEN                              ! Write trailing separator for DEBUG output
          WRITE(F06,9902)
       ENDIF
       WRITE(F06,*)

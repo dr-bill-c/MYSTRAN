@@ -27,7 +27,7 @@
       SUBROUTINE WRITE_EDAT
 
 ! This subr write array EDAT based on user input Bulk Data DEBUG (see module DEBUG_PARAMS). EDAT is an array that contains all of
-! the information read fron element connection entries in the Bulk Data
+! the information read from element connection entries in the Bulk Data
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG
       USE IOUNT1, ONLY                :  ERR, F04, F06, WRT_LOG

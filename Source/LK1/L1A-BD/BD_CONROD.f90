@@ -84,7 +84,7 @@
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
  
 ! First, check that fields 2-9 have the proper data type (we are going to have to rearrange the fields prior to calling ELEPRO).
-! If any erors, return
+! If any errors, return
 
       IERR = 0
 
@@ -141,7 +141,7 @@
          PROD(NPROD,2) = MATL_ID
       ENDIF
 
-! Put real data from CONROD into array RPROD. We already checked that the data in theses fields can be read by R8FLD
+! Put real data from CONROD into array RPROD. We already checked that the data in these fields can be read by R8FLD
  
       CALL R8FLD ( JCARD(6), JF(6), RPROD(NPROD,1) )
       CALL R8FLD ( JCARD(7), JF(7), RPROD(NPROD,2) )

@@ -1236,7 +1236,7 @@
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
   
-! MXALLOCA defines the max allowable attempts when attempting to allocate an array before quiting with a fatal error
+! MXALLOCA defines the max allowable attempts when attempting to allocate an array before quitting with a fatal error
 
       ELSE IF (JCARD(2)(1:8) == 'MXALLOCA') THEN
          PARNAM = 'MXALLOCA '
@@ -1301,7 +1301,7 @@
          CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,4,5,6,7,8,9 )! Issue warning if fields 4-9 not blank
          CALL CRDERR ( CARD )                              ! CRDERR prints errors found when reading fields
 
-! MEFMLOC tells what ref loaction to use for reducing modal effective mass to a 6 DOF location.
+! MEFMLOC tells what ref location to use for reducing modal effective mass to a 6 DOF location.
 
       ELSE IF (JCARD(2)(1:8) == 'MEFMLOC ') THEN
          PARNAM = 'MEFMLOC '
@@ -3157,7 +3157,7 @@ do_i:    DO I=1,JCARD_LEN
   102 FORMAT(' *INFORMATION: PARAMETER ',A8,' IS NOT USED IN MYSTRAN. PRINTOUT OF USETSTR REQUESTS WILL BE HONORED',&
                            ' AS IF MSC NASTRAN ',A8,' = ',A)
 
-  104 FORMAT(' *WARNING    : USE OF ":" SEPERATOR FOR THE PARAM USETSTR BULK DATA ENTRY NOT ALLOWED. ENTRY HAD "',A,'" IN FIELD 3')
+  104 FORMAT(' *WARNING    : USE OF ":" SEPARATOR FOR THE PARAM USETSTR BULK DATA ENTRY NOT ALLOWED. ENTRY HAD "',A,'" IN FIELD 3')
 
  1110 FORMAT(' *ERROR  1110: PARAMETER NAMED ',A,' MUST BE >= ',I2,' AND <= ',I2,' BUT INPUT VALUE IS: ',A)
 

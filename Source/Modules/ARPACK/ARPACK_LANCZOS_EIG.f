@@ -6207,9 +6207,9 @@ c     %----------------------%
 c
       intrinsic  abs
 c
-c     %----------------%
-c     | Data statments |
-c     %----------------%
+c     %-----------------%
+c     | Data Statements |
+c     %-----------------%
 c
       data       first / .true. /
 c
@@ -6290,7 +6290,7 @@ c
                   call ivout (logfil, 1, I_ARRAY, ndigit, 
      &                 '_sapps: deflation at row/column no.')
                   call ivout (logfil, 1, JJ_ARRAY, ndigit, 
-     &                 '_sapps: occured before shift number.')
+     &                 '_sapps: occurred before shift number.')
                   call dvout (logfil, 1, h(i+1,1), ndigit, 
      &                 '_sapps: the corresponding off diagonal element')
                end if
@@ -7018,7 +7018,7 @@ c
 c\Remarks
 c     1. Starting with version 2.5, this routine is a modified version
 c        of LAPACK version 2.0 subroutine SSTEQR. No lines are deleted,
-c        only commeted out and new lines inserted.
+c        only commented out and new lines inserted.
 c        All lines commented out have "c$$$" at the beginning.
 c        Note that the LAPACK version 1.0 subroutine SSTEQR contained
 c        bugs. 

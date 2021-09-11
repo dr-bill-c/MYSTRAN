@@ -406,7 +406,7 @@ k_do6:            DO K=EID1,EID2
 
       IELEM = 0
 
-! First convert EID to interal value
+! First convert EID to internal value
  
       CALL GET_ARRAY_ROW_NUM ( 'ESORT1', SUBR_NAME, NELE, ESORT1, EID, IELEM )
 

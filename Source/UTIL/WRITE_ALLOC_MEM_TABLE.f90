@@ -48,7 +48,7 @@
       INTEGER(LONG)                   :: NUM_ARRAYS_ALLOCTD! Number of arrays that have mem allocated to them
 
       REAL(DOUBLE)                    :: TOTAL             ! Sum of all rows of ALLOCATED_ARRAY_MEM (this should be the same as
-!                                                            TOT_MB_MEM_ALLOC in module SCONTR but I wan't an independent calc.
+!                                                            TOT_MB_MEM_ALLOC in module SCONTR but I want an independent calc.
 
 ! **********************************************************************************************************************************
 ! Write memory allocation table, if requested
@@ -72,7 +72,7 @@
             WRITE(F06,201) I, ALLOCATED_ARRAY_NAMES(I), ALLOCATED_ARRAY_MEM(I), ASTERISK
             ASTERISK = '  '
 
-         ELSE                                              ! Write info on only those arrays that have memory alocated
+         ELSE                                              ! Write info on only those arrays that have memory allocated
 
             IF (ALLOCATED_ARRAY_MEM(I) > ZERO) THEN
                ASTERISK = '  '

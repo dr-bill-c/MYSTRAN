@@ -1391,7 +1391,7 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
          WRITE(F06,5102) 'relative to it''s reference system. (only for CORD2 systems at this point)'
 
       ELSE IF (WHICH == '52') THEN
-         WRITE(F06,5202) CID, 'it''s reference coordiate system', RID, (RCORD(I,JJ),JJ=1,3), CID, RID,                             &
+         WRITE(F06,5202) CID, 'it''s reference coordinate system', RID, (RCORD(I,JJ),JJ=1,3), CID, RID,                            &
                                    (RCORD(I,JJ),JJ=4,6), RID, CID, (RCORD(I,JJ),JJ=7,9), RID, CID, (RCORD(I,JJ),JJ=10,12), RID, CID
 
       ELSE IF (WHICH == '61') THEN

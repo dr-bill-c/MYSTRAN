@@ -225,7 +225,7 @@
 
       CHARACTER( 2*BYTE)              :: MODULUS            ! Character to print out for error
 
-      INTEGER(LONG)                   :: JERR    = 0        ! Local erro count
+      INTEGER(LONG)                   :: JERR    = 0        ! Local error count
 
       REAL(DOUBLE)                    :: EPS1               ! A small number to compare real zero
       REAL(DOUBLE)                    :: DEN                ! (1 - NU12*NU21)

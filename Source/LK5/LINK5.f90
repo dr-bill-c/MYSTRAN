@@ -810,7 +810,7 @@ j_do: DO J = 1,NUM_SOLNS
       CHARACTER(JCARD_LEN*BYTE)       :: DATA_FIELD
       CHARACTER(80*BYTE)              :: TITLE             ! First record in EINFIL
 
-      INTEGER(LONG)                   :: IOCHK             ! Vaue of IOSTAT in file open
+      INTEGER(LONG)                   :: IOCHK             ! Value of IOSTAT in file open
       INTEGER(LONG)                   :: NUM_CHANGED       ! Number of eigenvectors to have their sign changed
       INTEGER(LONG)                   :: REC_NUM           ! Number of the record read from file
       INTEGER(LONG)                   :: VEC_NUM           ! Number of a eigenvector read from EINFIL
