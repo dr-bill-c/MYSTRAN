@@ -54,12 +54,13 @@
       CHARACTER(LEN=*) , INTENT(IN)   :: IHDR              ! Indicator of whether to write an output header
       CHARACTER( 1*BYTE), PARAMETER   :: COORD_SYS   = 'G' ! Subr TRANSFORM_NODE_FORCES will calc elem node forces in global coords
       CHARACTER( 1*BYTE)              :: OPT(6)            ! Option flags for subr ELMTLB (to tell it what to transform)
+      CHARACTER(128*BYTE)             :: TITLEI, STITLEI, LABELI ! title, subtitle, label
 
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG)                   :: AELEM             ! Actual element ID
-      INTEGER(LONG)                   :: BDY_COMP          ! Component (1-6) for a boundary DOF in CB analyses
-      INTEGER(LONG)                   :: BDY_GRID          ! Grid for a boundary DOF in CB analyses
-      INTEGER(LONG)                   :: BDY_DOF_NUM       ! DOF number for BDY_GRID/BDY_COMP
+      INTEGER(LONG)                   :: BNDY_COMP          ! Component (1-6) for a boundary DOF in CB analyses
+      INTEGER(LONG)                   :: BNDY_GRID          ! Grid for a boundary DOF in CB analyses
+      INTEGER(LONG)                   :: BNDY_DOF_NUM       ! DOF number for BNDY_GRID/BNDY_COMP
       INTEGER(LONG)                   :: BEG_ROW_NUM       ! Row num in PEG where we begin to get the 6 values of elem load KE*UE
       INTEGER(LONG)                   :: G_CID             ! Global coord system for GRID_NUM
       INTEGER(LONG)                   :: GRID_NUM          ! Actual grid point number
@@ -76,7 +77,7 @@
       INTEGER(LONG)                   :: TDOF_ROW          ! Row no. in array TDOF to find GDOF DOF number
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = GP_FORCE_BALANCE_PROC_BEGEND
 
-      INTEGER(SHORT), DIMENSION(1)    :: Udd = (/0220/)    ! 0220 is the 4 digit ASCI code for a capital U double-dot
+      INTEGER(SHORT), DIMENSION(1)    :: Udd = (/0220/)    ! 0220 is the 4 digit ASCII code for a capital U double-dot
 
       REAL(DOUBLE)                    :: DUM_KE(MELDOF,MELDOF)
       REAL(DOUBLE)                    :: FG1(6)            ! The 6 vals from FG_COL (grid inertia forces) for 1 grid point
@@ -96,6 +97,8 @@
       integer(long)                   :: max_abs_grid(6)    ! Grid where max-abs for GP force balance totals exists
       real(double)                    :: max_abs_all_grds(6)! The 6 max-abs from GP force balance totals
 
+      INTEGER(LONG)                   :: DEVICE_CODE        ! 
+      INTEGER(LONG)                   :: ANALYSIS_CODE      !      
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -123,40 +126,43 @@
       CALL CHK_COL_ARRAYS_ZEROS
 
 ! Write output headers.
-
+      ANALYSIS_CODE = -1
       IF (IHDR == 'Y') THEN
          WRITE(F06,*)
          WRITE(F06,*)
          IF    (SOL_NAME(1:7) == 'STATICS') THEN
-
+            ANALYSIS_CODE = 1
             WRITE(F06,9101) SCNUM(JVEC)
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
+            ANALYSIS_CODE = 2
             WRITE(F06,9102) JVEC
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
 
             IF ((JVEC <= NDOFR) .OR. (JVEC >= NDOFR+NVEC)) THEN 
                IF (JVEC <= NDOFR) THEN
-                  BDY_DOF_NUM = JVEC
+                  BNDY_DOF_NUM = JVEC
                ELSE
-                  BDY_DOF_NUM = JVEC-(NDOFR+NVEC)
+                  BNDY_DOF_NUM = JVEC-(NDOFR+NVEC)
                ENDIF
-               CALL GET_GRID_AND_COMP ( 'R ', BDY_DOF_NUM, BDY_GRID, BDY_COMP  )
+               CALL GET_GRID_AND_COMP ( 'R ', BNDY_DOF_NUM, BNDY_GRID, BNDY_COMP  )
             ENDIF
 
             IF       (JVEC <= NDOFR) THEN
-               WRITE(F06,9103) JVEC, NUM_CB_DOFS, 'acceleration', BDY_GRID, BDY_COMP
+               WRITE(F06,9103) JVEC, NUM_CB_DOFS, 'acceleration', BNDY_GRID, BNDY_COMP
             ELSE IF ((JVEC > NDOFR) .AND. (JVEC <= NDOFR+NVEC)) THEN
                WRITE(F06,9105) JVEC, NUM_CB_DOFS, JVEC-NDOFR
             ELSE
-               WRITE(F06,9103) JVEC, NUM_CB_DOFS, 'displacement', BDY_GRID, BDY_COMP
+               WRITE(F06,9103) JVEC, NUM_CB_DOFS, 'displacement', BNDY_GRID, BNDY_COMP
             ENDIF
 
          ENDIF
 
 
+         TITLEI = TITLE(INT_SC_NUM)
+         STITLEI = STITLE(INT_SC_NUM)
+         LABELI = LABEL(INT_SC_NUM)
          IF (TITLE(INT_SC_NUM)(1:)  /= ' ') THEN
             WRITE(F06,9799) TITLE(INT_SC_NUM)
          ENDIF
@@ -171,6 +177,7 @@
 
          WRITE(F06,*)
  
+         ! write f06 header
          IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
             WRITE(F06,8999)
          ELSE
@@ -178,34 +185,31 @@
          ENDIF
 
          IF (DEBUG(200) > 0) THEN
-
             WRITE(ANS,*)
             WRITE(ANS,*)
             IF    (SOL_NAME(1:7) == 'STATICS') THEN
-
                WRITE(ANS,9101) SCNUM(JVEC)
 
             ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
                WRITE(ANS,9102) JVEC
 
             ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
 
                IF ((JVEC <= NDOFR) .OR. (JVEC >= NDOFR+NVEC)) THEN 
                   IF (JVEC <= NDOFR) THEN
-                     BDY_DOF_NUM = JVEC
+                     BNDY_DOF_NUM = JVEC
                   ELSE
-                     BDY_DOF_NUM = JVEC-(NDOFR+NVEC)
+                     BNDY_DOF_NUM = JVEC-(NDOFR+NVEC)
                   ENDIF
-                  CALL GET_GRID_AND_COMP ( 'R ', BDY_DOF_NUM, BDY_GRID, BDY_COMP  )
+                  CALL GET_GRID_AND_COMP ( 'R ', BNDY_DOF_NUM, BNDY_GRID, BNDY_COMP  )
                ENDIF
 
                IF       (JVEC <= NDOFR) THEN
-                  WRITE(ANS,9103) JVEC, NUM_CB_DOFS, 'acceleration', BDY_GRID, BDY_COMP
+                  WRITE(ANS,9103) JVEC, NUM_CB_DOFS, 'acceleration', BNDY_GRID, BNDY_COMP
                ELSE IF ((JVEC > NDOFR) .AND. (JVEC <= NDOFR+NVEC)) THEN
                   WRITE(ANS,9105) JVEC, NUM_CB_DOFS, JVEC-NDOFR
                ELSE
-                  WRITE(ANS,9103) JVEC, NUM_CB_DOFS, 'displacement', BDY_GRID, BDY_COMP
+                  WRITE(ANS,9103) JVEC, NUM_CB_DOFS, 'displacement', BNDY_GRID, BNDY_COMP
                ENDIF
 
             ENDIF
@@ -223,7 +227,6 @@
       ENDIF
  
 ! Process grid point force balance output requests. 
-
       DO I=1,6
          FG1(I)     = ZERO
          PG1(I)     = ZERO
@@ -256,15 +259,20 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
          NREQ = NREQ + 1
       ENDDO
 
-      DO I=1,NGRID
+      DEVICE_CODE = 1
+      !GPFB_NROWS = 0
+      !CALL CALCULATE_GPFB_NROWS(GPFB_NROWS)
+      !CALL BUILD_GPFB(GPFB_NROWS)
+      !WRITE(OP2) (GRID(I,1)*10+DEVICE_CODE, I=1,NGRID)
 
+      DO I=1,NGRID
          WRITE(SC1,12345,ADVANCE='NO') I, NREQ, CR13
          IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_GPFO_BIT))
          GRID_NUM  = GRID(I,1)
          CALL GET_GRID_NUM_COMPS ( GRID_NUM, NUM_COMPS, SUBR_NAME )
-         IF ((IB > 0) .AND. (NUM_COMPS == 6)) THEN         ! Do not do force balance for SPOINT's
 
-            G_CID     = GRID(I,3)
+         IF ((IB > 0) .AND. (NUM_COMPS == 6)) THEN         ! Do not do force balance for SPOINT's
+            G_CID = GRID(I,3)
             WRITE(F06,9201) GRID_NUM, G_CID
             WRITE(F06,9202)
             IF (DEBUG(200) > 0) THEN
@@ -445,37 +453,7 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
       ENDDO
       WRITE(SC1,*) CR13
 
-! For each of the 6 components (J=1,6 for components T1, T2, T3, R1, R2, R3) , calc % of grid force imbalance as a % of the largest
-! force item in that component
-
-      IF (DEBUG(192) > 0) THEN
-         DO I=1,6
-            IF (MAX_ABS(I) > ZERO) THEN
-               MAX_ABS_PCT(I) = ONE_HUNDRED*MAX_ABS_ALL_GRDS(I)/MAX_ABS(I)
-               WRITE(CHAR_PCT(I),9213) MAX_ABS_PCT(I)
-            ELSE                                                 ! Denominator is zero so leave % blank
-               CHAR_PCT(I)(1:) = ' '
-            ENDIF
-         ENDDO
-         WRITE(F06,9214)
-         WRITE(F06,9202)
-         WRITE(F06,9215) (MAX_ABS_ALL_GRDS(I),I=1,6)
-         IF (DEBUG(192) > 1) THEN
-            WRITE(F06,9216) (MAX_ABS(I),I=1,6)
-            WRITE(F06,9217) (CHAR_PCT(I),I=1,6)
-         ENDIF
-         WRITE(F06,9218) (MAX_ABS_GRID(I),I=1,6)
-         IF (DEBUG(200) > 0) THEN
-            WRITE(ANS,9214)
-            WRITE(ANS,9202)
-            WRITE(ANS,9215) (MAX_ABS_ALL_GRDS(I),I=1,6)
-            IF (DEBUG(192) > 1) THEN
-               WRITE(ANS,9216) (MAX_ABS(I),I=1,6)
-               WRITE(ANS,9217) (CHAR_PCT(I),I=1,6)
-            ENDIF
-            WRITE(ANS,9218) (MAX_ABS_GRID(I),I=1,6)
-         ENDIF
-      ENDIF
+      CALL CALCULATE_GPFB_IMBALANCE(CHAR_PCT, MAX_ABS, MAX_ABS_PCT, MAX_ABS_GRID, MAX_ABS_ALL_GRDS)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -523,19 +501,6 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
 
  9211 FORMAT(1X,   'TOTALS                :',6(1ES14.6),/,                                                                         &
              1X,   '(should all be 0)',//) 
-
- 9213 FORMAT(1ES12.2,'%')
-
- 9214 FORMAT(1X,   '                                     Max abs values of force imbalance totals from above grids',/)
-
- 9215 FORMAT(1X,'Max abs imbal any grid:',6(1ES14.6))
-
- 9216 FORMAT(1X,'Max abs force any grid:',6(1ES14.6))
-
- 9217 FORMAT(1X,'as % of max abs force : ',6(A14))
-
- 9218 FORMAT(1X,   'Occurs at grid*       :',2X,I8,5(6X,I8),/,                                                                     &
-             1X,   '(*for output set)')
 
  9310 FORMAT(1X,   'TOTALS                :',6(1ES14.6),13X,/,                                                                     &
              1X,   '(may not be zero since there were OMIT''d DOF''s which can mean that the correct inertia forces at the G-set', &
@@ -590,6 +555,71 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
       END SUBROUTINE CHK_COL_ARRAYS_ZEROS
 
 
+      SUBROUTINE CALCULATE_GPFB_IMBALANCE(CHAR_PCT, MAX_ABS, MAX_ABS_PCT, MAX_ABS_GRID, MAX_ABS_ALL_GRDS)
+      ! For each of the 6 components (J=1,6 for components T1, T2, T3, R1, R2, R3)
+      !  - calc % of grid force imbalance as a % of the largest
+      !    force item in that component
+      USE PENTIUM_II_KIND, ONLY       :  BYTE, SHORT, LONG, DOUBLE
+      USE IOUNT1, ONLY                :  ANS, F06
+      USE CONSTANTS_1, ONLY           :  ZERO
+      USE DEBUG_PARAMETERS, ONLY      :  DEBUG
+
+      IMPLICIT NONE
+      CHARACTER(13*BYTE)              :: CHAR_PCT(6)        ! Character representation of MEFFMASS sum percents of total model mass
+      INTEGER(LONG)                   :: I                  ! DO loop index
+                                                            
+      REAL(DOUBLE), INTENT(IN)        :: MAX_ABS(6)         ! The 6 abs largest values of any force item in the 6 components
+      REAL(DOUBLE), INTENT(INOUT)     :: MAX_ABS_PCT(6)     ! Modal mass as % of total mass
+      
+      !INTRINSIC IAND
+      INTEGER(LONG), INTENT(IN)       :: max_abs_grid(6)    ! Grid where max-abs for GP force balance totals exists
+      REAL(DOUBLE), INTENT(IN)        :: max_abs_all_grds(6)! The 6 max-abs from GP force balance totals
+
+      IF (DEBUG(192) > 0) THEN
+         DO I=1,6
+            IF (MAX_ABS(I) > ZERO) THEN
+               MAX_ABS_PCT(I) = ONE_HUNDRED*MAX_ABS_ALL_GRDS(I)/MAX_ABS(I)
+               WRITE(CHAR_PCT(I),9213) MAX_ABS_PCT(I)
+            ELSE                                                 ! Denominator is zero so leave % blank
+               CHAR_PCT(I)(1:) = ' '
+            ENDIF
+         ENDDO
+         WRITE(F06,9214)
+         WRITE(F06,9202)
+         WRITE(F06,9215) (MAX_ABS_ALL_GRDS(I),I=1,6)
+         IF (DEBUG(192) > 1) THEN
+            WRITE(F06,9216) (MAX_ABS(I),I=1,6)
+            WRITE(F06,9217) (CHAR_PCT(I),I=1,6)
+         ENDIF
+         WRITE(F06,9218) (MAX_ABS_GRID(I),I=1,6)
+         IF (DEBUG(200) > 0) THEN
+            WRITE(ANS,9214)
+            WRITE(ANS,9202)
+            WRITE(ANS,9215) (MAX_ABS_ALL_GRDS(I),I=1,6)
+            IF (DEBUG(192) > 1) THEN
+               WRITE(ANS,9216) (MAX_ABS(I),I=1,6)
+               WRITE(ANS,9217) (CHAR_PCT(I),I=1,6)
+            ENDIF
+            WRITE(ANS,9218) (MAX_ABS_GRID(I),I=1,6)
+         ENDIF
+      ENDIF
+
+ 9202 FORMAT(1X,   '                              T1            T2            T3            R1            R2            R3',/)
+
+ 9213 FORMAT(1ES12.2,'%')
+
+ 9214 FORMAT(1X,   '                                     Max abs values of force imbalance totals from above grids',/)
+
+ 9215 FORMAT(1X,'Max abs imbal any grid:',6(1ES14.6))
+
+ 9216 FORMAT(1X,'Max abs force any grid:',6(1ES14.6))
+
+ 9217 FORMAT(1X,'as % of max abs force : ',6(A14))
+
+ 9218 FORMAT(1X,   'Occurs at grid*       :',2X,I8,5(6X,I8),/,                                                                     &
+             1X,   '(*for output set)')
+
+      END SUBROUTINE CALCULATE_GPFB_IMBALANCE
+!===================================================================================================================================
+
       END SUBROUTINE GP_FORCE_BALANCE_PROC
-
-

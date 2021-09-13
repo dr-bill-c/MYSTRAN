@@ -36,7 +36,7 @@
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR 
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO
-      USE MODEL_STUF, ONLY            :  STRAIN, TYPE
+      USE MODEL_STUF, ONLY            :  STRAIN, TYPE, ZS
       USE LINK9_STUFF, ONLY           :  MSPRNT, OGEL
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_VECS
       USE PARAMS, ONLY                :  POST
@@ -44,6 +44,7 @@
 
       IMPLICIT NONE
 
+      CHARACTER(1*BYTE)               :: MSP1,MSP2,MSP3     ! Output from subr MARGIN used to control how margins of safety printed
       CHARACTER( 1*BYTE), INTENT(IN)  :: WRITE_OGEL         ! If 'Y' then write data to array OGEL
       CHARACTER( 1*BYTE), INTENT(IN)  :: WRITE_FEMAP        ! If 'Y' then write data to array FEMAP_EL_VECS
  

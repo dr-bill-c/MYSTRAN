@@ -33,8 +33,9 @@
       USE IOUNT1, ONLY                :  WRT_BUG, WRT_LOG, ERR, F04, F06
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELOUT_STRN_BIT, FATAL_ERR, IBIT, INT_SC_NUM,                                &
                                          MAX_STRESS_POINTS, MBUG, MOGEL,                                                           &
-                                         NELE, NCBUSH, NCHEXA8, NCHEXA20, NCPENTA6, NCPENTA15, NCTETRA4, NCTETRA10, NCQUAD4,       &
-                                         NCQUAD4K, NCSHEAR, NCTRIA3, NCTRIA3K, SOL_NAME
+                                         NELE, NCBAR, NCBUSH, NCELAS1, NCELAS2, NCELAS3, NCELAS4, NCHEXA8, NCHEXA20, NCPENTA6,     &
+                                         NCPENTA15,NCTETRA4, NCTETRA10, NCQUAD4, NCQUAD4K, NCROD, NCSHEAR, NCTRIA3, NCTRIA3K,      &
+                                         SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  OFP3_STRN_NO_PCOMP_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO
@@ -91,8 +92,13 @@
                                                            ! Array of output stress values after surface fit
       REAL(DOUBLE)                    :: STRAIN_OUT(9,MAX_STRESS_POINTS)
 
+      ! OP2 stuff
+      CHARACTER(8*BYTE)               :: TABLE_NAME   ! name of the op2 table name
+      INTEGER(LONG)                   :: ITABLE       ! the subtable
+
       INTRINSIC IAND
-  
+      ITABLE = 0
+      TABLE_NAME = "OES ERR "
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -120,6 +126,7 @@
          IF((ELMTYP(I)(1:5) == 'TRIA3') .OR. (ELMTYP(I)(1:5) == 'QUAD4') .OR. (ELMTYP(I)(1:5) == 'SHEAR') .OR.                     &
             (ELMTYP(I)(1:4) == 'HEXA' ) .OR. (ELMTYP(I)(1:5) == 'PENTA') .OR. (ELMTYP(I)(1:5) == 'TETRA') .OR.                     &
             (ELMTYP(I)(1:4) == 'BUSH' )) THEN
+!            (ELMTYP(I)(1:4) == 'BUSH' ) .OR. (ELMTYP(I)(1:3) == 'ROD') .OR. (ELMTYP(I)(1:4) == 'ELAS')) THEN
             DO J=1,NELE
                CALL IS_ELEM_PCOMP_PROPS ( J )
                IF (PCOMP_PROPS == 'N') THEN
@@ -255,10 +262,16 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
  
                   ENDDO do_strain_pts
 
-                  IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
-                     CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                     CALL WRITE_ELEM_STRAINS ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I) )
-                     EXIT
+                  IF (ETYPE(J)(1:5) /='USER1') THEN
+                     IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
+                        CALL CHK_OGEL_ZEROS ( NUM_OGEL )
+ 100                    FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                        WRITE(ERR,100) "A",TYPE,TABLE_NAME,ITABLE
+                        CALL SET_OST_TABLE_NAME(TYPE, TABLE_NAME, ITABLE)
+                        WRITE(ERR,100) "B",TYPE,TABLE_NAME,ITABLE
+                        CALL WRITE_ELEM_STRAINS ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I), ITABLE )
+                        EXIT
+                     ENDIF
                   ENDIF
 
                ENDIF
@@ -269,6 +282,10 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
  
       ENDDO reqs7
  
+      IF ((TABLE_NAME .NE. "OES ERR ") .AND. (ITABLE < 0)) THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
+!===========================
       IF ((POST /= 0) .AND. (ANY_STRN_OUTPUT > 0)) THEN
                     
          NDUM = 0
@@ -689,7 +706,14 @@ do_strain_pts:    DO M=1,NUM_PTS(I)
          STRAIN_ITEM(II)(1:) = ' '
       ENDDO
 
-      IF      ((TYPE(1:5) == 'TRIA3') .OR. (TYPE(1:5) == 'QUAD4')) THEN
+      IF  (TYPE(1:3) == 'ROD'  ) THEN
+         NUM_OTM_ENTRIES = 4
+         STRAIN_ITEM( 1) = 'Axial Strain        '
+         STRAIN_ITEM( 2) = 'MS - Axial          '
+         STRAIN_ITEM( 3) = 'Torsional Strain    '
+         STRAIN_ITEM( 4) = 'MS - Torsion        '
+
+      ELSE IF ((TYPE(1:5) == 'TRIA3') .OR. (TYPE(1:5) == 'QUAD4')) THEN
          NUM_OTM_ENTRIES = 10
          STRAIN_ITEM( 1) = 'Fibre Dist      -Z1 '  ;  STRAIN_ITEM(11) = 'Fibre Dist      +Z1 '
          STRAIN_ITEM( 2) = 'Normal X Strain -Z1 '  ;  STRAIN_ITEM(12) = 'Normal X Strain +Z1 '

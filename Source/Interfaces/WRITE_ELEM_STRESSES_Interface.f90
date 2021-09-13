@@ -28,7 +28,7 @@
 
    INTERFACE
 
-      SUBROUTINE WRITE_ELEM_STRESSES ( JSUB, NUM, IHDR, NUM_PTS )
+      SUBROUTINE WRITE_ELEM_STRESSES ( JSUB, NUM, IHDR, NUM_PTS, ITABLE )
 
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -51,6 +51,7 @@
       INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
       INTEGER(LONG), INTENT(IN)       :: NUM_PTS           ! Num diff stress points for one element (3rd dim in arrays SEi, STEi)
+      INTEGER(LONG), INTENT(IN)       :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_ELEM_STRESSES_BEGEND
   
       END SUBROUTINE WRITE_ELEM_STRESSES

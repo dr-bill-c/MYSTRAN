@@ -79,8 +79,7 @@
 ! **********************************************************************************************************************************
 ! Calc engineering stresses from array STRESS and put into array OGEL
  
-      IF      (TYPE == 'BAR     ') THEN                    ! Stresses for BAR1 elements
-
+      IF      (TYPE == 'BAR     ') THEN                    ! BAR1 elements
          C1 = ZS(1)
          C2 = ZS(2)
          D1 = ZS(3)
@@ -157,8 +156,7 @@
             FEMAP_EL_VECS(NUM_FEMAP_ROWS,12) = SBMIN
          ENDIF
 
-      ELSE IF (TYPE(1:4) == 'BUSH') THEN                   ! Stresses for BUSH elements
-
+      ELSE IF (TYPE(1:4) == 'BUSH') THEN                        ! BUSH elements
          NUM1 = NUM1 + 1         
          IF (NUM1 > SIZE_ALLOCATED) THEN
             WRITE(ERR,9200) SUBR_NAME,SIZE_ALLOCATED
@@ -166,7 +164,6 @@
             FATAL_ERR = FATAL_ERR + 1
             CALL OUTA_HERE ( 'Y' )
          ENDIF   
-
          OGEL(NUM1,1) = STRESS(1)
          OGEL(NUM1,2) = STRESS(2)
          OGEL(NUM1,3) = STRESS(3)
@@ -182,9 +179,7 @@
             FEMAP_EL_VECS(NUM_FEMAP_ROWS, 5) = STRESS(5)
             FEMAP_EL_VECS(NUM_FEMAP_ROWS, 6) = STRESS(6)
          ENDIF
- 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN                   ! Stresses for ELAS elements
-
          IF (WRITE_OGEL == 'Y') THEN
             NUM1 = NUM1 + 1    
             IF (NUM1 > SIZE_ALLOCATED) THEN
@@ -200,8 +195,7 @@
             FEMAP_EL_VECS(NUM_FEMAP_ROWS,2) = STRESS(1)
          ENDIF
  
-      ELSE IF (TYPE == 'ROD     ') THEN                    ! Stresses for ROD1 elements
-
+      ELSE IF (TYPE == 'ROD     ') THEN                    ! ROD1 elements
          SA = STRESS(1)
          ST = STRESS(2)
          ICOL = 1
@@ -250,11 +244,9 @@
  9200 FORMAT(' *ERROR  9200: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' ARRAY OGEL WAS ALLOCATED TO HAVE ',I12,' ROWS. ATTEMPT TO WRITE TO OGEL BEYOND THIS')
  
+! **********************************************************************************************************************************
  9203 FORMAT(' *ERROR  9203: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
                     ,/,14X,' INCORRECT ELEMENT TYPE = "',A,'"')
-
-
-
 
 ! **********************************************************************************************************************************
  
