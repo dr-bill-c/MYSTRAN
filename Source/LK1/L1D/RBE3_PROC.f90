@@ -102,6 +102,7 @@
       REAL(DOUBLE)                    :: X0_I(3)           ! Basic coords of AGRID_D reference point
       REAL(DOUBLE)                    :: WTi(MRBE3)        ! Weight value for an indep grid
       REAL(DOUBLE)                    :: WT                ! Sum of weights on this RBE3
+      REAL(DOUBLE)                    :: WT6(6)            ! WT6(i) = Sum of weights in comp i of an indep grid NB *** new 10/03/21
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -113,10 +114,17 @@
 ! **********************************************************************************************************************************
 ! File LINK1F contains data from the logical RBE3 cards in the input B.D. deck. For each logical RBE3 card, LINK1F has:
 !     1st record          :'RBE3' the element type. This record was read in subr RIGID_ELEM_PROC before calling this subr
-!     2nd record          : REID, AGRID_D, COMPS_D, IRBE3, WT: elem ID, reference (or dependent) grid, dependent displ comps, 
-!                           number of independent sets of grid/components/weight in the element
+
+!     2nd record          : REID   : elem ID
+!                           AGRID_D: reference (or dependent) grid
+!                           COMPS_D: dependent displ comps
+!                           IRBE3  : number of independent sets of grid/components/weight in the element
+!                           WT     : total of all of the WTi weights on the RBE3 entry (calc'd when RBE3 bdf entry read in BD_RBE3
+
 !     3rd record          : GRID(1), COMP(1), WTi(1): 1st independent grid, the independent components and the weight for this grid
+
 !     4th record          : GRID(2), COMP(2), WTi(2): 2nd independent grid, the independent components and the weight for this grid
+
 !     5th record, and on, : GRID(3), COMP(3), WTi(3): 3rd independent grid, the independent components and the weight for this grid
 
 ! The above record structure is repeated for each RBE3 logical card in the data deck (in the order in which they were read from the 
@@ -130,6 +138,12 @@
       EPS1 = EPSIL(1)
 
       JERR = 0
+
+! Init weight totals in each of the 6 components           ! NB *** new 10/03/21
+
+      DO I=1,6                                             ! NB *** new 10/03/21
+         WT6(I) = ZERO                                     ! NB *** new 10/03/21
+      ENDDO                                                ! NB *** new 10/03/21
 
 ! Start reading at the 2nd record of L1F for this RBE3 (first record, RYPE, was read above in calling subr, RIGID_ELEM_PROC):
                                                            ! Read 2nd record from L1F for this RBE3
@@ -157,6 +171,14 @@
             IERR = IERR + 1
             JERR = JERR + 1
          ENDIF
+         CALL RDOF ( COMPS_I(I), CDOF_I )                  ! NB *** new 10/03/21 + next 6 lines
+         IF (CDOF_I(1) == '1') THEN   ;   WT6(1) = WT6(1) + WTi(I)   ;   ENDIF
+         IF (CDOF_I(2) == '1') THEN   ;   WT6(2) = WT6(2) + WTi(I)   ;   ENDIF
+         IF (CDOF_I(3) == '1') THEN   ;   WT6(3) = WT6(3) + WTi(I)   ;   ENDIF
+         IF (CDOF_I(4) == '1') THEN   ;   WT6(4) = WT6(4) + WTi(I)   ;   ENDIF
+         IF (CDOF_I(5) == '1') THEN   ;   WT6(5) = WT6(5) + WTi(I)   ;   ENDIF
+         IF (CDOF_I(6) == '1') THEN   ;   WT6(6) = WT6(6) + WTi(I)   ;   ENDIF
+         write(f06,*)
       ENDDO
 
 ! Return if error
@@ -206,16 +228,16 @@
             X0_I(K) = RGRID(GRID_ID_ROW_NUM_I,K)
             DX0(K)  = X0_I(K) - X0_D(K)
          ENDDO
-                                                              ! Transform rel coords from basic to the coord sys at the ref pt
+                                                           ! Transform rel coords from basic to the coord sys at the ref pt
          CALL MATMULT_FFF_T ( T0D, DX0, 3, 3, 1, DUM3 )
-                                                              ! Calc radius and in-plane angle from ref pt to indep points
+                                                           ! Calc radius and in-plane angle from ref pt to indep points
          DXI(J) = DUM3(1)
          DYI(J) = DUM3(2)
          DZI(J) = DUM3(3)
 
-         DX_BAR = DX_BAR + WTi(J)*DXI(J)/WT
-         DY_BAR = DY_BAR + WTi(J)*DYI(J)/WT
-         DZ_BAR = DZ_BAR + WTi(J)*DZI(J)/WT
+         DX_BAR = DX_BAR + WTi(J)*DXI(J)/WT6(1)            ! NB *** new 10/03/21. Change WT to WT6(1)
+         DY_BAR = DY_BAR + WTi(J)*DYI(J)/WT6(2)            ! NB *** new 10/03/21. Change WT to WT6(2)
+         DZ_BAR = DZ_BAR + WTi(J)*DZI(J)/WT6(3)            ! NB *** new 10/03/21. Change WT to WT6(3)
       ENDDO
 
 
@@ -233,13 +255,13 @@
 
       ENDDO
 
-
+   
       CALL TDOF_COL_NUM ( 'G ', G_SET_COL_NUM )
       CALL TDOF_COL_NUM ( 'M ', M_SET_COL_NUM )
       CALL RDOF ( COMPS_D, CDOF_D )
-
 ! Calc RMG_COL_NUM_D's no's for up to 6 DOF's for ref pt
 
+!xx   CALL CALC_TDOF_ROW_NUM ( AGRID_D, ROW_NUM_START_D, 'N' )
       CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID_D, IGRID )
       ROW_NUM_START_D = TDOF_ROW_START(IGRID)
       DO I=1,6
@@ -258,6 +280,7 @@
 do_i1:DO I=1,6
 cdof_dep:IF (CDOF_D(I) == '1') THEN                        ! The I-th component is in DDOF so write this row to RMG
             IROW = I
+!xx         CALL CALC_TDOF_ROW_NUM ( AGRID_D, ROW_NUM_START_D, 'N' )
             CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID_D, IGRID )
             ROW_NUM_START_D = TDOF_ROW_START(IGRID)
             ROW_NUM = ROW_NUM_START_D + I - 1
@@ -385,7 +408,7 @@ cdof_dep:IF (CDOF_D(I) == '1') THEN                        ! The I-th component 
 do_j1:      DO J=1,IRBE3                                   ! Cycle over "indep" terms (some here may actually be dep elsewhere)
                                                            ! Get T0I (transforms global vector at AGRID_I to basic)
                CALL RDOF ( COMPS_I(J), CDOF_I )
-
+               
                CALL GET_GRID_NUM_COMPS ( AGRID_I(J), NUM_COMPS, SUBR_NAME )
                IF (NUM_COMPS /= 6) THEN
                   IERR  = IERR + 1
@@ -504,14 +527,14 @@ do_j1:      DO J=1,IRBE3                                   ! Cycle over "indep" 
       DO K=1,3
 
          IF (CDOF_I(K) == '1') THEN
-
+!xx         CALL CALC_TDOF_ROW_NUM ( AGRID_I(J), ROW_NUM_START_I, 'N' )
             CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID_I(J), IGRID )
             ROW_NUM_START_I = TDOF_ROW_START(IGRID)
             ROW_NUM = ROW_NUM_START_I + K - 1
             RMG_COL_NUM_I = TDOF(ROW_NUM,G_SET_COL_NUM)
 
-            IF (RMG_COL_NUM_I > 0) THEN
-               WRITE(L1J) RMG_ROW_NUM, RMG_COL_NUM_I, -WTi(J)*TDI(I,K)/WT
+            IF (RMG_COL_NUM_I > 0) THEN                    ! NB *** new 10/03/21 Change WT (below) to WT6(K)
+               WRITE(L1J) RMG_ROW_NUM, RMG_COL_NUM_I, -WTi(J)*TDI(I,K)/WT6(K)
                ITERM_RMG = ITERM_RMG + 1
             ELSE
                WRITE(ERR,1513) 'RBE3_PROC', AGRID_I(J) ,COMPS_I(J), RMG_COL_NUM_I
@@ -561,7 +584,7 @@ do_j1:      DO J=1,IRBE3                                   ! Cycle over "indep" 
       REAL(DOUBLE) , INTENT(IN)       :: WTi(MRBE3)        ! Weight value for an indep grid
 
 ! **********************************************************************************************************************************
-
+!xx   CALL CALC_TDOF_ROW_NUM ( AGRID_I(J), ROW_NUM_START_I, 'N' )
       CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID_I(J), IGRID )
       ROW_NUM_START_I = TDOF_ROW_START(IGRID)
       RMG_COL_NUM_START = TDOF(ROW_NUM_START_I,G_SET_COL_NUM)

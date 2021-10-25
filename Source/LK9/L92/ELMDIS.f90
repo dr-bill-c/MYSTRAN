@@ -30,15 +30,16 @@
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, meldof, MELGP, NCORD, NGRID
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, INT_SC_NUM, meldof, MELGP, NCORD, NGRID
       USE TIMDAT, ONLY                :  TSEC
       USE CONSTANTS_1, ONLY           :  ZERO
       USE DOF_TABLES, ONLY            :  TDOF, TDOF_ROW_START
       USE SUBR_BEGEND_LEVELS, ONLY    :  ELMDIS_BEGEND
       USE MODEL_STUF, ONLY            :  AGRID, CAN_ELEM_TYPE_OFFSET, GRID, CORD, BGRID, ELGP, ELDOF, GRID_ID, OFFSET, OFFDIS,     &
-                                         TE, TYPE, UEB, UEG, UEL, UGG
+                                         SCNUM, TE, TYPE, UEB, UEG, UEL, UGG
       USE COL_VECS, ONLY              :  UG_COL
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
+      USE MODEL_STUF, ONLY            :  EID, AGRID
  
       USE ELMDIS_USE_IFs
 
@@ -107,6 +108,16 @@
             UGG(I2) = UG_COL(GDOF)
          ENDDO
       ENDDO
+
+      IF (DEBUG(56) > 0) THEN
+         WRITE(F06,5000)
+         WRITE(F06,5001) TRIM(TYPE), EID, SCNUM(INT_SC_NUM)
+         WRITE(F06,*)
+         WRITE(F06,5101)
+         WRITE(F06,5002) ' UGG FOR G.P. ', AGRID(1), ':       ', (UGG(I),I=1, 6)
+         WRITE(F06,5002) ' UGG FOR G.P. ', AGRID(2), ':       ', (UGG(I),I=7,12)
+         WRITE(F06,*)
+      ENDIF
                                                            ! For all but ELAS, USERIN there is a 3 step process to get UEL from UGG 
       IF ((TYPE(1:4) /= 'ELAS') .AND. (TYPE /= 'USERIN  ')) THEN
 
@@ -119,29 +130,38 @@
                UEG(I2) = UGG(I2)
             ENDDO   
             IF (CAN_ELEM_TYPE_OFFSET == 'Y') THEN
-               IF (OFFSET(I) == 'Y') THEN                  !     Elem is offset at this node so transform UGG to UEG
-                  DXI = OFFDIS(I,1)
-                  DYI = OFFDIS(I,2)
-                  DZI = OFFDIS(I,3)
-                  PROW = 6*(I-1) + 1
-                  UEG(PROW)   = UGG(PROW)                     + DZI*UGG(PROW+4) - DYI*UGG(PROW+5)
-                  UEG(PROW+1) = UGG(PROW+1) - DZI*UGG(PROW+3)                   + DXI*UGG(PROW+5)
-                  UEG(PROW+2) = UGG(PROW+2) + DYI*UGG(PROW+3) - DXI*UGG(PROW+4) 
-                  UEG(PROW+3) = UGG(PROW+3)
-                  UEG(PROW+4) = UGG(PROW+4)
-                  UEG(PROW+5) = UGG(PROW+5)
+               IF (TYPE /= 'BUSH    ') THEN                !     BUSH local axes are et the grids, not at the BUSH location
+                  IF (OFFSET(I) == 'Y') THEN               !     Elem is offset at this node so transform UGG to UEG
+                     DXI = OFFDIS(I,1)
+                     DYI = OFFDIS(I,2)
+                     DZI = OFFDIS(I,3)
+                     PROW = 6*(I-1) + 1
+                     UEG(PROW)   = UGG(PROW)                     + DZI*UGG(PROW+4) - DYI*UGG(PROW+5)
+                     UEG(PROW+1) = UGG(PROW+1) - DZI*UGG(PROW+3)                   + DXI*UGG(PROW+5)
+                     UEG(PROW+2) = UGG(PROW+2) + DYI*UGG(PROW+3) - DXI*UGG(PROW+4) 
+                     UEG(PROW+3) = UGG(PROW+3)
+                     UEG(PROW+4) = UGG(PROW+4)
+                     UEG(PROW+5) = UGG(PROW+5)
+                  ENDIF
                ENDIF
             ENDIF
          ENDDO 
 
+         IF (DEBUG(56) > 0) THEN
+            WRITE(F06,5102)
+            WRITE(F06,5002) ' UEG for G.P. ', AGRID(1), ':       ', (UEG(I),I=1, 6)
+            WRITE(F06,5002) ' UEG for G.P. ', AGRID(2), ':       ', (UEG(I),I=7,12)
+            WRITE(F06,*)
+         ENDIF
+
 !        ---------------------------------------------------------------------------------------------------------------------------
          I2 = 0                                            ! (2) Transform from global (UEG) to basic (UEB) coords at elem nodes
          DO I=1,ELGP
-            GLOBAL_CID = GRID(BGRID(I),3)                     !     GLOBAL_CID local coord sys exists. It was checked in CORD_PROC
-            IF (GLOBAL_CID /= 0) THEN                         !     If global is not basic, do coord transformation
+            GLOBAL_CID = GRID(BGRID(I),3)                  !     GLOBAL_CID local coord sys exists. It was checked in CORD_PROC
+            IF (GLOBAL_CID /= 0) THEN                      !     If global is not basic, do coord transformation
                DO J=1,NCORD
                   IF (CORD(J,2) == GLOBAL_CID) THEN
-                     ICORD = J                                !     ICORD is the internal coord. sys. ID corresponding to GLOBAL_CID
+                     ICORD = J                             !     ICORD is the internal coord. sys. ID corresponding to GLOBAL_CID
                      EXIT
                   ENDIF
                ENDDO   
@@ -152,7 +172,7 @@
                   CALL MATMULT_FFF ( T0G, DUM1, NROWA, NCOLA, NCOLB, DUM2 )
                   CALL MATPUT ( DUM2, 6*MELGP, 1, PROW, PCOL, NROW, NCOL, UEB )
                ENDDO   
-            ELSE                                              ! If global is basic, get UEB terms directly from UEG
+            ELSE                                           ! If global is basic, get UEB terms directly from UEG
                CALL GET_GRID_NUM_COMPS ( AGRID(I), NUM_COMPS, SUBR_NAME )
                DO J=1,NUM_COMPS
                   I2 = I2 + 1
@@ -160,6 +180,13 @@
                ENDDO   
             ENDIF
          ENDDO
+
+         IF (DEBUG(56) > 0) THEN
+            WRITE(F06,5103)
+            WRITE(F06,5002) ' UEB for G.P. ', AGRID(1), ':       ', (UEB(I),I=1, 6)
+            WRITE(F06,5002) ' UEB for G.P. ', AGRID(2), ':       ', (UEB(I),I=7,12)
+            WRITE(F06,*)
+         ENDIF
  
 !        ---------------------------------------------------------------------------------------------------------------------------
          DO I=1,2*ELGP                                     ! (3) Transform from basic (UEB) to local (UEL) elem coords at elem nodes
@@ -168,6 +195,14 @@
             UEL(I1+1) = TE(2,1)*UEB(I1)+ TE(2,2)*UEB(I1+1)+ TE(2,3)*UEB(I1+2)
             UEL(I1+2) = TE(3,1)*UEB(I1)+ TE(3,2)*UEB(I1+1)+ TE(3,3)*UEB(I1+2)
          ENDDO   
+
+         IF (DEBUG(56) > 0) THEN
+            WRITE(F06,5104)
+            WRITE(F06,5002) ' UEL for G.P. ', AGRID(1), ':       ', (UEL(I),I=1, 6)
+            WRITE(F06,5002) ' UEL for G.P. ', AGRID(2), ':       ', (UEL(I),I=7,12)
+            WRITE(F06,*)
+            WRITE(F06,5000)
+         ENDIF
 
       ELSE                                                 ! ELAS, USERIN have stiff, etc, in global coords so UEL = UGG
 
@@ -183,7 +218,6 @@
          CALL DEBUG_ELMDIS
       ENDIF
 
-
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -192,6 +226,23 @@
       ENDIF
 
       RETURN
+
+! **********************************************************************************************************************************
+
+ 5000 FORMAT('=============================================================================================================',/)
+
+ 5001 FORMAT(23X, 'S U B R O U T I N E   ELMDIS   F O R   ',A,I8,', S/C ',I8)
+
+ 5002 FORMAT(A,I3,A,12ES14.6)
+
+ 5101 FORMAT(' Displacements at grids in global coords',/,' ---------------------------------------')
+ 
+ 5102 FORMAT(' Displacements at elem nodes in global coords',/,' --------------------------------------------')
+
+ 5103 FORMAT(' Displacements at elem nodes in basic coords',/,' -------------------------------------------')
+ 
+ 5104 FORMAT(' Displacements at elem nodes in local elem coords',/,' ------------------------------------------------')
+
 
 ! ##################################################################################################################################
  

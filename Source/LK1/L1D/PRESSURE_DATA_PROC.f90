@@ -107,6 +107,8 @@
 
 isubc:DO I=1,NSUB                                          ! Loop through the S/C's
  
+         NPDAT = 0                                         ! 09/21/21: Init NPDAT before each S/C. Otherwise can get error 1523
+
          IF (SUBLOD(I,1) == 0) THEN                        ! If no load for this S/C, CYCLE
             CYCLE isubc
          ENDIF
@@ -168,7 +170,6 @@ k_do2:      DO K = 1,NSID                                  ! There is a match; w
             ENDIF
 
 ! Put pressure data into PDATA
- 
             IF ((NPDAT + NFIELD) > LPDAT) THEN             ! Check for overflow in PDATA
                WRITE(ERR,1523) SUBR_NAME,LPDAT
                WRITE(F06,1523) SUBR_NAME,LPDAT

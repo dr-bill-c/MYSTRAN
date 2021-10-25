@@ -63,10 +63,12 @@
       INTEGER(LONG)                   :: J_MNR(NTERM_MRN)   !
       INTEGER(LONG)                   :: J_MXXa(NTERM_MRRcbn+NTERM_MRN)
       INTEGER(LONG)                   :: J_MXXb(NTERM_MRN+NVEC)
+!xx   INTEGER(LONG)                   :: K1,K2              ! Counters
       INTEGER(LONG)                   :: MXXn_MERGE_VEC(NDOFR+NVEC) 
       INTEGER(LONG)                   :: NTERM_MNR          ! 
       INTEGER(LONG)                   :: NTERM_MXXa         ! 
       INTEGER(LONG)                   :: NTERM_MXXb         ! 
+!xx   INTEGER(LONG)                   :: NUM_MNR_IN_ROW_I   ! Number of terms in row i of MNR
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = MERGE_MXX_BEGEND
 
       REAL(DOUBLE)                    :: GEN_MASS2(NVEC)
@@ -139,7 +141,25 @@
 
 ! Merge MXXb <-- MNR and GEN_MASS
 
+!xx    I_MXXb(1) = I_MNR(1)
+!xx    DO I=1,NVEC
+!xx       I_MXXb(I+1) = I_MNR(I+1) + I
+!xx    ENDDO
 
+!xx    K1 = 0
+!xx    K2 = 0
+!xx    DO I=1,NVEC
+!xx       NUM_MNR_IN_ROW_I = I_MNR(I+1) - I_MNR(I)
+!xx       DO J=1,NUM_MNR_IN_ROW_I
+!xx          K1 = K1 + 1
+!xx          K2 = K2 + 1
+!xx          J_MXXb(K2) = J_MNR(K1)
+!xx            MXXb(K2) =   MNR(K1)
+!xx       ENDDO
+!xx       K2 = K2 + 1
+!xx       J_MXXb(K2) = J_MNR(K1) + I
+!xx         MXXb(K2) = GEN_MASS(I)
+!xx    ENDDO
 
       CALL MERGE_MAT_COLS_SSS ( 'MNR'     , NTERM_MNR, I_MNR      , J_MNR      , MNR      , 'N', NDOFR,                           &
                                 'GEN_MASS', NVEC     , I_GEN_MASS2, J_GEN_MASS2, GEN_MASS2, 'N', NVEC,                            &

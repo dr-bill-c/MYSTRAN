@@ -114,8 +114,10 @@
       ICONT = 0
       IF (NEWTAG == OLDTAG) THEN
          ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '*       ') .AND. (NEWTAG(1:8) == '       ')) THEN
       ELSE IF ((OLDTAG(1:1) == '*') .AND. (NEWTAG(1:1) == ' ') .AND. (OLDTAG(2:8) == NEWTAG(2:8))) THEN
          ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '        ') .AND. (NEWTAG(1:8) == '*      ')) THEN
       ELSE IF ((OLDTAG(1:1) == ' ') .AND. (NEWTAG(1:1) == '*') .AND. (OLDTAG(2:8) == NEWTAG(2:8))) THEN
          ICONT = 1
       ELSE

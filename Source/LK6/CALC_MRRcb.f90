@@ -158,6 +158,7 @@
          ENDIF
                                           
          CALL DEALLOCATE_SCR_MAT ( 'CRS3' )                ! 1-7 , Now CRS1 = (MRL*DLR) + (MRL*DLR)t so deallocate CRS3
+                                                           ! I-8 , sparse add: CRS3 = MRR + CRS1 = MRR + (MRL*DLR) + (MRL*DLR)t
          CALL MATADD_SSS_NTERM ( NDOFR, 'MRR', NTERM_MRR, I_MRR, J_MRR, SYM_MRR, 'MRL*DLR + (MRL*DLR)t', NTERM_CRS1,               &
                                  I_CRS1, J_CRS1, SYM_CRS1, 'CRS3', NTERM_CRS3 )
          CALL ALLOCATE_SCR_CRS_MAT ( 'CRS3', NDOFR, NTERM_CRS3, SUBR_NAME )

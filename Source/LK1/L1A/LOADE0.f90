@@ -67,6 +67,7 @@
       LNUM_IN4_FILES = 0
 		RESTART        = 'N'
 
+!xx   REWIND (IN1)
 main: DO
 
          READ(IN1,101,IOSTAT=IOCHK) CARD

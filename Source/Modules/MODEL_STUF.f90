@@ -376,7 +376,7 @@
 !                                                              Col 4 is G1  (see PLOAD4 B.D. entry description)
 !                                                              Col 5 is G34 (see PLOAD4 B.D. entry description)
 
-      REAL(DOUBLE) , ALLOCATABLE      :: PDATA(:)            ! NPDAT x 1 array of elem press data from PLOAD1, PLOAD2 B.D. entries
+      REAL(DOUBLE) , ALLOCATABLE      :: PDATA(:)            ! NPDAT x 1 array of elem press data from PLOADi B.D. entries
 
 ! **********************************************************************************************************************************
 ! Subcase items
@@ -907,17 +907,18 @@
 !                                   1) 0 if there are no offsets for this CBAR, or
 !                                   2) Offset key (row in array BAROFF where the 3 components at each of the 2 grids can be found)
  
-!        3)   BUSH       8 words: (1st 4 read by call to subr ELEPRO, next 3 by subr BD_BUSH)
+!        3)   BUSH       9 words: (1st 5 read by call to subr ELEPRO, next 4 by subr BD_CBUSH)
 !                                 1) Elem ID
 !                                 2) Prop ID
-!                                 3) Grid A 
-!                                 4) Grid B
-!                                 5) V-vector key
-!                                 6) CID : Coord system ID in field 9 to define VVEC if VVEC not defined in fields 6-8.
+!                                 3) Number of grids (2 if both G1 and G2 >0. If CBUSH G2 is blank, then number of grids = 1)
+!                                 4) Grid A 
+!                                 5) Grid B (set to a zero if CBUSH field 4 is blank)
+!                                 6) V-vector key
+!                                 7) CID : Coord system ID in field 9 to define VVEC if VVEC not defined in fields 6-8.
 !                                          If -99 then CID field was blank so V vec is defined by G0 or X1,2,3 on CBUSH
-!                                 7) OCID: coord system ID for offset
+!                                 8) OCID: coord system ID for offset
 !                                          If -1 then use elem local system with S (not S1,2,3) as offset
-!                                 8) Offset key
+!                                 9) Offset key
 
 !                                 The V vector key is either:
 !                                   1) a grid ID if the V vector is defined using a grid, or
@@ -1115,13 +1116,24 @@
 ! BUSH element specific data
 ! --------------------------
 
+      CHARACTER(1*BYTE)               :: BUSH_VVEC_OR_CID    = 'N'
+                                                             ! Indicator if either one of BUSH_VVEC or BUSH_CID is present    
+
       INTEGER(LONG)                   :: BUSH_CID            = -99
-                                                             ! BUSH elem coord system ID (defines elem coord system if noblank on
+                                                             ! BUSH elem coord system ID (defines elem coord system if not blank on
 !                                                              the CBUSH entry. Val of -99 is default and is used to indicate that
-!                                                              the CID field on CBUSH was blak
+!                                                              the CID field on CBUSH was blank. BUSH_CID >= 0 indicates the coord
+!                                                              system number of BUSH axes (and x doesn't have to be along grid line)
+
+      INTEGER(LONG)                   :: BUSH_G2             ! Grid 2 grid number. If 0 then BUSH is grounded there
 
       INTEGER(LONG)                   :: BUSH_OCID           = -1
                                                              ! BUSH elem offset coord system ID (default -1 is local elem coord sys)
+
+      INTEGER(LONG)                   :: BUSH_VVEC           = 0
+!                                                            ! If > 0 it is the grid number used to define the BUSB v-vecror
+!                                                            ! If < 0 is row number in array VVEC where v vector components are found
+!                                                            ! If = 0 no v-vector was specified
 
       REAL(DOUBLE), ALLOCATABLE       :: BUSHOFF(:,:)        ! BAR/BEAM elem offsets (3 offsets at each of 2 grids)
 
@@ -1476,6 +1488,9 @@
       REAL(DOUBLE)                    :: TE(3,3)             = RESHAPE ( (/(ZERO, I=1,3*3)/), (/3,3/) )
                                                              ! Coord system transformation matrix (3 x 3) such that UEL = TE*UEB
 
+      REAL(DOUBLE)                    :: TE_GA_GB(3,3)       = RESHAPE ( (/(ZERO, I=1,3*3)/), (/3,3/) )
+                                                             ! Coord system transformation matrix (3 x 3) for BUSH
+
       REAL(DOUBLE)                    :: T1P(6,6)            = RESHAPE ( (/(ZERO, I=1,6*6)/), (/6,6/) )
                                                              ! Coord transf matrix for 6x6 ply material matrices (6 stresses)
 
@@ -1547,21 +1562,41 @@
 
       REAL(DOUBLE) , ALLOCATABLE      :: KE(:,:)             ! Current elem stiffness matrix
 
+      REAL(DOUBLE)                    :: KEO_BUSH(12,12)     ! BUSH elem stiffness matrix in local elem coords with offsets
+
       REAL(DOUBLE) , ALLOCATABLE      :: KED(:,:)            ! Current elem linear differential stiffness matrix
+
+      REAL(DOUBLE) , ALLOCATABLE      :: KEG(:,:)            ! Current elem stiffness matrix in global coords with offsets
 
       REAL(DOUBLE) , ALLOCATABLE      :: KEM(:,:)            ! Current elem material stiffness matrix
 
       REAL(DOUBLE) , ALLOCATABLE      :: ME(:,:)             ! Current elem mass matrix
 
-      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS_B(:,:)       ! Array of elem offset distances in basic coord system
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS(:,:)         ! Elem offset distances used in offset calcs in subr ELMOFF
+!                                                              Set equal to OFFDIS_G in subr ELMGM1 since offsets are processed
+!                                                              in global coords. So, any reference to OFFDIS after ELMGM1 will
+!                                                              mean offsets in global coords. 
 
-      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS(:,:)         ! Array of elem offset distances in global coord system
+      REAL(DOUBLE)                    :: OFFDIS_L(2,3)       ! Elem offsets for BUSH in local, CID, coord system
+
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS_O(:,:)       ! Elem offsets based on input values (saved for posterity)
+
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS_B(:,:)       ! Elem offsets in basic coord system
+
+      REAL(DOUBLE) , ALLOCATABLE      :: OFFDIS_G(:,:)       ! Elem offsets in global coord system
+
+      REAL(DOUBLE)                    :: OFFDIS_GA_GB(2,3)   ! Elem offsets for BUSH in coord sys along & normal to BUSH axis
 
       REAL(DOUBLE) , ALLOCATABLE      :: PEB(:)              ! Array of current elem nodal forces in basic coords for one S/C
 
       REAL(DOUBLE) , ALLOCATABLE      :: PEG(:)              ! Array of current elem nodal forces in global coords for one S/C
 
+      REAL(DOUBLE)                    :: PE_GA_GB(12)        ! BUSH element nodal loads in coord sys with x along the line GA-GB
+
       REAL(DOUBLE) , ALLOCATABLE      :: PEL(:)              ! Array of current elem nodal forces in local elem coords for one S/C
+!                                                              PEL is always calculated, and stays in, the local element coord system
+!                                                              If PARAM ELFORCEN is BASIC or GLOBAL then PEB or PEG is used
+!                                                              for output to the E L E M  N O D A L   F O R C E S
 
       REAL(DOUBLE) , ALLOCATABLE      :: PRESS(:,:)          ! Elem pressure data for the current elem for all subcases
 

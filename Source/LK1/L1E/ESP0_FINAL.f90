@@ -83,6 +83,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 
       EPS1 = EPSIL(1)
 
@@ -118,6 +119,7 @@ elems:DO I=1,NELE
 
          EDOF_ROW_NUM = 0                                  ! Generate element DOF'S
          DO J = 1,ELGP
+!xx         CALL CALC_TDOF_ROW_NUM ( AGRID(J), ROW_NUM_START, 'N' )
             CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID(J), IGRID )
             ROW_NUM_START = TDOF_ROW_START(IGRID)
             CALL GET_GRID_NUM_COMPS ( AGRID(J), NUM_COMPS, SUBR_NAME )

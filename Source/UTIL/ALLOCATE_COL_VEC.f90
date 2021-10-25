@@ -934,7 +934,7 @@
 ! Quit if there were errors
 
       IF (JERR /= 0) THEN
-         WRITE(ERR,1699) SUBR_NAME, CALLING_SUBR
+         WRITE(ERR,1699) TRIM(SUBR_NAME), CALLING_SUBR
          WRITE(F06,1699) SUBR_NAME, CALLING_SUBR
          CALL OUTA_HERE ( 'Y' )
       ENDIF

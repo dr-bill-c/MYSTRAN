@@ -78,6 +78,7 @@
 ! Calculate recriprocal of the condition number of the stiffness matrix. Note: LAPACK subr XERBLA wrote message on illegal argument
 ! in a call to a LAPACK subr.
 
+!xx   WRITE(SC1, * )
       CALL DPBCON( UPLO, N, KD, MATIN_FAC, KD+1, K_INORM, RCOND, WORK, IWORK, INFO, ITMAX, 'Y' )
 
       CALLED_SUBR = 'DPBCON  '

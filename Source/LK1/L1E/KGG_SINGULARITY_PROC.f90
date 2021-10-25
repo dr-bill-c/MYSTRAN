@@ -109,6 +109,7 @@
 
 ! Check individual DOF's for singularities, and set SINGLR_COMP and CONSTR_COMP for this grid
 
+!xx   CALL CALC_TDOF_ROW_NUM  ( AGRID, ROW_NUM_START, 'N' )! Det where in TDOF (not TDOFI) the DOF data begins for AGRID
       CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID, IGRID )
       ROW_NUM_START = TDOF_ROW_START(IGRID)
       CALL GET_GRID_NUM_COMPS ( AGRID, NUM_COMPS, 'N' )

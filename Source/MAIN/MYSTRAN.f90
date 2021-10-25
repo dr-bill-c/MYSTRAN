@@ -388,6 +388,9 @@ iters:      DO
          ENDIF
       ENDIF
 
+!xx   IF (POST /= 0) THEN
+!xx      CALL FILE_CLOSE ( NEU, NEUFIL, 'KEEP', 'Y' )
+!xx   ENDIF
 
 ! Write MYSTRAN END to BUG, ERR, F04, F06 and then close those files
 
@@ -419,6 +422,7 @@ iters:      DO
       CALL WRITE_FILNAM ( F06FIL, SC1, 4 )
 
       IF (WARN_ERR > 0) THEN
+   !xx   WRITE(SC1, * )
          IF (SUPWARN == 'N') THEN
             WRITE(SC1,156) WARN_ERR
          ELSE

@@ -437,7 +437,7 @@
       INTEGER(LONG), PARAMETER :: MCORD               =   5      ! No. cols allowed in dimensioning array CORD 
       INTEGER(LONG), PARAMETER :: MEDAT_CBAR          =   8      ! No. terms that go into EDAT array for CBAR   elems
       INTEGER(LONG), PARAMETER :: MEDAT_CBEAM         =   8      ! No. terms that go into EDAT array for CBEAM  elems
-      INTEGER(LONG), PARAMETER :: MEDAT_CBUSH         =   8      ! No. terms that go into EDAT array for CBEAM  elems
+      INTEGER(LONG), PARAMETER :: MEDAT_CBUSH         =   9      ! No. terms that go into EDAT array for CBEAM  elems
       INTEGER(LONG), PARAMETER :: MEDAT_CELAS1        =   6      ! No. terms that go into EDAT array for CELAS1 elems
       INTEGER(LONG), PARAMETER :: MEDAT_CELAS2        =   6      ! No. terms that go into EDAT array for CELAS3 elems
       INTEGER(LONG), PARAMETER :: MEDAT_CELAS3        =   4      ! No. terms that go into EDAT array for CELAS3 elems

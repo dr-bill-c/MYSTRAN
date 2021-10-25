@@ -278,6 +278,7 @@
 
             NTERM_KAA = NTERM_CRS1                         ! Reallocate KAA to be size of CRS1
             WRITE(SC1, * ) '    Reallocate KAA'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAA', CR13   
             CALL DEALLOCATE_SPARSE_MAT ( 'KAA' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KAA', CR13   
@@ -334,12 +335,14 @@
          CALL CNT_NONZ_IN_FULL_MAT ( 'KAA_FULL  ', KAA_FULL, NDOFA, NDOFA, SYM_KAA, NTERM_KAA, SMALL )
 
          WRITE(SC1, * ) '    Reallocate KAA'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAA', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KAA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KAA', CR13   
          CALL ALLOCATE_SPARSE_MAT ( 'KAA', NDOFA, NTERM_KAA, SUBR_NAME )
 
          IF (NTERM_KAA > 0) THEN                           ! Create new sparse arrays from KAA_FULL
+!xx         CALL FULL_TO_SPARSE_CRS ( 'KAA_FULL  ', NDOFA, NDOFA, KAA_FULL, NTERM_KAA, SYM_KAA, I_KAA, J_KAA, KAA )
             CALL DEALLOCATE_FULL_MAT ( 'KAA_FULL' )
          ENDIF
 

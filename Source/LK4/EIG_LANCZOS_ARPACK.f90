@@ -116,7 +116,7 @@
       NUM_NEG_TERMS1 = 0
       NUM_NEG_TERMS2 = 0
 
-!     IF      (SOLLIB == 'BANDED  ') THEN
+!xx   IF      (SOLLIB == 'BANDED  ') THEN
 
          IF (NDOFL < EIGESTL) THEN
             IF (EIG_FRQ2 > EPS1) THEN
@@ -132,14 +132,14 @@
             ENDIF
          ENDIF
 
-!     ELSE
+!xx   ELSE
 
-!        FATAL_ERR = FATAL_ERR + 1
-!        WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
-!        WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
-!        CALL OUTA_HERE ( 'Y' )
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,9991) SUBR_NAME, 'SOLLIB'
+!xx      WRITE(F06,9991) SUBR_NAME, 'SOLLIB'
+!xx      CALL OUTA_HERE ( 'Y' )
 
-!     ENDIF
+!xx   ENDIF
 
       IF (EIG_FRQ2 > EPS1) THEN
          WRITE(SC1,101) EIG_FRQ2, NUM_EST_EIGENS
@@ -164,7 +164,6 @@
                                         'KMSM', NTERM_KMSM, I_KMSM, J_KMSM, KMSM )
       ENDIF
 
-   
 
 ! Det bandwidth of KMSM so BANDGEN can put it in LAPACK band form. KMSM_SDIA is the number of super-diags in the band form of KMSM 
 
@@ -232,6 +231,7 @@
          CALL OURTIM
          MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
          WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KLL', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF
@@ -281,6 +281,7 @@
 
 ! Now we can deallocate KMSM (since KMSMn will be used in subr DSBAND)
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KMSM', CR13
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 
@@ -307,6 +308,11 @@
          NUM1 = NDOFL
       ENDIF
       IF (NEV > (NUM1-1)) THEN
+!xx      WARN_ERR = WARN_ERR + 1
+!xx      WRITE(ERR,4901) EIG_N2, NDOFL-1-DARPACK, NDOFL-1-DARPACK
+!xx      IF (SUPWARN == 'N') THEN
+!xx         WRITE(F06,4901) EIG_N2, NDOFL-1-DARPACK, NDOFL-1-DARPACK
+!xx      ENDIF
          NEV = NUM1 - 1
       ENDIF
 
@@ -355,6 +361,7 @@
       CALL OURTIM
       MODNAM = 'SOLVE FOR EIGENVALS/VECTORS - LANCZOS METH'
       WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+!xx   WRITE(SC1, * )                                       ! Make new line for DTBSV pass messages that overwrite each other
 
       IF (DEBUG(50) == 1) CALL DEBUG_EIG_LANCZOS
       WHICH = 'LM'
@@ -365,6 +372,8 @@
       NVEC       = IPARAM(5)                               ! With HOWMNY = 'A' we are calc'ing eigenvecs for all eigenvalues found
       NUM_EIGENS = IPARAM(5)
 
+!xx   WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KMSMn ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KMSMn' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate IWORK ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'IWORK' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RFAC  ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'RFAC' )

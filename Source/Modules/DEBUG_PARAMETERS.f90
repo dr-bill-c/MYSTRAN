@@ -131,6 +131,10 @@
 !                   = 2 Write PHIZG in full format in LINK5
 !                   = 3 Write both
 
+!        DEBUG  56  = 1 print PEL in subr CALC_ELEM_NODE_FORCES.f90
+
+!        DEBUG  57  > 0 print KGG full in LINK2.f90
+
 !        DEBUG  64    Not used
 !        DEBUG  65    Not used
 !        DEBUG  66    Not used

@@ -80,6 +80,8 @@
             IF (SUPWARN == 'N') THEN
                WRITE(F06,1921) PDOF, TYPE, EID
             ENDIF
+!xx         NUM_EMG_FATAL_ERRS = NUM_EMG_FATAL_ERRS + 1
+!xx         FATAL_ERR = FATAL_ERR + 1
             ZERO_STIFF(I) = 'Y'
          ENDIF
       ENDDO   

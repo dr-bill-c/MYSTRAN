@@ -48,7 +48,6 @@
       USE MODEL_STUF, ONLY            :  ALPVEC, BE2, BE3, BENSUM, DT, FCONV_SHEAR_THICK, EB, EBM, EID, ET, ELDOF, FCONV, KE,      &
                                          MTRL_TYPE, PCOMP_LAM, PCOMP_PROPS, PHI_SQ, PPE, PRESS, PTE, SE2, SE3, SHELL_B, SHELL_DALP,&
                                          SHELL_D, SHELL_T, SHRSUM, STE2, TYPE
-      use model_stuf, only            :  psi_hat                                                                                  !?
       USE PARAMS, ONLY                :  EPSIL, CBMIN3, CBMIN4T
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
 
@@ -313,7 +312,6 @@
   
       A4  = FOUR*AREA
       A42 = A4*AREA
-
 ! BB is used in several places below:
 
       CALL BBMIN3 ( A, B, AREA, '(bending strains)', 'Y', BB )
@@ -356,7 +354,6 @@
                FXY(I,J) = B(I)*A(J)/A42
             ENDDO   
          ENDDO 
-
          DO I=1,3
             DO J=1,3
                KB(I+3,J+3)= AREA*(SHELL_D_TRIA(2,2)*FYY(I,J) + SHELL_D_TRIA(2,3)*(FXY(I,J) + FXY(J,I)) + SHELL_D_TRIA(3,3)*FXX(I,J)) 
@@ -381,7 +378,6 @@
          DO I=4,9
             BENSUM = BENSUM + KB(I,I)
          ENDDO 
-
 ! Shear stress terms (KS)
   
          DO I=1,9
@@ -540,7 +536,6 @@
          DO I=4,9
             SHRSUM = SHRSUM + KS(I,I)
          ENDDO 
-
   ! Now calculate the finite elem shear factor, PHI_SQ  
 
          IF (SHRSUM > EPS1) THEN
@@ -548,7 +543,6 @@
          ELSE
             PHI_SQ = ZERO
          ENDIF
-
 ! Return if IERROR > 0
 
          IF (IERROR > 0) RETURN
@@ -576,7 +570,6 @@
          ENDIF
   
 ! Set lower triangular partition equal to upper partition
-
          IF (CALC_EMATS == 'Y') THEN
             DO I=2,ELDOF
                DO J=1,I-1
@@ -586,7 +579,6 @@
          ENDIF 
   
          FCONV(3) = FCONV_SHEAR_THICK                      ! NOTE: PHI_SQ removed as multiplier based on error found on 10/12/11
-
       ENDIF
   
 ! **********************************************************************************************************************************
@@ -818,13 +810,13 @@ bend: IF ((MTRL_TYPE(2) == 2) .OR. (MTRL_TYPE(2) == 8)) THEN
 
 tshr: IF ((MTRL_TYPE(3) == 2) .OR. (MTRL_TYPE(3) == 8)) THEN
 
-         WRITE(F06,99665) 'ET_TRIA '
-         DO I=1,2
-            WRITE(F06,99669) (ET0(I,J),J=1,2), (ET_TRIA(I,J),J=1,2)
-         ENDDO
-         WRITE(F06,*)   ;   WRITE(F06,*)
+         write(f06,99665) 'ET_TRIA '
+         do i=1,2
+            write(f06,99669) (et0(i,j),j=1,2), (et_tria(i,j),j=1,2)
+         enddo
+         write(f06,*)   ;   write(f06,*)
 
-         WRITE(F06,99665) 'SHELL_T_TRIA'
+         write(f06,99665) 'SHELL_T_TRIA'
          DO I=1,2
             WRITE(F06,99669) (SHELL_T0_TRIA(I,J),J=1,2), (SHELL_T_TRIA(I,J),J=1,2)
          ENDDO

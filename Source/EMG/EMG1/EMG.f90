@@ -124,7 +124,8 @@
 ! coord system, and generate the coord transformation matrix to be used in transforming the stiffness matrices in
 ! elem system to basic sys. If elem is 'ELAS' the calcd stiff matrix IS in global coord's, so TE matrix is not needed.
 
-      IF      ((TYPE      == 'ROD     ') .OR. (TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR.        &
+!xx   IF      ((TYPE      == 'ROD     ') .OR. (TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ') .OR.        &
+      IF      ((TYPE      == 'ROD     ') .OR. (TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR.                                  &
                (TYPE(1:5) == 'TRIA3'   ) .OR.                                                                                      &
                (TYPE      == 'PENTA6  ') .OR. (TYPE == 'PENTA15 ') .OR.                                                            &
                (TYPE      == 'TETRA4  ') .OR. (TYPE == 'TETRA10 ')) THEN
@@ -146,6 +147,9 @@
             CALL ELMDAT1 ( INT_ELEM_ID, WRITE_WARN )
             CALL ELMGM1 ( INT_ELEM_ID, WRITE_WARN )
          ENDIF
+
+      ELSE IF (TYPE == 'BUSH    ') THEN
+         CALL ELMGM1_BUSH ( INT_ELEM_ID, WRITE_WARN )
 
       ELSE IF ((TYPE(1:5) == 'QUAD4') .OR. (TYPE == 'SHEAR   ')) THEN
          CALL ELMGM2 ( WRITE_WARN )

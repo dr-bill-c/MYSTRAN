@@ -72,6 +72,7 @@
       REAL(DOUBLE), ALLOCATABLE       :: CCS1_COL(:)       ! One column of MAT
       REAL(DOUBLE), INTENT(OUT)       :: MAT_FULL(NRI,NCI) ! Array of terms in matrix MAT
       REAL(DOUBLE)                    :: RJUNK             ! Values read from file for matrix other than the one we want
+!xx   REAL(DOUBLE)                    :: Z0                ! Zero values read from matrix trailer
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -143,6 +144,18 @@ do_1: DO                                                   ! Loop over unknown n
                      EXIT do_1
                   ENDIF
                                                            ! Read trailer
+!xx               READ(UNT,IOSTAT=IOCHK) NC, IROW, PREC, (Z0,J=1,PREC)                     ;  REC_NUM = REC_NUM + 1
+!xx               IF      (IOCHK > 0) THEN                 ! Error reading trailer so set error condition
+!xx                  IERR2 = IERR2 + 1
+!xx                  IERRT = IERRT + IERR2
+!xx                  CALL IN4_READ_ERR ( 31 )
+!xx                  EXIT do_1
+!xx               ELSE IF (IOCHK < 0) THEN                 ! EOR or EOF  reading trailer so set error condition
+!xx                  IERR2 = IERR2 + 1
+!xx                  IERRT = IERRT + IERR2
+!xx                  CALL IN4_READ_ERR ( 32 )
+!xx                  EXIT do_1
+!xx               ENDIF
 
 
                   DEALLOCATE ( CCS1_COL )

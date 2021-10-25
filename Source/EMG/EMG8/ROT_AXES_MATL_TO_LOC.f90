@@ -125,6 +125,7 @@
          IF (DABS(MATL_AXES_ROTATE) > EPS1) THEN
 
             CALL PLANE_COORD_TRANS_21 ( MATL_AXES_ROTATE, TME, SUBR_NAME )
+!xx         CALL GET_T1_TRANSFORM_MAT
             CALL MATL_TRANSFORM_MATRIX ( TME, T1 )
                                                            ! T1_MB is for Sxx, Syy, Sxy which are rows and cols 1,2,4 from T1
             T1_MB(1,1) = T1(1,1)     ;     T1_MB(1,2) = T1(1,2)     ;     T1_MB(1,3) = T1(1,4)
@@ -222,6 +223,7 @@
                ENDDO
             ENDDO
 
+!xx         CALL GET_T1_TRANSFORM_MAT
             CALL MATL_TRANSFORM_MATRIX ( TME, T1 )
             CALL MATMULT_FFF   ( ES , T1   , 6, 6, 6, DUM66 )
             CALL MATMULT_FFF_T ( T1 , DUM66, 6, 6, 6, ES    )

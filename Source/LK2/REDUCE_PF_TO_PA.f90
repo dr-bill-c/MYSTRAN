@@ -162,6 +162,7 @@
 
             NTERM_PA = NTERM_CRS2                          ! Reallocate KAA to be size of CRS2
             WRITE(SC1, * ) '    Reallocate PA '
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PA ', CR13   
             CALL DEALLOCATE_SPARSE_MAT ( 'PA' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   PA ', CR13   
@@ -176,6 +177,7 @@
             ENDDO 
 
             WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOAt', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'GOAt' )
             CALL DEALLOCATE_SCR_MAT ( 'CRS2' )             ! Deallocate CRS2 and GOAt
@@ -222,10 +224,12 @@
          CALL CNT_NONZ_IN_FULL_MAT ( 'PA_FULL  ', PA_FULL, NDOFA, NSUB, SYM_PA, NTERM_PA, SMALL )
 
          WRITE(SC1, * ) '    Reallocate PA '
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PA ', CR13  ;  CALL DEALLOCATE_SPARSE_MAT ( 'PA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Allocate   PA ', CR13  ;  CALL ALLOCATE_SPARSE_MAT ('PA', NDOFA, NTERM_PA, SUBR_NAME)
 
          IF (NTERM_PA > 0) THEN                            ! Create new sparse arrays from PA_FULL
+!xx         CALL FULL_TO_SPARSE_CRS ( 'PA_FULL   ', NDOFA, NSUB , PA_FULL,  NTERM_PA,  SYM_PA,  I_PA,  J_PA,  PA  )
             CALL DEALLOCATE_FULL_MAT ( 'PA_FULL' )      
          ENDIF
 

@@ -48,9 +48,10 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ALLOCATE_MODEL_STUF_BEGEND
 
-      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, ME, OFFDIS, OFFDIS_B, OFFSET, KE, KED, KEM,      &
-                                         PEB, PEG, PEL, PPE, PRESS, PTE, SE1, SE2, SE3, STE1, STE2, STE3, UEB, UEG, UEL, UGG,      &
-                                         USERIN_NUM_ACT_GRDS, USERIN_ACT_COMPS, USERIN_ACT_GRIDS, USERIN_MAT_NAMES, XEB, XEL, XGL
+      USE MODEL_STUF, ONLY            :  AGRID, BE1, BE2, BE3, BGRID, DOFPIN, DT, ME, OFFDIS, OFFDIS_O, OFFDIS_B, OFFDIS_G, OFFSET,&
+                                         KE, KEG, KED, KEM, PEB, PEG, PEL, PPE, PRESS, PTE, SE1, SE2, SE3, STE1, STE2, STE3,       &
+                                         UEB, UEG, UEL, UGG, USERIN_NUM_ACT_GRDS, USERIN_ACT_COMPS, USERIN_ACT_GRIDS,              &
+                                         USERIN_MAT_NAMES, XEB, XEL, XGL
       USE MODEL_STUF, ONLY            :  CMASS, CONM2, PMASS, RPMASS, RCONM2
       USE MODEL_STUF, ONLY            :  CORD, RCORD, TN
       USE MODEL_STUF, ONLY            :  SEQ1, SEQ2
@@ -3073,6 +3074,33 @@
             ENDIF
          ENDIF
 
+         NAME = 'KEG'
+         IF (ALLOCATED(KEG)) THEN
+            WRITE(ERR,990) SUBR_NAME, NAME
+            WRITE(F06,990) SUBR_NAME, NAME
+            FATAL_ERR = FATAL_ERR + 1
+            JERR = JERR + 1
+         ELSE
+            ALLOCATE (KEG(MELDOF,MELDOF),STAT=IERR)
+            NROWS = MELDOF
+            NCOLS = MELDOF
+            MB_ALLOCATED = RDOUBLE*REAL(MELDOF)*REAL(MELDOF)/ONEPP6
+            IF (IERR == 0) THEN
+               CALL ALLOCATED_MEMORY ( NAME, MB_ALLOCATED, 'ALLOC', 'Y', CUR_MB_ALLOCATED, SUBR_NAME )
+               CALL WRITE_MEM_SUM_TO_F04 ( NAME, 'ALLOC', MB_ALLOCATED, MELDOF, MELDOF, SUBR_BEGEND )
+               DO I=1,MELDOF
+                  DO J=1,MELDOF
+                     KEG(I,J) = ZERO
+                  ENDDO
+               ENDDO 
+            ELSE
+               WRITE(ERR,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               WRITE(F06,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               FATAL_ERR = FATAL_ERR + 1
+               JERR = JERR + 1
+            ENDIF
+         ENDIF
+
          NAME = 'KED'
          IF (ALLOCATED(KED)) THEN
             WRITE(ERR,990) SUBR_NAME, NAME
@@ -3181,6 +3209,33 @@
             ENDIF
          ENDIF
 
+         NAME = 'OFFDIS_O'
+         IF (ALLOCATED(OFFDIS_O)) THEN
+            WRITE(ERR,990) SUBR_NAME, NAME
+            WRITE(F06,990) SUBR_NAME, NAME
+            FATAL_ERR = FATAL_ERR + 1
+            JERR = JERR + 1
+         ELSE
+            ALLOCATE (OFFDIS_O(MOFFSET,3),STAT=IERR)
+            NROWS = MOFFSET
+            NCOLS = 3
+            MB_ALLOCATED = RDOUBLE*REAL(MOFFSET)*REAL(3)/ONEPP6
+            IF (IERR == 0) THEN
+               CALL ALLOCATED_MEMORY ( NAME, MB_ALLOCATED, 'ALLOC', 'Y', CUR_MB_ALLOCATED, SUBR_NAME )
+               CALL WRITE_MEM_SUM_TO_F04 ( NAME, 'ALLOC', MB_ALLOCATED, MOFFSET, 3, SUBR_BEGEND )
+               DO I=1,MOFFSET
+                  DO J=1,3
+                     OFFDIS_O(I,J) = ZERO
+                  ENDDO
+               ENDDO 
+            ELSE
+               WRITE(ERR,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               WRITE(F06,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               FATAL_ERR = FATAL_ERR + 1
+               JERR = JERR + 1
+            ENDIF
+         ENDIF
+
          NAME = 'OFFDIS_B'
          IF (ALLOCATED(OFFDIS_B)) THEN
             WRITE(ERR,990) SUBR_NAME, NAME
@@ -3198,6 +3253,33 @@
                DO I=1,MOFFSET
                   DO J=1,3
                      OFFDIS_B(I,J) = ZERO
+                  ENDDO
+               ENDDO 
+            ELSE
+               WRITE(ERR,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               WRITE(F06,991) MB_ALLOCATED, NAME,SUBR_NAME, IERR
+               FATAL_ERR = FATAL_ERR + 1
+               JERR = JERR + 1
+            ENDIF
+         ENDIF
+
+         NAME = 'OFFDIS_G'
+         IF (ALLOCATED(OFFDIS_G)) THEN
+            WRITE(ERR,990) SUBR_NAME, NAME
+            WRITE(F06,990) SUBR_NAME, NAME
+            FATAL_ERR = FATAL_ERR + 1
+            JERR = JERR + 1
+         ELSE
+            ALLOCATE (OFFDIS_G(MOFFSET,3),STAT=IERR)
+            NROWS = MOFFSET
+            NCOLS = 3
+            MB_ALLOCATED = RDOUBLE*REAL(MOFFSET)*REAL(3)/ONEPP6
+            IF (IERR == 0) THEN
+               CALL ALLOCATED_MEMORY ( NAME, MB_ALLOCATED, 'ALLOC', 'Y', CUR_MB_ALLOCATED, SUBR_NAME )
+               CALL WRITE_MEM_SUM_TO_F04 ( NAME, 'ALLOC', MB_ALLOCATED, MOFFSET, 3, SUBR_BEGEND )
+               DO I=1,MOFFSET
+                  DO J=1,3
+                     OFFDIS_G(I,J) = ZERO
                   ENDDO
                ENDDO 
             ELSE
@@ -3839,8 +3921,8 @@
 ! Quit if there were errors
 
       IF (JERR /= 0) THEN
-         WRITE(ERR,999) SUBR_NAME, CALLING_SUBR
-         WRITE(F06,999) SUBR_NAME, CALLING_SUBR
+         WRITE(ERR,1699) TRIM(SUBR_NAME), CALLING_SUBR
+         WRITE(F06,1699) TRIM(SUBR_NAME), CALLING_SUBR
          CALL OUTA_HERE ( 'Y' )
       ENDIF
 
@@ -3863,7 +3945,7 @@
   991 FORMAT(' *ERROR   991: CANNOT ALLOCATE ',F10.3,' MB OF MEMORY TO ARRAY ',A,' IN SUBROUTINE ',A                               &
                     ,/,14X,' ALLOCATION STAT = ',I8)
 
-  999 FORMAT('               THE SUBR IN WHICH THESE ERRORS WERE FOUND (',A,') WAS CALLED BY SUBR ',A)
+ 1699 FORMAT('               THE SUBR IN WHICH THESE ERRORS WERE FOUND (',A,') WAS CALLED BY SUBR ',A)
 
 ! **********************************************************************************************************************************
  

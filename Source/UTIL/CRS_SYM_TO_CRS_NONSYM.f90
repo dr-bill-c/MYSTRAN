@@ -106,6 +106,7 @@
       ENDDO
 
       IF (WRT_SCREEN == 'Y') THEN
+   !xx   WRITE(SC1, * )                                    ! Write blank line to screen
       ENDIF
 
 ! Generate I2

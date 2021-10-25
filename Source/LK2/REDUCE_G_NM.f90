@@ -151,6 +151,7 @@
             WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
 
             CALL SOLVE_GMN ( PART_VEC_G_NM, PART_VEC_M )   ! First, solve for GMN
+      !xx   WRITE(SC1,  * )                                ! Advance 1 line for screen messages
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RMG', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'RMG' ) 
 
             IF (NTERM_KGG > 0) THEN                        ! Reduce KGG to KNN 
@@ -242,12 +243,39 @@
 
             CALL ALLOCATE_SPARSE_MAT ( 'KNN', NDOFN, NTERM_KNN, SUBR_NAME )
 
+!xx         DO I=1,NDOFN+1
+!xx            I_KNN(I) = I_KGG(I)
+!xx         ENDDO
+!xx
+!xx         DO I=1,NTERM_KNN
+!xx            J_KNN(I) = J_KGG(I)
+!xx              KNN(I) =   KGG(I)
+!xx         ENDDO
+!xx
             CALL ALLOCATE_SPARSE_MAT ( 'MNN', NDOFN, NTERM_MNN, SUBR_NAME )
 
+!xx         DO I=1,NDOFN+1
+!xx            I_MNN(I) = I_MGG(I)
+!xx         ENDDO
+!xx
+!xx         DO I=1,NTERM_MNN
+!xx            J_MNN(I) = J_MGG(I)
+!xx              MNN(I) =   MGG(I)
+!xx         ENDDO
+!xx
             IF ((SOL_NAME(1:5) /= 'MODES') .AND. (SOL_NAME(1:12) /= 'GEN CB MODEL')) THEN
 
                CALL ALLOCATE_SPARSE_MAT ( 'PN', NDOFN, NTERM_PN, SUBR_NAME )
 
+!xx            DO I=1,NDOFN+1
+!xx               I_PN(I) = I_PG(I)
+!xx            ENDDO
+!xx
+!xx            DO I=1,NTERM_PN
+!xx            J_PN(I) = J_PG(I)
+!xx              PN(I) =   PG(I)
+!xx            ENDDO
+!xx
             ENDIF
 
          ENDIF
@@ -256,6 +284,7 @@
 
          MODNAM = '  DEALLOCATE G-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KGG == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KGG', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KGG' )
@@ -480,6 +509,7 @@
 
          MODNAM = '  DEALLOCATE G-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KGGD == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KGGD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KGGD' )
@@ -604,6 +634,7 @@
 
       NUM_N_SET_ROWS_NULL = 0
       JSTART = 1
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 i_do: DO I=1,NDOFN
          WRITE(SC1,12345,ADVANCE='NO') I, NDOFN, CR13
          IF (I_KNN(I+1) == I_KNN(I)) THEN                  ! If true, row i is null
@@ -783,6 +814,7 @@ j_do:       DO J=JSTART,NDOFG                              ! Loop over rows of T
 
       NUM_NSET_DOFS_SPCD = 0
       JSTART = 1
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 i_do: DO I=1,NDOFN
          WRITE(SC1,22345,ADVANCE='NO') I, NDOFN, CR13
          IF ((DABS(KNN_DIAG(I)/KNN_MAX_DIAG) < AUTOSPC_RAT) .OR. (KNN_DIAG(I) < ZERO)) THEN

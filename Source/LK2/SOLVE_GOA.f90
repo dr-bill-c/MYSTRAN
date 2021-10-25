@@ -119,6 +119,7 @@
  
 ! Loop on columns of KAO(transpose)
  
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
       NTERM_GOA = 0
       DO J=1,NDOFA
@@ -208,6 +209,7 @@
 ! Reallocate memory to GOA based on the NTERM_GOA counted above and read values from scratch file into GOA arrays
 
       WRITE(SC1, * ) '    Reallocate GOA'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA'     , CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate L2_GOA_2', CR13   ;   CALL DEALLOCATE_L2_GOA_2
       WRITE(SC1,12345,ADVANCE='NO') '       Allocate   GOA'     , CR13

@@ -313,6 +313,9 @@ res13:IF (RESTART == 'N') THEN
          CALL FILE_OPEN ( L1V, LINK1V, OUNT, 'REPLACE', L1V_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
          CALL FILE_OPEN ( L1W, LINK1W, OUNT, 'REPLACE', L1W_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
          CALL FILE_OPEN ( L1X, LINK1X, OUNT, 'REPLACE', L1X_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+!xx      IF ((SOL_NAME(1:5) == 'MODES') .OR. (SOL_NAME(1:12) == 'GEN CB MODEL')) THEN
+!xx         CALL FILE_OPEN ( L1M, LINK1M, OUNT, 'REPLACE', L1M_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+!xx      ENDIF
   
 ! Get machine parameters and set EPSIL(1). This may change later if user inputs a value on a PARAM EPSIL entry.
 
@@ -720,6 +723,7 @@ res15:IF (RESTART == 'Y') THEN
          CALL ALLOCATE_DOF_TABLES ( 'TDOF_ROW_START' , SUBR_NAME )
          CALL READ_DOF_TABLES
          CALL CALC_TDOF_ROW_START ( 'N' )
+!xx      CALL ALLOCATE_MODEL_STUF ( 'GRID_SEQ, INV_GRID_SEQ', SUBR_NAME )
          IF (PRTTSET > 0) THEN
             CALL WRITE_TSET
          ENDIF

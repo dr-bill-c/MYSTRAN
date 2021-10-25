@@ -55,6 +55,7 @@
       IF (FILE_OPND) THEN
          IF (WRT_LOG >= SUBR_BEGEND) THEN
             CALL OURTIM
+!xx         WRITE(F04,9001) SUBR_NAME,TSEC
  9001       FORMAT(1X,A,' BEGN ',F10.3)
          ENDIF
       ENDIF

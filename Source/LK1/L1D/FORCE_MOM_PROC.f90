@@ -362,6 +362,7 @@ k_do221:    DO K = 1,NSID                                  ! There is a match; w
                ENDIF
             ENDIF
  
+!xx         CALL CALC_TDOF_ROW_NUM ( AGRID, ROW_NUM_START, 'N' )
             CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, AGRID, IGRID )
             ROW_NUM_START = TDOF_ROW_START(IGRID)
             K1 = 0                                         ! (2-b-iii). Put forces and moments into SYS_LOAD array

@@ -195,14 +195,38 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
             CALL ALLOCATE_SPARSE_MAT ( 'KAA', NDOFA, NTERM_KAA, SUBR_NAME )
 
+!xx      DO I=1,NDOFA+1
+!xx         I_KAA(I) = I_KFF(I)
+!xx      ENDDO
+!xx
+!xx      DO I=1,NTERM_KAA
+!xx         J_KAA(I) = J_KFF(I)
+!xx           KAA(I) =   KFF(I)
+!xx      ENDDO
 
             CALL ALLOCATE_SPARSE_MAT ( 'MAA', NDOFA, NTERM_MAA, SUBR_NAME )
 
+!xx      DO I=1,NDOFA+1
+!xx         I_MAA(I) = I_MFF(I)
+!xx      ENDDO
+!xx
+!xx      DO I=1,NTERM_MAA
+!xx         J_MAA(I) = J_MFF(I)
+!xx           MAA(I) =   MFF(I)
+!xx      ENDDO
 
             IF ((SOL_NAME(1:5) /= 'MODES') .AND. (SOL_NAME(1:12) /= 'GEN CB MODEL')) THEN
 
                CALL ALLOCATE_SPARSE_MAT ( 'PA', NDOFA, NTERM_PA, SUBR_NAME )
 
+!xx         DO I=1,NDOFA+1
+!xx            I_PA(I)  = I_PF(I)
+!xx         ENDDO
+!xx
+!xx         DO I=1,NTERM_PA
+!xx            J_PA(I) = J_PF(I)
+!xx              PA(I) =   PF(I)
+!xx         ENDDO
 
             ENDIF
 
@@ -212,6 +236,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE F-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFF  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFF' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MFF  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MFF' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PF   ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PF' )
@@ -221,6 +246,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE GOA, ABAND ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
          WRITE(SC1,*) CR13
@@ -251,6 +277,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE O SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAO', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAO' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KOO', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KOO' )
          WRITE(SC1,*) CR13
@@ -333,7 +360,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
             CALL STIFF_MAT_EQUIL_CHK ( EQCHK_OUTPUT(4),'A ', SYM_KAA, NDOFA, NTERM_KAA, I_KAA, J_KAA, KAA, KAA_DIAG, KAA_MAX_DIAG, &
                                        RBGLOBAL_ASET)
          ENDIF
-         CALL DEALLOCATE_RBGLOBAL ( 'A ' )
+!xx      CALL DEALLOCATE_RBGLOBAL ( 'A ' )
          CALL DEALLOCATE_RBGLOBAL ( 'F ' )
 
 ! **********************************************************************************************************************************
@@ -377,6 +404,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE F-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFFD  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFFD' )
          WRITE(SC1,*) CR13
 
@@ -384,6 +412,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE GOA, ABAND ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA  ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
          WRITE(SC1,*) CR13
@@ -414,6 +443,7 @@ FreeS:      IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free th
 
          MODNAM = 'DEALLOCATE O SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAOD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAOD' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KOOD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KOOD' )
          WRITE(SC1,*) CR13

@@ -66,7 +66,9 @@
       INTEGER(LONG)                   :: IFAIL_IND(NDOFL)    ! The integer numbers from array IFAIL that are not 0.
       INTEGER(LONG)                   :: IL, IU              ! For LAPACK - the lower/upper eigenvector numbers in over
 !                                                               which LAPACK will calc eigenvectors.
+!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ! NOTE: LAPACK says to dimension         IWORK(5*NDOFL),       This failed on some small DOF problems. Seems like 8*NDOFL works.
+!///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       INTEGER(LONG)                   :: IWORK(8*NDOFL)      ! Integer workspace used by LAPACK.
       INTEGER(LONG)                   :: INFO        = 0     ! Output from LAPACK routine to do eigenvalue, vector calculation:
 !                                                                 0:  successful exit
@@ -240,6 +242,7 @@
          CALL OURTIM
          MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
          WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KLL', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF

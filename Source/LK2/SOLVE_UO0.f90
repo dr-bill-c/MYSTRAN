@@ -91,6 +91,7 @@
 ! **********************************************************************************************************************************
 ! Solve for UO0 by looping on columns of PO ("loads") to get columns of UO0 ("displs")
  
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
       CALL ALLOCATE_COL_VEC ( 'UO0_COL', NDOFO, SUBR_NAME )
       DO J = 1,NSUB

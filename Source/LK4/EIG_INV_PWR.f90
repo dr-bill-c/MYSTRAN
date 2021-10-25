@@ -184,6 +184,9 @@
 ! Loop until convergence
 
       EIGEN_VAL_APPROX(0) = ONE
+!xx   WRITE(SC1, * ) '    Iterating on eigenvector number   1:'
+!xx   WRITE(SC1, * ) '       Iter No.  Approx Eigenvalue  % Change from last'
+!xx   WRITE(SC1, * )
 
       IF (DEBUG(46) == 1) THEN
          WRITE(F06,4902) EIGEN_VAL_APPROX(0)
@@ -222,6 +225,7 @@ iters:DO
                ELSE
                   CALL FBS_SUPRLU ( SUBR_NAME, 'KLL' , NDOFL, NTERM_KLL , I_KLL , J_KLL , KLL , ITER_NUM, MVEC, INFO )
                ENDIF
+
             ELSE
 
                FATAL_ERR = FATAL_ERR + 1
@@ -249,6 +253,7 @@ iters:DO
 
          IF (DABS(MAX_VALUE) > EPSIL(1)) THEN              ! If max value in eigenvector > 0 then get next eigenvalue approx
 
+!zz         EIGEN_VAL_APPROX(ITER_NUM) = ONE/MAX_VALUE     ! 11/25/11: WRONG !!    
                                                            ! If MVEC had its max numerical value repeated with a different sign,
 !                                                            the algorithm could converge to the negative of the actual eigenvalue.
 !                                                            This algorithm is valid only for positive eigens, so use ABS(MAX_VALUE)
@@ -324,6 +329,7 @@ iters:DO
          MODE_NUM(I) = I
       ENDDO
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KMSM'
       CALL DEALLOCATE_SPARSE_MAT ( 'KMSM' )
 
@@ -333,6 +339,7 @@ iters:DO
          CALL OURTIM
          MODNAM = 'DEALLOCATE SPARSE KLL ARRAYS'
          WRITE(SC1,4092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,32345,ADVANCE='NO') '       Deallocate KLL', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KLL' )
       ENDIF

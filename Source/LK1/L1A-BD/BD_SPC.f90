@@ -85,6 +85,7 @@
 !     8      Displacement   
  
  
+!xx   CC_SPC_FND = 'N'                                    ! ERROR. When this is in, then it is reset each time an SPC card is read
 
       DEPS1 = DABS(EPSIL(1))
 
@@ -95,6 +96,12 @@
 ! Check for overflow
 
       NSPC = NSPC + 1
+!xx   IF (NSPC > LSPC) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LSPC
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LSPC
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
 
 ! Read set ID
 

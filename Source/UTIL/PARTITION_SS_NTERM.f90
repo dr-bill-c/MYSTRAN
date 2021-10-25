@@ -122,6 +122,7 @@
       AROW_MAX_TERMS = 0
       NTERM_B        = 0
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
 ! Check inputs for sensibility
 
@@ -317,6 +318,7 @@ i_do: DO I=1,NROW_A                                        ! Matrix partition lo
          KBEG_MATIN = KEND_MATIN + 1
 
       ENDDO i_do
+!xx   WRITE(SC1,*) CR13
 
       IF ((DEBUG(86) == 2) .OR. (DEBUG(86) == 3)) CALL PARTITION_SS_NTERM_DEB ( '7' )
 

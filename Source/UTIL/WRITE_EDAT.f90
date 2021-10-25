@@ -53,6 +53,8 @@
 
                                                            ! Descriptors for items in EDAT for each element in the Bulk Data deck
       CHARACTER(16*BYTE)              :: EDAT_DESCR(0:MAX(2*LGUSERIN+LSUSERIN+6,25),METYPE)
+      CHARACTER(56*BYTE)              :: EDAT_EXPLAIN_CID  = ' (-99 is a placeholder to indicate that field was blank)'
+      CHARACTER(61*BYTE)              :: EDAT_EXPLAIN_VVEC = ' (neg number -i indicates v-vector is in row i in array VVEC)'
 
       INTEGER(LONG)                   :: EPNTK             ! Value in array EPNT where data begins for an element
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices
@@ -103,13 +105,13 @@
       EDAT_DESCR( 0, 3) = 'BUSH            '
       EDAT_DESCR( 1, 3) = 'Elem ID         '
       EDAT_DESCR( 2, 3) = 'Prop ID         '
-      EDAT_DESCR( 3, 3) = 'Grid A          '
-      EDAT_DESCR( 4, 3) = 'Grid B          '
-      EDAT_DESCR( 5, 3) = 'V-vector key    '
-      EDAT_DESCR( 6, 3) = 'CID             '
-      EDAT_DESCR( 7, 3) = 'OCID            '
-      EDAT_DESCR( 8, 3) = 'Offset key      '
-      EDAT_DESCR( 9, 3) = 'Location Key    '
+      EDAT_DESCR( 3, 3) = 'Number of grids '               ! If CBUSH G2 is blank BUSH has only 1 grid. Otherwise 2 grids
+      EDAT_DESCR( 4, 3) = 'Grid A          '
+      EDAT_DESCR( 5, 3) = 'Grid B          '
+      EDAT_DESCR( 6, 3) = 'V-vector key    '
+      EDAT_DESCR( 7, 3) = 'CID             '
+      EDAT_DESCR( 8, 3) = 'OCID            '
+      EDAT_DESCR( 9, 3) = 'Offset key      '
 
       EDAT_DESCR( 0, 4) = 'ELAS1           '
       EDAT_DESCR( 1, 4) = 'Elem ID         '
@@ -319,34 +321,38 @@
 ! ----------------------------------------------------------------------------------------------------------------------------------
 ! Write EDAT table
 
+      WRITE(F06,2000)
       WRITE(F06,2001)
+      WRITE(F06,2000)
+      WRITE(F06,*)
+      WRITE(F06,2002)
 
       I1 = 1
-do_1: DO I=1,NELE
+do_1: DO K=1,NELE
 
-         IF      (ETYPE(I) == 'BAR     ') THEN   ;   MEDAT = MEDAT_CBAR
-         ELSE IF (ETYPE(I) == 'BEAM    ') THEN   ;   MEDAT = MEDAT_CBEAM
-         ELSE IF (ETYPE(I) == 'BUSH    ') THEN   ;   MEDAT = MEDAT_CBUSH
-         ELSE IF (ETYPE(I) == 'ELAS1   ') THEN   ;   MEDAT = MEDAT_CELAS1
-         ELSE IF (ETYPE(I) == 'ELAS2   ') THEN   ;   MEDAT = MEDAT_CELAS2
-         ELSE IF (ETYPE(I) == 'ELAS3   ') THEN   ;   MEDAT = MEDAT_CELAS3
-         ELSE IF (ETYPE(I) == 'ELAS4   ') THEN   ;   MEDAT = MEDAT_CELAS4
-         ELSE IF (ETYPE(I) == 'HEXA8   ') THEN   ;   MEDAT = MEDAT_CHEXA8
-         ELSE IF (ETYPE(I) == 'HEXA20  ') THEN   ;   MEDAT = MEDAT_CHEXA20
-         ELSE IF (ETYPE(I) == 'PENTA6  ') THEN   ;   MEDAT = MEDAT_CPENTA6
-         ELSE IF (ETYPE(I) == 'PENTA15 ') THEN   ;   MEDAT = MEDAT_CPENTA15
-         ELSE IF (ETYPE(I) == 'PLOTEL  ') THEN   ;   MEDAT = MEDAT_PLOTEL
-         ELSE IF (ETYPE(I) == 'QUAD4   ') THEN   ;   MEDAT = MEDAT_CQUAD
-         ELSE IF (ETYPE(I) == 'QUAD4K  ') THEN   ;   MEDAT = MEDAT_CQUAD
-         ELSE IF (ETYPE(I) == 'ROD     ') THEN   ;   MEDAT = MEDAT_CROD
-         ELSE IF (ETYPE(I) == 'SHEAR   ') THEN   ;   MEDAT = MEDAT_CSHEAR
-         ELSE IF (ETYPE(I) == 'TETRA4  ') THEN   ;   MEDAT = MEDAT_CTETRA4
-         ELSE IF (ETYPE(I) == 'TETRA10 ') THEN   ;   MEDAT = MEDAT_CTETRA10
-         ELSE IF (ETYPE(I) == 'TRIA3   ') THEN   ;   MEDAT = MEDAT_CTRIA
-         ELSE IF (ETYPE(I) == 'TRIA3K  ') THEN   ;   MEDAT = MEDAT_CTRIA
-         ELSE IF (ETYPE(I) == 'USER1   ') THEN   ;   MEDAT = MEDAT_CUSER1
-         ELSE IF (ETYPE(I) == 'USERIN  ') THEN
-            EPNTK = EPNT(I)
+         IF      (ETYPE(K) == 'BAR     ') THEN   ;   MEDAT = MEDAT_CBAR
+         ELSE IF (ETYPE(K) == 'BEAM    ') THEN   ;   MEDAT = MEDAT_CBEAM
+         ELSE IF (ETYPE(K) == 'BUSH    ') THEN   ;   MEDAT = MEDAT_CBUSH
+         ELSE IF (ETYPE(K) == 'ELAS1   ') THEN   ;   MEDAT = MEDAT_CELAS1
+         ELSE IF (ETYPE(K) == 'ELAS2   ') THEN   ;   MEDAT = MEDAT_CELAS2
+         ELSE IF (ETYPE(K) == 'ELAS3   ') THEN   ;   MEDAT = MEDAT_CELAS3
+         ELSE IF (ETYPE(K) == 'ELAS4   ') THEN   ;   MEDAT = MEDAT_CELAS4
+         ELSE IF (ETYPE(K) == 'HEXA8   ') THEN   ;   MEDAT = MEDAT_CHEXA8
+         ELSE IF (ETYPE(K) == 'HEXA20  ') THEN   ;   MEDAT = MEDAT_CHEXA20
+         ELSE IF (ETYPE(K) == 'PENTA6  ') THEN   ;   MEDAT = MEDAT_CPENTA6
+         ELSE IF (ETYPE(K) == 'PENTA15 ') THEN   ;   MEDAT = MEDAT_CPENTA15
+         ELSE IF (ETYPE(K) == 'PLOTEL  ') THEN   ;   MEDAT = MEDAT_PLOTEL
+         ELSE IF (ETYPE(K) == 'QUAD4   ') THEN   ;   MEDAT = MEDAT_CQUAD
+         ELSE IF (ETYPE(K) == 'QUAD4K  ') THEN   ;   MEDAT = MEDAT_CQUAD
+         ELSE IF (ETYPE(K) == 'ROD     ') THEN   ;   MEDAT = MEDAT_CROD
+         ELSE IF (ETYPE(K) == 'SHEAR   ') THEN   ;   MEDAT = MEDAT_CSHEAR
+         ELSE IF (ETYPE(K) == 'TETRA4  ') THEN   ;   MEDAT = MEDAT_CTETRA4
+         ELSE IF (ETYPE(K) == 'TETRA10 ') THEN   ;   MEDAT = MEDAT_CTETRA10
+         ELSE IF (ETYPE(K) == 'TRIA3   ') THEN   ;   MEDAT = MEDAT_CTRIA
+         ELSE IF (ETYPE(K) == 'TRIA3K  ') THEN   ;   MEDAT = MEDAT_CTRIA
+         ELSE IF (ETYPE(K) == 'USER1   ') THEN   ;   MEDAT = MEDAT_CUSER1
+         ELSE IF (ETYPE(K) == 'USERIN  ') THEN
+            EPNTK = EPNT(K)
             NG    = EDAT(EPNTK+2)
             NS    = EDAT(EPNTK+3)
             MEDAT = MEDAT0_CUSERIN + 2*NG + NS + 1
@@ -365,23 +371,33 @@ do_1: DO I=1,NELE
             EDAT_DESCR(2*NG+NS+6,22) = '# boundary DOF  '
          ELSE
             WARN_ERR = WARN_ERR + 1
-            WRITE(ERR,1001) ETYPE(I), SUBR_NAME
+            WRITE(ERR,1001) ETYPE(K), SUBR_NAME
             IF (SUPWARN == 'N') THEN
-               WRITE(F06,1001) ETYPE(I), SUBR_NAME
+               WRITE(F06,1001) ETYPE(K), SUBR_NAME
             ENDIF
             EXIT do_1
          ENDIF
 
          DO J=1,METYPE
-            IF (ETYPE(I) == EDAT_DESCR(0,J)(1:8)) THEN
+            IF (ETYPE(K) == EDAT_DESCR(0,J)(1:8)) THEN
                L = 1
-               DO K=I1,I1+MEDAT-1
-                  IF (K == I1) THEN
-                     WRITE (F06,2002) ETYPE(I), K, EDAT(K), EDAT_DESCR(L,J)
+               DO I=I1,I1+MEDAT-1
+                  IF (I == I1) THEN
+                     WRITE (F06,2003) K, EPNT(K), ETYPE(K), I, 'EPNTK', EDAT(I), EDAT_DESCR(L,J)
                   ELSE
-                     WRITE (F06,2003)           K, EDAT(K), EDAT_DESCR(L,J)
+                     IF ( L-1 < 10) THEN
+                        IF (EDAT(I) == -99) THEN
+                           WRITE (F06,2004) I, '"  +', L-1, EDAT(I), TRIM(EDAT_DESCR(L,J)) // EDAT_EXPLAIN_CID
+                        ELSE IF ((EDAT(I) < 0) .AND. (TRIM(EDAT_DESCR(L,J)) == 'V-vector key')) THEN
+                           WRITE (F06,2004) I, '"  +', L-1, EDAT(I), TRIM(EDAT_DESCR(L,J)) // EDAT_EXPLAIN_VVEC
+                        ELSE
+                           WRITE (F06,2004) I, '"  +', L-1, EDAT(I), EDAT_DESCR(L,J)
+                        ENDIF
+                     ELSE
+                        WRITE (F06,2010) I, '"  +', L-1, EDAT(I), EDAT_DESCR(L,J)
+                     ENDIF
                   ENDIF
-                  L  = L + 1
+                  L = L + 1
                ENDDO
                I1 = I1 + MEDAT
                WRITE(F06,*)
@@ -392,7 +408,7 @@ do_1: DO I=1,NELE
 
       IF (NCUSERIN > 0) THEN
          WRITE(F06,*)
-         WRITE(F06,2004)
+         WRITE(F06,2100)
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -408,16 +424,24 @@ do_1: DO I=1,NELE
  1001 FORMAT(' *WARNING    : ELEMENT TYPE ',A,' IS NOT INCLUDED IN SUBR ',A                                                        &
                    ,/,14X, ' CANNOT PRINT EDAT TABLE AS REQUESTED BY DEBUG(108)')
 
- 2001 FORMAT(52X,'    Array EDAT of element connection data',//,                                                                   &
-             52X,'Elem type        I  EDAT(I)    Description',/)
+ 2000 FORMAT( 6X,'-------------------------------------------------------------------------------------------------')
 
- 2002 FORMAT(53X,A8,2I9,4X,A)
+ 2001 FORMAT( 5X,'|  A R R A Y S   E P N T   A N D   E D A T   O F   E L E M E N T   C O N N E C T I O N   D A T A  |')
 
- 2003 FORMAT(53X,8X,2I9,4X,A)
+ 2002 FORMAT(24X,'EDAT is an array of element connection data for all elements',/,                                                 &
+             14X,'EPNT is an array that gives the starting position in EDAT for internal element K',//,                            &
+             17X,'K         EPNT(K)   Elem type        I     Loction in EDAT   EDAT(I)   Description',/,                           &
+              9X,'Internal elem ID  (EPNTK)                         relative to EPNTK',/)
 
- 2004 FORMAT(37X,'NOTE: In the above table for USERIN elements :',/,                                                               &
-             37X,'      (1) "Comps  i" are the boundary displacement components for "Grid i"',/,                                   &
-             37X,'      (2) "SPOINT i" are the scalar points for the modal DOF for the USERIN element',/)
+ 2003 FORMAT(10X,I8,I13,7X,A8,I9,9X,A,I13,7X,A)
+
+ 2004 FORMAT(47X,I8,11X,A,I1,I11,7X,A)
+
+ 2010 FORMAT(47X,I8,11X,A,I2,I10,7X,A)
+
+ 2100 FORMAT(8X,'NOTE: In the above table for USERIN elements :',/,                                                                &
+             8X,'      (1) "Comps  i" are the boundary displacement components for "Grid i"',/,                                    &
+             8X,'      (2) "SPOINT i" are the scalar points for the modal DOF for the USERIN element',/)
 
 ! **********************************************************************************************************************************
 

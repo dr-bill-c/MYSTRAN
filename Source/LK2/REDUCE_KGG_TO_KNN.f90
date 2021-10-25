@@ -65,6 +65,7 @@
       INTEGER(LONG)                   :: ITRNSPB             ! Transpose indicator for matrix multiply routine
       INTEGER(LONG)                   :: KNN_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KNM_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
+!xx   INTEGER(LONG)                   :: KMN_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KMM_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: NTERM_CCS1          ! Number of terms in matrix CCS1  
       INTEGER(LONG)                   :: NTERM_CRS1          ! Number of terms in matrix CRS1  
@@ -125,6 +126,22 @@
 
       IF ((NDOFN > 0) .AND. (NDOFM > 0)) THEN
 
+!xx      CALL PARTITION_SS_NTERM ( 'KGG', NTERM_KGG, NDOFG, NDOFG, SYM_KGG, I_KGG, J_KGG,      PART_VEC_G_NM, PART_VEC_G_NM,       &
+!xx                                 NUM2, NUM1, KMN_ROW_MAX_TERMS, 'KMN', NTERM_KMN, SYM_KMN ) 
+!xx      IF (NTERM_KMN /= NTERM_KNM) THEN
+!xx         FATAL_ERR = FATAL_ERR + 1
+!xx         WRITE(ERR,936) SUBR_NAME, NTERM_KMN, NTERM_KNM
+!xx         WRITE(F06,936) SUBR_NAME, NTERM_KMN, NTERM_KNM
+!xx         CALL OUTA_HERE ( 'Y' )
+!xx      ENDIF
+!xx
+!xx      CALL ALLOCATE_SPARSE_MAT ( 'KMN', NDOFM, NTERM_KMN, SUBR_NAME )
+!xx
+!xx      IF (NTERM_KMN > 0) THEN
+!xx         CALL PARTITION_SS ( 'KGG', NTERM_KGG, NDOFG, NDOFG, SYM_KGG, I_KGG, J_KGG, KGG, PART_VEC_G_NM, PART_VEC_G_NM,          &
+!xx                              NUM2, NUM1, KMN_ROW_MAX_TERMS, 'KMN', NTERM_KMN, NDOFM, SYM_KMN, I_KMN, J_KMN, KMN )
+!xx      ENDIF
+!xx
          NTERM_KMN = NTERM_KNM
          CALL ALLOCATE_SPARSE_MAT ( 'KMN', NDOFM, NTERM_KNM, SUBR_NAME )
 
@@ -233,6 +250,7 @@
 
             NTERM_KNN = NTERM_CRS3                         ! I-11, reallocate KNN to be size of CRS3
             WRITE(SC1, * ) '    Reallocate KNN'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNN', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'KNN' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KNN', CR13
@@ -342,6 +360,7 @@
 
             NTERM_KNN = NTERM_CRS2                         ! II-11, reallocate KNN to be size of CRS2
             WRITE(SC1, * ) '    Reallocate KNN'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNN', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'KNN' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KNN', CR13
@@ -383,6 +402,7 @@
          ENDIF
 
          WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GMNt', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'GMNt' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate HMN ', CR13
@@ -462,12 +482,14 @@
          CALL CNT_NONZ_IN_FULL_MAT ( 'KNN_FULL  ', KNN_FULL, NDOFN, NDOFN, SYM_KNN, NTERM_KNN, SMALL )
 
          WRITE(SC1, * ) '    Reallocate KNN'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNN', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'KNN' )
          WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KNN', CR13
          CALL ALLOCATE_SPARSE_MAT ( 'KNN', NDOFN, NTERM_KNN, SUBR_NAME )
 
          IF (NTERM_KNN > 0) THEN                           ! Create new sparse arrays from KNN_FULL
+!xx         CALL FULL_TO_SPARSE_CRS ( 'KNN_FULL  ', NDOFN, NDOFN, KNN_FULL, NTERM_KNN, SYM_KNN, I_KNN, J_KNN, KNN )
             CALL DEALLOCATE_FULL_MAT ( 'KNN_FULL' )
          ENDIF
 

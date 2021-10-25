@@ -82,6 +82,7 @@
                WRITE(F21) PPE(J,I)
             ENDDO 
          ENDDO 
+!xx      WRITE(F21) 'FINISHED'
       ENDIF
    
 ! Write element mass matrix to disk file if requested
@@ -96,6 +97,7 @@
                WRITE(F22) ME(I,J)
             ENDDO
          ENDDO
+!xx      WRITE(F22) 'FINISHED'
       ENDIF   
 
 ! Write element stiffness matrix to disk file if requested
@@ -110,6 +112,7 @@
                WRITE(F23) KE(I,J)
             ENDDO
          ENDDO
+!xx      WRITE(F23) 'FINISHED'
       ENDIF   
  
 ! Write element stress recovery matrices to disk file if requested
@@ -162,6 +165,7 @@
 
          ENDDO
 
+!xx      WRITE(F24) 'FINISHED'
       ENDIF
  
 ! Write element loads, displ's to disk file if requested
@@ -186,6 +190,7 @@
                WRITE(F25) UEG(I),PEG(I)
             ENDDO
          ENDIF
+!xx      WRITE(F25) 'FINISHED'
       ENDIF
  
 ! **********************************************************************************************************************************

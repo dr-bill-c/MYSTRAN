@@ -47,6 +47,7 @@
       INTEGER(LONG)                   :: COMP_JUNK         ! A displ component read from file LINK1S that we do not need
       INTEGER(LONG)                   :: GID               ! Grid for an MPC read from file LINK1S
       INTEGER(LONG)                   :: GID_JUNK          ! An grid read from file LINK1S that we do not need
+!xx   INTEGER(LONG)                   :: GRID_ID_ROW_NUM   ! Row number, in array GRID_ID, where an actual grid ID resides
       INTEGER(LONG)                   :: G_SET_COL_NUM     ! Col no., in TDOF array, of the G-set DOF list
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices
       INTEGER(LONG)                   :: IGRID             ! Internal grid ID
@@ -127,6 +128,7 @@ j_do3:   DO J=1,NUM_MPCSIDS
                   CALL OUTA_HERE ( 'Y' )
                ENDIF
                                                            ! Get row num (in GRID_ID) corresponding to grid GID (we know GID exists)
+!xx            CALL CALC_TDOF_ROW_NUM ( GID, ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GID, IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
                                                            ! Determine the row and col for COEFF in RMG and write to L1J
@@ -157,9 +159,18 @@ j_do3:   DO J=1,NUM_MPCSIDS
                      CALL OUTA_HERE ( 'Y' )
                   ENDIF
 
+!xx05/05/07       CALL GET_ARRAY_ROW_NUM ( '', SUBR_NAME, NGRID, GRID_ID, GID, GRID_ID_ROW_NUM )
+!xx05/05/07          IF (GRID_ID_ROW_NUM == -1) THEN
+!xx05/05/07             WRITE(ERR,1822) 'GRID', GID, 'MPC', MPCSIDS(J)
+!xx05/05/07             WRITE(F06,1822) 'GRID', GID, 'MPC', MPCSIDS(J)
+!xx05/05/07             FATAL_ERR = FATAL_ERR + 1
+!xx05/05/07             CYCLE j_do3
+!xx05/05/07          ENDIF
+!xx               CALL CALC_TDOF_ROW_NUM ( GID, ROW_NUM_START, 'N' )
                   CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GID, IGRID )
                   ROW_NUM_START = TDOF_ROW_START(IGRID)
 
+!xx05/05/07       ROW_NUM = 6*(GRID_ID_ROW_NUM - 1) + COMP
                   ROW_NUM = ROW_NUM_START + COMP - 1
                   RMG_COL_NUM = TDOF(ROW_NUM,G_SET_COL_NUM)
                   IF (RMG_COL_NUM > 0) THEN

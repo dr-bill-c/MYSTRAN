@@ -77,7 +77,9 @@
       IF (NOU4_UNITS > 0) THEN
          WRITE(F06,*)
          WRITE(ERR,288) NUM_OU4_REQUESTS, NOU4_UNITS
+!xx      IF (SUPINFO == 'N') THEN
             WRITE(F06,288) NUM_OU4_REQUESTS, NOU4_UNITS
+!xx      ENDIF
          DO I=1,MOU4                                       ! Open and then close as "KEEP' the requested OUTPUT4 files
             NOU4_FILES = 0
             IF (OU4STAT(I) == 'KEEP') THEN

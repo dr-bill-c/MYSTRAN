@@ -129,6 +129,7 @@
 
 ! If we got here, there was no problem with NTERMS, so read matrix
 
+!xx   WRITE(SC1, * )
       OLD_ROW_NUM = 0
       IERROR  = 0
       WRITE(SC1,12345,ADVANCE='NO') NAME, OLD_ROW_NUM+1, NROWS, NTERMS, CR13

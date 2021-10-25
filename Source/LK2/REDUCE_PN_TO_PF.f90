@@ -118,6 +118,7 @@
 
 ! Deallocate PN
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PN ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PN' )
 
 ! Reduce PN to PF = PF(bar) - PFYS where PF(bar) was original F-set partition from PN. If there are no enforced displs then
@@ -163,6 +164,7 @@
                ENDDO 
             ENDDO
 
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PFYS1', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PFYS1' )
 
 
@@ -185,7 +187,9 @@
                                                            ! Recalc NTERM_PF for new PF = PF_TMP + PFYS
                   CALL MATADD_SSS_NTERM ( NDOFF, 'PF-bar', NTERM_PF_TMP, I_PF_TMP, J_PF_TMP, SYM_PF_TMP,                           &
                                                  'KFse*YSe', NTERM_PFYS  , I_PFYS  , J_PFYS  , SYM_PFYS  , 'PFYS', NTERM_PF )
+            !xx   WRITE(SC1, * )                           ! Advance 1 line for screen messages         
                   WRITE(SC1, * ) '    Reallocate PF '
+            !xx   WRITE(SC1, * )                           ! Advance 1 line for screen messages         
                   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PF ', CR13
                   CALL DEALLOCATE_SPARSE_MAT ( 'PF' )
                   WRITE(SC1,12345,ADVANCE='NO') '       Allocate   PF ', CR13
@@ -193,6 +197,7 @@
 
                   CALL MATADD_SSS ( NDOFF, 'PF-bar', NTERM_PF_TMP, I_PF_TMP, J_PF_TMP, PF_TMP, ALPHA,                              &
                                    'KFse*YSe'  , NTERM_PFYS  , I_PFYS  , J_PFYS  , PFYS  , BETA ,'PF', NTERM_PF, I_PF, J_PF, PF)
+            !xx   WRITE(SC1, * )                           ! Advance 1 line for screen messages         
                   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PF_TMP', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PF_TMP' )
          
                ENDIF
@@ -203,6 +208,7 @@
 
                   NTERM_PF = NTERM_PFYS*NSUB
                   WRITE(SC1, * ) '    Reallocate PF '
+            !xx   WRITE(SC1, * )                           ! Advance 1 line for screen messages         
                   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PF ', CR13
                   CALL DEALLOCATE_SPARSE_MAT ( 'PF' )
                   WRITE(SC1,12345,ADVANCE='NO') '       Allocate   PF ', CR13
@@ -236,6 +242,7 @@
             ENDIF 
 
             WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PFYS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PFYS' )
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFSe', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFSe' )
 
@@ -302,6 +309,7 @@
          ENDIF
 
          IF (NTERM_PF > 0) THEN                            ! Create new sparse arrays from PF_FULL
+!xx         CALL FULL_TO_SPARSE_CRS ( 'PF_FULL   ', NDOFF, NSUB , PF_FULL,  NTERM_PF,  SYM_PF,  I_PF,  J_PF,  PF  )
             CALL DEALLOCATE_FULL_MAT ( 'PF_FULL' )      
          ENDIF
 

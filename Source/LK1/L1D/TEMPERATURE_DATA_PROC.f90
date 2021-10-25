@@ -1007,6 +1007,7 @@ cont_cards: DO                                             ! Top of loop for rea
          IF (SID == SUBLOD(I,2)) THEN
             IF (TPNT(IELEM,TCASE1(I)) /= 0) THEN
                EL_REDUNDANT_TEMP = EL_REDUNDANT_TEMP + 1
+!xx            FATAL_ERR = FATAL_ERR + 1
                WARN_ERR = WARN_ERR + 1
                WRITE(ERR,1531) NAME,ESORT1(IELEM) 
                IF (SUPWARN == 'N') THEN

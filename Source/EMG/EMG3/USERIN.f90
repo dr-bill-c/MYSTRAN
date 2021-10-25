@@ -299,6 +299,8 @@
 
       IF ((OPT(5) == 'Y') .AND. (USERIN_LOAD_MAT_NAME(1:) /= ' ')) THEN
 
+         CALL DEALLOCATE_IN4_FILES ( 'IN4_MAT' )
+         CALL ALLOCATE_IN4_FILES ( 'IN4_MAT', NRC, NSUB, SUBR_NAME//' at 2nd occurance' )
 
          CALL READ_IN4_FULL_MAT ( TYPE, EID, USERIN_LOAD_MAT_NAME, NRC, NSUB, IN4, IN4FIL(USERIN_IN4_INDEX), IN4_MAT,              &
                                   IERR, SUBR_NAME//' (for USERIN load matrix)' )
@@ -314,7 +316,9 @@
             ENDDO
          ENDDO
 
+         IF (DEBUG(180) > 0) CALL DEB_USERIN ( 19 )
 
+         CALL DEALLOCATE_IN4_FILES ( 'IN4_MAT' )
 
       ENDIF
 

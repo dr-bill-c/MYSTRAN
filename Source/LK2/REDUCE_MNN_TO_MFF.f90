@@ -50,6 +50,7 @@
       INTEGER(LONG), INTENT(IN)       :: PART_VEC_N_FS(NDOFN)   ! Partitioning vector (N set into F and S sets) 
       INTEGER(LONG)                   :: MFF_ROW_MAX_TERMS      ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: MFS_ROW_MAX_TERMS      ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
+!xx   INTEGER(LONG)                   :: MSF_ROW_MAX_TERMS      ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: MSS_ROW_MAX_TERMS      ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG), PARAMETER        :: NUM1        = 1        ! Used in subr's that partition matrices
       INTEGER(LONG), PARAMETER        :: NUM2        = 2        ! Used in subr's that partition matrices
@@ -118,11 +119,27 @@
 
       IF ((NDOFF > 0) .AND. (NDOFS > 0)) THEN
 
+!xx      CALL PARTITION_SS_NTERM ( 'MNN', NTERM_MNN, NDOFN, NDOFN, SYM_MNN, I_MNN, J_MNN,      PART_VEC_N_FS, PART_VEC_N_FS,       &
+!xx                                 NUM2, NUM1, MSF_ROW_MAX_TERMS, 'MSF', NTERM_MSF, SYM_MFS ) 
 
+!xx      IF (NTERM_MSF /= NTERM_MFS) THEN
+!xx         FATAL_ERR = FATAL_ERR + 1
+!xx         WRITE(ERR,936) SUBR_NAME, NTERM_MSF, NTERM_MFS
+!xx         WRITE(F06,936) SUBR_NAME, NTERM_MSF, NTERM_MFS
+!xx         CALL OUTA_HERE ( 'Y' )
+!xx      ENDIF
 
+!xx      CALL ALLOCATE_SPARSE_MAT ( 'MSF', NDOFS, NTERM_MSF, SUBR_NAME )
 
+!xx      IF (NTERM_MSF > 0) THEN
+!xx         CALL PARTITION_SS ( 'MNN', NTERM_MNN, NDOFN, NDOFN, SYM_MNN, I_MNN, J_MNN, MNN, PART_VEC_N_FS, PART_VEC_N_FS,          &
+!xx                              NUM2, NUM1, MSF_ROW_MAX_TERMS, 'MSF', NTERM_MSF, NDOFS, SYM_MFS, I_MSF, J_MSF, MSF )
 
+!xx         CLOSE_IT   = 'Y'
+!xx         CLOSE_STAT = 'KEEP'
+!xx         CALL WRITE_MATRIX_1 ( LINK2S, L2S, CLOSE_IT, CLOSE_STAT, L2S_MSG, 'MSF', NTERM_MSF, NDOFS, I_MSF, J_MSF, MSF )
 
+!xx      ENDIF
 
          NTERM_MSF = NTERM_MFS
          CALL ALLOCATE_SPARSE_MAT ( 'MSF', NDOFS, NTERM_MSF, SUBR_NAME )

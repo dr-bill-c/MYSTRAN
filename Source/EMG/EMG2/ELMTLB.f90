@@ -112,7 +112,9 @@
                CALL MATMULT_FFF_T ( TE, DUM12, NROWA, NCOLA, NCOLB, DUM11 )
                CALL MATPUT ( DUM11, MELDOF, MELDOF, BEG_ROW, BEG_COL, NROW, NCOL, KE )
             ENDDO 
-         ENDDO 
+         ENDDO
+
+ 
  
          DO I=1,ELDOF                                      ! Set lower portion of KE using symmetry.
             DO J=1,I-1

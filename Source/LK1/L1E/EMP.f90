@@ -122,6 +122,7 @@
       ENDIF
  
       IERROR = 0
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 elems:DO I=1,NELE
 
          WRITE(SC1,12345,ADVANCE='NO') I, NELE, CR13
