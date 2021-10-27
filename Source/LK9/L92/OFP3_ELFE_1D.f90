@@ -375,6 +375,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
 
       IF ((POST /= 0) .AND. (ANY_ELFE_OUTPUT > 0)) THEN
 
+! bar    ---------------------------------------------------------------------------------------------------------------------------
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCBAR, 8, SUBR_NAME )
          DO J=1,NELE                                       ! Write out BAR engineering forces
@@ -410,6 +411,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+! bush   ---------------------------------------------------------------------------------------------------------------------------
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCBUSH, 6, SUBR_NAME )
          DO J=1,NELE                                       ! Write out BUSH engineering forces
@@ -430,20 +432,81 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
                CALL ELMDIS
                CALL CALC_ELEM_NODE_FORCES
 
-               DX = OFFDIS_L(2,1)
-               DY = OFFDIS_L(2,2)
-               DZ = OFFDIS_L(2,3)
+               IF (ETYPE(J)(1:4) == 'BUSH') THEN
 
-               DUM21(1) =  PEL(7)
-               DUM21(2) =  PEL(8)
-               DUM21(3) =  PEL(9)
-               DUM31(1) =  PEL(8)*DZ - PEL(9)*DY + PEL(10)
-               DUM31(2) = -PEL(7)*DZ - PEL(9)*DX + PEL(11)
-               DUM31(3) =  PEL(7)*DY + PEL(8)*DX + PEL(12)
-               DO K=1,3
-                  EEF(K)   = DUM21(K)
-                  EEF(K+3) = DUM31(K)
-               ENDDO
+                  DO K=1,3                           ! Calculate element forces in GA-GB axes (x along line from GA to GB)
+                    DUM21(K) = ZERO
+                    DUM22(K) = ZERO
+                    DUM31(K) = ZERO
+                    DUM32(K) = ZERO
+                  ENDDO
+
+                  IF (ELEM_LEN_12 > .0001D0) THEN    ! Element has a GA-GB axis so start with PE_GA_GB
+
+                     DX = ABS(OFFDIS_GA_GB(2,1))
+                     DY =    (OFFDIS_GA_GB(2,2))
+                     DZ =    (OFFDIS_GA_GB(2,3))
+
+                     DUM21(1) =  PE_GA_GB(7)
+                     DUM21(2) =  PE_GA_GB(8)
+                     DUM21(3) =  PE_GA_GB(9)
+                     DUM31(1) =  PE_GA_GB(8)*DZ - PE_GA_GB(9)*DY + PE_GA_GB(10)
+                     DUM31(2) = -PE_GA_GB(7)*DZ - PE_GA_GB(9)*DX + PE_GA_GB(11)
+                     DUM31(3) =  PE_GA_GB(7)*DY + PE_GA_GB(8)*DX + PE_GA_GB(12)
+
+                     DO K=1,3
+                        EEF(K)   = DUM21(K)
+                        EEF(K+3) = DUM31(K)
+                     ENDDO
+                                                     ! There is a local elem coord system (via CID or v-vec)
+                     IF ((BUSH_CID >= 0) .OR. (BUSH_VVEC /= 0)) THEN
+
+                        DO K=1,3                     ! Transform elem forces from GA-GB axes to basic
+                           DO L=1,3
+                              TET_GA_GB(K,L) = TE_GA_GB(L,K)
+                           ENDDO
+                        ENDDO
+
+                        DO K=1,3
+                        DUM22(K) = ZERO
+                        DUM32(K) = ZERO
+                        ENDDO
+
+                        CALL MATMULT_FFF ( TET_GA_GB, DUM21, 3, 3, 1, DUM22 )
+                        CALL MATMULT_FFF ( TET_GA_GB, DUM31, 3, 3, 1, DUM32 )
+                        DO K=1,3
+                           EEF(K)   = DUM22(K)
+                           EEF(K+3) = DUM32(K)
+                        ENDDO
+
+                     ENDIF
+                                                     ! Transform elem forces from basic to local
+                     IF ((BUSH_CID > 0) .OR. (BUSH_VVEC /= 0)) THEN
+
+                        DO K=1,3
+                           DO L=1,3
+                              TET(K,L) = TE(L,K)
+                           ENDDO
+                        ENDDO
+
+                        CALL MATMULT_FFF ( TE, DUM22, 3, 3, 1, DUM21 )
+                        CALL MATMULT_FFF ( TE, DUM32, 3, 3, 1, DUM31 )
+                        DO K=1,3
+                           EEF(K)   = DUM21(K)
+                           EEF(K+3) = DUM31(K)
+                        ENDDO
+
+                     ENDIF
+
+                  ELSE                               ! Element has GA, GB coincident so element loads are in PEL
+
+                     DO K=1,6
+                        EEF(K) = PEL(K+6)
+                     ENDDO
+
+                  ENDIF
+
+               ENDIF
 
                FEMAP_EL_VECS(NUM_FROWS,1) = EEF(1)
                FEMAP_EL_VECS(NUM_FROWS,2) = EEF(2)
@@ -451,6 +514,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
                FEMAP_EL_VECS(NUM_FROWS,4) = EEF(4)
                FEMAP_EL_VECS(NUM_FROWS,5) = EEF(5)
                FEMAP_EL_VECS(NUM_FROWS,6) = EEF(6)
+
             ENDIF
          ENDDO
          IF (NUM_FROWS > 0) THEN
@@ -458,6 +522,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+! rod    ---------------------------------------------------------------------------------------------------------------------------
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCROD, 8, SUBR_NAME )
          DO J=1,NELE                                       ! Write out ROD engineering forces
@@ -488,6 +553,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
 
 ! For ELAS we need to calculate elem engr forces from the stresses since there is no "local" elem coord system
 
+! elas1  ---------------------------------------------------------------------------------------------------------------------------
          NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS1, 2, SUBR_NAME )
@@ -521,6 +587,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+! elas2  ---------------------------------------------------------------------------------------------------------------------------
          NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS2, 2, SUBR_NAME )
@@ -554,6 +621,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+! elas3  ---------------------------------------------------------------------------------------------------------------------------
          NDUM = 0
          NUM_FROWS= 0
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS3, 2, SUBR_NAME )
@@ -587,6 +655,7 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
 
+! elas4  ---------------------------------------------------------------------------------------------------------------------------
          NDUM = 0
          NUM_FROWS= 0                                      ! 'N' in call to EMG means do not write to BUG file
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCELAS4, 2, SUBR_NAME )
