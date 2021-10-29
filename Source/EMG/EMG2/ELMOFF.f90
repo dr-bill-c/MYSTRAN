@@ -38,8 +38,7 @@
       USE SUBR_BEGEND_LEVELS, ONLY    :  ELMOFF_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
       USE MODEL_STUF, ONLY            :  CAN_ELEM_TYPE_OFFSET, ELDOF, ELGP, EID, KE, ME, NUM_EMG_FATAL_ERRS,                       &
-                                         OFFDIS_G, OFFSET, PPE, PTE, SE1, SE2, SE3, TYPE
- 
+                                         OFFDIS, OFFSET, PPE, PTE, SE1, SE2, SE3, TYPE
       USE ELMOFF_USE_IFs
 
       IMPLICIT NONE
@@ -155,9 +154,9 @@
          DYI = ZERO
          DZI = ZERO
          IF (OFFSET(I) == 'Y') THEN
-            DXI = OFFDIS_G(I,1)
-            DYI = OFFDIS_G(I,2)
-            DZI = OFFDIS_G(I,3)
+            DXI = OFFDIS(I,1)
+            DYI = OFFDIS(I,2)
+            DZI = OFFDIS(I,3)
          ENDIF
          DO J=1,6
             Ei(I,J,J) = ONE
@@ -197,7 +196,6 @@
          CALL MATMULT_FFF   ( KE1, E     , 6*ELGP, 6*ELGP, 6*ELGP, DUM_KE )
          CALL MATMULT_FFF_T ( E  , DUM_KE, 6*ELGP, 6*ELGP, 6*ELGP, KE1    )
 
-
 ! Set KE = KE1 for 6*ELGP by 6*ELGP terms
 
          DO J=1,6*ELGP
@@ -216,9 +214,9 @@
          DYI = ZERO
          DZI = ZERO
          IF (OFFSET(I) == 'Y') THEN
-            DXI = OFFDIS_G(I,1)
-            DYI = OFFDIS_G(I,2)
-            DZI = OFFDIS_G(I,3)
+            DXI = OFFDIS(I,1)
+            DYI = OFFDIS(I,2)
+            DZI = OFFDIS(I,3)
             IF (OPT(2) == 'Y') THEN                        ! Process PTE. Generate E'* PTE
                DO J=1,3
                   DO K=1,NTSUB
@@ -239,9 +237,9 @@
                DO J=I,ELGP
                   JJ = 6*(J-1)
                   IF (OFFSET(J) == 'Y') THEN
-                     DXJ = OFFDIS_G(J,1)
-                     DYJ = OFFDIS_G(J,2)
-                     DZJ = OFFDIS_G(J,3)
+                     DXJ = OFFDIS(J,1)
+                     DYJ = OFFDIS(J,2)
+                     DZJ = OFFDIS(J,3)
 
                      DO K=1,3                              ! Partition ME for this grid point pair (i,j) into 4-3x3 matrices
                         DO L=1,3
@@ -387,9 +385,9 @@
                DO J=I,ELGP
                   JJ = 6*(J-1)
                   IF (OFFSET(J) == 'Y') THEN
-                     DXJ = OFFDIS_G(J,1)
-                     DYJ = OFFDIS_G(J,2)
-                     DZJ = OFFDIS_G(J,3)
+                     DXJ = OFFDIS(J,1)
+                     DYJ = OFFDIS(J,2)
+                     DZJ = OFFDIS(J,3)
 
                      DO K=1,3                              ! Partition KE for this grid point pair (i,j) into 4-3x3 matrices
                         DO L=1,3
@@ -500,7 +498,7 @@
  3006 format(6(1es14.6))
 
  1955 FORMAT(' *ERROR  1955: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURED FOR ELEMENT NUMBER ',I8)
+                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURRED FOR ELEMENT NUMBER ',I8)
 
 ! ##################################################################################################################################
 
