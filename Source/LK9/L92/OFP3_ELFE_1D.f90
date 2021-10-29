@@ -38,9 +38,9 @@
       USE CONSTANTS_1, ONLY           :  ZERO, HALF
       USE FEMAP_ARRAYS, ONLY          :  FEMAP_EL_NUMS, FEMAP_EL_VECS
       USE PARAMS, ONLY                :  OTMSKIP, POST
-      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, BUSH_CID, BUSH_VVEC, EDAT, ELAS_COMP, ELEM_LEN_12, EPNT, ETYPE, EID,     &
-                                         ELMTYP, ELOUT, FCONV, METYPE, NUM_EMG_FATAL_ERRS, OFFDIS_GA_GB, OFFDIS_L, PE_GA_GB, PEL,  &
-                                         PLY_NUM, STRESS, TE, TE_GA_GB, TYPE, XEL
+      USE MODEL_STUF, ONLY            :  ANY_ELFE_OUTPUT, BUSH_CID, BUSH_VVEC, EDAT, ELAS_COMP, ELEM_LEN_12, ELEM_LEN_AB, EPNT,    &
+                                         ETYPE, EID, ELMTYP, ELOUT, FCONV, METYPE, NUM_EMG_FATAL_ERRS, OFFDIS_GA_GB, OFFDIS_L,     &
+                                         PE_GA_GB, PEL, PLY_NUM, STRESS, TE, TE_GA_GB, TYPE, XEL
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, MAXREQ, OGEL
       USE OUTPUT4_MATRICES, ONLY      :  OTM_ELFE, TXT_ELFE
   
@@ -169,7 +169,6 @@ elems_2: DO J = 1,NELE
                         IERROR = IERROR + 1
                         CYCLE elems_2
                      ENDIF
-                     LENGTH = XEL(2,1)
                      CALL ELMDIS
 
                      CALL CALC_ELEM_NODE_FORCES            ! Use NODE to get engr forces (SE matrices don't have torque)
@@ -205,6 +204,7 @@ bush:                IF (ETYPE(J)(1:4) == 'BUSH') THEN
                         ENDDO
 
                         IF (ELEM_LEN_12 > .0001D0) THEN    ! Element has a GA-GB axis so start with PE_GA_GB
+
                            DX = ABS(OFFDIS_GA_GB(2,1))
                            DY =    (OFFDIS_GA_GB(2,2))
                            DZ =    (OFFDIS_GA_GB(2,3))
@@ -220,11 +220,10 @@ bush:                IF (ETYPE(J)(1:4) == 'BUSH') THEN
                               EEF(K)   = DUM21(K)
                               EEF(K+3) = DUM31(K)
                            ENDDO
-
-                                                           ! If following conditions are met, BUSH axis is GA-GP
+                                                           ! There is a local elem coord system (via CID or v-vec)
    bush_2:                 IF ((BUSH_CID >= 0) .OR. (BUSH_VVEC /= 0)) THEN
 
-                              DO K=1,3                     ! Otherwise, transform elem forces from GA-GB axes to basic
+                              DO K=1,3                     ! Transform elem forces from GA-GB axes to basic
                                  DO L=1,3
                                     TET_GA_GB(K,L) = TE_GA_GB(L,K)
                                  ENDDO
@@ -243,7 +242,7 @@ bush:                IF (ETYPE(J)(1:4) == 'BUSH') THEN
                               ENDDO
                            
                            ENDIF bush_2
-                                                           ! Transform elem forces from basic to local if there is CID or v-vec
+                                                           ! Transform elem forces from basic to local
    bush_3:                 IF ((BUSH_CID > 0) .OR. (BUSH_VVEC /= 0)) THEN
    
                               DO K=1,3
@@ -271,7 +270,6 @@ bush:                IF (ETYPE(J)(1:4) == 'BUSH') THEN
 
                      ENDIF bush
 
-
                      OGEL(NUM_OGEL,1) = EEF(1)             ! Now set OGEL output equal to the correct EEF's
                      OGEL(NUM_OGEL,2) = EEF(2)
                      OGEL(NUM_OGEL,3) = EEF(3)
@@ -287,6 +285,7 @@ rod:                 IF (ETYPE(J)(1:3) == 'ROD') THEN
 
 !                    ---------------------------------------------------------------------------------------------------------------
 bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
+                        LENGTH = ELEM_LEN_AB
                         OGEL(NUM_OGEL,1) = -PEL(6)                 ! M1a (bending moment, plane 1, end a for BAR)
                         OGEL(NUM_OGEL,2) =  PEL(5)                 ! M2a (bending moment, plane 2, end a for BAR)
                         OGEL(NUM_OGEL,3) = -PEL(6) + PEL(2)*LENGTH ! M1b (bending moment, plane 1, end b for BAR)
@@ -393,17 +392,17 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
                   IERROR = IERROR + 1
                   CYCLE
                ENDIF
-               LENGTH = XEL(2,1)
+               LENGTH = ELEM_LEN_AB
                CALL ELMDIS
                CALL CALC_ELEM_NODE_FORCES
                FEMAP_EL_VECS(NUM_FROWS,1) = -PEL(6)                 ! M1a (bending moment, plane 1, end a for BAR)
-               FEMAP_EL_VECS(NUM_FROWS,2) = -PEL(6) + PEL(2)*LENGTH ! M1b (bending moment, plane 1, end b for BAR)
-               FEMAP_EL_VECS(NUM_FROWS,3) =  PEL(5)                 ! M2a (bending moment, plane 2, end a for BAR)
+               FEMAP_EL_VECS(NUM_FROWS,2) =  PEL(5)                 ! M2a (bending moment, plane 2, end a for BAR)
+               FEMAP_EL_VECS(NUM_FROWS,3) = -PEL(6) + PEL(2)*LENGTH ! M1b (bending moment, plane 1, end b for BAR)
                FEMAP_EL_VECS(NUM_FROWS,4) =  PEL(5) + PEL(3)*LENGTH ! M2b (bending moment, plane 2, end b for BAR)
                FEMAP_EL_VECS(NUM_FROWS,5) = -PEL(2)                 ! V1  (plane 1 shear for BAR)
                FEMAP_EL_VECS(NUM_FROWS,6) = -PEL(3)                 ! V2  (plane 2 shear for BAR)
-               FEMAP_EL_VECS(NUM_FROWS,7) = -PEL(1)                 ! Fx  (axial force for BAR or ROD)
-               FEMAP_EL_VECS(NUM_FROWS,8) = -PEL(4)                 ! T   (torque for BAR or ROD)
+               FEMAP_EL_VECS(NUM_FROWS,7) = -PEL(1)                 ! Fx  (axial force for BAR)
+               FEMAP_EL_VECS(NUM_FROWS,8) = -PEL(4)                 ! T   (torque for BAR)
             ENDIF            
          ENDDO
          IF (NUM_FROWS > 0) THEN
