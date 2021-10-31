@@ -171,6 +171,10 @@
          VX(1) = ( XEB(2,1) + OFFDIS_B(2,1) ) - ( XEB(1,1) + OFFDIS_B(1,1) )
          VX(2) = ( XEB(2,2) + OFFDIS_B(2,2) ) - ( XEB(1,2) + OFFDIS_B(1,2) )
          VX(3) = ( XEB(2,3) + OFFDIS_B(2,3) ) - ( XEB(1,3) + OFFDIS_B(1,3) )
+      ELSE
+         VX(1) = XEB(2,1) - XEB(1,1)
+         VX(2) = XEB(2,2) - XEB(1,2)
+         VX(3) = XEB(2,3) - XEB(1,3)
       ENDIF
       LX(1) = VX(1)
       LX(2) = VX(2)
