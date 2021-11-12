@@ -185,7 +185,8 @@ Congragulations! You have just installed MYSTRAN.
 - Implement OP2 output format
 - Creating easier ways to aquire mystran would be nice. This would include, but is not limited to, entry into the Arch Linux User Repository (AUR), the Debian Advanced Package Manager (apt), the snapcraft store (snap), the chocolatey package manager for Windows, an appimage, or flatpak.
 - Creation of a more comprehensive testing suite would be nice. Current method uses VBA and Microsoft excel. New testing methods should ideally include correlation to other solvers, previous versions of mystran, industry standard demonstration problems, and continuum mechanics/direct solutions.
-- 
+- The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
+- Migrate documentation to github.
 - As a longer term goal, materialistically nonlinear support is desirable.
 - As a longer term goal, geometric nonlinear support is desirable.
 
@@ -193,15 +194,6 @@ Congragulations! You have just installed MYSTRAN.
 
 - Join the MYSTRAN forum and/or Discord Channel below
 - Contribute your MYSTRAN runs to the list of demonstration problems by posting on the forums, or in our discord channel below
-- Support for True Classically Laminate Plate Theory
-- etc...
-- "All of our documentation can be found in the Docs directory of this github repository"
-
-# Developmental Goals
-
-- The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
-- OP2 support is in work, but if you can help with this, please let us know.
-- As a longer term goal, geometric nonlinear support is desirable.
 
 # Community
 - [Join our Forums](https://mystran.com/forums)
