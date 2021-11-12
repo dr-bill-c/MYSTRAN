@@ -10,7 +10,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 [Features](#features) |
 [Compiling Instructions](#compiling-instructions) |
 [Developmental Goals](#developmental-goals) |
-<<<<<<< HEAD
 [Ways You Can Help](#ways-you-can-help) |
 [Community](#community)
 
@@ -18,7 +17,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 
 
 # Introduction
-=======
 
 [*Your Structural Analysis* Software](https://mystran.com)
 
@@ -195,7 +193,6 @@ Congragulations! You have just installed MYSTRAN.
 
 - Join the MYSTRAN forum and/or Discord Channel below
 - Contribute your MYSTRAN runs to the list of demonstration problems by posting on the forums, or in our discord channel below
-=======
 - Support for True Classically Laminate Plate Theory
 - etc...
 - "All of our documentation can be found in the Docs directory of this github repository"
