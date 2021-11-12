@@ -234,4 +234,3 @@ More detailed instructions can be found here.
 # Community
 - [Join our Forums](https://mystran.com/forums)
 - [Join our Discord Channel on the Elmer Discord Server](https://discord.com/invite/fUJr75H)
-
