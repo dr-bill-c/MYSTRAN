@@ -96,6 +96,11 @@ file(GLOB_RECURSE F2C_CFILES "${F2C_DIR}/*.c")
 add_definitions(-DINTEGER_STAR_8)
 add_library(f2c ${F2C_CFILES} ${F2C_ARITH_H})
 
+# add some extra win32 flags for libf2c
+if (WIN32)
+  add_definitions(-DUSE_CLOCK -DMSDOS)
+endif()
+
 
 # set some extra vars for MSYS builds to make the binary portable
 if (WIN32)
