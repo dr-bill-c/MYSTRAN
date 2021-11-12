@@ -175,7 +175,7 @@ Congragulations! You have just installed MYSTRAN.
 
 </details>
 
-[General guidance can be found here.]([200~https://gist.github.com/Bruno02468/4b58a04168d090a8b62cc9f2008698f5) (last updated 2021-02-01) 
+[General guidance can be found here.](https://gist.github.com/Bruno02468/4b58a04168d090a8b62cc9f2008698f5) (last updated 2021-02-01) 
 
 # Developmental Goals
 
