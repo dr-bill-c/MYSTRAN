@@ -28,6 +28,7 @@ For anyone familiar with the popular NASTRAN computer program developed by NASA 
 - NASTRAN compatibility
 - Modal analysis
 - Linear Static Analysis
+- Linear Elastic Buckling Analysis (All but shell elements as of 13.3)
 - Support for True Classical Laminate Plate Theory
 - All of our documentation can be found in MYSTRAN forums
 
@@ -182,10 +183,12 @@ Congragulations! You have just installed MYSTRAN.
 # Developmental Goals
 
 - Add detailed installation instructions for Windows to the README
-- The differential stiffness matrix for bar elements, rod elements, and solid elements is coded in MYSTRAN. However, the differential stiffness matrix needs to be coded for the shell elements.
-- OP2 support is in work, but if you can help with this, please let us know.
+- Add installation instructions for other platforms to the readme (other linux distributions, and/or Apple operating systems)
+- Implement differential stiffness matrices for shell elements
+- Implement OP2 output format
 - Creating easier ways to aquire mystran would be nice. This would include, but is not limited to, entry into the Arch Linux User Repository (AUR), the Debian Advanced Package Manager (apt), the snapcraft store (snap), the chocolatey package manager for Windows, an appimage, or flatpak.
 - Creation of a more comprehensive testing suite would be nice. Current method uses VBA and Microsoft excel. New testing methods should ideally include correlation to other solvers, previous versions of mystran, industry standard demonstration problems, and continuum mechanics/direct solutions.
+- 
 - As a longer term goal, materialistically nonlinear support is desirable.
 - As a longer term goal, geometric nonlinear support is desirable.
 
@@ -197,18 +200,11 @@ Congragulations! You have just installed MYSTRAN.
 - etc...
 - "All of our documentation can be found in the Docs directory of this github repository"
 
-
 # Developmental Goals
 
-- Add installation instructions for multiple platforms to the readme.
-- The differential stiffness matrix for beam elements is coded in MYSTRAN. Therefore a buckling analysis (SOL 105) can be performed for beam elements. However, the differential stiffness matrix needs to be coded for the shell and solid elements. Also, it would be desirable to add the differential stiffness matrix for the shear and rod elements (lower priority).
 - The default QUAD element is internally composed of 4 tri elements. These internal tri elements need a coordinate transformation to allow for orthotropic/anisotropic materials. Currently, the default QUAD element is only valid for isotropic materials (though the alternate QUAD element does support anisotropic materials).
 - OP2 support is in work, but if you can help with this, please let us know.
 - As a longer term goal, geometric nonlinear support is desirable.
-
-# Ways You Can Help
-
-- Not sure what we want here yet
 
 # Community
 - [Join our Forums](https://mystran.com/forums)
