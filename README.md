@@ -179,8 +179,6 @@ Congragulations! You have just installed MYSTRAN.
 - Support for True Classically Laminate Plate Theory
 - etc...
 - "All of our documentation can be found in the Docs directory of this github repository"
-<<<<<<< HEAD
-=======
 
 # Installation Instructions
 
