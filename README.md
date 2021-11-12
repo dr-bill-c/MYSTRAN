@@ -52,12 +52,9 @@ More detailed instructions can be found here.
 * A binary can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=39
 * Compilation Instructions can be downloaded from this link: https://www.mystran.com/forums/showthread.php?tid=2
 
-
 ### For Linux
 
-<details>
-<summary> Debian/Ubuntu </summary>
-<br>
+<details><summary>Debian/Ubuntu</summary><br>
 MYSTRAN relies upon the following dependencies
 
 - gcc
@@ -177,6 +174,8 @@ sudo rm -r MYSTRAN
 Congragulations! You have just installed MYSTRAN.
 
 </details>
+
+[General guidance can be found here.]([200~https://gist.github.com/Bruno02468/4b58a04168d090a8b62cc9f2008698f5) (last updated 2021-02-01) 
 
 # Developmental Goals
 
