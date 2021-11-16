@@ -204,6 +204,13 @@
             CALL ALLOCATE_SPARSE_MAT ( 'MPF0', NDOFR, NTERM_MPF0, SUBR_NAME )
             CALL MATMULT_SFS ('DLRt*MLL', NDOFR, NTERM_CRS2, 'N', I_CRS2, J_CRS2, CRS2, 'EIGEN_VEC', NDOFL, NVEC, EIGEN_VEC,       &
                                AROW_MAX_TERMS, 'MPF0', ONE, NTERM_MPF0, I_MPF0, J_MPF0, MPF0  )
+!xx         DO I=1,NDOFR+1
+!xx            I_MPF0(I) = I_CRS2(I)
+!xx         ENDDO
+!xx         DO J=1,NTERM_CRS2
+!xx            J_MPF0(J) = J_CRS2(J)
+!xx              MPF0(J) =   CRS2(J)
+!xx         ENDDO
             CALL DEALLOCATE_SCR_MAT ( 'CRS2' )
 
          ENDIF

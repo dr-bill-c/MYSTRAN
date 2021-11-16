@@ -62,6 +62,8 @@
       INTEGER(LONG)                   :: ELOUT_ELFE        ! If > 0, there are ELFORCE(ENGR) requests for some elems                
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices
       INTEGER(LONG)                   :: IERROR       = 0  ! Local error count
+!xx   INTEGER(LONG)                   :: IROW_MAT          ! Row number in OTM's
+!xx   INTEGER(LONG)                   :: IROW_TXT          ! Row number in OTM text file
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NUM_ELEM          ! No. elems processed prior to writing results to F06 file
       INTEGER(LONG)                   :: NUM_FROWS         ! No. elems processed for FEMAP
@@ -129,12 +131,24 @@
          ENDDO 
       ENDDO 
 
+!xx   DO I=1,METYPE                                        ! Engr force requests for ELAS elems not honored. Give message
+!xx      IF ((ELMTYP(I)(1:4) == 'ELAS') .AND. (NELREQ(I) > 0)) THEN
+!xx         WARN_ERR = WARN_ERR + 1
+!xx         WRITE(ERR,9204) NELREQ(I), ELMTYP(I)
+!xx         IF (SUPWARN == 'N') THEN
+!xx            WRITE(F06,9204) NELREQ(I), ELMTYP(I)
+!xx         ENDIF
+!xx      ENDIF
+!xx   ENDDO  
+   
       DO I=1,MAXREQ
          DO J=1,MOGEL
             OGEL(I,J) = ZERO
          ENDDO 
       ENDDO   
  
+!xx   IROW_MAT = 0
+!xx   IROW_TXT = 0
       OT4_DESCRIPTOR = 'Element engineering force'
 reqs3:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs3

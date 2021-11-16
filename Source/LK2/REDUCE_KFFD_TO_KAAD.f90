@@ -166,6 +166,7 @@
                   J_CRS2(I) = J_CRS1(I)
                     CRS2(I) =   CRS1(I)
                ENDDO
+!xx            SYM_CRS2 = 'Y'      ! NO: SHOULD BE 'N' HERE SINCE SPARSTOR = 'NONSYM' IN THIS BRANCH OF THE IF BLOCK
                SYM_CRS2 = 'N'
 
             ELSE                                           ! Error - incorrect SPARSTOR
@@ -189,6 +190,7 @@
 
             NTERM_KAAD = NTERM_CRS1                        ! Reallocate KAAD to be size of CRS1
             WRITE(SC1, * ) '    Reallocate KAAD'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAAD', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'KAAD' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KAAD', CR13   

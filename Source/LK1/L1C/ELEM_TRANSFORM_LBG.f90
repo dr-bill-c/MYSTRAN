@@ -27,11 +27,11 @@
       SUBROUTINE ELEM_TRANSFORM_LBG ( WHICH, ZE, QE )
  
 ! Transforms one element stiff, mass, thermal load or pressure load matrix from local to basic to global coords at each
-! grid including the effects of element offsets (for BAR, BEAM). The element matrix is input in array ZE or QE in local element
+! grid including the effects of element offsets. The element matrix is input in array ZE or QE in local element
 ! coords. The output is array ZE or QE containing the element stiff or mass matrix in global coords at each grid.  Note that plate
 ! element offsets were processed in subr EMG since those offsets are in local element coords, while the BAR and BEAM offsets are
 ! handled here after transforming their matrices from local-basic-global, since BAR and BEAM offsets are specified (in the input
-! data) in global coordinates
+! data) in global coordinates and the BUSH in a unique system
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
@@ -39,7 +39,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  ELEM_TRANSFORM_LBG_BEGEND
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
-      USE MODEL_STUF, ONLY            :  ELDOF, GRID, GRID_ID, CORD, AGRID, TE_IDENT, TYPE
+      USE MODEL_STUF, ONLY            :  AGRID, CORD, ELDOF, GRID, GRID_ID, KEG, TE_IDENT, TYPE
       USE MODEL_STUF, ONLY            :  ELGP
 
       USE ELEM_TRANSFORM_LBG_USE_IFs
@@ -66,7 +66,7 @@
       INTEGER(LONG), PARAMETER        :: NROWA     = 3     ! An input to subr MATMULT_FFF/MATMULT_FFF_T, called herein
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = ELEM_TRANSFORM_LBG_BEGEND
  
-      REAL(DOUBLE) , INTENT(INOUT)    :: QE(MELDOF,NSUB)  ! PTE or PPE if WHICH = 'PTE' or 'PPE'
+      REAL(DOUBLE) , INTENT(INOUT)    :: QE(MELDOF,NSUB)   ! PTE or PPE if WHICH = 'PTE' or 'PPE'
       REAL(DOUBLE) , INTENT(INOUT)    :: ZE(MELDOF,MELDOF) ! Either the mass or stiff matrix of the element
       REAL(DOUBLE)                    :: DUM11(3,3)        ! An intermadiate matrix in a matrix multiply operation 
       REAL(DOUBLE)                    :: DUM12(3,3)        ! An intermadiate matrix in a matrix multiply operation
@@ -84,6 +84,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+
       IF ((TYPE(1:4) == 'ELAS') .OR. (TYPE == 'USERIN  ')) THEN
          FATAL_ERR = FATAL_ERR + 1
          WRITE(ERR,1407) SUBR_NAME, ' ELASi, USERIN '
@@ -117,13 +118,16 @@
          CALL OUTA_HERE ( 'Y' )
       ENDIF
 
+!-----------------------------------------------------------------------------------------------------------------------------------
 ! Transform from local to basic coords (TE_IDENT = 'Y': TE is ident matrix). Note that ELAS elem is already in global coords
 
       IF (TE_IDENT /= 'Y') THEN
          CALL ELMTLB ( OPT )
       ENDIF
-24357 format(6(1es14.6))
  
+!-----------------------------------------------------------------------------------------------------------------------------------
+! Transform from basic to global coords
+
 ! Double loop over j_do1:, k_do1: will transform KE, KED or ME from basic to global coords for all but ELAS element
 
 ke_me:IF ((WHICH == 'KE') .OR. (WHICH == 'KED') .OR. (WHICH == 'ME')) THEN
@@ -184,7 +188,7 @@ l_cord1:             DO L=1,NCORD
                IF ((ACIDJ /= 0) .OR. (ACIDK /= 0)) THEN ! Do the coord transformation using TJ, TK coord transformation matrices
                   DO L=1,2
                      BEG_ROW_GET = 6*(J-1) + 1 + 3*(L-1)
-                        DO M=1,2
+                     DO M=1,2
                         BEG_COL_GET = 6*(K-1) + 1 + 3*(M-1)
                         CALL MATGET ( ZE, MELDOF, NCOL_IN, BEG_ROW_GET, BEG_COL_GET, NROW_GET, NCOL_GET, DUM11 )
                         CALL MATMULT_FFF   ( DUM11, TK, 3    , 3    , 3    , DUM12 )
@@ -206,6 +210,7 @@ l_cord1:             DO L=1,NCORD
          ENDDO
 
       ENDIF ke_me
+
 
 pte_1:IF ((WHICH == 'PTE') .OR. (WHICH == 'PPE')) THEN
 
@@ -253,10 +258,24 @@ k_cord2:       DO K=1,NCORD
 
       ENDIF pte_1
 
-! Transform the matrix from global at elem ends to global at grids for BAR, BEAM
+! Transform the matrix from global at elem ends to global at grids for BAR, BEAM, BUSH
 
       IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'BUSH    ')) THEN
-         CALL ELMOFF ( OPT, 'N' )
+         CALL ELMOFF ( OPT, 'N' ) 
+   
+         IF (WHICH == 'KE') THEN                           ! Set the KE which was just calc'd in global coords with offsets to KEG
+            DO I=1,ELDOF
+               DO J=1,ELDOF
+                  KEG(I,J) = ZE(I,J)
+               ENDDO
+            ENDDO
+         ENDIF 
+
+
+      ENDIF
+
+      IF (TYPE == 'BUSH    ') THEN
+         CALL GET_KE_OFFSET                                ! Now transform the global KE (with offsets) back to local
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -278,6 +297,69 @@ k_cord2:       DO K=1,NCORD
 
 
 
+! ##################################################################################################################################
+ 
+      CONTAINS
+ 
+! ##################################################################################################################################
+
+      SUBROUTINE GET_KE_OFFSET
+
+      USE PENTIUM_II_KIND
+      USE IOUNT1, ONLY                :  F06
+      USE SCONTR, ONLY                :  MELDOF
+      USE MODEL_STUF, ONLY            :  ELGP, KEO_BUSH, TE, TE_GA_GB
+
+
+      IMPLICIT NONE
+
+
+      INTEGER(LONG)                   :: BEG_COL           ! Beginning col of matrix to get partition from
+      INTEGER(LONG)                   :: BEG_ROW           ! Beginning row of matrix to get partition from
+      INTEGER(LONG)                   :: II,JJ             ! DO loop indices
+      INTEGER(LONG)                   :: NCOL              ! No. cols to get/put for subrs MATGET/MATPUT, called herein
+      INTEGER(LONG), PARAMETER        :: NCOLA     = 3     ! No. cols in a matrix for subr MATMULT_FFF/MATMULT_FFF_T, called herein
+      INTEGER(LONG)                   :: NCOLB             ! No. cols in a matrix for subr MATMULT_FFF/MATMULT_FFF_T, called herein
+      INTEGER(LONG), PARAMETER        :: NROW      = 3     ! No. rows to get/put for subrs MATGET/MATPUT, called herein
+      INTEGER(LONG), PARAMETER        :: NROWA     = 3     ! No. rows in a matrix for subr MATMULT_FFF/MATMULT_FFF_T, called herein
+  
+      REAL(DOUBLE)                    :: DUM11(3,3)        ! An intermediate result
+      REAL(DOUBLE)                    :: DUM12(3,3)        ! An intermediate result
+      REAL(DOUBLE)                    :: TET(3,3)          ! Transpose of TE
+      REAL(DOUBLE)                    :: TET_GA_GB(3,3)    ! Transpose of TE
+
 ! **********************************************************************************************************************************
+      DO II=1,3
+         DO JJ = 1,3
+            TET(II,JJ) = TE(II,JJ)
+            TET_GA_GB(II,JJ) = TE_GA_GB(II,JJ)
+         ENDDO
+      ENDDO
+
+      NCOL  = 3
+      NCOLB = 3
+      DO II=1,2*ELGP
+         BEG_ROW = 3*II - 2
+         DO JJ=II,2*ELGP
+            BEG_COL = 3*JJ - 2
+            CALL MATGET ( ZE, MELDOF, MELDOF, BEG_ROW, BEG_COL, NROW, NCOL, DUM11 )
+            CALL MATMULT_FFF   ( DUM11, TET_GA_GB, NROWA, NCOLA, NCOLB, DUM12 )
+            CALL MATMULT_FFF_T ( TE_GA_GB, DUM12, NROWA, NCOLA, NCOLB, DUM11 )
+            CALL MATPUT ( DUM11, MELDOF, MELDOF, BEG_ROW, BEG_COL, NROW, NCOL, KEO_BUSH )
+         ENDDO 
+      ENDDO
+      DO II=1,ELDOF                                        ! Set lower portion of KE using symmetry.
+         DO JJ=1,II-1
+            KEO_BUSH(II,JJ) = KEO_BUSH(JJ,II)
+         ENDDO 
+      ENDDO
+
+ 
+
+
+! **********************************************************************************************************************************
+
+      END SUBROUTINE GET_KE_OFFSET
+
 
       END SUBROUTINE ELEM_TRANSFORM_LBG

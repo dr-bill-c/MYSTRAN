@@ -86,6 +86,12 @@
 ! Check for overflow
 
       NPUSER1 = NPUSER1+1
+!xx   IF (NPUSER1 > LPUSER1) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LPUSER1
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LPUSER1
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
  
 ! Read and check data on parent card
 

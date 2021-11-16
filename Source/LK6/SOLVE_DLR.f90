@@ -158,6 +158,7 @@
  
 ! Loop on columns of KLR using rows of KRL
  
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
       NTERM_DLR = 0
       DO J = 1,NDOFR

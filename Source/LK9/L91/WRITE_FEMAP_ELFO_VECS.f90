@@ -353,6 +353,8 @@
          ENDDO
          WRITE(NEU,1008)
 
+! Process BUSH elements
+
       ELSE IF (ELEM_TYP == 'BUSH    ') THEN
 
          TITLE_E( 1) = 'Force XE'

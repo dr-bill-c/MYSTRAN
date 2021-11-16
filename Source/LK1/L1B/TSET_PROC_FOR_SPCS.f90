@@ -229,6 +229,9 @@ j_do6:   DO J=1,NUM_SPCSIDS
                                      (TSET(GRID_ID_ROW_NUM,K) == 'SB')) THEN
                                     TSET(GRID_ID_ROW_NUM,K) = 'SB'
                                     NDOFSB = NDOFSB + 1
+!xx-DOFSET CAN'T BE 'SE' HERE       IF ((DOFSET == 'SE') .AND. (DABS(RSPC) > EPS1)) THEN
+!xx-DUE TO TEST 4 LINES ABOVE          WRITE(L1H) GRID_ID_ROW_NUM, K, RSPC
+!xx-MOD ON 12/28/06                 ENDIF
                                  ELSE
                                     DOF_ERR = DOF_ERR + 1
                                     FATAL_ERR = FATAL_ERR + 1

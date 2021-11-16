@@ -82,6 +82,7 @@
       ENDDO
 
       IF (WRT_SCREEN == 'Y') THEN
+   !xx   WRITE(SC1, * )                                    ! Write blank line to screen
       ENDIF
 
       IF ((DEBUG(87) == 1) .OR. (DEBUG(87) == 3)) CALL CRS_CCS_DEB ( '1' )

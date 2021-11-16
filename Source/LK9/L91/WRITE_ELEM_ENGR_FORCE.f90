@@ -148,7 +148,7 @@ headr:IF (IHDR == 'Y') THEN
             IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
                WRITE(F06,302) FILL(1:19)
             ELSE
-               WRITE(F06,301) FILL(1:25)
+               WRITE(F06,301) FILL(1:24)
             ENDIF
             WRITE(F06,401) FILL(1:29), ONAME
 
@@ -226,6 +226,7 @@ headr:IF (IHDR == 'Y') THEN
 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN                   ! Engr force for ELAS was put into OGEL(I,1)
 
+!xx      WRITE(F06,1202) FILL(1: 0), (EID_OUT_ARRAY(I,1),OGEL(I,1),I=1,NUM)
          J1 = 1
          DO I=1,NUM,5
             IF (J1+4 <= NUM) THEN
@@ -327,97 +328,97 @@ headr:IF (IHDR == 'Y') THEN
 
   201 FORMAT(1X,A)
 
-  301 FORMAT(1X,A,'E L E M E N T   E N G I N E E R I N G   F O R C E S')
+  301 FORMAT(16X,A,'E L E M E N T   E N G I N E E R I N G   F O R C E S')
 
-  302 FORMAT(1X,A,'C B   E L E M E N T   E N G I N E E R I N G   F O R C E   O T M')
+  302 FORMAT(16X,A,'C B   E L E M E N T   E N G I N E E R I N G   F O R C E   O T M')
 
-  401 FORMAT(1X,A,'F O R   E L E M E N T   T Y P E   ',A11)
+  401 FORMAT(16X,A,'F O R   E L E M E N T   T Y P E   ',A11)
 
 ! BAR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1101 FORMAT(1X,A,' Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial'         &
+ 1101 FORMAT(16X,A,' Element       Bend-Moment End A           Bend-Moment End B              - Shear -              Axial'        &
           ,'         Torque'  &
-          ,/,1X,A,'    ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force')
+          ,/,16X,A,'    ID       Plane 1       Plane 2       Plane 1       Plane 2      Plane 1       Plane 2        Force')
  
- 1102 FORMAT(1X,A,I8,8(1ES14.6))
+ 1102 FORMAT(16X,A,I8,8(1ES14.6))
  
  1103 FORMAT(1X,A,'         ------------- ------------- ------------- ------------- ------------- ------------- -------------',    &
                         ' -------------',/,                                                                                        &
-             1X,A,'MAX* :  ',8(ES14.6),/,                                                                                          &
-             1X,A,'MIN* :  ',8(ES14.6),//,                                                                                         &
-             1X,A,'ABS* :  ',8(ES14.6),/,                                                                                          &
-             1X,A,'*for output set')
+             16X,A,'MAX* :  ',8(ES14.6),/,                                                                                         &
+             16X,A,'MIN* :  ',8(ES14.6),//,                                                                                        &
+             16X,A,'ABS* :  ',8(ES14.6),/,                                                                                         &
+             16X,A,'*for output set')
 
 ! ELAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1201 FORMAT(1X,A,' Element     Force      Element     Force      Element     Force      Element     Force      Element     Force' &
-          ,/,1X,A,'    ID                     ID                     ID                     ID                     ID')
+ 1201 FORMAT(16X,A,' Element     Force      Element     Force      Element     Force      Element     Force      Element     Force'&
+          ,/,16X,A,'    ID                     ID                     ID                     ID                     ID')
  
- 1202 FORMAT(1X,A,5(I8,1ES14.6))
+ 1202 FORMAT(16X,A,5(I8,1ES14.6))
   
- 1203 FORMAT(1X,A,'         -------------',/,                                                                                      &
-             1X,A,'MAX* :  ',1(ES14.6),/,                                                                                          &
-             1X,A,'MIN* :  ',1(ES14.6),//,                                                                                         &
-             1X,A,'ABS* :  ',1(ES14.6),/,                                                                                          &
-             1X,A,'*for output set')
+ 1203 FORMAT(16X,A,'         -------------',/,                                                                                     &
+             16X,A,'MAX* :  ',1(ES14.6),/,                                                                                         &
+             16X,A,'MIN* :  ',1(ES14.6),//,                                                                                        &
+             16X,A,'ABS* :  ',1(ES14.6),/,                                                                                         &
+             16X,A,'*for output set')
 
 ! ROD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1301 FORMAT(1X,A,' Element     Axial        Torque      Element     Axial        Torque      Element     Axial        Torque'     &
-          ,/,1X,A,'    ID       Force                       ID       Force                       ID       Force')
+ 1301 FORMAT(16X,A,' Element     Axial        Torque      Element     Axial        Torque      Element     Axial        Torque'    &
+          ,/,16X,A,'    ID       Force                       ID       Force                       ID       Force')
  
- 1302 FORMAT(1X,A,3(I8,1ES14.6,1ES14.6))
+ 1302 FORMAT(16X,A,3(I8,1ES14.6,1ES14.6))
  
- 1303 FORMAT(1X,A,'         ------------- -------------',/,                                                                        &
-             1X,A,'MAX* :  ',2(1ES14.6),/,                                                                                         &
-             1X,A,'MIN* :  ',2(1ES14.6),//,                                                                                        &
-             1X,A,'ABS* :  ',2(1ES14.6),/,                                                                                         &
-             1X,A,'*for output set')
+ 1303 FORMAT(16X,A,'         ------------- -------------',/,                                                                       &
+             16X,A,'MAX* :  ',2(1ES14.6),/,                                                                                        &
+             16X,A,'MIN* :  ',2(1ES14.6),//,                                                                                       &
+             16X,A,'ABS* :  ',2(1ES14.6),/,                                                                                        &
+             16X,A,'*for output set')
 
 ! SHEAR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1401 FORMAT(1X,A,' Element        N o r m a l   F o r c e s           Element        N o r m a l   F o r c e s          '         &
-          ,/,1X,A,'    ID        Nxx           Nyy           Nxy          ID        Nxx           Nyy           Nxy')
+ 1401 FORMAT(16X,A,' Element        N o r m a l   F o r c e s           Element        N o r m a l   F o r c e s          '        &
+          ,/,16X,A,'    ID        Nxx           Nyy           Nxy          ID        Nxx           Nyy           Nxy')
  
  1402 FORMAT(1X,A,2(I8,3(1ES14.6),1X))
  
- 1403 FORMAT(1X,A,'         ------------- ------------- -------------',/,                                                          &
-             1X,A,'MAX* :  ',3ES14.6,/,                                                                                            &
-             1X,A,'MIN* :  ',3ES14.6,//,                                                                                           &
-             1X,A,'ABS* :  ',3ES14.6,/,                                                                                            &
-             1X,A,'*for output set')
+ 1403 FORMAT(16X,A,'         ------------- ------------- -------------',/,                                                         &
+             16X,A,'MAX* :  ',3ES14.6,/,                                                                                           &
+             16X,A,'MIN* :  ',3ES14.6,//,                                                                                          &
+             16X,A,'ABS* :  ',3ES14.6,/,                                                                                           &
+             16X,A,'*for output set')
 
 ! SHELL >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1501 FORMAT(1X,A,' Element         N o r m a l   F o r c e s                       M o m e n t s'                                 &
-          ,19X,'T r a n s v e r s e',/1X,A,'    ID',89X,'S h e a r   F o r c e s'                                                  &
-          ,/,1X,A,'              Nxx           Nyy           Nxy           Mxx           Myy           Mxy            Qx          '&
+ 1501 FORMAT(16X,A,' Element         N o r m a l   F o r c e s                       M o m e n t s'                                &
+          ,19X,'T r a n s v e r s e',/16X,A,'    ID', 89X,'S h e a r   F o r c e s'                                                &
+          ,/,16X,A,'              Nxx           Nyy           Nxy           Mxx           Myy           Mxy            Qx         '&
           ,'  Qy')
 
 !            WRITE(F06,1501) FILL(1: 0), FILL(1: 0), FILL(1: 0)
- 1512 FORMAT(1X,A,I8,6(1ES14.6))
+ 1512 FORMAT(16X,A,I8,6(1ES14.6))
  
- 1513 FORMAT(1X,A,'          ------------- ------------- ------------- ------------- ------------- -------------',/,               &
-             1X,A,'MAX* :  ',6(ES14.6),/,                                                                                          &
-             1X,A,'MIN* :  ',6(ES14.6),//,                                                                                         &
-             1X,A,'ABS* :  ',6(ES14.6),/,                                                                                          &
-             1X,A,'*for output set')
+ 1513 FORMAT(16X,A,'          ------------- ------------- ------------- ------------- ------------- -------------',/,              &
+             16X,A,'MAX* :  ',6(ES14.6),/,                                                                                         &
+             16X,A,'MIN* :  ',6(ES14.6),//,                                                                                        &
+             16X,A,'ABS* :  ',6(ES14.6),/,                                                                                         &
+             16X,A,'*for output set')
 
- 1522 FORMAT(1X,A,I8,8(1ES14.6))
+ 1522 FORMAT(16X,A,I8,8(1ES14.6))
  
- 1523 FORMAT(1X,A,'          ------------- ------------- ------------- ------------- ------------- ------------- -------------',   &
+ 1523 FORMAT(16X,A,'          ------------- ------------- ------------- ------------- ------------- ------------- -------------',  &
                         ' -------------',/,                                                                                        &
-             1X,A,'MAX* :  ',8(ES14.6),/,                                                                                          &
-             1X,A,'MIN* :  ',8(ES14.6),//,                                                                                         &
-             1X,A,'ABS* :  ',8(ES14.6),/,                                                                                          &
-             1X,A,'*for output set')
+             16X,A,'MAX* :  ',8(ES14.6),/,                                                                                         &
+             16X,A,'MIN* :  ',8(ES14.6),//,                                                                                        &
+             16X,A,'ABS* :  ',8(ES14.6),/,                                                                                         &
+             16X,A,'*for output set')
 
 ! BUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 1601 FORMAT(1X,A,' Element      Force         Force         Force        Moment        Moment        Moment'                      &
-          ,/,1X,A,'    ID         XE            YE            ZE            XE            YE            ZE')
+ 1601 FORMAT(16X,A,' Element      Force         Force         Force        Moment        Moment        Moment'                     &
+          ,/,16X,A,'    ID         XE            YE            ZE            XE            YE            ZE')
  
- 1602 FORMAT(1X,A,I8,6(1ES14.6))
+ 1602 FORMAT(16X,A,I8,6(1ES14.6))
   
- 1603 FORMAT(1X,A,'          ------------- ------------- ------------- ------------- ------------- ------------- ',/,              &
-             1X,A,'MAX* :  ',6(ES14.6),/,                                                                                          &
-             1X,A,'MIN* :  ',6(ES14.6),//,                                                                                         &
-             1X,A,'ABS* :  ',6(ES14.6),/,                                                                                          &
-             1X,A,'*for output set')
+ 1603 FORMAT(16X,A,'          ------------- ------------- ------------- ------------- ------------- ------------- ',/,             &
+             16X,A,'MAX* :  ',6(ES14.6),/,                                                                                         &
+             16X,A,'MIN* :  ',6(ES14.6),//,                                                                                        &
+             16X,A,'ABS* :  ',6(ES14.6),/,                                                                                         &
+             16X,A,'*for output set')
 
 ! **********************************************************************************************************************************
   

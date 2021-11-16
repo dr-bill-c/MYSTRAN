@@ -86,6 +86,12 @@
 ! Check for overflow
 
       NGRID = NGRID+1
+!xx   IF (NGRID > LGRID) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LGRID
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LGRID
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
  
 ! Read and check data
 

@@ -110,6 +110,12 @@
 ! Check for overflow
 
       NSPC1 = NSPC1 + 1
+!xx   IF (NSPC1 > LSPC1) THEN                              ! Check for overflow
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LSPC1
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LSPC1
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
 
 ! Check if SPC set ID matches a Case Control request
 

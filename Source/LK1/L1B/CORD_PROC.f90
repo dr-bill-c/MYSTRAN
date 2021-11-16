@@ -53,7 +53,7 @@
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE CONSTANTS_1, ONLY           :  ZERO, ONE80, PI, CONV_DEG_RAD
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, NCORD, NCORD1, NCORD2, NGRID, FATAL_ERR
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, MRCORD, NCORD, NCORD1, NCORD2, NGRID, FATAL_ERR
       USE PARAMS, ONLY                :  EPSIL, PRTCORD
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  CORD_PROC_BEGEND
@@ -1497,15 +1497,33 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
          WRITE(F06,*)
 
          WRITE(F06,8104)
+         WRITE(F06,8105)
          DO II=1,NCORD
             CORD_TYPE = CORD(II,1)
             IF ((CORD_TYPE == 11) .OR. (CORD_TYPE == 11) .OR. (CORD_TYPE == 11)) THEN
-               WRITE(F06,8105) CORD_NAME(II), (CORD(II,JJ),JJ=2,5)
+               WRITE(F06,8106) CORD_NAME(II), (CORD(II,JJ),JJ=2,5)
             ELSE
-               WRITE(F06,8105) CORD_NAME(II), (CORD(II,JJ),JJ=2,3)
+               WRITE(F06,8106) CORD_NAME(II), (CORD(II,JJ),JJ=2,3)
             ENDIF
          ENDDO
          WRITE(F06,*)
+         WRITE(F06,*)
+
+         WRITE(F06,8107)
+         WRITE(F06,8108)
+         DO II=1,NCORD
+            WRITE(F06,8109) ' CID ', CORD(II,2),' |',(RCORD(II,JJ),JJ= 1, 3),' |', (RCORD(II,JJ),JJ= 4, 6),' |'                    &
+                                                    ,(RCORD(II,JJ),JJ= 7, 9),' |', (RCORD(II,JJ),JJ=10,12),' |'
+         ENDDO
+         WRITE(F06,*)
+
+ 8107 FORMAT(42X,'A R R A Y   R C O R D   W I T H   O R I G I N S   A N D   3 X 3   T R A N F O R M A T I O N   M A T R I C E S',/,&
+             70X,'T H A T   T R A N S F O R M   C I D   T O   B A S I C',/)
+ 
+ 8108 FORMAT(14X,'|         Coords of origin of CID        |  Row 1 of coord transformation matrix  |',                            &
+                  '  Row 2 of coord transformation matrix  |  Row 3 of coord transformation matrix')
+
+ 8109 FORMAT(A,I8,A,3ES13.6,A,3ES13.6,A,3ES13.6,A,3ES13.6,A)
          WRITE(F06,8901)
 
       ENDIF
@@ -1667,10 +1685,11 @@ big_loop:   DO J=1,NCORD                                   ! Find a CORD1 with a
              '   =========================================================',//)
  8101 FORMAT(' Phase 8: Check that all systems have been transformed to basic and rewrite RID''s in array CORD to reflect this',//)
 
- 8104 FORMAT(' Array CORD at end of subr CORD_PROC: (all RID''s should be zero now)'                                            ,/,&
-             ' -----------------------------------',/, 43X,'Coord type      CID      RID''s ->',/)
+ 8104 FORMAT(' Arrays CORD and RCORD at end of subr CORD_PROC',/,' ----------------------------------------------',/)
 
- 8105 FORMAT(45X,A,2X,5I9)
+ 8105 FORMAT(66X,'A R R A Y   C O R D',/,61X,'(all RID''s should be zero now)',//,60X,'Coord type      CID      RID''s ->',/)
+
+ 8106 FORMAT(62X,A,2X,5I9)
 
  8901 FORMAT(' :::::::::::::::::::::::::::::::::::::::END PARAM PRTCORD OUTPUT FROM SUBROUTINE CORD_PROC:::::::::::::::::::::::::' &
              ,':::::::::::::::::'                                                                                               ,/,&

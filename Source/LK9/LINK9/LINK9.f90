@@ -529,6 +529,10 @@
 
 ! Determine if we need to open F25 to write element disp, loads to unformatted file
  
+!xx   ANY_U_P_OUTPUT = IAND(OELDT,IBIT(ELDT_F25_U_P_BIT))
+!xx   IF (ANY_U_P_OUTPUT > 0) THEN
+!xx      CALL FILE_OPEN ( F25, F25FIL, OUNT, 'REPLACE', F25_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+!xx   ENDIF
   
 ! Open data files for reading displacements (will be read below in loop over number of subcases/vectors)
  
@@ -542,6 +546,7 @@
       IF ((SOL_NAME(1:5) == 'MODES') .OR. (SOL_NAME(1:12) == 'GEN CB MODEL')) THEN
                                                         ! MODE_NUM is not used to det gen stiff but it is read in subr READ_L1M
          CALL ALLOCATE_EIGEN1_MAT ( 'MODE_NUM' , NUM_EIGENS, 1, SUBR_NAME ) 
+!xx      CALL ALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL', NUM_EIGENS, 1, SUBR_NAME ) 
          CALL ALLOCATE_EIGEN1_MAT ( 'GEN_MASS' , NUM_EIGENS, 1, SUBR_NAME )
          IERROR = 0
          CALL READ_L1M ( IERROR )
@@ -1219,6 +1224,8 @@ j_do: DO JVEC=1,NUM_SOLNS
 
 ! Deallocate some arrays
 
+!xx   WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSF ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSF' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSFD', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSFD')
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MGG ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'MGG' )
@@ -1265,6 +1272,18 @@ j_do: DO JVEC=1,NUM_SOLNS
          CALL DEALLOCATE_MODEL_STUF ( 'TPNT, TDATA' )
          CALL DEALLOCATE_MODEL_STUF ( 'GTEMP' )
          CALL DEALLOCATE_MODEL_STUF ( 'GRID_ELEM_CONN_ARRAY' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'GRID_ID' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'GRID, RGRID' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'ELEM PROPERTIES AND MATERIALS' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'EOFF' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'ELDT' )
+         CALL DEALLOCATE_DOF_TABLES ( 'TSET' )             ! NB *** 10/05/21. Was commented out since ver 6.21 or 6.22
+         CALL DEALLOCATE_DOF_TABLES ( 'TDOF' )             ! NB *** 10/05/21. Was commented out since ver 6.21 or 6.22
+         CALL DEALLOCATE_DOF_TABLES ( 'TDOF_ROW_START' )   ! NB *** 10/05/21. Was commented out since ver 6.21 or 6.22
+         CALL DEALLOCATE_DOF_TABLES ( 'TDOFI' )            ! NB *** 10/05/21. Was commented out since ver 6.21 or 6.22
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'GRID_SEQ, INV_GRID_SEQ' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'SUBLOD' )
+!xx      CALL DEALLOCATE_MODEL_STUF ( 'VVEC, OFFSETS, PLATE stuff' )
       ENDIF
 
 !-----------------------------------------------------------------------------------------------------------------------------------

@@ -432,6 +432,7 @@ l_do_2211:        DO L=1,NCORD
                   CALL MATMULT_FFF ( GRID_MGG, -ACCEL_I, NROWA, NCOLA, NCOLB, FORCE_I )
                ENDIF
 
+!xx            CALL CALC_TDOF_ROW_NUM ( GRID(K,1), ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID(K,1), IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
 l_do_2214:     DO L = 1,6

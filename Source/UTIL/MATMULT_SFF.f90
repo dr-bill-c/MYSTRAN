@@ -153,6 +153,7 @@
          ENDIF
          A_ROW_BEG = A_ROW_END + 1
       ENDDO
+!xx   WRITE(SC1,*) CR13
                                                            ! Allocate  vectors long enough to hold the max terms in a row of A
       CALL ALLOCATE_SPARSE_ALG ( 'J_AROW', AROW_MAX_TERMS, 0, SUBR_NAME )
       CALL ALLOCATE_SPARSE_ALG (   'AROW', AROW_MAX_TERMS, 0, SUBR_NAME )

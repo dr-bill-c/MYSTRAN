@@ -141,6 +141,9 @@
          CALL R8FLD (JCARD(J+1),JF(J+1),RPSHEL(NPSHEL,N-1))! Read TM, 12I/(TM^3), TS/TM
       ENDDO
 
+!xx   IF (JCARD(7)(1:) == ' ') THEN                        ! Reset MID3 to MID2 if MID3 field is blank
+!xx      PSHEL(NPSHEL,4) = PSHEL(NPSHEL,3)
+!xx   ENDIF
  
       IF ((IERRFL(5)=='N') .AND. (IERRFL(7)=='N')) THEN    ! Check that MID3 is not > 0 when MID2 is blank (error)
          IF ((PSHEL(NPSHEL,4) > 0) .AND. (JCARD(5)(1:) == ' ')) THEN

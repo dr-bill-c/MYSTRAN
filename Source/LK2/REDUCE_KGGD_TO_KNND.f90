@@ -58,6 +58,7 @@
 !                                                              the ones on and above the diagonal (controlled by param SPARSTOR)
       INTEGER(LONG)                   :: KNND_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KNMD_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
+!xx   INTEGER(LONG)                   :: KMND_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KMMD_ROW_MAX_TERMS   ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: NTERM_CCS1          ! Number of terms in matrix CCS1  
       INTEGER(LONG)                   :: NTERM_CRS1          ! Number of terms in matrix CRS1  
@@ -114,9 +115,22 @@
 
       IF ((NDOFN > 0) .AND. (NDOFM > 0)) THEN
 
+!xx      CALL PARTITION_SS_NTERM ( 'KGGD', NTERM_KGGD, NDOFG, NDOFG, SYM_KGGD, I_KGGD, J_KGGD,      PART_VEC_G_NM, PART_VEC_G_NM,  &
+!xx                                 NUM2, NUM1, KMND_ROW_MAX_TERMS, 'KMND', NTERM_KMND, SYM_KMND ) 
 
+!xx      IF (NTERM_KMND /= NTERM_KNMD) THEN
+!xx         FATAL_ERR = FATAL_ERR + 1
+!xx         WRITE(ERR,936) SUBR_NAME, NTERM_KMND, NTERM_KNMD
+!xx         WRITE(F06,936) SUBR_NAME, NTERM_KMND, NTERM_KNMD
+!xx         CALL OUTA_HERE ( 'Y' )
+!xx      ENDIF
 
+!xx      CALL ALLOCATE_SPARSE_MAT ( 'KMND', NDOFM, NTERM_KMND, SUBR_NAME )
 
+!xx      IF (NTERM_KMND > 0) THEN
+!xx         CALL PARTITION_SS ( 'KGGD', NTERM_KGGD, NDOFG, NDOFG, SYM_KGGD, I_KGGD, J_KGGD, KGGD, PART_VEC_G_NM, PART_VEC_G_NM,    &
+!xx                              NUM2, NUM1, KMND_ROW_MAX_TERMS, 'KMND', NTERM_KMND, NDOFM, SYM_KMND, I_KMND, J_KMND, KMND )
+!xx      ENDIF
 
          NTERM_KMND = NTERM_KNMD
          CALL ALLOCATE_SPARSE_MAT ( 'KMND', NDOFM, NTERM_KNMD, SUBR_NAME )
@@ -232,6 +246,7 @@
 
             NTERM_KNND = NTERM_CRS3                        ! I-11, reallocate KNND to be size of CRS3
             WRITE(SC1, * ) '    Reallocate KNND'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNND', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'KNND' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KNND', CR13
@@ -345,6 +360,7 @@
 
             NTERM_KNND = NTERM_CRS2                        ! II-11, reallocate KNND to be size of CRS2
             WRITE(SC1, * ) '    Reallocate KNND'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNND', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'KNND' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KNND', CR13
@@ -386,6 +402,7 @@
          ENDIF
 
          WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GMNt', CR13
          CALL DEALLOCATE_SPARSE_MAT ( 'GMNt' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate HMN ', CR13

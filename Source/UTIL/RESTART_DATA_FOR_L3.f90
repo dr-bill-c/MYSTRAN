@@ -67,6 +67,7 @@
 
       INQUIRE ( FILE=LINK2G, EXIST=FILE_EXIST )
       IF ((FILE_EXIST) .AND. (NTERM_KLL > 0)) THEN
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages
          WRITE(SC1,12345,ADVANCE='NO') '       Allocate   KLL ', CR13
          WRITE(SC1,*) CR13
          CALL ALLOCATE_SPARSE_MAT ( 'KLL', NDOFL, NTERM_KLL, SUBR_NAME )
@@ -82,6 +83,7 @@
 
       INQUIRE ( FILE=LINK2H, EXIST=FILE_EXIST )
       IF ((FILE_EXIST) .AND. (NTERM_PL > 0)) THEN
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages
          WRITE(SC1,12345,ADVANCE='NO') '       Allocate   PL  ', CR13
          WRITE(SC1,*) CR13
          CALL ALLOCATE_SPARSE_MAT ( 'PL', NDOFL, NTERM_PL, SUBR_NAME )

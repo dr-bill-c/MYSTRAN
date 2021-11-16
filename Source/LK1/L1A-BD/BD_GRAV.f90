@@ -105,6 +105,12 @@
 ! Check for overflow
 
       NGRAV = NGRAV+1
+!xx   IF (NGRAV > LGRAV) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LGRAV
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LGRAV
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
 
 ! Read and check data
  

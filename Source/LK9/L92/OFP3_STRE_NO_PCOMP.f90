@@ -65,6 +65,8 @@
       INTEGER(LONG)                   :: ELOUT_STRE        ! If > 0, there are STRESS   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error count
+!xx   INTEGER(LONG)                   :: IROW_MAT          ! Row number in OTM's
+!xx   INTEGER(LONG)                   :: IROW_TXT          ! Row number in OTM text file
       INTEGER(LONG)                   :: NDUM              ! Value initialized to zero and used in call to CALC_ELEM_STRESSES
       INTEGER(LONG)                   :: NELREQ(METYPE)    ! Count of the no. of requests for ELFORCE(NODE or ENGR) or STRESS
       INTEGER(LONG)                   :: NUM_OGEL_ROWS     ! No. elems processed prior to writing results to F06 file
@@ -142,6 +144,8 @@
          ENDDO 
       ENDDO   
  
+!xx   IROW_MAT = 0
+!xx   IROW_TXT = 0
       OT4_DESCRIPTOR = 'Element stress'
 reqs5:DO I=1,METYPE
          IF (NELREQ(I) == 0) CYCLE reqs5

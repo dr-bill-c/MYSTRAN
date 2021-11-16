@@ -240,13 +240,38 @@
 
             CALL ALLOCATE_SPARSE_MAT ( 'KFF', NDOFF, NTERM_KFF, SUBR_NAME )
 
+!xx         DO I=1,NDOFF+1
+!xx            I_KFF(I) = I_KNN(I)
+!xx         ENDDO
+!xx
+!xx         DO I=1,NTERM_KFF
+!xx            J_KFF(I) = J_KNN(I)
+!xx              KFF(I) =   KNN(I)
+!xx         ENDDO
+!xx
             CALL ALLOCATE_SPARSE_MAT ( 'MFF', NDOFF, NTERM_MFF, SUBR_NAME )
 
+!xx         DO I=1,NDOFF+1
+!xx            I_MFF(I) = I_MNN(I)
+!xx         ENDDO
+!xx
+!xx         DO I=1,NTERM_MFF
+!xx            J_MFF(I) = J_MNN(I)
+!xx              MFF(I) =   MNN(I)
+!xx         ENDDO
 
             IF ((SOL_NAME(1:5) /= 'MODES') .AND. (SOL_NAME(1:12) /= 'GEN CB MODEL')) THEN
 
                CALL ALLOCATE_SPARSE_MAT ( 'PF', NDOFF, NTERM_PF, SUBR_NAME )
 
+!xx            DO I=1,NDOFF+1
+!xx               I_PF(I)  = I_PN(I)
+!xx            ENDDO
+!xx
+!xx            DO I=1,NTERM_PF
+!xx               J_PF(I) = J_PN(I)
+!xx                 PF(I) =   PN(I)
+!xx            ENDDO
 
             ENDIF
 
@@ -256,6 +281,7 @@
 
          MODNAM = '   DEALLOCATE SOME ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNN', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KNN' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MNN', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MNN' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PN ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PN' )
@@ -299,6 +325,7 @@
 
          MODNAM = '   DEALLOCATE SOME ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSSe', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSSe' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate QSYS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'QSYS' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate YSe ', CR13   ;   CALL DEALLOCATE_COL_VEC ( 'YSe' )
@@ -325,6 +352,7 @@
          ENDIF
 
          WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFS' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSF', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSF' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSS' )
@@ -358,6 +386,7 @@
          ENDIF
 
          WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MFS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MFS' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MSF', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MSF' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MSS', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'MSS' )
@@ -460,6 +489,7 @@
 
          MODNAM = '   DEALLOCATE SOME ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KNND', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KNND' )
          WRITE(SC1,*) CR13
 
@@ -484,6 +514,7 @@
          ENDIF
 
          WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate YSe ', CR13   ;   CALL DEALLOCATE_COL_VEC    ( 'YSe' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KFSD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KFSD' )
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KSFD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KSFD' )

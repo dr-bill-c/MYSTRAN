@@ -60,11 +60,12 @@
       USE PARAMS, ONLY                :  CUSERIN, CUSERIN_XSET, EQCHK_OUTPUT, EQCHK_NORM, PRTSTIFF, PRTSTIFD, PRTMASS, PRTFOR,     &
                                          SUPINFO, SUPWARN
       USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
-      USE DEBUG_PARAMETERS, ONLY      :  DEBUG
+      USE DEBUG_PARAMETERS
 
       USE SPARSE_MATRICES, ONLY       :  I_KGG, J_KGG, KGG, I_KGGD, J_KGGD, KGGD,                                                  &
                                          I_KAA, J_KAA, KAA, I_MAA, J_MAA, MAA, I_PA, J_PA , PA,                                    &
                                          I_KLL, J_KLL, KLL, I_MLL, J_MLL, MLL, I_PL, J_PL , PL
+      USE FULL_MATRICES, ONLY         :  KGG_FULL
       USE SPARSE_MATRICES, ONLY       :  SYM_KGG
       USE OUTPUT4_MATRICES, ONLY      :  NUM_OU4_REQUESTS
       USE LINK2_USE_IFs
@@ -78,7 +79,7 @@
       CHARACTER( 44*BYTE)             :: MODNAM            ! Name to write to screen to describe module being run
 
       INTEGER(LONG)                   :: NROWS             ! Value of DOF size to pass to subr WRITE_USERIN_BD_CARDS
-      INTEGER(LONG)                   :: I                 ! DO loop index
+      INTEGER(LONG)                   :: I,J               ! DO loop indices
       INTEGER(LONG), PARAMETER        :: P_LINKNO  = 1     ! Prior LINK no's that should have run before this LINK can execute
       
       REAL(DOUBLE)                    :: KGG_DIAG(NDOFG)   ! Diagonal of KGG
@@ -133,6 +134,19 @@
 ! NOTE: call this subr even if PRTSTIFFD(1) = 0 since we need KGG_DIAG, KGG_MAX_DIAG for the equilibrium check
 ! Do equilibrium check on the G-set stiffness matrix, if requested
 
+      IF (DEBUG(57) > 0) THEN
+         CALL ALLOCATE_FULL_MAT ( 'KGG_FULL', NDOFG, NDOFG, SUBR_NAME )
+         CALL SPARSE_CRS_TO_FULL ( 'KGG', NTERM_KGG, NDOFG, NDOFG, 'Y', I_KGG, J_KGG, KGG, KGG_FULL )
+         WRITE(F06,*) ' G-Set Stiffness Matrix, KGG'
+         DO I=1,NDOFG
+            IF (DEBUG(57) == 2) THEN
+               WRITE(F06,*) '  ROW',I
+            ENDIF
+            WRITE(F06,3006) (KGG_FULL(I,J),J=1,NDOFG)
+            WRITE(F06,*)
+         ENDDO
+ 3006    FORMAT(6(1ES15.6))
+      ENDIF
       IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
          CALL GET_MATRIX_DIAG_STATS ( 'KGGD', 'G ', NDOFG, NTERM_KGGD, I_KGGD, J_KGGD, KGGD, PRTSTIFD(1), KGGD_DIAG , KGGD_MAX_DIAG)
       ELSE
@@ -319,6 +333,20 @@
             WRITE(F06,*)
             CALL OUTPUT4_PROC ( SUBR_NAME )
 
+!xx         WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating KGG', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KGG' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating MGG', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'MGG' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating PG ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'PG'  )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating KAA', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAA' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating MAA', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'MAA' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating PA ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'PA'  )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating KRL', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KRL' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating KRR', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'KRR' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating MRL', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'MRL' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating MRR', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'MRR' )
+!xx         WRITE(SC1,12345,ADVANCE='NO') '       Deallocating PL ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'PL'  )
+!xx
          ENDIF
 
          IF (CUSERIN == 'Y') THEN                          ! Write out B.D. CUSERIN card images for use in INPUT4 for this substr

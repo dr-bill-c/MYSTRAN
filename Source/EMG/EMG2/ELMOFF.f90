@@ -27,8 +27,9 @@
       SUBROUTINE ELMOFF ( OPT, WRITE_WARN ) 
  
 ! Processes element mass, stiffness, thermal load, pressure load, stress recovery matrices if there are any offsets of the element
-! at any grid points. This is a general routine which can be used by any of the elements as long as the element has no more than
-! 4 grid points.
+! at any grid points. This is a general routine which can be used by any of the elements as long as the 
+! element has no more than 4 grid points.
+! ======================================
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ERR, F04, F06, WRT_LOG
@@ -38,7 +39,6 @@
       USE CONSTANTS_1, ONLY           :  ZERO, ONE
       USE MODEL_STUF, ONLY            :  CAN_ELEM_TYPE_OFFSET, ELDOF, ELGP, EID, KE, ME, NUM_EMG_FATAL_ERRS,                       &
                                          OFFDIS, OFFSET, PPE, PTE, SE1, SE2, SE3, TYPE
- 
       USE ELMOFF_USE_IFs
 
       IMPLICIT NONE
@@ -82,8 +82,8 @@
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
-         WRITE(F04,9001) SUBR_NAME,TSEC
- 9001    FORMAT(1X,A,' BEGN ',F10.3)
+         WRITE(F04,9001) SUBR_NAME,TSEC, (OPT(I),I=1,6)
+ 9001    FORMAT(1X,A,' BEGN ',F10.3, 3X,6A1)
       ENDIF
 
 ! **********************************************************************************************************************************
@@ -100,7 +100,7 @@
 ! The processing is done in 1 major loop over the  number of G.P.'s in which PTE, SEi are processed by pre or post multiplying by
 ! the offset matrix (or it's transpose).
 
-! A minor loop within the major loop takes care ofME and KE which gets post-multiplied by the offset matrix and pre-multiplied by
+! A minor loop within the major loop takes care of ME and KE which gets post-multiplied by the offset matrix and pre-multiplied by
 ! it's transpose. The offset matrices for each G.P. are a 6 x 6 matrix which is an identity matrix plus a small 3 x 3 submatrix
 ! containing only 3 independent terms, and the processing takes advantage of this and simplifies the matrix multiplications.
 ! The offset matrix is called E for each G.P. but is never written out as a 6 x 6 matrix.
@@ -129,7 +129,7 @@
 
 ! where MEe, KEe, PTEe and SEe are the mass, stiffness, thermal loads and stress recovery matrices developed in local element
 ! coordinates at the element nodes and MEg, KEg, PTEg, SEg are the same matrices but in terms of degrees of freedom at the grids and
-! in coordinates parallel to local element coordinates.
+! in global coordinates.
 
 ! Initialize
 
@@ -148,6 +148,7 @@
       ENDDO
 
       DO I=1,ELGP
+
          II  = 6*(I-1)
          DXI = ZERO
          DYI = ZERO
@@ -157,10 +158,6 @@
             DYI = OFFDIS(I,2)
             DZI = OFFDIS(I,3)
          ENDIF
-      ENDDO
-
-      DO I=1,ELGP
-
          DO J=1,6
             Ei(I,J,J) = ONE
          ENDDO
@@ -171,7 +168,6 @@
          Ei(I,2,6) =  DXI
          Ei(I,3,4) =  DYI
          Ei(I,3,5) = -DXI
-
 
       ENDDO
 
@@ -187,7 +183,6 @@
          ENDDO
       ENDDO
 
-
       IF (OPT(4) == 'Y') THEN
 
          DO J=1,6*ELGP
@@ -201,7 +196,6 @@
          CALL MATMULT_FFF   ( KE1, E     , 6*ELGP, 6*ELGP, 6*ELGP, DUM_KE )
          CALL MATMULT_FFF_T ( E  , DUM_KE, 6*ELGP, 6*ELGP, 6*ELGP, KE1    )
 
-
 ! Set KE = KE1 for 6*ELGP by 6*ELGP terms
 
          DO J=1,6*ELGP
@@ -210,8 +204,7 @@
             ENDDO
          ENDDO
 
-
-         ENDIF
+      ENDIF
 
 ! Process offsets
 
@@ -224,7 +217,6 @@
             DXI = OFFDIS(I,1)
             DYI = OFFDIS(I,2)
             DZI = OFFDIS(I,3)
-
             IF (OPT(2) == 'Y') THEN                        ! Process PTE. Generate E'* PTE
                DO J=1,3
                   DO K=1,NTSUB
@@ -329,6 +321,7 @@
                DO L=1,MAX_STRESS_POINTS+1
                   DO J=1,3
                      DO K=1,3
+!xxError                DUM3(J,K) = SE1(L,J,II+K)
                         DUM3(J,K) = SE1(J,II+K,L)
                      ENDDO 
                   ENDDO
@@ -337,8 +330,9 @@
                METH = 1
                CALL MULT_OFFSET ( DUM3, DXI, DYI, DZI, NCOL, METH, DUM4 )
                DO L=1,MAX_STRESS_POINTS+1
-                  DO J=1,3	    
+                  DO J=1,3 
                      DO K=1,3
+!xxError                SE1(L,J,II+K+3) = SE1(L,J,II+K+3) + DUM4(J,K)
                         SE1(J,II+K+3,L) = SE1(J,II+K+3,L) + DUM4(J,K)
                      ENDDO
                   ENDDO 
@@ -347,6 +341,7 @@
                DO L=1,MAX_STRESS_POINTS+1
                   DO J=1,3
                      DO K=1,3
+!xxError                DUM3(J,K) = SE2(L,J,II+K)
                         DUM3(J,K) = SE2(J,II+K,L)
                      ENDDO 
                   ENDDO
@@ -357,6 +352,7 @@
                DO L=1,MAX_STRESS_POINTS+1
                   DO J=1,3
                      DO K=1,3
+!xxError                SE2(L,J,II+K+3) = SE2(L,J,II+K+3) + DUM4(J,K)
                         SE2(J,II+K+3,L) = SE2(J,II+K+3,L) + DUM4(J,K)
                      ENDDO 
                   ENDDO 
@@ -365,6 +361,7 @@
                DO L=1,MAX_STRESS_POINTS+1
                   DO J=1,3
                      DO K=1,3
+!xxError                DUM3(J,K) = SE3(L,J,II+K)
                         DUM3(J,K) = SE3(J,II+K,L)
                      ENDDO 
                   ENDDO
@@ -375,6 +372,7 @@
                DO L=1,MAX_STRESS_POINTS+1
                   DO J=1,3
                      DO K=1,3
+!xxError                SE3(L,J,II+K+3) = SE3(L,J,II+K+3) + DUM4(J,K)
                         SE3(J,II+K+3,L) = SE3(J,II+K+3,L) + DUM4(J,K)
                      ENDDO 
                   ENDDO
@@ -383,6 +381,7 @@
             ENDIF
 
             IF (OPT(4) == 'Z') THEN                        ! Process KE. Generate E(transp)*KE*E.
+!xx         IF (OPT(4) == 'Y') THEN                        ! Process KE. Generate E(transp)*KE*E.
                DO J=I,ELGP
                   JJ = 6*(J-1)
                   IF (OFFSET(J) == 'Y') THEN
@@ -499,7 +498,7 @@
  3006 format(6(1es14.6))
 
  1955 FORMAT(' *ERROR  1955: PROGRAMMING ERROR IN SUBROUTINE ',A                                                                   &
-                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURED FOR ELEMENT NUMBER ',I8)
+                    ,/,14X,' ELEMENT TYPE ',A,' DOES NOT SUPPORT OFFSETS. ERROR OCCURRED FOR ELEMENT NUMBER ',I8)
 
 ! ##################################################################################################################################
 

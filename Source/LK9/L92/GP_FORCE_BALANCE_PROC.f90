@@ -256,6 +256,7 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
          NREQ = NREQ + 1
       ENDDO
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
       DO I=1,NGRID
 
          WRITE(SC1,12345,ADVANCE='NO') I, NREQ, CR13

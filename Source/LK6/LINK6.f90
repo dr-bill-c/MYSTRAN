@@ -141,11 +141,27 @@
 ! Read eigenvalues. EIGEN_VAL was not deallocated in LINK4 (see LINK4 comment 01/11/19) so we do not allocate it here anymore
 
 
+!xx   CALL ALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL', NUM_EIGENS, 1, SUBR_NAME ) 
       CALL ALLOCATE_EIGEN1_MAT ( 'MODE_NUM' , NUM_EIGENS, 1, SUBR_NAME ) 
       CALL ALLOCATE_EIGEN1_MAT ( 'GEN_MASS' , NUM_EIGENS, 1, SUBR_NAME ) 
       CALL READ_L1M ( IERROR )
 
 !!Read KLL stiffness matrix
+!xx
+!xx   CALL ALLOCATE_SPARSE_MAT ( 'KLL', NDOFL, NTERM_KLL, SUBR_NAME )
+!xx
+!xx   IF (NTERM_KLL > 0) THEN                              ! Allocate and read KGG stiffness matrix
+!xx
+!xx      READ_NTERM = 'Y'
+!xx      OPND       = 'N'
+!xx      CLOSE_IT   = 'Y'
+!xx      CALL OURTIM
+!xx      MODNAM = 'READ KLL STIFFNESS MATRIX                 '
+!xx      WRITE(SC1,6092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+!xx      CALL READ_MATRIX_1 ( LINK2G, L2G, OPND, CLOSE_IT, L2GSTAT, L2G_MSG, 'KLL', NTERM_KLL, READ_NTERM, NDOFL                   &
+!xx                         , I_KLL, J_KLL, KLL)
+!xx   ENDIF
+
 ! Read KRL stiffness matrix
 
       CALL ALLOCATE_SPARSE_MAT ( 'KRL', NDOFR, NTERM_KRL, SUBR_NAME )
@@ -177,6 +193,22 @@
          CALL READ_MATRIX_1 ( LINK2L, L2L, OPND, CLOSE_IT, L2LSTAT, L2L_MSG, 'KRR', NTERM_KRR, READ_NTERM, NDOFR                   &
                             , I_KRR, J_KRR, KRR)
       ENDIF
+
+!xxRead MLL mass matrix
+!xx
+!xx   CALL ALLOCATE_SPARSE_MAT ( 'MLL', NDOFL, NTERM_MLL, SUBR_NAME )
+!xx
+!xx   IF (NTERM_MLL > 0) THEN                              ! Allocate and read KGG stiffness matrix
+!xx
+!xx      READ_NTERM = 'Y'
+!xx      OPND       = 'N'
+!xx      CLOSE_IT   = 'Y'
+!xx      CALL OURTIM
+!xx      MODNAM = 'READ MLL MASS MATRIX                 '
+!xx      WRITE(SC1,6092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+!xx      CALL READ_MATRIX_1 ( LINK2I, L2I, OPND, CLOSE_IT, 'KEEP', L2I_MSG, 'MLL', NTERM_MLL, READ_NTERM, NDOFL                   &
+!xx                         , I_MLL, J_MLL, MLL)
+!xx   ENDIF
 
 ! Read MRL mass matrix
 
@@ -271,6 +303,7 @@
       IF (PRTPHIXA > 0) THEN
          CALL WRITE_SPARSE_CRS ( 'PHIXA','A ','  ', NTERM_PHIXA, NDOFA, I_PHIXA, J_PHIXA, PHIXA )
       ENDIF
+!xx   WRITE(SC1, * )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate IRR      ', CR13
       CALL DEALLOCATE_SPARSE_MAT ( 'IRR')
 
@@ -305,6 +338,7 @@
       WRITE(SC1,6092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
       CALL CALC_MRN  
 
+!xx   WRITE(SC1, * )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate DLRt     ', CR13
       CALL DEALLOCATE_SPARSE_MAT ( 'DLRt' )
 
@@ -327,6 +361,7 @@
       WRITE(SC1,6092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
       CALL NET_CG_LOADS_LTM
 
+!xx   WRITE(SC1, * )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MRRcbn   ', CR13
       CALL DEALLOCATE_SPARSE_MAT ( 'MRRcbn' )
 
@@ -388,9 +423,11 @@
 ! Deallocate arrays, but not PHIXA which may be needed in LINK5 to expand to G-set or IF_LTM needed in LINK9 for calc of QR_COL.
 ! Also do not deallocate EIGEN_VAL, it may be needed later
 
+!xx   WRITE(SC1, * )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate CG_LTM   ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'CG_LTM'    )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate DLR      ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'DLR'       )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PHIZL    ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'PHIZL'     )
+!xx   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate EIGEN_VAL', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate EIGEN_VEC', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VEC' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GEN_MASS ', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'GEN_MASS'  )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MODE_NUM ', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'MODE_NUM'  )

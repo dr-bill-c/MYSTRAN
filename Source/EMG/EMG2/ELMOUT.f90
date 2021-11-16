@@ -30,7 +30,7 @@
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, BUG, F04
-      USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_DAT1_BIT, ELDT_BUG_DAT2_BIT, ELDT_BUG_ME_BIT, ELDT_BUG_P_T_BIT,  &
+      USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_DAT1_BIT, ELDT_BUG_DAT2_BIT, ELDT_BUG_ME_BIT, ELDT_BUG_P_T_BIT,    &
                                          ELDT_BUG_SE_BIT, ELDT_BUG_KE_BIT, ELDT_BUG_U_P_BIT, MBUG, MDT, MELGP, METYPE,             &
                                          MEMATR, MEMATC, MEPROP, MPRESS, NSUB, NTSUB, SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
@@ -496,6 +496,8 @@
 
             WRITE(BUG,1001) ELDT_BUG_SE_BIT, TYPE, EID
 
+!xx         IF ((TYPE(1:4) /= 'ELAS') .AND. (TYPE(1:5) /= 'TRIA3') .AND. (TYPE(1:5) /= 'QUAD4') .AND                               &
+!xx             (TYPE(1:4) /= 'HEXA') .AND. (TYPE(1:5) /= 'PENTA') .AND. (TYPE(1:5) /= 'TETRA')) THEN
 
             IF ((TYPE == 'BAR     ') .OR. (TYPE == 'BEAM    ') .OR. (TYPE == 'ROD     ')) THEN
                IF (CAN_ELEM_TYPE_OFFSET == 'Y') THEN

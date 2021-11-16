@@ -129,7 +129,6 @@
 ! Calculate volume by Gaussian integration
 
       CALL ORDER_TETRA ( IORD, SSS_I, SSS_J, SSS_K, HHH_IJK )
-
       IORD_MSG = ' '
       IORD_MSG = 'for 3-D solid strains,           input IORD = '
       VOLUME = ZERO

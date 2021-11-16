@@ -56,8 +56,10 @@
       INTEGER(LONG)                   :: KTERM_IRR           ! Count of number terms in arrays J_IRR and A
       INTEGER(LONG)                   :: KTERM_DLR           ! Count of number terms in arrays J_DLR and B
       INTEGER(LONG)                   :: KTERM_PHIXA         ! Count of number terms in arrays J_C and C
+!xx   INTEGER(LONG)                   :: NTERM_PHIXA         ! Number of nonzero terms in output matrix C
       INTEGER(LONG)                   :: NUM_IN_ROW_OF_IRR   ! Num terms in a row of IRR matrix
       INTEGER(LONG)                   :: NUM_IN_ROW_OF_DLR   ! Num terms in a row of DLR matrix
+!xx   INTEGER(LONG)                   :: NUM_IN_ROW_OF_PHIXA ! Num terms in a row of IRR
       INTEGER(LONG)                   :: ROW_NUM_DLR         ! Row number in matrix DLR
       INTEGER(LONG)                   :: ROW_NUM_EV          ! Row number in matrix EIGEN_VEC (L-set eigenvectors)
       INTEGER(LONG)                   :: ROW_NUM_IRR         ! Row number in matrix IRR (R-set identity matrix)
@@ -76,6 +78,7 @@
       ROW_NUM_IRR        = 0
       NUM_IN_ROW_OF_DLR  = 0
       NUM_IN_ROW_OF_IRR  = 0
+!xx   NUM_IN_ROW_OF_PHIXA = 0
       KTERM_IRR   = 0
       KTERM_DLR   = 0
       KTERM_PHIXA = 0
@@ -85,6 +88,7 @@
          IF      (PART_VEC_A_LR(I) == 2) THEN              ! Get a row of matrix IRR and put it into PHIXA
             ROW_NUM_IRR         = ROW_NUM_IRR + 1
             NUM_IN_ROW_OF_IRR   = I_IRR(ROW_NUM_IRR+1) - I_IRR(ROW_NUM_IRR)
+!xx         NUM_IN_ROW_OF_PHIXA = NUM_IN_ROW_OF_IRR
             DO J=1,NUM_IN_ROW_OF_IRR
                KTERM_IRR            = KTERM_IRR + 1
                I_PHIXA(I+1)         = I_PHIXA(I+1) + 1
@@ -97,6 +101,7 @@
             ROW_NUM_DLR             = ROW_NUM_DLR + 1
             ROW_NUM_EV              = ROW_NUM_EV  + 1
             NUM_IN_ROW_OF_DLR       = I_DLR(ROW_NUM_DLR+1) - I_DLR(ROW_NUM_DLR)
+!xx         NUM_IN_ROW_OF_PHIXA     = NUM_IN_ROW_OF_DLR
             DO J=1,NUM_IN_ROW_OF_DLR
                KTERM_DLR            = KTERM_DLR + 1
                I_PHIXA(I+1)         = I_PHIXA(I+1) + 1

@@ -80,17 +80,16 @@
       CALL ALLOCATE_L1_MGG ( 'MGGC', SUBR_NAME )
 
       KTERM_MGGC = 0
-      I_MGGC(1) = 1
-      irow_start = 1
+      I_MGGC(1)  = 1
+      IROW_START = 1
 i_do1:DO I=1,NGRID
 
-         GRID_NUM = GRID_ID(INV_GRID_SEQ(I))               ! GRID_NUM's are in TDOFI order (internal DOF order)
+!xx      GRID_NUM = GRID_ID(INV_GRID_SEQ(I))               ! GRID_NUM's are in TDOFI order (internal DOF order)
+         GRID_NUM = GRID_ID(I)
          CALL MGG_CONM2_PROC ( I, GRID_NUM, MGG_CONM2, MGG_CONM2_NONZERO )
          CALL GET_GRID_NUM_COMPS ( GRID_NUM, NUM_COMPS, SUBR_NAME )
 
-
          IF (MGG_CONM2_NONZERO == 'Y') THEN 
-
             DO J=1,NUM_COMPS
                DELTA_KTERM_MGGC = 0
 
@@ -99,7 +98,6 @@ i_do1:DO I=1,NGRID
                ELSE
                   KSTART = 1                               ! Process all of MGG_CONM2
                ENDIF
-
                DO K=KSTART,NUM_COMPS
                   IF (DABS(MGG_CONM2(J,K)) >= EPS1) THEN
                      MGGC_COL_NUM       = IROW_START + K - 1
@@ -110,6 +108,7 @@ i_do1:DO I=1,NGRID
                         MGGC(KTERM_MGGC) = MGG_CONM2(J,K)
                   ENDIF
                ENDDO
+!xx            IJ = 6*(I-1) + J 
                IJ = NUM_COMPS*(I-1) + J 
                I_MGGC(IJ+1) = I_MGGC(IJ) + DELTA_KTERM_MGGC 
             ENDDO
@@ -125,9 +124,7 @@ i_do1:DO I=1,NGRID
 
          IROW_START = IROW_START + NUM_COMPS
 
-
       ENDDO i_do1
-
 
       NTERM_MGGC = KTERM_MGGC
 
@@ -142,10 +139,6 @@ i_do1:DO I=1,NGRID
 
       RETURN
 
-! **********************************************************************************************************************************
-
-
-
 ! ##################################################################################################################################
 
       CONTAINS
@@ -154,7 +147,7 @@ i_do1:DO I=1,NGRID
  
       SUBROUTINE MGG_CONM2_PROC ( INT_GRID_ID, GRID_NUM, MGG_CONM2, MGG_CONM2_NONZERO )
  
-! Generates 6 x 6 element mass matrix, MGG_CONM2, for one CONM2 for grid GRID_NUM (if there is any CONM2 connected to this grid)
+! Generates 6 x 6 mass matrix, MGG_CONM2, for one CONM2 for grid GRID_NUM (if there is any CONM2 connected to this grid)
 
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ERR, F04, F06
@@ -212,7 +205,7 @@ i_do1:DO I=1,NGRID
 
       ENDIF
 
-! Process CONM2's for this grid 
+! Process CONM2's for this grid
 
       DO L=1,NCONM2
 
@@ -251,7 +244,6 @@ i_do1:DO I=1,NGRID
                ENDDO
             ENDDO
 
-
          ENDIF
 
       ENDDO 
@@ -267,7 +259,6 @@ i_do1:DO I=1,NGRID
 
 ! **********************************************************************************************************************************
 12345 format(5X,'Process mass for CONM2 ',I8,' int G.P. ',I8,' of ',I8,'           ', A)
-
 
 ! **********************************************************************************************************************************
 

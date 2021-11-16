@@ -137,6 +137,7 @@
                GID_OUT_ARRAY(NUM,1)       = GRID(I,1)
                GID_OUT_ARRAY(NUM,2)       = GRID(I,3)
                GID_OUT_ARRAY(NUM,MELGP+1) = GRID(I,5)
+!xx            CALL CALC_TDOF_ROW_NUM ( GRID_ID(I), ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID_ID(I), IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
                CALL GET_GRID_NUM_COMPS ( GRID_ID(I), NUM_COMPS, SUBR_NAME )

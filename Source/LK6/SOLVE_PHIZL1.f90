@@ -113,6 +113,7 @@
  
 ! Loop on columns of CRS3
  
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
       NTERM_PHIZL1   = 0
       DO J = 1,NDOFR

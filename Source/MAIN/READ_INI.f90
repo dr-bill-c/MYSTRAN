@@ -182,6 +182,7 @@
                   WRT_CARD = 'Y'
                ENDIF
                WRITE(SC1,1501) LINE_NUMBER
+         !xx   WRITE(SC1, * )
                IERR = IERR + 1
                CYCLE
             ELSE IF ((CARD(1:1) /= '$') .AND. (CARD(1:) /= ' ')) THEN
@@ -440,6 +441,7 @@
                   ENDIF
                   WRITE(SC1,'(1X,A79)') CARD(1:79)
                   WRITE(SC1,1502)
+            !xx   WRITE(SC1, * )
                   CYCLE                  
 
                ENDIF
@@ -480,6 +482,7 @@
             WRITE(SC1,1511)
             CALL WRITE_FILNAM ( INIFIL, SC1, 1 ) 
             WRITE(SC1,1512)
+      !xx   WRITE(SC1, * )
             READ(*,*) RESPONSE
             IF      ((RESPONSE == 'Y') .OR. (RESPONSE == 'y')) THEN
                EXIT
@@ -618,6 +621,7 @@
       CALL CRDERR0 ( CARD, FLD_ERR_MSG )
 
       IF (WRT_HDR == 'Y') THEN
+   !xx   WRITE(SC1, * )
       ENDIF
 
 !***********************************************************************************************************************************

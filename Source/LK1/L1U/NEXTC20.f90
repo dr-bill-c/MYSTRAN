@@ -88,6 +88,17 @@
       ENDIF
       NEWTAG = CHILD1(1:8)
 
+!xx CODE COMMENTED OUT IS REPLACED WITH CODE BELOW IT
+!xx   IF (NEWTAG == OLDTAG) THEN
+!xx      ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '*       ') .AND. (NEWTAG(1:8) == '       ')) THEN
+!xx      ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '        ') .AND. (NEWTAG(1:8) == '*      ')) THEN
+!xx      ICONT = 1
+!xx   ELSE
+!xx      BACKSPACE(IN1)
+!xx      RETURN
+!xx   ENDIF 
 
       IF (NEWTAG == OLDTAG) THEN
          ICONT = 1
@@ -115,8 +126,10 @@
       ICONT = 0
       IF (NEWTAG == OLDTAG) THEN
          ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '*       ') .AND. (NEWTAG(1:8) == '       ')) THEN
       ELSE IF ((OLDTAG(1:1) == '*') .AND. (NEWTAG(1:1) == ' ') .AND. (OLDTAG(2:8) == NEWTAG(2:8))) THEN
          ICONT = 1
+!xx   ELSE IF ((OLDTAG(1:8) == '        ') .AND. (NEWTAG(1:8) == '*      ')) THEN
       ELSE IF ((OLDTAG(1:1) == ' ') .AND. (NEWTAG(1:1) == '*') .AND. (OLDTAG(2:8) == NEWTAG(2:8))) THEN
          ICONT = 1
       ELSE

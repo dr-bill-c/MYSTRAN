@@ -74,6 +74,9 @@
 
       DO I=1,ELGP
          DELTA = 1
+         IF (TYPE == 'BUSH    ') THEN                      ! 1st grid in EDAT for BUSH is at EPNTK+3 since "Num grids" is EPNTK+2
+            DELTA = 2
+         ENDIF
          IF (TYPE == 'USERIN  ') THEN
             DELTA = MEDAT0_CUSERIN - 1
          ENDIF

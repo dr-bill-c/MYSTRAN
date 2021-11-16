@@ -223,6 +223,7 @@
 
             NTERM_MAA = NTERM_CRS3                         ! I-10, reallocate MAA to be size of CRS1
             WRITE(SC1, * ) '    Reallocate MAA'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MAA', CR13
             CALL DEALLOCATE_SPARSE_MAT ( 'MAA' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   MAA', CR13
@@ -279,6 +280,8 @@
 
                CALL SPARSE_CRS_TERM_COUNT ( NDOFA, NTERM_CRS1, 'GOAt*MOO*GOA all nonzeros', I_CRS1, J_CRS1, NTERM_CRS3 )
                CALL ALLOCATE_SCR_CRS_MAT ( 'CRS3', NDOFA, NTERM_CRS3, SUBR_NAME )
+!xx            CALL SPARSE_NONSYM_TO_SYM ( NDOFA, NTERM_CRS1, 'CRS1', I_CRS1, J_CRS1, CRS1,                                        &
+!xx                                               NTERM_CRS3, 'CRS3', I_CRS3, J_CRS3, CRS3 )
                CALL CRS_NONSYM_TO_CRS_SYM ( 'CRS1 = GOAt*MOO*GOA all nonzeros', NDOFA, NTERM_CRS1, I_CRS1, J_CRS1, CRS1,           &
                                             'CRS3 = GOAt*MOO*GOA stored sym'  ,        NTERM_CRS3, I_CRS3, J_CRS3, CRS3 )
                SYM_CRS3 = 'Y'
@@ -316,6 +319,7 @@
 
             NTERM_MAA = NTERM_CRS2                         ! II-11, reallocate MAA to be size of CRS2
             WRITE(SC1, * ) '    Reallocate MAA'
+      !xx   WRITE(SC1, * )                                 ! Advance 1 line for screen messages         
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MAA', CR13
              CALL DEALLOCATE_SPARSE_MAT ( 'MAA' )
             WRITE(SC1,12345,ADVANCE='NO') '       Allocate   MAA', CR13
@@ -418,6 +422,7 @@
          CALL ALLOCATE_SPARSE_MAT ( 'MAA', NDOFA, NTERM_MAA, SUBR_NAME )
 
          IF (NTERM_MAA > 0) THEN                            ! Create new sparse arrays from MAA_FULL
+!xx         CALL FULL_TO_SPARSE_CRS ( 'MAA_FULL  ', NDOFA, NDOFA, MAA_FULL, NTERM_MAA, SYM_MAA, I_MAA, J_MAA, MAA )
             CALL DEALLOCATE_FULL_MAT ( 'MAA_FULL' )
          ENDIF
 

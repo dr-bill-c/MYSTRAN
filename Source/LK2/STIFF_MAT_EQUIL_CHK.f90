@@ -361,6 +361,7 @@
          ENDIF
          OLD_GRID = 0
          DO I=1,6
+!xx         MAX_AFORCE(I) = ZERO
             MAX_AFORCE(I) = -MACH_LARGE_NUM
          ENDDO
          DO I=1,NDOFG

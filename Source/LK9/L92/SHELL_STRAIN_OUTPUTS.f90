@@ -243,6 +243,11 @@
                   FEMAP_EL_VECS(NUM_FEMAP_ROWS,11*(I-1)+10) = SXZ
                   FEMAP_EL_VECS(NUM_FEMAP_ROWS,11*(I-1)+11) = SYZ
 
+!xx               IF (STRN_OPT == 'VONMISES') THEN
+!xx                  FEMAP_EL_VECS(NUM_FEMAP_ROWS,9*(I-1)+8) = VONMISES
+!xx               ELSE
+!xx                  FEMAP_EL_VECS(NUM_FEMAP_ROWS,9*(I-1)+8) = SXYMAX
+!xx               ENDIF
                ENDIF
             ENDDO   
  

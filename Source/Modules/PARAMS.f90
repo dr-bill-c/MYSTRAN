@@ -106,7 +106,7 @@
       INTEGER(LONG)            :: DARPACK        =     2     ! Delta to add to EIG_N2 so that ARPACK will find a few more eigens 
 !                                                              than user requested (since higher ones seem to be a little bad)
 
-      INTEGER(LONG)            :: DELBAN         =     0     ! Delete the Bandit files left over, 0 is not to. 1 is to delete them.
+      INTEGER(LONG)            :: DELBAN         =     1     ! Delete the Bandit files left over, 0 is not to. 1 is to delete them.
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
       INTEGER(LONG)            :: EIGESTL        =  5000     ! Upper limit on NDOFL for running code to est # eigens below EIG_FRQ2

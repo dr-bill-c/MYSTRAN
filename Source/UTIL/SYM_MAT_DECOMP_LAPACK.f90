@@ -106,6 +106,7 @@
       REAL(DOUBLE)                    :: MB_TO_ALLOCATE    ! MB of memory to allocate
       REAL(DOUBLE)                    :: MINKII            ! Minimum diagonal term in MATIN
       REAL(DOUBLE)                    :: FAC_DIAG          ! Diagonal term in the tringular factor of MATIN
+!xx   REAL(DOUBLE)                    :: SCOND             ! Ratio of min to max scaling factors, LAPACK_S(i), if MATIN is equil'ed.
       REAL(DOUBLE)                    :: RATIO             ! Ratio of matrix diagonal to factor diagonal
  
       INTRINSIC                       :: DABS
@@ -185,6 +186,7 @@
          CALL OURTIM
          MODNAM = 'CALC INFINITY NORM OF MATRIX ' // MATIN_NAME(1:)
          WRITE(SC1,3092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )
          K_INORM = DLANSB ( INORM, UPLO, NROWS, MATIN_SDIA, ABAND, MATIN_SDIA+1, LAPACK_S )
          WRITE(F06,3005) MATIN_NAME, K_INORM
       ENDIF  

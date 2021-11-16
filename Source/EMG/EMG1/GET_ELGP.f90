@@ -70,6 +70,11 @@
          ELGP = NG + NS
          FOUND = 'Y'
 
+      ELSE IF (TYPE == 'BUSH    ') THEN
+
+         ELGP  = EDAT(EPNTK+2)
+         FOUND = 'Y'
+
       ELSE
 
          DO I=1,METYPE

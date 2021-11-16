@@ -47,7 +47,9 @@
                                          I_MAA , J_MAA , MAA , I_MLL , J_MLL , MLL , I_MRL , J_MRL , MRL , I_MRR , J_MRR , MRR ,   &
                                          I_PA  , J_PA  , PA  , I_PL  , J_PL  , PL  , I_PR  , J_PR  , PR
       USE SPARSE_MATRICES, ONLY       :  SYM_KLL
+      USE FULL_MATRICES, ONLY         :  KAA_FULL
       USE OUTPUT4_MATRICES, ONLY      :  ACT_OU4_MYSTRAN_NAMES, NUM_OU4_REQUESTS
+      USE DEBUG_PARAMETERS
  
       USE REDUCE_A_LR_USE_IFs
                    
@@ -225,8 +227,23 @@
 
 ! Deallocate A-set arrays
 
+         IF (DEBUG(57) > 0) THEN
+            CALL ALLOCATE_FULL_MAT ( 'KAA_FULL', NDOFA, NDOFA, SUBR_NAME )
+            CALL SPARSE_CRS_TO_FULL ( 'KAA', NTERM_KAA, NDOFA, NDOFA, 'Y', I_KAA, J_KAA, KAA, KAA_FULL )
+            WRITE(F06,*) ' A-Set Stiffness Matrix, KAA'
+            DO I=1,NDOFA
+               IF (DEBUG(57) == 2) THEN
+                  WRITE(F06,*) '  ROW',I
+               ENDIF
+               WRITE(F06,3006) (KAA_FULL(I,J),J=1,NDOFA)
+               WRITE(F06,*)
+            ENDDO
+ 3006       FORMAT(6(1ES15.6))
+         ENDIF
+
          MODNAM = '  DEALLOCATE A-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KAA == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAA', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAA' )
@@ -265,6 +282,7 @@
 
          MODNAM = '  DEALLOCATE R-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KRL == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KRL', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KRL' )
@@ -419,6 +437,7 @@
 
          MODNAM = '  DEALLOCATE A-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KAAD == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KAAD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KAAD' )
@@ -447,6 +466,7 @@
 
          MODNAM = '  DEALLOCATE R-SET ARRAYS'
          WRITE(SC1,2092) MODNAM,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
 
          IF (DEALLOCATE_KRLD == 'Y') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KRLD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KRLD' )

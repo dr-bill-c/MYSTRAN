@@ -112,6 +112,7 @@
 
 ! Read LINK1A file
  
+!xx   CALL READ_L1A ( 'KEEP', 'Y' )
       CALL INIT_COUNTERS
 
 ! Check COMM for successful completion of prior LINKs
@@ -203,6 +204,7 @@ res19:IF (RESTART == 'N') THEN
 ! Element thermal and pressure load processing
   
          IF ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC') .OR. (SOL_NAME(1:8) == 'BUCKLING')) THEN
+!xx         ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1))) THEN
             CALL OURTIM
             MODNAM = 'ALLOCATE MEMORY FOR THERMAL LOAD ARRAYS       '
             WRITE(SC1,1092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC

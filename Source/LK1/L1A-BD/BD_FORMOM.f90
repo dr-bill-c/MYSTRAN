@@ -108,6 +108,12 @@
 ! Check for overflow
 
       NFORCE = NFORCE+1
+!xx   IF (NFORCE > LFORCE) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LFORCE
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LFORCE
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
 
 ! Read and check data
  

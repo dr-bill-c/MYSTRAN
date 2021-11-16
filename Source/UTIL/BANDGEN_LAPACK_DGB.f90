@@ -73,6 +73,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
 ! First, put terms from upper triangle of MATIN (which has only the upper triangle stored) into MATOUT. Note that this storage
 ! scheme (required by ARPACK Lanczos subr's) has the first KD rows unused in MATOUT.
@@ -107,6 +108,7 @@
 ! Second, symmetric terms from MATIN into MATOUT
 
       IF (SPARSTOR == 'SYM') THEN
+   !xx   WRITE(SC1, * )
          MATOUT_DIAG_ROW_NUM = 2*KD + 1
          DO I=1,KD
             DO J=1,N-I 

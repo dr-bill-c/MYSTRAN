@@ -126,6 +126,7 @@
       IF ((NAME == 'KNN') .OR. (NAME == 'MNN') .OR. (NAME == 'PN')) THEN
          IF (ALLOCATED(I_KGG)) THEN
             IF (NDOFM == 0) THEN
+         !xx   WRITE(SC1, * )
             ENDIF
          ENDIF
       ENDIF 
@@ -133,6 +134,7 @@
       IF ((NAME == 'KFF') .OR. (NAME == 'MFF') .OR. (NAME == 'PF')) THEN
          IF (ALLOCATED(I_KNN)) THEN
             IF (NDOFS == 0) THEN
+         !xx   WRITE(SC1, * )
             ENDIF
          ENDIF
       ENDIF 
@@ -140,6 +142,7 @@
       IF ((NAME == 'KAA') .OR. (NAME == 'MAA') .OR. (NAME == 'PA')) THEN
          IF (ALLOCATED(I_KFF)) THEN
             IF (NDOFO == 0) THEN
+         !xx   WRITE(SC1, * )
             ENDIF
          ENDIF
       ENDIF 
@@ -147,6 +150,7 @@
       IF ((NAME == 'KLL') .OR. (NAME == 'MLL') .OR. (NAME == 'PL')) THEN
          IF (ALLOCATED(I_KAA)) THEN
             IF (NDOFR == 0) THEN
+         !xx   WRITE(SC1, * )
             ENDIF
          ENDIF
       ENDIF 
@@ -7028,7 +7032,7 @@
 ! Quit if there were errors
 
       IF (JERR /= 0) THEN
-         WRITE(ERR,1699) SUBR_NAME, CALLING_SUBR
+         WRITE(ERR,1699) TRIM(SUBR_NAME), CALLING_SUBR
          WRITE(F06,1699) SUBR_NAME, CALLING_SUBR
          FATAL_ERR = FATAL_ERR + 1
          CALL OUTA_HERE ( 'Y' )
