@@ -62,7 +62,6 @@ MYSTRAN relies upon the following dependencies
 - gfortran
 - make
 - git
-- f2c (aka libf2c)
 - cmake (version 3.18 or above)
 
 Check if gcc is installed. 
@@ -108,16 +107,6 @@ dpkg --list | grep -P "^ii\s+git\s+"
 If it is not installed, install it.
 ```
 sudo apt install git
-```
-
-Check if f2c is installed
-```
-dpkg --list | grep -P "^ii\s+f2c\s+"
-```
-
-If it is not installed, install it.
-```
-sudo apt install f2c
 ```
 
 Check if cmake is installed
