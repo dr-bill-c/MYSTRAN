@@ -41,10 +41,12 @@
  
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME     = 'BD_PUSERIN'
       CHARACTER(LEN=*), INTENT(IN)    :: CARD              ! A Bulk Data card
+!xx   CHARACTER(LEN=*), INTENT(IN)    :: CARD_AS_INPUT     ! A Bulk Data card
       CHARACTER(LEN=JCARD_LEN)        :: JCARD(10)         ! The 10 fields of characters making up CARD
  
       INTEGER(LONG)                   :: IN4_NUM           ! IN4 file number read from field 3 of RPUSERIN entry
       INTEGER(LONG)                   :: J                 ! DO loop indices
+!xx   INTEGER(LONG)                   :: ISTART            ! Start col in CARD for matrix names
       INTEGER(LONG)                   :: PROPERTY_ID   = 0 ! Property ID (field 2 of this property card)
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = BD_PUSERIN_BEGEND
 
@@ -96,13 +98,18 @@
          PUSERIN(NPUSERIN,2) = IN4_NUM
       ENDIF
  
+!xx   ISTART = 25
                                                            ! Read stiff matrix name in field 4
+!xx   USERIN_MAT_NAMES(NPUSERIN,1) = CARD_AS_INPUT(ISTART  :ISTART+  7)
       USERIN_MAT_NAMES(NPUSERIN,1) = JCARD(4)
                                                            ! Read mass  matrix name in field 5
+!xx   USERIN_MAT_NAMES(NPUSERIN,2) = CARD_AS_INPUT(ISTART+ 8:ISTART+15)
       USERIN_MAT_NAMES(NPUSERIN,2) = JCARD(5)
                                                            ! Read load  matrix name in field 6
+!xx   USERIN_MAT_NAMES(NPUSERIN,3) = CARD_AS_INPUT(ISTART+16:ISTART+23)
       USERIN_MAT_NAMES(NPUSERIN,3) = JCARD(6)
                                                            ! Read RBM0  matrix name in field 7
+!xx   USERIN_MAT_NAMES(NPUSERIN,4) = CARD_AS_INPUT(ISTART+24:ISTART+31)
       USERIN_MAT_NAMES(NPUSERIN,4) = JCARD(7)
 
 

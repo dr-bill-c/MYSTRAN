@@ -100,6 +100,7 @@
 ! Process Bulk Data cards in a loop that runs until either an ENDDATA card is found or when an error or EOF/EOR occurs
     
       ICNT = 0
+!xx   REWIND (IN1)
       DO
 
          ICNT = ICNT + 1
@@ -507,6 +508,10 @@
  
       ENDDO
 
+! ! Reset FATAL_ERR to 0. Errors that incremented FATAL_ERR in LOADBO (and routines it calls) will be recorded and 
+! ! reported when LOADB runs.
+! ! 
+! !   FATAL_ERR = 0 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM

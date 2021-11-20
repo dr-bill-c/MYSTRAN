@@ -105,6 +105,35 @@
          CHAR_INT(1:) = TEMP_CHAR_INT(1:)
 
       ENDIF
+!xxLeft adjust CHAR_INT
+!xx
+!xx   TEMP_CHAR_INT(1:) = ' '
+!xx   IF (CHAR_INT(1:1) == ' ') THEN                       ! We need to shift:
+!xx
+!xx      TEMP_CHAR_INT(1:) = CHAR_INT(1:)                  ! Set temporary field to CHR8_FLD
+!xx
+!xx      DO I = 2,WORD_LEN                                       ! Perform shift
+!xx         IF (CHAR_INT(I:I) /= ' ') THEN
+!xx            TEMP_CHAR_INT(1:) = CHAR_INT(I:)
+!xx            EXIT
+!xx         ENDIF
+!xx      ENDDO
+!xx
+!xx      CHAR_INT(1:) = TEMP_CHAR_INT(1:)                  ! Reset CHR_FLD and return 
+!xx
+!xx   ENDIF   
+!xx 
+!xxCount nonblank characters in CHAR_INT
+!xx
+!xx   NUM_CHARS = WORD_LEN
+!xx   DO I=WORD_LEN,1,-1
+!xx      IF ((CHAR_INT(I:I) == ' ') .OR. (CHAR_INT(I:I) == ',')) THEN
+!xx         CYCLE
+!xx      ELSE
+!xx         NUM_CHARS = WORD_LEN - I
+!xx      write(f06,'(a,i3,a,a,a,i3)') ' I, CHAR_INT(I:I)= ', i, '  "', char_int(i:i), '"'
+!xx      ENDIF
+!xx   ENDDO
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN

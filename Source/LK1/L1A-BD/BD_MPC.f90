@@ -110,6 +110,12 @@
 ! Check for overflow
 
       NMPC = NMPC+1
+!xx   IF (NMPC > LMPC) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LMPC
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LMPC
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
  
 ! Read MPC set ID in field 2
 

@@ -81,6 +81,7 @@
 
       WRITE(UNT) NTERM
       K = 0
+!xx   WRITE(SC1, * )
       DO I=1,NROWS
          NTERM_ROW_I = I_MATIN(I+1) - I_MATIN(I)
          WRITE(SC1,12345,ADVANCE='NO') NAME, I, NROWS, CR13

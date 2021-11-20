@@ -56,6 +56,7 @@
       REAL(DOUBLE), INTENT(OUT)       :: TAU_OCT            ! Octrahedral shear  stress or strain
       REAL(DOUBLE), INTENT(OUT)       :: VONMISES           ! Octahedral stress or strain
       REAL(DOUBLE)                    :: SIG1,SIG2,SIG3     ! Principal stresses or strains
+!xx   REAL(DOUBLE)                    :: I1,I2,I3           ! Invariants of Cauchy stress or strain tensor      
       REAL(DOUBLE)                    :: Q(3,3)             ! Output from subr ROOTS_3D, called herein (transform to princ dir's)
       REAL(DOUBLE)                    :: STR_TENSOR(3,3)    ! Principal stresses or strains in a 3x3 matrix
       REAL(DOUBLE)                    :: TAU12,TAU23,TAU13  ! Max shear stresses or strains
@@ -72,8 +73,11 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+!xx   I1 = STR(1) + STR(2) + STR(3)
 
+!xx   I2 = STR(1)*STR(2) + STR(2)*STR(3) + STR(3)*STR(1) - STR(4)*STR(4) - STR(5)*STR(5) - STR(6)*STR(6)
 
+!xx   I3 = STR(1)*STR(2)*STR(3) + TWO*STR(4)*STR(5)*STR(6) - STR(1)*STR(5)*STR(5) - STR(2)*STR(6)*STR(6) - STR(3)*STR(4)*STR(4)
 
       STR_TENSOR(1,1) = STR(1)
       STR_TENSOR(2,1) = STR(4)   ;   STR_TENSOR(2,2) = STR(2)
@@ -162,6 +166,7 @@
       REAL(DOUBLE)                    :: PSTR(N)           ! Principal stresses or strains in a 1-D array
       REAL(DOUBLE)                    :: WORK(LWORK)       ! Workspace
  
+!xx   EXTERNAL                        :: DGEMM
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN

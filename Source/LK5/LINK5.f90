@@ -291,6 +291,7 @@
       IF (DO_IT == 'Y') THEN
          IERROR = 0
          CALL ALLOCATE_EIGEN1_MAT ( 'MODE_NUM' , NUM_EIGENS, 1, SUBR_NAME ) 
+!xx      CALL ALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL', NUM_EIGENS, 1, SUBR_NAME ) 
          CALL ALLOCATE_EIGEN1_MAT ( 'GEN_MASS' , NUM_EIGENS, 1, SUBR_NAME ) 
          CALL READ_L1M ( IERROR )
 
@@ -527,13 +528,13 @@ j_do: DO J = 1,NUM_SOLNS
          CALL DEALLOCATE_COL_VEC ( 'UM_COL' )
 
          IERROR = 0
-!        IF ((SOL_NAME(1:8) == 'DIFFEREN') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
+!xx      IF ((SOL_NAME(1:8) == 'DIFFEREN') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
             IF (ALLOCATED(UG_T123_MAT)) THEN
                CALL DEALLOCATE_MISC_MAT ( 'UG_T123_MAT' )
             ENDIF
             CALL ALLOCATE_MISC_MAT ( 'UG_T123_MAT', NGRID, 3, SUBR_NAME )
             CALL GET_UG_123_IN_GRD_ORD ( IERROR )
-!        ENDIF
+!xx      ENDIF
          IF (IERROR /= 0) THEN
             WRITE(ERR,9995) LINKNO,IERROR
             WRITE(F06,9995) LINKNO,IERROR
@@ -603,6 +604,7 @@ j_do: DO J = 1,NUM_SOLNS
  
          CALL DEALLOCATE_COL_VEC ( 'UG_COL' )
          CALL EXPAND_PHIXA_TO_PHIXG                        ! Expand PHIXA to PHIXG and write cols to file L5B
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PHIXA', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PHIXA' )
 
       ENDIF
@@ -664,7 +666,7 @@ j_do: DO J = 1,NUM_SOLNS
       IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
          CLOSE_STAT = 'KEEP'
       ELSE
-!        CLOSE_STAT = L2FSTAT
+!xx      CLOSE_STAT = L2FSTAT
          CLOSE_STAT = 'KEEP'
       ENDIF
       CALL FILE_CLOSE ( L2F, LINK2F, CLOSE_STAT, 'Y' )
@@ -690,9 +692,12 @@ j_do: DO J = 1,NUM_SOLNS
 
 ! Deallocate arrays (except EIGEN_VAL, may be needed later)
 
+!xx   WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GMN      ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'GMN' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GOA      ', CR13  ;   CALL DEALLOCATE_SPARSE_MAT ( 'GOA' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate MODE_NUM ', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'MODE_NUM' ) 
+!xx   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate EIGEN_VAL', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL' ) 
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GEN_MASS ', CR13  ;   CALL DEALLOCATE_EIGEN1_MAT ( 'GEN_MASS' )
       CALL DEALLOCATE_COL_VEC    ( 'YSe' )
       CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VEC' )  

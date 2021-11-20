@@ -133,6 +133,12 @@
 
       NRBE1  = NRBE1+1
       NRIGEL = NRIGEL+1
+!xx   IF (NRIGEL > LRIGEL) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LRIGEL
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LRIGEL
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
 
 ! Initialize CHR_IDOF
  

@@ -228,6 +228,7 @@
 ! Deallocate partitions of RMG: RMN, RMM. Keep GMN, it is needed in the reduction of KGG, MGG and PG
 
       WRITE(SC1, * ) '     DEALLOCATE SOME ARRAYS'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RMN', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'RMN' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RMM', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'RMM' )
 
@@ -420,6 +421,7 @@
  
 ! Loop on columns of RMN
  
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
 
       NTERM_GMN = 0
       DO J = 1,NDOFN
@@ -545,6 +547,7 @@ FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the stor
       CALL DEALLOCATE_L2_GMN_2
 
       WRITE(SC1, * ) '    Reallocate GMN'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate GMN', CR13   ;  CALL DEALLOCATE_SPARSE_MAT ( 'GMN' )
       WRITE(SC1,12345,ADVANCE='NO') '       Allocate   GMN', CR13   ;  CALL ALLOCATE_SPARSE_MAT ('GMN', NDOFM, NTERM_GMN, SUBR_NAME)
 

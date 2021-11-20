@@ -116,6 +116,7 @@
 
 ! **********************************************************************************************************************************
       WRITE(SC1, * ) '     TDOF PROC'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 
 ! Call routine to calc what row in TDOF each grid's data begins
 
@@ -309,25 +310,23 @@
          ENDDO
       ENDIF
  
-! Remove code for L-set here. The L-set is done below also 
-
 ! Calc TDOF for N-set based on G-set minus M-set = S-set + O-set + R-set + L-set
  
-         NDOFN = 0
-         DO I=1,NGRID
-            WRITE(SC1,22345,ADVANCE='NO') '       Process N -set         ', I, NGRID, CR13
-            IGRID = INV_GRID_SEQ(I)
-            CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
-            DO J=1,NUM_COMPS
-               IROW  = TDOF_ROW_START(IGRID) + J - 1
-               IF ((TDOF(IROW,G_SET_COL) > 0) .AND. (TDOF(IROW,M_SET_COL) == 0)) THEN
-                  NDOFN = NDOFN + 1
-                  TDOF(IROW,N_SET_COL) = NDOFN
-               ELSE
-                  TDOF(IROW,N_SET_COL) = 0
-               ENDIF
-            ENDDO
+      NDOFN = 0
+      DO I=1,NGRID
+         WRITE(SC1,22345,ADVANCE='NO') '       Process N -set         ', I, NGRID, CR13
+         IGRID = INV_GRID_SEQ(I)
+         CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
+         DO J=1,NUM_COMPS
+            IROW  = TDOF_ROW_START(IGRID) + J - 1
+            IF ((TDOF(IROW,G_SET_COL) > 0) .AND. (TDOF(IROW,M_SET_COL) == 0)) THEN
+               NDOFN = NDOFN + 1
+               TDOF(IROW,N_SET_COL) = NDOFN
+            ELSE
+               TDOF(IROW,N_SET_COL) = 0
+            ENDIF
          ENDDO
+      ENDDO
 
 ! Calc DOF'S in SZ-set (all zero SPC's) based on SA + SB + SG
  
@@ -371,39 +370,39 @@
 
 ! Calc TDOF for F-set based on N-set minus S-set
  
-         NDOFF = 0
-         DO I=1,NGRID
-            WRITE(SC1,22345,ADVANCE='NO') '       Process F -set         ', I, NGRID, CR13
-            IGRID = INV_GRID_SEQ(I)
-            CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
-            DO J=1,NUM_COMPS
-               IROW  = TDOF_ROW_START(IGRID) + J - 1
-               IF ((TDOF(IROW,N_SET_COL) > 0) .AND. (TDOF(IROW,S_SET_COL) == 0)) THEN
-                  NDOFF = NDOFF + 1
-                  TDOF(IROW,F_SET_COL) = NDOFF
-               ELSE
-                  TDOF(IROW,F_SET_COL) = 0
-               ENDIF
-            ENDDO
+      NDOFF = 0
+      DO I=1,NGRID
+         WRITE(SC1,22345,ADVANCE='NO') '       Process F -set         ', I, NGRID, CR13
+         IGRID = INV_GRID_SEQ(I)
+         CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
+         DO J=1,NUM_COMPS
+            IROW  = TDOF_ROW_START(IGRID) + J - 1
+            IF ((TDOF(IROW,N_SET_COL) > 0) .AND. (TDOF(IROW,S_SET_COL) == 0)) THEN
+               NDOFF = NDOFF + 1
+               TDOF(IROW,F_SET_COL) = NDOFF
+            ELSE
+               TDOF(IROW,F_SET_COL) = 0
+            ENDIF
          ENDDO
+      ENDDO
 
 ! Calc TDOF for A-set based on F-set minus O-set
  
-         NDOFA = 0
-         DO I=1,NGRID
-            WRITE(SC1,22345,ADVANCE='NO') '       Process A -set         ', I, NGRID, CR13
-            IGRID = INV_GRID_SEQ(I)
-            CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
-            DO J=1,NUM_COMPS
-               IROW  = TDOF_ROW_START(IGRID) + J - 1
-               IF ((TDOF(IROW,F_SET_COL) > 0) .AND. (TDOF(IROW,O_SET_COL) == 0)) THEN
-                  NDOFA = NDOFA + 1
-                  TDOF(IROW,A_SET_COL) = NDOFA
-               ELSE
-                  TDOF(IROW,A_SET_COL) = 0
-               ENDIF
-            ENDDO
+      NDOFA = 0
+      DO I=1,NGRID
+         WRITE(SC1,22345,ADVANCE='NO') '       Process A -set         ', I, NGRID, CR13
+         IGRID = INV_GRID_SEQ(I)
+         CALL GET_GRID_NUM_COMPS ( GRID_ID(INV_GRID_SEQ(I)), NUM_COMPS, SUBR_NAME )
+         DO J=1,NUM_COMPS
+            IROW  = TDOF_ROW_START(IGRID) + J - 1
+            IF ((TDOF(IROW,F_SET_COL) > 0) .AND. (TDOF(IROW,O_SET_COL) == 0)) THEN
+               NDOFA = NDOFA + 1
+               TDOF(IROW,A_SET_COL) = NDOFA
+            ELSE
+               TDOF(IROW,A_SET_COL) = 0
+            ENDIF
          ENDDO
+      ENDDO
 
 ! Calc TDOF for L-set based on A-set minus R-set
  
@@ -512,6 +511,7 @@
          ENDIF
       ENDIF
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       WRITE(SC1,*) CR13
 
 ! **********************************************************************************************************************************

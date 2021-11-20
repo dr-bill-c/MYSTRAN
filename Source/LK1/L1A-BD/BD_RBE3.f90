@@ -97,10 +97,10 @@
 !    6      WT1             Weighting factor for 1st component of displ
 !    7      C1              Comp number for associated with WT1 
 !    8      G1,1            Grid associated with WT1
-!    9      G1,2 or next WT or blank
+!    9      G1,2 or next WTi or blank
 
 ! on optional continuation entries:
-!    2-9    contain either a WT, Ci, or blank
+!    2-9    contain more of the same: weights, components, grida
 
 
 ! Subsequent entries have the same format where a WTi is specified followed by a displ component Ci followed by a list of grids that
@@ -355,6 +355,7 @@ do_j:       DO J=2,9
          FATAL_ERR = FATAL_ERR + 1
       ENDIF
 
+!xx   NTERM_RMG = REFC_NUM_Ci*(NTERM_RMG + 1)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN

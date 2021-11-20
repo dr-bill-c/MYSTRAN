@@ -125,6 +125,8 @@
       OUNT(1) = ERR
       OUNT(2) = F06
 
+!xx   WRITE(SC1, * ) '    ALLOCATE/DEALLOCATE SOME ARRAYS'
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 
 ! ----------------------------------------------------------------------------------------------------------------------------------
 ! Write PG load matrix
@@ -222,12 +224,15 @@
       IF ((PRTSTIFF(1) >= 1) .OR. (PRTSTIFD(1) >= 1)) THEN
          INQUIRE ( FILE=LINK1L, EXIST=FILE_EXIST )
          IF ((FILE_EXIST) .AND. (NTERM_KGG > 0)) THEN
+!xx         CALL ALLOCATE_SPARSE_MAT ( 'KGG', NDOFG, NTERM_KGG, SUBR_NAME )
+!xx         CALL READ_MATRIX_1 ( LINK1L, L1L, OPND, CLOSE_IT, L1LSTAT, L1L_MSG,'KGG', NTERM_KGG, NTERM_RD, NDOFG, I_KGG, J_KGG, KGG)
             IF (PRTSTIFF(1) >= 1) THEN
                CALL WRITE_SPARSE_CRS ( L1L_MSG, 'G ', 'G ', NTERM_KGG, NDOFG, I_KGG, J_KGG, KGG )
             ENDIF
             IF (PRTSTIFD(1) > 0) THEN
                CALL GET_MATRIX_DIAG_STATS ( 'KGG', 'G ', NDOFG, NTERM_KGG, I_KGG, J_KGG, KGG, PRTSTIFD(1), KGG_DIAG, KGG_MAX_DIAG  )
             ENDIF
+!xx         CALL DEALLOCATE_SPARSE_MAT ( 'KGG' )
          ELSE
             WARN_ERR = WARN_ERR + 1
             WRITE(ERR,101) L1L_MSG, LINK1L

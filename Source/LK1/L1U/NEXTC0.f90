@@ -104,6 +104,19 @@
       ENDIF
 
 ! Make JCARD for TCARD above and get FFIELD to left adjust and fix-field it (if necessary).
+!xx CODE COMMENTED OUT IS REPLACED WITH CODE BELOW IT
+!xx   IF ((TCARD(1:1) /= '$')  .AND. (TCARD(1:) /= ' ')) THEN
+!xx      CALL FFIELD ( TCARD, IERR )
+!xx      CALL MKJCARD ( SUBR_NAME, TCARD, JCARD )
+!xx      IF (OLDTAG == JCARD(1)) THEN
+!xx         ICONT = 1
+!xx         CARD = TCARD
+!xx      ELSE
+!xx         BACKSPACE(IN1)
+!xx      ENDIF
+!xx   ELSE
+!xx      BACKSPACE(IN1)
+!xx   ENDIF
 
       IF (TCARD(1:1) /= '$') THEN
          CALL FFIELD ( TCARD, IERR )

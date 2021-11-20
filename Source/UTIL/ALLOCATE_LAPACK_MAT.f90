@@ -99,6 +99,7 @@
             ENDIF
             ALLOCATE (ABAND(NROWS,NCOLS),STAT=IERR)
             IF (IERR == 0) THEN
+         !xx   WRITE(SC1, * )                              ! Advance 1 line for screen messages
                DO I=1,NROWS
                   WRITE(SC1,12345,ADVANCE='NO') NAME, I, NROWS, NCOLS, CR13 
                   DO J=1,NCOLS
@@ -126,6 +127,7 @@
             WRITE(SC1,9199) NAME, MB_ALLOCATED
             ALLOCATE (BBAND(NROWS,NCOLS),STAT=IERR)
             IF (IERR == 0) THEN
+         !xx   WRITE(SC1, * )                              ! Advance 1 line for screen messages
                DO I=1,NROWS
                   WRITE(SC1,12345,ADVANCE='NO') NAME, I, NROWS, NCOLS, CR13 
                   DO J=1,NCOLS
@@ -265,6 +267,7 @@
             WRITE(SC1,9199) NAME, MB_ALLOCATED
             ALLOCATE (RFAC(NROWS,NCOLS),STAT=IERR)
             IF (IERR == 0) THEN
+         !xx   WRITE(SC1, * )                              ! Advance 1 line for screen messages
                DO I=1,NROWS
                   WRITE(SC1,12345,ADVANCE='NO') NAME, I, NROWS, NCOLS, CR13
                   DO J=1,NCOLS
@@ -292,6 +295,7 @@
             WRITE(SC1,9199) NAME, MB_ALLOCATED
             ALLOCATE (VBAS(NROWS,NCOLS),STAT=IERR)
             IF (IERR == 0) THEN
+         !xx   WRITE(SC1, * )                              ! Advance 1 line for screen messages
                DO I=1,NROWS
                   WRITE(SC1,12345,ADVANCE='NO') NAME, I, NROWS, NCOLS, CR13
                   DO J=1,NCOLS
@@ -363,7 +367,7 @@
 ! Quit if there were errors
 
       IF (JERR /= 0) THEN
-         WRITE(ERR,1699) SUBR_NAME, CALLING_SUBR
+         WRITE(ERR,1699) TRIM(SUBR_NAME), CALLING_SUBR
          WRITE(F06,1699) SUBR_NAME, CALLING_SUBR
          CALL OUTA_HERE ( 'Y' )
       ENDIF

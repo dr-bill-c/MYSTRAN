@@ -239,10 +239,21 @@
                GID_OUT_ARRAY(NUM,2)       = GRID(I,3)
                GID_OUT_ARRAY(NUM,MELGP+1) = GRID(I,5)
 
+!xx            CALL CALC_TDOF_ROW_NUM ( GRID_ID(I), ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID_ID(I), IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
                CALL GET_GRID_NUM_COMPS ( GRID_ID(I), NUM_COMPS, SUBR_NAME )
 
+!xx            WRITE_OGEL(NUM) = 'N'                       ! Set WRITE_OGEL to 'Y' for all grids that have a component in S-set
+!xx            DO J=1,NUM_COMPS
+!xx               CALL TDOF_COL_NUM ( 'S ', S_SET_COL )
+!xx               TDOF_ROW = ROW_NUM_START + J - 1
+!xx               SDOF = TDOF(TDOF_ROW,S_SET_COL)
+!xx               IF (SDOF > 0) THEN
+!xx                  WRITE_OGEL(NUM) = 'Y'
+!xx                  EXIT doj1
+!xx               ENDIF
+!xx            ENDDO doj1 
 
                DO J=1,NUM_COMPS                            ! Calc SPC forces for all grids in requested output set (not only ones 
                   CALL TDOF_COL_NUM ( 'S ', S_SET_COL )    ! that have a component in S-set)
@@ -359,6 +370,7 @@
                QSA_SUM     = ZERO
             ENDDO
             DO I=1,NGRID
+!xx            CALL CALC_TDOF_ROW_NUM ( GRID_ID(I), ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID_ID(I), IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
                CALL GET_GRID_NUM_COMPS ( GRID_ID(I), NUM_COMPS, SUBR_NAME )
@@ -519,6 +531,7 @@
                GID_OUT_ARRAY(NUM,1)       = GRID(I,1)
                GID_OUT_ARRAY(NUM,2)       = GRID(I,3)
                GID_OUT_ARRAY(NUM,MELGP+1) = GRID(I,5)
+!xx            CALL CALC_TDOF_ROW_NUM ( GRID_ID(I), ROW_NUM_START, 'N' )
                CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID_ID(I), IGRID )
                ROW_NUM_START = TDOF_ROW_START(IGRID)
                CALL GET_GRID_NUM_COMPS ( GRID_ID(I), NUM_COMPS, SUBR_NAME )

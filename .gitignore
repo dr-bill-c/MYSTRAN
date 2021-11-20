@@ -7,6 +7,12 @@ Binaries/*
 # downloaded SuperLU sources
 superlu*
 
+# downloaded f2c sources
+f2c
+
+# IDE stuff
+.vscode
+
 # what follows is github's recommendation for CMake projects
 CMakeLists.txt.user
 CMakeCache.txt

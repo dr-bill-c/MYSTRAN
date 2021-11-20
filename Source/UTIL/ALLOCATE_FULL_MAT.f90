@@ -35,7 +35,7 @@
       USE TIMDAT, ONLY                :  TSEC
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
       USE SUBR_BEGEND_LEVELS, ONLY    :  ALLOCATE_FULL_MAT_BEGEND
-      USE FULL_MATRICES, ONLY         :  KNN_FULL, KNM_FULL, KMM_FULL, MNN_FULL, MNM_FULL, MMM_FULL, PN_FULL, PM_FULL,             &
+      USE FULL_MATRICES, ONLY         :  KGG_FULL, KNN_FULL, KNM_FULL, KMM_FULL, MNN_FULL, MNM_FULL, MMM_FULL, PN_FULL, PM_FULL,   &
                                          KFF_FULL, KFS_FULL, KSS_FULL, MFF_FULL, MFS_FULL, MSS_FULL, PF_FULL, PS_FULL,             &
                                          KAA_FULL, KAO_FULL, KOO_FULL, MAA_FULL, MAO_FULL, MOO_FULL, PA_FULL, PO_FULL,             &
                                          PFYS_FULL, QSYS_FULL, KFSe_FULL, KSSe_FULL,                                               &
@@ -83,8 +83,30 @@
       JERR = 0
 
 ! Allocate array named 'NAME' which was declared allocatable in module SCRATCH_MATRICES
+      IF (NAME == 'KGG_FULL') THEN
 
-      IF (NAME == 'KNN_FULL') THEN
+         IF (ALLOCATED(KGG_FULL)) THEN
+            WRITE(ERR,990) SUBR_NAME, NAME
+            WRITE(F06,990) SUBR_NAME, NAME
+            FATAL_ERR = FATAL_ERR + 1
+            JERR = JERR + 1
+         ELSE
+            ALLOCATE (KGG_FULL(NROWS,NCOLS),STAT=IERR)
+            IF (IERR == 0) THEN
+               DO I=1,NROWS
+                  DO J=1,NCOLS
+                     KGG_FULL(I,J) = ZERO
+                  ENDDO
+               ENDDO
+            ELSE
+               WRITE(ERR,991) MB_ALLOCATED,NAME,SUBR_NAME,IERR
+               WRITE(F06,991) MB_ALLOCATED,NAME,SUBR_NAME,IERR
+               FATAL_ERR = FATAL_ERR + 1
+               JERR = JERR + 1
+            ENDIF
+         ENDIF
+
+      ELSE IF (NAME == 'KNN_FULL') THEN
 
          IF (ALLOCATED(KNN_FULL)) THEN
             WRITE(ERR,990) SUBR_NAME, NAME
@@ -970,7 +992,7 @@
 ! Quit if there were errors
 
       IF (JERR /= 0) THEN
-         WRITE(ERR,1699) SUBR_NAME, CALLING_SUBR
+         WRITE(ERR,1699) TRIM(SUBR_NAME), CALLING_SUBR
          WRITE(F06,1699) SUBR_NAME, CALLING_SUBR
          CALL OUTA_HERE ( 'Y' )
       ENDIF

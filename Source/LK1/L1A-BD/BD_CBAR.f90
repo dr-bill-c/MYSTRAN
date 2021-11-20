@@ -212,7 +212,7 @@
                ENDIF
             ENDDO
             IF (JERR /= 0) THEN
-               VVEC_TYPE = 'ERROR    '                ! Found error in V vector components, so reset VVEC_TYPE 
+               VVEC_TYPE = 'ERROR    '                     ! Found error in V vector components, so reset VVEC_TYPE 
             ENDIF
          ELSE                                              ! Check to see if there is a grid no. for specifying VVEC
             IF ((JCARD(6)(1:) /= ' ') .AND. (JCARD(7)(1:) == ' ') .AND. (JCARD(8)(1:) == ' ')) THEN

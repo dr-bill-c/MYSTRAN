@@ -53,6 +53,7 @@
       INTEGER(LONG), INTENT(IN)       :: PART_VEC_S_SzSe(NDOFS) ! Partitioning vector (S set into SZ and SE sets) 
       INTEGER(LONG)                   :: KFFD_ROW_MAX_TERMS     ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KFSD_ROW_MAX_TERMS     ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
+!xx   INTEGER(LONG)                   :: KSFD_ROW_MAX_TERMS     ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KFSDe_ROW_MAX_TERMS    ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KSSD_ROW_MAX_TERMS     ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
       INTEGER(LONG)                   :: KSSDe_ROW_MAX_TERMS    ! Output from subr PARTITION_SIZE (max terms in any row of matrix)
@@ -123,11 +124,27 @@
 
       IF ((NDOFF > 0) .AND. (NDOFS > 0)) THEN
 
+!xx      CALL PARTITION_SS_NTERM ( 'KNND', NTERM_KNND, NDOFN, NDOFN, SYM_KNND, I_KNND, J_KNND,      PART_VEC_N_FS, PART_VEC_N_FS,  &
+!xx                                 NUM2, NUM1, KSFD_ROW_MAX_TERMS, 'KSFD', NTERM_KSFD, SYM_KFSD ) 
 
+!xx      IF (NTERM_KSFD /= NTERM_KFSD) THEN
+!xx         FATAL_ERR = FATAL_ERR + 1
+!xx         WRITE(ERR,936) SUBR_NAME, NTERM_KSFD, NTERM_KFSD
+!xx         WRITE(F06,936) SUBR_NAME, NTERM_KSFD, NTERM_KFSD
+!xx         CALL OUTA_HERE ( 'Y' )
+!xx      ENDIF
 
+!xx      CALL ALLOCATE_SPARSE_MAT ( 'KSFD', NDOFS, NTERM_KSFD, SUBR_NAME )
 
+!xx      IF (NTERM_KFSD > 0) THEN
+!xx         CALL PARTITION_SS ( 'KNND', NTERM_KNND, NDOFN, NDOFN, SYM_KNND, I_KNND, J_KNND, KNND, PART_VEC_N_FS, PART_VEC_N_FS,    &
+!xx                              NUM2, NUM1, KSFD_ROW_MAX_TERMS, 'KSFD', NTERM_KSFD, NDOFS, SYM_KFSD, I_KSFD, J_KSFD, KSFD )
 
+!xx         CLOSE_IT   = 'Y'
+!xx         CLOSE_STAT = 'KEEP'
+!xx         CALL WRITE_MATRIX_1 ( LINK2B, L2B, CLOSE_IT, CLOSE_STAT, L2B_MSG, 'KSFD', NTERM_KSFD, NDOFS, I_KSFD, J_KSFD, KSFD )
 
+!xx      ENDIF
 
          NTERM_KSFD = NTERM_KFSD
          CALL ALLOCATE_SPARSE_MAT ( 'KSFD', NDOFS, NTERM_KSFD, SUBR_NAME )

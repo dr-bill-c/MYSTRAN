@@ -265,6 +265,7 @@ i_do1:   DO I=1,NGRID                                      ! (2) Set initial val
       !CALL BUILD_GPFB(GPFB_NROWS)
       !WRITE(OP2) (GRID(I,1)*10+DEVICE_CODE, I=1,NGRID)
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages
       DO I=1,NGRID
          WRITE(SC1,12345,ADVANCE='NO') I, NREQ, CR13
          IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_GPFO_BIT))

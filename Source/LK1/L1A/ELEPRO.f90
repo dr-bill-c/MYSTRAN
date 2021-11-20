@@ -132,11 +132,24 @@
          EPNT(NELE) = NEDAT+1                              ! Set element pointer EPNT to start for new element
       ENDIF
 
-      DO J=1,NFIELD                                        ! Load element data into array EDAT
+jdo:  DO J=1,NFIELD                                        ! Load element data into array EDAT
+ 
+         IF ((J == 3) .AND. (JCARD(1)(1:6) == 'CBUSH ')) THEN
+            NEDAT = NEDAT + 1
+            IF (JCARD(5)(1:) == ' ') THEN                  ! CBUSH has G2 blank so BUSH elem has only G1 grid. Other end is grounded
+               EDAT(NEDAT) = 1
+            ELSE                                           ! CBUSH G2 not blank so BUSH elem has 2 grids
+               EDAT(NEDAT) = 2
+            ENDIF
+         ENDIF
+
          CALL I4FLD ( JCARD(J+1), JF(J+1), I4INP )
          IF (IERRFL(J+1) == 'N') THEN
             IF (CHK_FLD_ARRAY(J+1) == 'Y') THEN
-               IF (I4INP <= 0) THEN
+               IF (I4INP <= 0) THEN                        ! No error if BUSH and G2 field is blank (BUSH grounded at end G2)
+                  IF ((JCARD(1)(1:8) == 'CBUSH   ') .AND. (JCARD(5)(1:) == ' ')) THEN
+                     EXIT jdo
+                  ENDIF
                   WRITE(ERR,1021) JCARD(1), JCARD(2), I4INP, JF(J+1)
                   WRITE(F06,1021) JCARD(1), JCARD(2), I4INP, JF(J+1)
                   FATAL_ERR = FATAL_ERR + 1
@@ -145,7 +158,8 @@
             NEDAT = NEDAT + 1
             EDAT(NEDAT) = I4INP
          ENDIF
-      ENDDO
+
+      ENDDO jdo
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN

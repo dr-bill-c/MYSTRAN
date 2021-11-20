@@ -141,6 +141,12 @@
 ! Check for overflow
 
       NPCOMP = NPCOMP+1
+!xx   IF (NPCOMP > LPCOMP) THEN
+!xx      FATAL_ERR = FATAL_ERR + 1
+!xx      WRITE(ERR,1163) SUBR_NAME,JCARD(1),LPCOMP
+!xx      WRITE(F06,1163) SUBR_NAME,JCARD(1),LPCOMP
+!xx      CALL OUTA_HERE ( 'Y' )                            ! Coding error, so quit
+!xx   ENDIF
  
 ! Read and check data on parent card
 

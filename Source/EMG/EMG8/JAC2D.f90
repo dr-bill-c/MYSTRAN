@@ -86,6 +86,7 @@
       DETJ = JAC(1,1)*JAC(2,2) - JAC(1,2)*JAC(2,1)
  
       IF ((WRT_BUG_THIS_TIME == 'Y') .AND. (WRT_BUG(7) > 0)) THEN
+         WRITE(BUG,1100) ELDT_BUG_SHPJ_BIT, TYPE, EID
          WRITE(BUG,1101) SSI, SSJ
          WRITE(BUG,1102)
          DO I=1,2

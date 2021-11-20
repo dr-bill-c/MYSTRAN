@@ -384,28 +384,28 @@
 
   298 FORMAT('$ NOTES:',/,'$ -----')
 
-  299 FORMAT('$ ',A,' is to be replaced with the coord sys ID that is used to define the'    ,/,                                  &
-             '$ basic coord sys of this USERIN elem rel to the system model basic coord     ',/,                                  &
-             '$ system in the system model run'                                              ,//,                                 &
-             '$ If the above grid entries are used, and are different than the corresponding',/,                                  &
-             '$ grids in the system model, RBE2''s should be included to connect them to the',/,                                  &
-             '$ corresponding grids in the system model.'                                    ,/,                                  &
-             '$ **NOTE: If RBE2''s are NOT used, it is imperative that the grids in the     ',/,                                  &
-             '$ system model that this USERIN element is connected to have the same global  ',/,                                  &
+  299 FORMAT('$ ',A,' is to be replaced with the coord sys ID that is used to define the'    ,/,                                   &
+             '$ basic coord sys of this USERIN elem rel to the system model basic coord     ',/,                                   &
+             '$ system in the system model run'                                              ,//,                                  &
+             '$ If the above grid entries are used, and are different than the corresponding',/,                                   &
+             '$ grids in the system model, RBE2''s should be included to connect them to the',/,                                   &
+             '$ corresponding grids in the system model.'                                    ,/,                                   &
+             '$ **NOTE: If RBE2''s are NOT used, it is imperative that the grids in the     ',/,                                   &
+             '$ system model that this USERIN element is connected to have the same global  ',/,                                   &
              '$ coordinate system as was used in generating this substructure.')
 
-  399 FORMAT('$ name 1 is to be replaced with the stiffness matrix name:'                    ,/,                                  &
-             '$        For CB model generation, KXX or its alias, KRRGN'                     ,/,                                  &
-             '$        For statics, KGG, KAA, etc'                                           ,//,                                 &
-             '$ name 2 is to be replaced with the mass matrix name (if one is input):'       ,/,                                  &
-             '$        For CB model generation, MXX or its alias, MRRGN'                     ,/,                                  &
-             '$        For statics, MGG, MAA, etc'                                           ,//,                                 &
-             '$ name 3 is to be replaced with:'                                              ,/,                                  &
-             '$        For CB model generation, RBM0 (not required)'                         ,/,                                  &
-             '$        For statics, load matrix PG, PA, etc'                                 ,//,                                 &
-             '$ The matrices whose names are "name i" must have been requested to be'        ,/,                                  &
-             '$ written to binary files via Exec Control OUTPUT4 statement(s) in this run'   ,//,                                 &
-             '$ Finally, make sure that the real numbers above have enough decimal places to',/,                                  &
+  399 FORMAT('$ name 1 is to be replaced with the stiffness matrix name:'                    ,/,                                   &
+             '$        For CB model generation, KXX or its alias, KRRGN'                     ,/,                                   &
+             '$        For statics, KGG, KAA, etc'                                           ,//,                                  &
+             '$ name 2 is to be replaced with the mass matrix name (if one is input):'       ,/,                                   &
+             '$        For CB model generation, MXX or its alias, MRRGN'                     ,/,                                   &
+             '$        For statics, MGG, MAA, etc'                                           ,//,                                  &
+             '$ name 3 is to be replaced with:'                                              ,/,                                   &
+             '$        For CB model generation, RBM0 (not required)'                         ,/,                                   &
+             '$        For statics, load matrix PG, PA, etc'                                 ,//,                                  &
+             '$ The matrices whose names are "name i" must have been requested to be'        ,/,                                   &
+             '$ written to binary files via Exec Control OUTPUT4 statement(s) in this run'   ,//,                                  &
+             '$ Finally, make sure that the real numbers above have enough decimal places to',/,                                   &
              '$ accurately represent the quantities. Otherwise replace them before using them')
              
 

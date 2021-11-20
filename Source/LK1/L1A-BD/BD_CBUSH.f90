@@ -86,15 +86,16 @@
 !    1      Element type   ETYPE(nele)
 !    2      Element ID     EDAT(nedat+1)
 !    3      Property ID    EDAT(nedat+2)
-!    4      Grid A         EDAT(nedat+3)
-!    5      Grid B         EDAT(nedat+4)
-!    6-8    V-Vector       EDAT(nedat+5) (see VVEC explanation below)
-!    9      CID            EDAT(nedat+6) Elem coord sys identification. 0 is basic. blank means to use G0 or X1,2,3 
+!    -      Num of grids   EDAT)nedat+3
+!    4      Grid A         EDAT(nedat+4)
+!    5      Grid B         EDAT(nedat+5)
+!    6-8    V-Vector       EDAT(nedat+6) (see VVEC explanation below)
+!    9      CID            EDAT(nedat+7) Elem coord sys identification. 0 is basic. blank means to use G0 or X1,2,3 
 
 ! on optional second card:
 !    2      S              Location of spring/damper (def = 0.5). This is a relative distance = offset/BUSH length
-!    3      OCID           EDAT(nedat+7) Offset coord sys ID
-!   none    NBUSHOFF       EDAT(nedat+8)
+!    3      OCID           EDAT(nedat+8) Offset coord sys ID
+!   none    NBUSHOFF       EDAT(nedat+9)
 !    4-6    S1,2,3         Offset vector. The Si are actual offsets
 
 ! NOTES:
@@ -144,16 +145,16 @@
 ! Get the V vector for this CBUSH. If field 9 is not blank, ignore fields 6-8 since v vector will be defined using CID in field 9
 ! The following sets slots 5 and 6 in EDAT since VVEC can be defined by:
 !   (1) A vector defined in field 6,7,8 (field 6 can be a grid or 6-8 can be a vector), or
-!   (2) CID in field 9. In this case the VVEC will be along the directions defined by CID and wil be determined in a later subr
-!       If CID is blank then V must be defined by G0 in field 6 or Xi in fields 6-8
+!   (2) CID in field 9. In this case the VVEC will be along the directions defined by CID and will be determined in a later subr
+! If CID is blank then V must be defined by G0 in field 6 or Xi in fields 6-8
 
+      VVEC_TYPE = 'UNDEFINED'
 vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank so VVEC should be defined in fields 6,7,8
 
          DO J=1,3
             VV(J) = ZERO
          ENDDO
 
-         VVEC_TYPE = 'UNDEFINED'
          DO J=1,JCARD_LEN                                  ! See if there is an actual V vector.
             IF ((JCARD(6)(J:J) == '.') .OR. (JCARD(7)(J:J) == '.') .OR. (JCARD(8)(J:J) == '.')) THEN
                VVEC_TYPE = 'VECTOR   '
@@ -188,24 +189,24 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                ELSE
                   VVEC_TYPE = 'ERROR    '                  ! Found error in field 6, so reset VVEC_TYPE
                ENDIF
-            ELSE
-               IF ((JCARD(6)(1:) == ' ') .AND. (JCARD(7)(1:) == ' ') .AND. (JCARD(8)(1:) == ' ')) THEN
-                  VVEC_TYPE = 'UNDEFINED'
-                  FATAL_ERR = FATAL_ERR + 1
-                  WRITE(ERR,1188) NAME, EID
-                  WRITE(F06,1188) NAME, EID
-               ELSE
-                  VVEC_TYPE = 'ERROR    '
-                  FATAL_ERR = FATAL_ERR + 1
-                  WRITE(ERR,1186) NAME, EID
-                  WRITE(F06,1186) NAME, EID
-               ENDIF
+!xx         ELSE
+!xx            IF ((JCARD(6)(1:) == ' ') .AND. (JCARD(7)(1:) == ' ') .AND. (JCARD(8)(1:) == ' ')) THEN
+!xx               VVEC_TYPE = 'UNDEFINED'
+!xx               FATAL_ERR = FATAL_ERR + 1
+!xx               WRITE(ERR,1188) NAME, EID
+!xx               WRITE(F06,1188) NAME, EID
+!xx            ELSE
+!xx               VVEC_TYPE = 'ERROR    '
+!xx               FATAL_ERR = FATAL_ERR + 1
+!xx               WRITE(ERR,1186) NAME, EID
+!xx               WRITE(F06,1186) NAME, EID
+!xx            ENDIF
             ENDIF
          ENDIF
                                                            ! Load V vector data into EDAT and into VVEC, if not already there
          IF (VVEC_TYPE == 'GRID     ') THEN
 
-            EDAT(NEDAT_START+5) = G0                       ! --- Slot 5 in EDAT is VVEC defined by grid G0 
+            EDAT(NEDAT_START+6) = G0                       ! --- Slot 6 in EDAT is VVEC defined by grid G0 
 
          ELSE IF (VVEC_TYPE == 'VECTOR   ') THEN
 
@@ -233,25 +234,25 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                ENDDO
             ENDIF
 
-            EDAT(NEDAT_START+5) = -VVEC_NUM                ! --- Slot 5 in EDAT is VVEC defined by neg of a vector number
+            EDAT(NEDAT_START+6) = -VVEC_NUM                ! --- Slot 6 in EDAT is VVEC defined by neg of a vector number
 
          ELSE
 
-            EDAT(NEDAT_START+5) = 0                        ! --- Slot 5 in EDAT is undefined VVEC
+            EDAT(NEDAT_START+6) = 0                        ! --- Slot 6 in EDAT is undefined VVEC
 
          ENDIF
 
-         EDAT(NEDAT_START+6) = -99                         ! --- Slot 6 in EDAT is for CID. Use CID = -99 when CID field is blank
+         EDAT(NEDAT_START+7) = -99                         ! --- Slot 7 in EDAT is for CID. Use CID = -99 when CID field is blank
 
       ELSE                                                 ! --- CID field is not blank so VVEC is defined by CID
 
-         EDAT(NEDAT_START+5) = 0                           ! --- Load 0 into EDAT slot 5 for VVEC since field 9 not blank
+         EDAT(NEDAT_START+6) = 0                           ! --- Load 0 into EDAT slot 5 for VVEC since field 9 not blank
 
-         EDAT(NEDAT_START+6) = 0                           ! --- Initialize. 0 (does not mean basic)
+         EDAT(NEDAT_START+7) = 0                           ! --- Initialize. 0 (does not mean basic)
          CALL I4FLD ( JCARD(9), JF(9), CID )
          IF (IERRFL(9) == 'N') THEN
             IF (CID >= 0) THEN
-               EDAT(NEDAT_START+6) = CID                   ! --- Slot 6 in EDAT is for CID. Use actual value if no read error
+               EDAT(NEDAT_START+7) = CID                   ! --- Slot 6 in EDAT is for CID. Use actual value if no read error
             ELSE
                FATAL_ERR = FATAL_ERR + 1
                WRITE(ERR,1189) NAME, EID, JF(9), CID
@@ -287,13 +288,13 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
       ENDIF
       CALL MKJCARD ( SUBR_NAME, CARD, JCARD )
 
-      OCID = -99                                           ! Initially set OCID = -99 since we will test for -1, >0 below
-
+      OCID = -99                                           ! Initially set OCID = -99 since we will test for -1 and > 0 below
       IF (ICONT == 1) THEN
 
          IF (CARD(1:) /= ' ') THEN                         ! Only process continuation entries if 1st one is not totally blank
 
-            IF (JCARD(3)(1:) == ' ') THEN                  ! Get OCID. It will determine whether to use S or S1,2,3 for offset
+            CALL LEFT_ADJ_BDFLD ( JCARD(3) )               ! Get OCID. OCID=-1 is default and means use elem sys and S, not S1,2,3
+            IF ((JCARD(3)(1:) == ' ') .OR. (JCARD(3)(1:2) == '-1')) THEN
                OCID = -1                                   ! OCID = -1 is default and means use elem system and S, not S1,2,3
             ELSE                                           ! Field 3 not blank so get value to use for OCID
                CALL I4FLD ( JCARD(3), JF(3), I4INP )
@@ -308,20 +309,20 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                   WRITE(F06,1180) JCARD(3), NAME, EID
                ENDIF
             ENDIF
-            EDAT(NEDAT_START+7) = OCID                     ! Slot 7 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
+            EDAT(NEDAT_START+8) = OCID                     ! Slot 8 in EDAT is the OCID value. Slot 7 will be NBUSHOFF
 
             IF      (OCID == -1) THEN                      ! Get components of BUSHOFF
                CALL R8FLD ( JCARD(2), JF(2), R8INP )
                IF (IERRFL(1) == 'N') THEN
                   NBUSHOFF = NBUSHOFF + 1
-                  EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+                  EDAT(NEDAT_START+9) = NBUSHOFF           ! Slot 9 in EDAT is for the offset key
                   BUSHOFF(NBUSHOFF,1) = R8INP
                   BUSHOFF(NBUSHOFF,2) = ZERO
                   BUSHOFF(NBUSHOFF,3) = ZERO
                ENDIF
             ELSE IF (OCID >= 0) THEN
                NBUSHOFF = NBUSHOFF + 1
-               EDAT(NEDAT_START+8) = NBUSHOFF              ! Slot 8 in EDAT is for the offset key
+               EDAT(NEDAT_START+9) = NBUSHOFF              ! Slot 9 in EDAT is for the offset key
                DO J=1,3
                   CALL R8FLD ( JCARD(J+3), JF(J+3), R8INP )
                   IF (IERRFL(J+3) == 'N') THEN
@@ -329,18 +330,17 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
                   ENDIF
                ENDDO
             ENDIF
-
             CALL BD_IMBEDDED_BLANK   ( JCARD,2,3,4,5,6,0,0,0 )
             CALL CARD_FLDS_NOT_BLANK ( JCARD,0,0,0,0,0,7,8,9 )
             CALL CRDERR ( CARD )
 
          ELSE
 
-            EDAT(NEDAT_START+7) = -1                       ! Con't entry was blank so default OCID and null offset flag
-            EDAT(NEDAT_START+8) =  0
+            EDAT(NEDAT_START+8) = -1                       ! Con't entry was blank so default OCID and null offset flag
+            EDAT(NEDAT_START+7) =  0
 
             NBUSHOFF = NBUSHOFF + 1
-            EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+            EDAT(NEDAT_START+9) = NBUSHOFF                 ! Slot 9 in EDAT is for the offset key
             BUSHOFF(NBUSHOFF,1) = HALF
             BUSHOFF(NBUSHOFF,2) = ZERO
             BUSHOFF(NBUSHOFF,3) = ZERO
@@ -349,11 +349,9 @@ vec:  IF (JCARD(9)(1:) == ' ') THEN                        ! CID field is blank 
 
       ELSE
 
-         EDAT(NEDAT_START+7) = -1                          ! There was no con't entry so default OCID and null offset flag
-         EDAT(NEDAT_START+8) =  0
-
+         EDAT(NEDAT_START+8) = -1                          ! There was no con't entry so default OCID
          NBUSHOFF = NBUSHOFF + 1
-         EDAT(NEDAT_START+8) = NBUSHOFF           ! Slot 8 in EDAT is for the offset key
+         EDAT(NEDAT_START+9) = NBUSHOFF                    ! Slot 9 in EDAT is for the offset key
          BUSHOFF(NBUSHOFF,1) = HALF
          BUSHOFF(NBUSHOFF,2) = ZERO
          BUSHOFF(NBUSHOFF,3) = ZERO

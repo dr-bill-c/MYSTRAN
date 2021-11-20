@@ -45,6 +45,7 @@
       IMPLICIT NONE
  
       CHARACTER(LEN=LEN(BLNK_SUB_NAM)):: SUBR_NAME = 'WRITE_MPFACTOR'
+!xx   CHARACTER(LEN=*) , INTENT(IN)   :: IHDR              ! Indicator of whether to write an output header
       CHARACTER(1*BYTE)               :: IHDR   = 'Y'      ! Indicator of whether to write an output header
 
       INTEGER(LONG)                   :: I,J               ! DO loop indices

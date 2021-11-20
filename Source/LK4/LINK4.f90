@@ -283,6 +283,7 @@
       ENDIF
 
       IF (DEBUG(42) == 2) THEN
+         CALL WRITE_SPARSE_CRS ( ' MLLn', 'A ', 'A ', NTERM_MLLn, NDOFL, I_MLLn, J_MLLn, MLLn )
       ENDIF
 
 
@@ -311,6 +312,7 @@
       ENDIF
 
       IF (SOL_NAME(1:12) /= 'GEN CB MODEL') THEN
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages         
          IF (SOL_NAME(1:8) == 'BUCKLING') THEN
             WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KLLD', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KLLD' )
          ELSE
@@ -349,6 +351,7 @@
 
       ENDIF
 
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
       IF (SOL_NAME(1:8) == 'BUCKLING') THEN
          WRITE(SC1,12345,ADVANCE='NO') '       Deallocate KLLDn', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'KLLDn' )
       ELSE
@@ -410,6 +413,7 @@
 
       CALL DEALLOCATE_LAPACK_MAT ( 'RFAC' )
 
+!xx   CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VAL' )  
       CALL DEALLOCATE_EIGEN1_MAT ( 'GEN_MASS' )
       CALL DEALLOCATE_EIGEN1_MAT ( 'EIGEN_VEC' )  
       CALL DEALLOCATE_EIGEN1_MAT ( 'MODE_NUM' )  

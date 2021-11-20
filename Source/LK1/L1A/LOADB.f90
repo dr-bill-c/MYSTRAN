@@ -254,11 +254,11 @@ bdf:  DO
                   CARD2(COMMENT_COL:) = ' '
                ENDIF
 
-!              IF (CARD2(1:8) /= CARD1(73:80)) THEN
-!                 BACKSPACE(IN1)
-!                 CARD2(1:) = ' '
-!                 CARD2(1:8) = CARD1(73:80)
-!              ENDIF
+!xx            IF (CARD2(1:8) /= CARD1(73:80)) THEN
+!xx               BACKSPACE(IN1)
+!xx               CARD2(1:) = ' '
+!xx               CARD2(1:8) = CARD1(73:80)
+!xx            ENDIF
 
                IF      (CARD2( 1: 8) == CARD1(73:80)) THEN
                   CONTINUE
@@ -278,6 +278,12 @@ bdf:  DO
 
             IF (IERR /= 0) THEN
                FATAL_ERR = FATAL_ERR + 1
+!xx            WRITE(ERR,101) CARD
+!xx            WRITE(ERR,1003)
+!xx            IF (ECHO == 'NONE  ') THEN
+!xx               WRITE(F06,101) CARD
+!xx            ENDIF
+!xx            WRITE(F06,1003)
                CYCLE
             ENDIF 
 

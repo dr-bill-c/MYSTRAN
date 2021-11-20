@@ -60,6 +60,7 @@
       INTEGER(LONG), INTENT(IN)       :: UNT               ! Unit number where to write matrix
       INTEGER(LONG)                   :: I,J,K             ! DO loop indices or counters
       INTEGER(LONG), PARAMETER        :: IROW        = 1   ! 
+!xx   INTEGER(LONG)                   :: NTERM_ROW_CCS1    ! Number of nonzero terms in row I of CRS1
       INTEGER(LONG)                   :: NUM_MAT_DIAG_0    ! 
       INTEGER(LONG)                   :: NTERM_CCS1        ! 
       INTEGER(LONG)                   :: NTERM_CRS1        ! 
@@ -126,6 +127,7 @@
 
 ! Write matrix header
 
+!xx   WRITE(UNT) NCOLS, NROWS, FORM, PREC, MAT_NAME(1:16)
       WRITE(UNT) NCOLS, NROWS, FORM, PREC, MAT_OUT_NAME(1:4), MAT_OUT_NAME(5:8)
 
 ! Write matrix data

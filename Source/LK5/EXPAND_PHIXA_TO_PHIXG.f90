@@ -101,6 +101,7 @@
          CALL OURTIM                                       ! Write UG displs for this subcase to file LINK5A
          MODNAM = 'WRITE PHIXG DISPLS TO FILE,                       "'
          WRITE(SC1,5093) LINKNO,MODNAM,J,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Separator between UG_COL calcs
          DO I=1,NDOFG
             WRITE(L5B) UG_COL(I)                           ! For CB this is a col of PHIXG (which is never processed as an array)
          ENDDO

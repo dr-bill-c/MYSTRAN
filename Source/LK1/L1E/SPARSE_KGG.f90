@@ -179,6 +179,7 @@
       IF (DEBUG(17) > 0) THEN                              ! Write leading seperator for DEBUG output
          WRITE(F06,9901) AUTOSPC_RAT
       ENDIF
+!xx   WRITE(SC1,*)
       KTERM_KGG = 0                                        ! I runs over the number of rows (or grids)
       CALL TDOF_COL_NUM ( 'G ', G_SET_COL )
       KGG_ROW_NUM = 0
@@ -196,6 +197,7 @@ i_do: DO I = 1,NGRID
             ENDDO
          ENDDO 
 
+!xx      CALL CALC_TDOF_ROW_NUM ( GRID_ID(INV_GRID_SEQ(I)), IROW_START, 'N' )
          CALL GET_ARRAY_ROW_NUM ( 'GRID_ID', SUBR_NAME, NGRID, GRID_ID, GRID_ID(INV_GRID_SEQ(I)), IGRID )
          ROW_NUM_START = TDOF_ROW_START(IGRID)
          KGG_COL_NUM = TDOF(ROW_NUM_START,G_SET_COL)

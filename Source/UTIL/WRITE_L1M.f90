@@ -55,6 +55,8 @@
       OUNT(1) = ERR
       OUNT(2) = F06
 
+!xx   STATUS = 'OLD    '
+!xx   RW     = 'WRITE'
       CALL FILE_OPEN ( L1M, LINK1M, OUNT, 'REPLACE', L1M_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
 
       CALL OURTIM

@@ -36,6 +36,8 @@
   
       SAVE
 
+      REAL(DOUBLE) , ALLOCATABLE      :: KGG_FULL(:,:)     ! Full representation of KGG stiff matrix
+
       REAL(DOUBLE) , ALLOCATABLE      :: KNN_FULL(:,:)     ! Full representation of KNN stiff matrix
       REAL(DOUBLE) , ALLOCATABLE      :: KNM_FULL(:,:)     ! Full representation of KNM stiff matrix
       REAL(DOUBLE) , ALLOCATABLE      :: KMM_FULL(:,:)     ! Full representation of KMM stiff matrix

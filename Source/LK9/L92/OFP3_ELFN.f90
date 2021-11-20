@@ -59,6 +59,8 @@
       INTEGER(LONG)                   :: ELOUT_ELFN        ! If > 0, there are ELFORCE(NODE) requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L           ! DO loop indices
       INTEGER(LONG)                   :: IERROR      = 0   ! Local error count
+!xx   INTEGER(LONG)                   :: IROW_MAT          ! Row number in OTM's
+!xx   INTEGER(LONG)                   :: IROW_TXT          ! Row number in OTM text file
       INTEGER(LONG)                   :: I2                ! A calculated index into an array
       INTEGER(LONG)                   :: NBUG(METYPE)      ! Count of the no. of requests for ELDATA print requests of UEL, PEL
       INTEGER(LONG)                   :: NDISK(METYPE)     ! Count of the no. of requests for ELDATA disk file requests of UEL, PEL
@@ -117,6 +119,8 @@
          ENDDO 
       ENDDO   
  
+!xx   IROW_MAT = 0
+!xx   IROW_TXT = 0
       OT4_DESCRIPTOR = 'Element nodal force'
 
       DO I=0,MBUG-1

@@ -212,6 +212,8 @@ Factr:IF (SOLLIB == 'BANDED  ') THEN                       ! Use LAPACK
 !***********************************************************************************************************************************
 !  Allocate col vector arrays for loads, displs and res vector
 
+!xx   CALL ALLOCATE_COL_VEC ( 'UL_COL', NDOFL, SUBR_NAME )
+!xx   CALL ALLOCATE_COL_VEC ( 'PL_COL', NDOFL, SUBR_NAME )
       CALL ALLOCATE_LAPACK_MAT ( 'RES', NDOFL, 1, SUBR_NAME )
 
 ! Open file for writing displs to.
@@ -249,6 +251,7 @@ Solve:DO ISUB = 1,NSUB
          CALL OURTIM                                       ! Call FBS to solve for displacements for this subcase
          MODNAM = 'FBS - SOLVE FOR RHS ANSWERS FOR                   "'
          WRITE(SC1,3093) LINKNO,MODNAM,ISUB,HOUR,MINUTE,SEC,SFRAC
+   !xx   WRITE(SC1, * )                                    ! Advance 1 line for screen messages
 
          IF      (SOLLIB == 'BANDED  ') THEN
 
@@ -260,6 +263,7 @@ Solve:DO ISUB = 1,NSUB
 
                SLU_INFO = 0
                CALL FBS_SUPRLU ( SUBR_NAME, 'KLL', NDOFL, NTERM_KLL, I_KLL, J_KLL, KLL, ISUB, DUM_COL, SLU_INFO )
+
             ELSE
 
                FATAL_ERR = FATAL_ERR + 1
@@ -328,6 +332,7 @@ Solve:DO ISUB = 1,NSUB
          CALL DEALLOCATE_COL_VEC  ( 'UL_COL' )
          CALL DEALLOCATE_COL_VEC  ( 'PL_COL' )
 
+
       ENDDO Solve
 
 FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the storage allocated inside SuperLU
@@ -355,6 +360,7 @@ FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the stor
       CALL OURTIM
       MODNAM = 'DEALLOCATE ARRAYS'
       WRITE(SC1,3092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
+!xx   WRITE(SC1, * )                                       ! Advance 1 line for screen messages         
 
       IF (SOL_NAME(1:8) == 'BUCKLING') THEN
          CONTINUE
@@ -367,6 +373,9 @@ FreeS:IF (SOLLIB == 'SPARSE  ') THEN                       ! Last, free the stor
 
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate ABAND ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'ABAND' )
       WRITE(SC1,12345,ADVANCE='NO') '       Deallocate RES   ', CR13   ;   CALL DEALLOCATE_LAPACK_MAT ( 'RES' )
+!xx   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate UL_COL', CR13   ;   CALL DEALLOCATE_COL_VEC  ( 'UL_COL' )
+!xx   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PL_COL', CR13   ;   CALL DEALLOCATE_COL_VEC  ( 'PL_COL' )
+!xx   WRITE(SC1,12345,ADVANCE='NO') '       Deallocate PL    ', CR13   ;   CALL DEALLOCATE_SPARSE_MAT ( 'PL' )
 
       CALL FILE_CLOSE ( L3A, LINK3A, 'KEEP', 'Y' )
 
