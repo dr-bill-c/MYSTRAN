@@ -321,7 +321,6 @@ headr:IF (IHDR == 'Y') THEN
          !CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
          !                       TITLEI, STITLEI, LABELI)
          NVALUES = NUM * NUM_WIDE
-         !NTOTAL = NVALUES * 4
          !WRITE(OP2) NVALUES
          ! write the CSHEAR force data
          !WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,3), 4), REAL(OGEL(I,3), 4), &
