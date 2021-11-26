@@ -72,8 +72,10 @@ def call_mystran(mystran_exe: str, bdf_filename: str) -> int:
         return_code = subprocess.call(call_args, stdout=log_file, stderr=log_file)
     return return_code
 
-def main():
-    test_dirname = 'test_runs'
+def run_jobs(test_dirname: str):
+    """
+    >>> python3 run_tests.py > junk.out
+    """
     mystran_exe = os.path.join('..', 'Binaries', 'mystran')
     if IS_WINDOWS:
         mystran_exe += '.exe'
@@ -89,9 +91,16 @@ def main():
         case_sensitive=False)
     for bdf_filename in bdf_filenames:
         if ('Archive' in bdf_filename or
-            'Eigen' in bdf_filename or
             'Combined' in bdf_filename):
             continue
+
+        if 'Static' in bdf_filename:
+            continue
+        #if 'Eigen' in bdf_filename:
+            #continue
+
+        #if 'BUCK' not in bdf_filename:
+            #continue
 
         print(bdf_filename)
         return_code = call_mystran(mystran_exe, bdf_filename)
@@ -103,7 +112,11 @@ def main():
         files = get_files_of_type(test_dirname, extension='.ans', max_size=100.,
                                   case_sensitive=False)
         for f06_filename in files:
-            if 'Eigen' in f06_filename or 'Combined' in f06_filename:
+            if 'Static' in f06_filename:
+                continue
+            #if 'Eigen' in f06_filename:
+                #continue
+            if 'Combined' in f06_filename:
                 continue
 
             #try:
@@ -112,6 +125,45 @@ def main():
             #except NotLinearStatics:
                 #print(f'*{f06_filename}')
     x = 1
+
+def check_jobs(test_dirname):
+    from pyNastran.op2.op2 import read_op2
+    bdf_filenames = get_files_of_type(test_dirname, extension='.dat', max_size=100.,
+                                      case_sensitive=False)
+    bdf_filenames += get_files_of_type(test_dirname, extension='.bdf', max_size=100.,
+                              case_sensitive=False)
+    #files = get_files_of_type(test_dirname, extension='.op2', max_size=100.,
+                              #case_sensitive=False)
+    ntotal = 0
+    npassed = 0
+    nfailures = 0
+    nmissing = 0
+    for bdf_filename in bdf_filenames:
+        if 'Combined' in bdf_filename:
+            continue
+        base = os.path.splitext(bdf_filename)[0]
+        op2_filename = base + '.op2'
+        if not op2_filename:
+            print(f'****missing {op2_filename}')
+            nmissing += 1
+            ntotal += 1
+
+        try:
+            read_op2(op2_filename, debug=None)
+            print(op2_filename)
+            npassed += 1
+        except:
+            print(f'*{op2_filename}')
+            nfailures += 1
+        ntotal += 1
+    print(f'{npassed}/{ntotal}; nmissing={nmissing}; nfailed={nfailures}')
+
+def main():
+    test_dirname = 'test_runs'
+    if IS_WINDOWS:
+        check_jobs(test_dirname)
+    else:
+        run_jobs(test_dirname)
 
 if __name__ == '__main__':
     main()
