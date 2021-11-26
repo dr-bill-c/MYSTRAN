@@ -592,7 +592,7 @@
 
       ENDIF
 
-      CALL WRITE_OP2_GEOM()
+!      CALL WRITE_OP2_GEOM()
 
 ! Open FEMAP neutral file for writing, if PARAM POST /= 0, and write FEMAP data block 100
 

@@ -65,7 +65,7 @@
 !      INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_GRD_OP2_OUTPUTS_BEGEND
       INTEGER(LONG)                   :: ISUBCASE          ! the current subcase ID
       INTEGER(LONG)                   :: TABLE_CODE        ! flag for the type of table
-      INTEGER(LONG)                   :: APPROACH_CODE     ! flag for the solution type
+      INTEGER(LONG)                   :: ANALYSIS_CODE     ! flag for the solution type
       INTEGER(LONG), DIMENSION(NUM)   :: G_OR_S            ! flag for the type of point
       INTEGER(LONG)                   :: DEVICE_CODE       ! flag for PLOT,PRINT,PUNCH
       INTEGER(LONG)                   :: MODE              ! mode number for an eigenvector solution
@@ -114,36 +114,43 @@
       EIGENVALUE = 0.0
       MODE = 0
       IF (SOL_NAME(1:7) == 'STATICS') THEN
-        APPROACH_CODE = 1  ! statics
+        ANALYSIS_CODE = 1  ! statics
       ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-        APPROACH_CODE = 1 ! statics
+        ANALYSIS_CODE = 1 ! statics
         
       ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-        APPROACH_CODE = 2 ! eigenvectors
+        ANALYSIS_CODE = 2 ! eigenvectors
         EIGENVALUE = EIGEN_VAL(JSUB)
         MODE = JSUB
       ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-        APPROACH_CODE = 7 ! pre-buckling
+        ANALYSIS_CODE = 7 ! pre-buckling
         EIGENVALUE = EIGEN_VAL(JSUB)
         MODE = JSUB
 !      ELSE IF ???
-!        APPROACH_CODE = 5 ! frequency
+!        ANALYSIS_CODE = 5 ! frequency
 !      ELSE IF ???
-!        APPROACH_CODE = 6 ! transient
+!        ANALYSIS_CODE = 6 ! transient
 !      ELSE IF ???
-!        APPROACH_CODE = 9 ! complex eigenvectors
+!        ANALYSIS_CODE = 9 ! complex eigenvectors
       ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
-        APPROACH_CODE = 10 ! nonlinear statics
+        ANALYSIS_CODE = 10 ! nonlinear statics
       ELSE
-        APPROACH_CODE = -1 ! error
+        ANALYSIS_CODE = -1 ! error
       ENDIF
       ISUBCASE = SCNUM(JSUB)
       
       TITLEI = TITLE(INT_SC_NUM)
       STITLEI = STITLE(INT_SC_NUM)
       LABELI = LABEL(INT_SC_NUM)
-      CALL WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, APPROACH_CODE, TABLE_CODE, NEW_RESULT, &
-                             TITLEI, STITLEI, LABELI)
+      
+      IF ((ANALYSIS_CODE == 1) .OR. (ANALYSIS_CODE == 10)) THEN
+         ! static
+          CALL WRITE_OUG3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NEW_RESULT, &
+                                 TITLEI, STITLEI, LABELI)
+      ELSE
+          CALL WRITE_OUG3_EIGN(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NEW_RESULT, &
+                               TITLEI, STITLEI, LABELI, MODE, EIGENVALUE)
+      ENDIF
 
       ITABLE = ITABLE - 1
 ! Write accels, displ's, applied forces or SPC forces (also calc TOTALS for forces if that is being output)

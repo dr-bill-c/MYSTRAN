@@ -10,6 +10,38 @@
       LOGICAL, INTENT(INOUT)           :: NEW_RESULT
       INTEGER(LONG)                    :: FORMAT_CODE
       INTEGER(LONG)                    :: NUM_WIDE
+      INTEGER(LONG)                    :: LSDVMN  ! field 5
+      REAL(DOUBLE)                     :: FIELD6
+
+!      1 = OP2 is the output file
+!      DEVICE_CODE = 1
+
+!     real
+      FORMAT_CODE = 1
+      NUM_WIDE = 8
+
+      LSDVMN = 1
+      FIELD6 = 0.0
+      CALL WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT, &
+                      TITLE, SUBTITLE, LABEL, LSDVMN, FIELD6)
+      END SUBROUTINE WRITE_OUG3_STATIC
+
+
+! ##################################################################################################################################
+    SUBROUTINE WRITE_OUG3_EIGN(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NEW_RESULT, &
+                               TITLE, SUBTITLE, LABEL, MODE, EIGENVALUE)
+      USE PENTIUM_II_KIND, ONLY  :  BYTE, LONG, DOUBLE
+      IMPLICIT NONE
+      INTEGER(LONG), INTENT(IN)        :: ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE
+      CHARACTER(LEN=128), INTENT(IN)   :: TITLE            ! Solution title
+      CHARACTER(LEN=128), INTENT(IN)   :: SUBTITLE         ! Subcase subtitle
+      CHARACTER(LEN=128), INTENT(IN)   :: LABEL            ! Subcase label
+      LOGICAL, INTENT(INOUT)           :: NEW_RESULT
+      INTEGER(LONG)                    :: FORMAT_CODE
+      INTEGER(LONG)                    :: NUM_WIDE
+
+      INTEGER(LONG), INTENT(IN)        :: MODE       ! field 5
+      REAL(DOUBLE), INTENT(IN)         :: EIGENVALUE ! field 6
 
 !      1 = OP2 is the output file
 !      DEVICE_CODE = 1
@@ -19,29 +51,32 @@
       NUM_WIDE = 8
 
       CALL WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT, &
-                      TITLE, SUBTITLE, LABEL)
-      END SUBROUTINE WRITE_OUG3_STATIC
+                      TITLE, SUBTITLE, LABEL, MODE, EIGENVALUE)
+      END SUBROUTINE WRITE_OUG3_EIGN
 
 ! ##################################################################################################################################
       SUBROUTINE WRITE_OUG3(ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE, NEW_RESULT, &
-                            TITLE, SUBTITLE, LABEL)
+                            TITLE, SUBTITLE, LABEL, FIELD5, FIELD6)
 !      Parameters
 !      ==========
 !      isubcase : int
 !         the subcase id
       USE PENTIUM_II_KIND, ONLY  :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY           :  OP2
+      USE IOUNT1, ONLY           :  ERR, OP2
       IMPLICIT NONE
       INTEGER(LONG), INTENT(IN)        :: ITABLE, ISUBCASE, FORMAT_CODE, DEVICE_CODE, ANALYSIS_CODE, TABLE_CODE, NUM_WIDE
       CHARACTER(LEN=128), INTENT(IN)   :: TITLE            ! Solution title
       CHARACTER(LEN=128), INTENT(IN)   :: SUBTITLE         ! Subcase subtitle
       CHARACTER(LEN=128), INTENT(IN)   :: LABEL            ! Subcase label
+      INTEGER(LONG), INTENT(IN)        :: FIELD5
+      REAL(DOUBLE), INTENT(IN)         :: FIELD6
+      REAL(DOUBLE)                     :: FIELD7
       LOGICAL, INTENT(INOUT)           :: NEW_RESULT
 
       INTEGER(LONG) :: THERMAL, SORT_CODE, &
         RANDOM_CODE, ACOUSTIC_FLAG, OCODE, &
         APPROACH_CODE, TCODE
-      INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
+!      INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
 
       write(*,*) NEW_RESULT, itable
       IF(NEW_RESULT .AND. (ITABLE .NE. -3)) THEN
@@ -85,20 +120,43 @@
 !      approach, tcode, int3, isubcase
       TCODE = SORT_CODE * 1000 + TABLE_CODE
 
-
-      FIELD6 = 0
-      FIELD7 = 0
-
 !      if isinstance(acoustic_flag, float_types):
 !          ftable3 = set_table3_field(ftable3, 12, b'f') # field 11
 
       IF(ANALYSIS_CODE == 1) THEN
 !        what actually is this??
 !        field5 = self.lsdvmns[itime]
-        FIELD5 = 1
+!       statics
+!        FIELD5 = 1
+!        FIELD6 = 0
+        FIELD7 = 0
+      ELSE IF(ANALYSIS_CODE == 2) THEN
+!       modes - real eigenvalues
+        !FIELD5 = MODE             ! int
+        !FIELD6 = EIGN             ! float
+
+!       abs_freqs = np.sqrt(np.abs(self.eigns)) / (2 * np.pi)
+!       column_names.append('Freq')
+!       column_values.append(abs_freqs)
+!       column_names.append('Eigenvalue')
+!       column_values.append(times)
+!       column_names.append('Radians')
+!       column_values.append(abs_freqs * 2 * np.pi)  ! radians
+!       ABS_FREQ = SQRT(ABS(FIELD6)) / (2 * PI)
+!       FIELD7 = ABS_FREQ * 2 * PI
+        FIELD7 = SQRT(ABS(FIELD6))  ! SQRT(ABS(EIGN))
+        
+        !FIELD7 = MODE_CYCLE_FREQ  ! float; radians
+      ELSE IF(ANALYSIS_CODE == 7) THEN
+!       pre-buckling????
+!        op2.lsdvmn = op2.add_data_parameter(data, 'lsdvmn', b'i', 5)
+        !FIELD5 = 1
+        
+        ! do nothing statement
+        APPROACH_CODE = 0
       ELSE
-        print *, "analysis code not supported...stopping"
-        stop
+        WRITE(ERR,100) ANALYSIS_CODE
+        STOP
 !        raise NotImplementedError(self.analysis_code)
       ENDIF
 
@@ -115,7 +173,8 @@
 !      ]
 !      WRITE(OP2) 
       WRITE(OP2) APPROACH_CODE, TABLE_CODE, 0, ISUBCASE, FIELD5, &
-          FIELD6, FIELD7, RANDOM_CODE, FORMAT_CODE, NUM_WIDE, &
+          REAL(FIELD6, 4), REAL(FIELD7, 4),                      &
+          RANDOM_CODE, FORMAT_CODE, NUM_WIDE, &
           OCODE, ACOUSTIC_FLAG, 0, 0, 0, &
           0, 0, 0, 0, 0, &
           0, 0, THERMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
@@ -126,5 +185,7 @@
 !      print *, "finished OUGV1 table=3"
 
       CALL WRITE_ITABLE(ITABLE)
+      
+ 100  FORMAT(" analysis_code=", i4, " is not supported...stopping")
       END SUBROUTINE WRITE_OUG3
 

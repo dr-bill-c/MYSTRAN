@@ -28,7 +28,8 @@
 
    INTERFACE
 
-      SUBROUTINE WRITE_ROD ( ISUBCASE, NUM, FILL_F06, FILL_ANS, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_ROD ( ISUBCASE, NUM, FILL_F06, FILL_ANS, ITABLE, TITLE, SUBTITLE, LABEL, &
+                             FIELD5_INT_MODE, FIELD6_EIGENVALUE )
 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -51,6 +52,9 @@
 
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
       INTEGER(LONG), INTENT(IN)       :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
+      INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN) :: FIELD6_EIGENVALUE
+
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_ROD_BEGEND
  
       END SUBROUTINE WRITE_ROD

@@ -115,8 +115,8 @@
       END SUBROUTINE SET_OESC_TABLE_NAME
 
 ! ##################################################################################################################################
-      SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, & 
-                                   TITLE, LABEL, SUBTITLE)
+      SUBROUTINE WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, &
+                                   TITLE, LABEL, SUBTITLE, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 !
 !      Parameters
 !      ==========
@@ -148,25 +148,26 @@
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
 
-      INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
+      INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN) :: FIELD6_EIGENVALUE
       INTEGER(LONG) :: FORMAT_CODE, ANALYSIS_CODE
 !      we assumed static
       ANALYSIS_CODE = 1
       
       ! LSDVMN
-      FIELD5 = 0
+      !FIELD5 = 0
 
-      FIELD6 = 0
-      FIELD7 = 0
+      !FIELD6 = 0
+      !FIELD7 = 0
 !      static is real
       FORMAT_CODE = 1
       CALL WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE,       &
-                      TITLE, LABEL, SUBTITLE)
+                      TITLE, LABEL, SUBTITLE, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
       END SUBROUTINE WRITE_OES3_STATIC
 
 ! ##################################################################################################################################
       SUBROUTINE WRITE_OES3(ITABLE, ANALYSIS_CODE, ISUBCASE, DEVICE_CODE, FORMAT_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, &
-                            TITLE, LABEL, SUBTITLE)
+                            TITLE, LABEL, SUBTITLE, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 !      Parameters
 !      ==========
 !      analysis_code
@@ -187,16 +188,21 @@
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
+
+      INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN) :: FIELD6_EIGENVALUE
+      REAL(DOUBLE)              :: FIELD7
+
       
-      INTEGER(LONG) :: FIELD5, FIELD6, FIELD7, APPROACH_CODE
+      INTEGER(LONG) :: APPROACH_CODE
       INTEGER(LONG) :: TABLE_CODE, LOAD_SET, THERMAL, ACOUSTIC_FLAG
       CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
  1    FORMAT("WRITE_OES3: ITABLE_START=",I8)
       WRITE(ERR,1) ITABLE
 
-      FIELD5 = 0
-      FIELD6 = 0
-      FIELD7 = 0
+      !FIELD5 = 0
+      !FIELD6 = 0
+      FIELD7 = 0.0
 
       WRITE(OP2) 146
       ! stress/strain only
@@ -211,12 +217,22 @@
       ! not always 0 for stress, but for now
       THERMAL = 0
 
+      IF ((ANALYSIS_CODE == 1) .OR. (ANALYSIS_CODE == 10)) THEN
+        ! statics
+        
+        ! pass statement
+        APPROACH_CODE = 0
+      ELSE
+         ! frequency in radians
+         FIELD7 = SQRT(ABS(FIELD6_EIGENVALUE))
+      ENDIF
       APPROACH_CODE = ANALYSIS_CODE * 10 + DEVICE_CODE
 2     FORMAT(" APPROACH_CODE=",I4," TABLE_CODE=",I4," ELEM_TYPE=",I4," ISUBCASE=",I4)
       ! 584 bytes
       WRITE(ERR,2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE
-      WRITE(OP2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE, FIELD5, &
-            FIELD6, FIELD7, LOAD_SET, FORMAT_CODE, NUM_WIDE, &
+      WRITE(OP2) APPROACH_CODE, TABLE_CODE, ELEM_TYPE, ISUBCASE, FIELD5_INT_MODE,   &
+            REAL(FIELD6_EIGENVALUE, 4), REAL(FIELD7, 4),                            &
+            LOAD_SET, FORMAT_CODE, NUM_WIDE, &
             STRESS_CODE, ACOUSTIC_FLAG, 0, 0, 0, &
             0, 0, 0, 0, 0, &
             0, 0, THERMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &

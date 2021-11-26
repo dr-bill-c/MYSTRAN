@@ -24,7 +24,9 @@
                                                                                                         
 ! End MIT license text.                                                                                      
  
-      SUBROUTINE WRITE_ROD ( ISUBCASE, NUM, FILL_F06, FILL_ANS, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_ROD ( ISUBCASE, NUM, FILL_F06, FILL_ANS, ITABLE, &
+                             TITLE, SUBTITLE, LABEL,                    &
+                             FIELD5_INT_MODE, FIELD6_EIGENVALUE)
  
 ! Routine for writing output to text files F06 and ANS for ROD element stresses. Up to 2 elements written per line of output.
 ! Data is first written to character variables and then that character variable is output the F06 and ANS.
@@ -50,6 +52,8 @@
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
+      INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN) :: FIELD6_EIGENVALUE
 
       CHARACTER(  1*BYTE)             :: MSFLAG            ! If margin is negative, MSFLAG is an *
       CHARACTER(118*BYTE)             :: RLINE_F06         ! Result of concatenating char. variables below to make a line of
@@ -97,7 +101,8 @@
       ELEM_TYPE = 1  ! CROD
       !ELEM_TYPE = 3  ! CTUBE
       !ELEM_TYPE = 10  ! CONROD
-      CALL OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NUM, ITABLE, TITLE, SUBTITLE, LABEL)
+      CALL OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NUM, ITABLE, TITLE, SUBTITLE, LABEL, &
+                                 FIELD5_INT_MODE, FIELD6_EIGENVALUE)
       DO I=1,NUM,2
  
          RLINE_F06(1:)  = ' '
@@ -300,7 +305,8 @@
 
       END SUBROUTINE WRITE_ROD
 !==================================================================================================
-      SUBROUTINE OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NUM, ITABLE, TITLE, SUBTITLE, LABEL)
+      SUBROUTINE OUTPUT2_WRITE_OES_ROD(ISUBCASE, ELEM_TYPE, NUM, ITABLE, TITLE, SUBTITLE, LABEL, &
+                                       FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 !     writes the CROD/CTUBE/CONROD stress/strain results.
 !     Data is first written to character variables and then that character variable is output the F06 and ANS.
 !     
@@ -323,6 +329,8 @@
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
+      INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN) :: FIELD6_EIGENVALUE
 
       INTEGER(LONG) :: ITABLE       ! the current subtable number
       INTEGER(LONG) :: NUM_WIDE     ! the number of "words" for a single element
@@ -348,7 +356,8 @@
       
       ! dunno???
       STRESS_CODE = 1
-      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL)
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEM_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL, &
+                             FIELD5_INT_MODE, FIELD6_EIGENVALUE)
       ! ITABLE = -4, -6, ...
       !NWORDS = NUM * NUM_WIDE
       !NTOTAL = NBYTES_PER_WORD * NWORDS

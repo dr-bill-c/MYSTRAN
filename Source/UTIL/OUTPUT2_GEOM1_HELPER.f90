@@ -13,8 +13,12 @@
       INTEGER(LONG),PARAMETER                      :: NUM_WIDE = 8
       INTEGER(LONG),PARAMETER                      :: SEID = 0
 
+      WRITE(ERR,1) "WRITE_OP2_GEOM1_GRID"
+      WRITE(ERR,2) "NGRID_ACTUAL=",NGRID_ACTUAL
       IF(NGRID_ACTUAL > 0) THEN
- 2    FORMAT("****DEBUG:   GRID_ID=",i4, "; ID=",i4, "; cp=", i4, "; x=", f8.3, "; y=", f8.3, "; z=", f8.3, &
+ 1    FORMAT("****DEBUG:   ", A)
+ 2    FORMAT("****DEBUG:   ", A, i4)
+ 3    FORMAT("****DEBUG:   GRID_ID=",i4, "; ID=",i4, "; cp=", i4, "; x=", f8.3, "; y=", f8.3, "; z=", f8.3, &
              "; cd=", i4, "; PS=", i4,"; NDOF=",i4)
 
         ! if there are GRIDs
@@ -23,7 +27,7 @@
         DO J=1,NGRID_ACTUAL
           ! nid, cp, x, y, z, cd, ps, seid
           I = GRID_INDEX(J)
-          WRITE(ERR,2) GRID_ID(I), GRID(I,1), GRID(I,2), REAL(RGRID(I,1),4), REAL(RGRID(I,2),4), REAL(RGRID(I,3),4), &
+          WRITE(ERR,3) GRID_ID(I), GRID(I,1), GRID(I,2), REAL(RGRID(I,1),4), REAL(RGRID(I,2),4), REAL(RGRID(I,3),4), &
                        GRID(I,3), GRID(I,4), GRID(I,6)
         ENDDO
         ! oh dear...

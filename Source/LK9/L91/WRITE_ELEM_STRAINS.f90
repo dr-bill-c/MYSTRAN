@@ -137,31 +137,42 @@
 
 ! Write output headers if this is not the first use of this subr.
 
+
+      ANALYSIS_CODE = -1
+      FIELD5_INT_MODE = 0
+      FIELD6_EIGENVALUE = 0.0
       IF (IHDR == 'Y') THEN
 
          WRITE(F06,*)                                                   ;   IF (DEBUG(200) > 0) WRITE(ANS,*)
          WRITE(F06,*)                                                   ;   IF (DEBUG(200) > 0) WRITE(ANS,*)
 
 ! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
-         ANALYSIS_CODE = -1
          ISUBCASE = SCNUM(JSUB)
          IF    (SOL_NAME(1:7) == 'STATICS') THEN
             ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = 1  ! temp
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)                                  ;   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
          ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
             ANALYSIS_CODE = 10
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)                                  ;   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
             ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
             ANALYSIS_CODE = 7
+            FIELD5_INT_MODE = JSUB
+!            FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
             ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
+!            FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB                                         ;   IF (DEBUG(200) > 0) WRITE(ANS,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
@@ -339,7 +350,7 @@
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            1,         0)
          CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                                TITLEI, STITLEI, LABELI)
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
          WRITE(OP2) NVALUES
          WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), I=1,NUM)
@@ -370,7 +381,7 @@
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            1,         0)
          CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                                TITLEI, STITLEI, LABELI)
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
          WRITE(OP2) NVALUES
          CEN_WORD = "CEN/"
 
@@ -437,11 +448,15 @@
          !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
          CALL GET_STRESS_CODE( STRESS_CODE, 1,            1,         1)
          IF (STRN_LOC == 'CENTER  ') THEN
+            ! CQUAD4-33
+            !(eid_device, 
+            ! fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
+            ! fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,) = out; n=17
             NUM_WIDE = 17
             ELEMENT_TYPE = 33
             NVALUES = NUM_WIDE * NUM
             CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                                   TITLEI, STITLEI, LABELI)
+                                   TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
             !NUM_PTS = 1
             ! just a copy of the CTRIA3 code
             ! op2 version of the upper & lower layers all in one call, but without the transverse shear
@@ -466,7 +481,7 @@
             !  fd1, sx1, sy1, txy1, angle1, major1, minor1, vm1,
             !  fd2, sx2, sy2, txy2, angle2, major2, minor2, vm2,)*4 = n = 17*4
             CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                                   TITLEI, STITLE, LABELI)
+                                   TITLEI, STITLE, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
             WRITE(OP2) NVALUES
             ! see the CQUAD4-33 stress/strain (the IF part of this IF-ELSE block)
             ! writing before trying to understand this...
@@ -588,13 +603,16 @@
          ENDIF
 
       ELSE IF (TYPE == 'ROD     ') THEN
-         CALL WRITE_ROD ( ISUBCASE, NUM, FILL(1:1), FILL(1:16), ITABLE, TITLEI, STITLEI, LABELI )
+         CALL WRITE_ROD (ISUBCASE, NUM, FILL(1:1), FILL(1:16), ITABLE, TITLEI, STITLEI, LABELI, &
+                         FIELD5_INT_MODE, FIELD6_EIGENVALUE )
 
       ELSE IF (TYPE(1:5) == 'SHEAR') THEN
-         CALL WRITE_OST_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         CALL WRITE_OST_CSHEAR (NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI, &
+                                FIELD5_INT_MODE, FIELD6_EIGENVALUE )
 
       ELSE IF (TYPE(1:5) == 'TRIA3') THEN
-         CALL WRITE_OST_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI )
+         CALL WRITE_OST_CTRIA3 (NUM, FILL, ISUBCASE, ITABLE, TITLEI, STITLEI, LABELI, &
+                                FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
       ELSE IF (TYPE == 'BUSH    ') THEN
          ELEMENT_TYPE = 102 ! CBUSH
@@ -605,7 +623,7 @@
          NVALUES = NUM * NUM_WIDE
          
          CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                               TITLEI, STITLEI, LABELI)
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
          WRITE(OP2) NVALUES
          WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,(OGEL(I,J),J=1,6), I=1,NUM)
@@ -827,7 +845,8 @@
       END SUBROUTINE WRITE_ELEM_STRAINS
 !==============================================================================
 
-      SUBROUTINE WRITE_OST_CSHEAR ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_OST_CSHEAR(NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL, &
+                                  FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 !     TODO: calculate margin
 !
       USE PENTIUM_II_KIND, ONLY     :  BYTE, LONG, DOUBLE
@@ -845,31 +864,35 @@
       CHARACTER(119*BYTE)             :: FILL              ! Padding for output format
 
       INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
+      !LOGICAL                         :: FIELD_5_INT_FLAG       ! flag to trigger FIELD5_INT_MODE vs. FIELD5_FLOAT_TIME_FREQ
+      INTEGER(LONG)                   :: FIELD5_INT_MODE        ! int value for field 5
+      !REAL(DOUBLE)                    :: FIELD5_FLOAT_TIME_FREQ ! float value for field 5
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE      ! float value for field 6
+
       INTEGER(LONG)               :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
-      INTEGER(LONG)               :: NUM_WIDE     ! the number of "words" for an element
-      INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
-      INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
-      INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
-      INTEGER(LONG)               :: STRESS_CODE  ! the OP2 flag for the stress
-      REAL(DOUBLE)                :: ABS_ANS(3)   ! Max ABS for output
-      REAL(DOUBLE)                :: MAX_ANS(3)   ! Max for output
-      REAL(DOUBLE)                :: MIN_ANS(3)   ! Min for output
-      INTEGER(LONG)               :: I, J         ! DO loop indices
+      INTEGER(LONG)               :: NUM_WIDE = 4     ! the number of "words" for an element
+      INTEGER(LONG)               :: NVALUES          ! the number of "words" for all the elments
+      INTEGER(LONG)               :: NTOTAL           ! the number of bytes for all NVALUES
+      INTEGER(LONG)               :: ELEMENT_TYPE = 4 ! the OP2 flag for the element
+      INTEGER(LONG)               :: STRESS_CODE      ! the OP2 flag for the stress
+      REAL(DOUBLE)                :: ABS_ANS(3)       ! Max ABS for output
+      REAL(DOUBLE)                :: MAX_ANS(3)       ! Max for output
+      REAL(DOUBLE)                :: MIN_ANS(3)       ! Min for output
+      INTEGER(LONG)               :: I, J             ! DO loop indices
       REAL(REAL32)  :: NAN
       NAN = IEEE_VALUE(NAN, IEEE_QUIET_NAN)
 
       DEVICE_CODE = 1   ! PLOT
-      ELEMENT_TYPE = 4  ! CSHEAR
       NVALUES = NUM * NUM_WIDE
       NTOTAL = NVALUES * 4
 
       ! eid, max_shear, avg_shear, margin
-      NUM_WIDE = 4
       
       ! dunno???
       !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
       CALL GET_STRESS_CODE( STRESS_CODE, 0,            1,         0)
-      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, TITLE, SUBTITLE, LABEL)
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                             TITLE, SUBTITLE, LABEL, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
  100  FORMAT("*DEBUG: WRITE_CSHEAR    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
  101  FORMAT("*DEBUG: WRITE_CSHEAR    ITABLE=",I8," (should be -5, -7,...)")
@@ -920,7 +943,8 @@
       END SUBROUTINE WRITE_OST_CSHEAR
 
 !==============================================================================
-      SUBROUTINE WRITE_OST_CTRIA3 ( NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL )
+      SUBROUTINE WRITE_OST_CTRIA3(NUM, FILL, ISUBCASE, ITABLE, TITLE, SUBTITLE, LABEL, &
+                                  FIELD5_INT_MODE, FIELD6_EIGENVALUE)
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
       USE IOUNT1, ONLY                :  ANS, ERR, F06, OP2
       USE LINK9_STUFF, ONLY           :  EID_OUT_ARRAY, OGEL
@@ -935,23 +959,25 @@
       CHARACTER(119*BYTE)             :: FILL              ! Padding for output format
 
       INTEGER(LONG), INTENT(INOUT) :: ITABLE       ! the current subtable number
+      !LOGICAL                         :: FIELD_5_INT_FLAG       ! flag to trigger FIELD5_INT_MODE vs. FIELD5_FLOAT_TIME_FREQ
+      INTEGER(LONG)                   :: FIELD5_INT_MODE        ! int value for field 5
+      !REAL(DOUBLE)                    :: FIELD5_FLOAT_TIME_FREQ ! float value for field 5
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE      ! float value for field 6
+
       INTEGER(LONG)               :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
-      INTEGER(LONG)               :: NUM_WIDE     ! the number of "words" for an element
-      INTEGER(LONG)               :: NVALUES      ! the number of "words" for all the elments
-      INTEGER(LONG)               :: NTOTAL       ! the number of bytes for all NVALUES
-      INTEGER(LONG)               :: ELEMENT_TYPE ! the OP2 flag for the element
-      INTEGER(LONG)               :: STRESS_CODE  ! the OP2 flag for the stress
-      REAL(DOUBLE)                :: ABS_ANS(11)   ! Max ABS for output
-      REAL(DOUBLE)                :: MAX_ANS(11)   ! Max for output
-      REAL(DOUBLE)                :: MIN_ANS(11)   ! Min for output
-      INTEGER(LONG)               :: I, J, K       ! DO loop indices
+      INTEGER(LONG), PARAMETER    :: NUM_WIDE = 17     ! the number of "words" for an element
+      INTEGER(LONG)               :: NVALUES           ! the number of "words" for all the elments
+      INTEGER(LONG)               :: NTOTAL            ! the number of bytes for all NVALUES
+      INTEGER(LONG)               :: ELEMENT_TYPE = 74 ! the OP2 flag for the element
+      INTEGER(LONG)               :: STRESS_CODE = 1   ! the OP2 flag for the stress; preallocate
+      REAL(DOUBLE)                :: ABS_ANS(11)       ! Max ABS for output
+      REAL(DOUBLE)                :: MAX_ANS(11)       ! Max for output
+      REAL(DOUBLE)                :: MIN_ANS(11)       ! Min for output
+      INTEGER(LONG)               :: I, J, K = 0       ! DO loop indices
 
       ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
       !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
       !]
-      STRESS_CODE = 1 ! initial value; will be overwritten
-      NUM_WIDE = 17
-      ELEMENT_TYPE = 74
       NVALUES = NUM * NUM_WIDE
       DEVICE_CODE = 1 ! plot
 
@@ -963,7 +989,7 @@
       !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
       CALL GET_STRESS_CODE( STRESS_CODE, 1,            1,         1)
       CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                             TITLE, SUBTITLE, LABEL)
+                             TITLE, SUBTITLE, LABEL, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
       WRITE(OP2) NVALUES
 
       ! op2 version of the upper & lower layers all in one call, but without the transverse shear
@@ -987,7 +1013,6 @@
              1X,'MIN (for output set): ',15X,3(ES14.6),14X,5(ES14.6),//,                                                           &
              1X,'ABS (for output set): ',15X,3(ES14.6),14X,5(ES14.6),/)
 
-      K = 0
       DO I=1,NUM
          K = K + 1
          WRITE(F06,*)                                         ; WRITE(ANS,*)
