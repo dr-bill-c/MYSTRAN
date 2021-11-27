@@ -72,6 +72,8 @@
       CHARACTER(LEN=128)              :: TITLEI                 ! the model TITLE
       CHARACTER(LEN=128)              :: STITLEI                ! the subcase SUBTITLE
       CHARACTER(LEN=128)              :: LABELI                 ! the subcase LABEL
+      INTEGER(LONG)                   :: FIELD5_INT_MODE
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE
 
 !     op2 specific flags
       INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
@@ -111,6 +113,10 @@
 
 ! Write output headers if this is not the first use of this subr.
 
+      ANALYSIS_CODE = -1
+      FIELD5_INT_MODE = 0
+      FIELD6_EIGENVALUE = 0.0
+
       IF (IHDR == 'Y') THEN
 
 ! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
@@ -118,16 +124,30 @@
          WRITE(F06,*)
          WRITE(F06,*)
          ISUBCASE = SCNUM(JSUB)
-         IF    ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
+         IF      (SOL_NAME(1:7) == 'STATICS') THEN
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
+            WRITE(F06,101) SCNUM(JSUB)
+         ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
+            ANALYSIS_CODE = 10
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
+            ANALYSIS_CODE = 7
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
+            ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
@@ -279,7 +299,8 @@
       NUM_WIDE = 11
       NVALUES = NUM * NUM_WIDE
       CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
-                             TITLEI, STITLEI, LABELI)
+                             TITLEI, STITLEI, LABELI, &
+                             FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
       WRITE(OP2) NVALUES
       ! TODO: dropping the failure theory

@@ -137,7 +137,6 @@
 
 ! Write output headers if this is not the first use of this subr.
 
-
       ANALYSIS_CODE = -1
       FIELD5_INT_MODE = 0
       FIELD6_EIGENVALUE = 0.0
@@ -166,13 +165,13 @@
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
             ANALYSIS_CODE = 7
             FIELD5_INT_MODE = JSUB
-!            FIELD6_EIGENVALUE = ????
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
             ANALYSIS_CODE = 2
             FIELD5_INT_MODE = JSUB
-!            FIELD6_EIGENVALUE = ????
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB                                         ;   IF (DEBUG(200) > 0) WRITE(ANS,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN

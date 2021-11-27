@@ -66,7 +66,7 @@
       INTEGER(LONG)                   :: BDY_GRID          ! Grid for a boundary DOF in CB analyses
       INTEGER(LONG)                   :: BDY_DOF_NUM       ! DOF number for BDY_GRID/BDY_COMP
       INTEGER(LONG)                   :: I,J,L             ! DO loop indices
-      INTEGER(LONG)                   :: K                 ! Counters
+      INTEGER(LONG)                   :: K                 ! Counter
       INTEGER(LONG)                   :: NCOLS             ! Num of cols to write out
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_ELEM_STRESSES_BEGEND
   
@@ -166,13 +166,13 @@
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
             ANALYSIS_CODE = 7
             FIELD5_INT_MODE = JSUB
-!            FIELD6_EIGENVALUE = ????
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
             ANALYSIS_CODE = 2
             FIELD5_INT_MODE = JSUB
-!            FIELD6_EIGENVALUE = ????
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB                                         ;   IF (DEBUG(200) > 0) WRITE(ANS,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN

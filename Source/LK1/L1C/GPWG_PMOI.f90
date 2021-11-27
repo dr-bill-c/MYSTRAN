@@ -80,8 +80,7 @@
       ENDIF
 
 ! **********************************************************************************************************************************
-! Initialize outputs
-
+      ! Initialize outputs
       INFO = 0
 
       DO I=1,N
@@ -90,8 +89,7 @@
          ENDDO
       ENDDO
 
-! Use LAPACK driver DSYEV to get all eigenvalues (the principal MOI's) and eigenvectors (returned in Z)
-
+      ! Use LAPACK driver DSYEV to get all eigenvalues (the principal MOI's) and eigenvectors (returned in Z)
       DO I=1,N
          DO J=1,N
             Z(I,J) = MOI1(I,J)
@@ -101,18 +99,20 @@
  
       CALL DSYEV ( JOBZ, UPLO, N, Z, N, PMOI, WORK, LWORK, INFO )
 
-! Set MOI1 matrix to zero for off-diag terms and to PMOI for diag terms. Set Q = Z' (' = transpose) 
+      ! Set MOI1 matrix to zero for off-diag terms and to PMOI for diag terms.
+      ! Set Q = Z' (' = transpose)
 
-      CALLED_SUBR = 'DSTEQR'      
-      IF      (INFO < 0) THEN                              ! LAPACK subr XERBLA should have reported error on an illegal argument
-!                                                            in a called LAPACK subr, so we should not have gotten here
+      CALLED_SUBR = 'DSTEQR'
+      IF      (INFO < 0) THEN
+         ! LAPACK subr XERBLA should have reported error on an illegal argument
+         ! in a called LAPACK subr, so we should not have gotten here
          WRITE(ERR,993) SUBR_NAME, CALLED_SUBR
          WRITE(F06,993) SUBR_NAME, CALLED_SUBR
          FATAL_ERR = FATAL_ERR + 1
          CALL OUTA_HERE ( 'Y' )
 
-      ELSE IF (INFO > 0) THEN  ! No convergence in subr DSYEV
-
+      ELSE IF (INFO > 0) THEN
+        ! No convergence in subr DSYEV
         WARN_ERR = WARN_ERR + 1
          WRITE(ERR,1001) CALLED_SUBR, SUBR_NAME
          IF (SUPWARN == 'N') THEN
@@ -120,15 +120,18 @@
          ENDIF
          RETURN
 
-      ELSE                                                 ! INFO=0, so no error
-
-         DO I=1,N                                          ! Set Q = Z'
+      ELSE
+         ! INFO=0, so no error
+         
+         ! Set Q = Z'
+         DO I=1,N
             DO J=1,N
                Q(J,I) = Z(I,J)
             ENDDO
          ENDDO
 
-         TRANSA = 'N'                                      ! MOI1 <-- Z'*MOI1*Z, diags should be PMOI's, off-diags should be zero
+         ! MOI1 <-- Z'*MOI1*Z, diags should be PMOI's, off-diags should be zero
+         TRANSA = 'N'
          TRANSB = 'N'
          CALL DGEMM ( TRANSA, TRANSB, N, N, N, ALPHA, MOI1, N, Z,   N, BETA, DUM,  N )
          TRANSA = 'T'

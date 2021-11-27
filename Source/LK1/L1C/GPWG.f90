@@ -29,7 +29,7 @@
 ! Generates rigid body mass properties for the finite element model
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  ERR, F04, F06, SC1, WRT_BUG, WRT_ERR, WRT_LOG
+      USE IOUNT1, ONLY                :  ERR, F04, F06, OP2, SC1, WRT_BUG, WRT_ERR, WRT_LOG
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, ELDT_BUG_ME_BIT, IBIT, MBUG, NCONM2, NCORD, NELE, NGRID, SOL_NAME, WARN_ERR
       USE PARAMS, ONLY                :  EPSIL, GRDPNT, MEFMGRID, MEFMLOC, SUPWARN, WTMASS
       USE DEBUG_PARAMETERS, ONLY      :  DEBUG
@@ -77,15 +77,15 @@
       REAL(DOUBLE)                    :: MASS              ! Total mass
       REAL(DOUBLE)                    :: M0                ! An intermediate variable used in calc model mass props
       REAL(DOUBLE)                    :: MOI1(3,3)         ! Moments of inertia (several diff interps during exec of this subr)
-      !REAL(DOUBLE)                    :: MOI2(3,3)         ! Moments of inertia (several diff interps during exec of this subr)
-      !REAL(DOUBLE)                    :: MOI3(3,3)         ! Moments of inertia (several diff interps during exec of this subr)
-      !REAL(DOUBLE)                    :: MOI4(3,3)         ! Moments of inertia (several diff interps during exec of this subr)
+      REAL(DOUBLE)                    :: S(3,3)            ! Tranformation matrix from basic to principal axes of inertia
+      REAL(DOUBLE)                    :: IS(3,3)           ! Moments of Inertia relative to the CG
       REAL(DOUBLE)                    :: MX                ! First moment of MASS about X axis
       REAL(DOUBLE)                    :: MY                ! First moment of MASS about Y axis
       REAL(DOUBLE)                    :: MZ                ! First moment of MASS about Z axis
       REAL(DOUBLE)                    :: PHID, THETAD      ! Outputs from subr GEN_T0L
-      REAL(DOUBLE)                    :: Q(3,3)            ! Output from subr GPWG_PMOI, called herein (transform to princ dir's)
-      REAL(DOUBLE)                    :: RB_MASS_BASIC(6,6)! 6x6 rigid body mass matrix about ref point in basic coords
+      REAL(DOUBLE)                    :: Q(3,3)            ! Transformation between S and Q axes
+                                                           ! Output from subr GPWG_PMOI, called herein (transform to princ dir's)
+      REAL(DOUBLE)                    :: RB_MASS_BASIC(6,6)! MO: 6x6 rigid body mass matrix about ref point in basic coords
       REAL(DOUBLE)                    :: T0G(3,3)          ! Coord transformation matrix from basic to global for a grid
       REAL(DOUBLE)                    :: TRANS(3,3)        ! Transfer terms when MOI's about c.g. ard calc'd from MOI's about XREF
       REAL(DOUBLE)                    :: XB(3)             ! Basic coord diffs bet c.g. and XREF in X, Y, Z directions
@@ -99,8 +99,10 @@
       REAL(DOUBLE)                    :: YZ                ! XD(2)*XD(3)
 
       ! op2
-      INTEGER(LONG)                   :: ITABLE            ! 
-      CHARACTER(LEN=8)                :: TABLE_NAME        ! Name of the op2 table that we're writing
+      INTEGER(LONG)                   :: ITABLE            ! the op2 subtable counter
+      INTEGER(LONG)                   :: ANALYSIS_CODE     ! the result type
+      INTEGER(LONG), PARAMETER        :: TABLE_CODE = 0    ! is this right?
+      CHARACTER(LEN=8)                :: TABLE_NAME         ! Name of the op2 table that we're writing
  
       INTRINSIC                       :: DABS
       INTRINSIC                       :: IAND
@@ -165,7 +167,7 @@
       XB(2) = ZERO
       XB(3) = ZERO
  
-! First process element mass terms
+      ! First process element mass terms
       OPT(1) = 'Y'                                         ! OPT(1) is for calc of ME
       OPT(2) = 'N'                                         ! OPT(2) is for calc of PTE
       OPT(3) = 'N'                                         ! OPT(3) is for calc of SEi, STEi
@@ -343,7 +345,20 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
       MOI1(1,2) = MOI1(2,1)
       MOI1(1,3) = MOI1(3,1)
       MOI1(2,3) = MOI1(3,2)
- 
+
+      ! backup MOI1 to create MO
+      !MO(1,1) = MOI1(1,1)
+      !MO(2,2) = MOI1(2,2)
+      !MO(3,3) = MOI1(3,3)
+      !
+      !MO(1,2) = MOI1(1,2)
+      !MO(1,3) = MOI1(1,3)
+      !MO(2,3) = MOI1(2,3)
+      !
+      !MO(2,1) = MOI1(1,2)
+      !MO(3,1) = MOI1(1,3)
+      !MO(3,2) = MOI1(2,3)
+
       ! XB(I) are components of distance from reference point, XREF, to c.g.
       IF (DABS(MASS) > EPS1) THEN
          XB(1) = MX/MASS
@@ -351,7 +366,7 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
          XB(3) = MZ/MASS
       ENDIF
  
-      ! RB_MASS_BASIC is 6x6 rigid body mass matrix about ref point in basic coords
+      ! M0 - RB_MASS_BASIC: is 6x6 rigid body mass matrix about ref point in basic coords
       DO I=1,6                                             ! Init
          DO J=1,6
             RB_MASS_BASIC(I,J) = ZERO
@@ -389,15 +404,6 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
             WRITE(F06,903)
          ENDIF
 
- 1       FORMAT("WRITE OGPWG F06/OP2")
-         WRITE(ERR,1) ITABLE
-        !WRITE(OP2)
-
-        TABLE_NAME = "OGPWG   "
-        !CALL WRITE_TABLE_HEADER(TABLE_NAME)
-        ITABLE = -3
-        !CALL WRITE_OPGWG_TABLE3(ITABLE, ANALYSIS_CODE, TABLE_CODE, REFERENCE_POINT)
-
          IF (REFPNT == 0) THEN
             WRITE(F06,1001)
          ELSE IF (REFPNT > 0) THEN
@@ -411,7 +417,6 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
       ENDIF
 
       IF (REFPNT >= 0) THEN
-
          WRITE(F06,1004) MASS
          WRITE(F06,1005) (XB(I),I=1,3)
 
@@ -432,14 +437,14 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
          WRITE(F06,1900)
          DO I=1,3
             WRITE(F06,1101) (MOI1(I,J),J=1,3)              ! MOI1 now are MOI's about ref pt in basic
-         ENDDO   
+         ENDDO
          WRITE(F06,1900)
          WRITE(F06,*)
          WRITE(F06,*)
 
       ENDIF
  
-      ! Generate moments of inertia about c.g. in basic coord. system
+      ! S, TRANS: Generate moments of inertia about c.g. in basic coord. system
       TRANS(1,1) =  MASS*(XB(2)*XB(2) + XB(3)*XB(3))
       TRANS(2,2) =  MASS*(XB(1)*XB(1) + XB(3)*XB(3))
       TRANS(3,3) =  MASS*(XB(1)*XB(1) + XB(2)*XB(2))
@@ -453,8 +458,21 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
          DO J=1,3
             MOI1(I,J) = MOI1(I,J) - TRANS(I,J)
          ENDDO
-      ENDDO   
+      ENDDO
  
+      ! backup MOI1 to create IS
+      IS(1,1) = MOI1(1,1)
+      IS(2,2) = MOI1(2,2)
+      IS(3,3) = MOI1(3,3)
+      
+      IS(1,2) = MOI1(1,2)
+      IS(1,3) = MOI1(1,3)
+      IS(2,3) = MOI1(2,3)
+      
+      IS(2,1) = MOI1(1,2)
+      IS(3,1) = MOI1(1,3)
+      IS(3,2) = MOI1(2,3)
+
       ! Set model total mass parameters about c.g.
       MODEL_MASS = WTMASS*MASS
       MODEL_IXX  = WTMASS*MOI1(1,1)
@@ -481,22 +499,77 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
          WRITE(F06,1900)
          DO I=1,3
             WRITE(F06,1101) (MOI1(I,J),J=1,3)              ! MOI1 now are MOI's about cg in basic
-         ENDDO   
+         ENDDO
          WRITE(F06,1900)
          WRITE(F06,*)
          WRITE(F06,*)
       ENDIF
  
-      ! Get principal MOI's and transformation matrix (eigenvectors of MOI1)
+      ! Q - Get principal MOI's and S transformation matrix (eigenvectors of MOI1)
       CALL GPWG_PMOI ( MOI1, Q, INFO )
  
       ! Write out princ MOI's and coord transf. Otherwise errors were written in subr GPWG_PMOI
       IF ((INFO == 0) .AND. (REFPNT >= 0)) THEN  
+
+         IF(REFPNT > -1) THEN
+ 1         FORMAT("WRITE OGPWG OP2: ",A)
+ 2         FORMAT("* DEBUG OGPWG ITABLE=",i4)
+           WRITE(ERR,1) "START"
+           WRITE(ERR,2) ITABLE
+           
+           TABLE_NAME = "OGPWG   "
+           CALL WRITE_TABLE_HEADER(TABLE_NAME)
+           ITABLE = -3
+           ANALYSIS_CODE = 1   ! TODO: this is probably wrong, but is weird for this table
+
+           WRITE(ERR,2) ITABLE
+           CALL WRITE_ITABLE(ITABLE)
+           WRITE(ERR,2) ITABLE
+
+           WRITE(ERR,1) "WRITE_OPGWG_TABLE3"
+           CALL WRITE_OPGWG_TABLE3(ITABLE, ANALYSIS_CODE, TABLE_CODE, REFPNT)
+           WRITE(ERR,2) ITABLE
+           CALL WRITE_ITABLE(ITABLE)
+           ITABLE = ITABLE - 1
+
+           WRITE(ERR,1) "WRITE_OPGWG_TABLE4"
+           WRITE(ERR,2) ITABLE
+
+           !data = (self.MO.ravel().tolist() + self.S.ravel().tolist() +
+           !        mcg.ravel().tolist() + self.IS.ravel().tolist() + self.IQ.ravel().tolist() +
+           !        self.Q.ravel().tolist())
+           
+           ! not verified
+           ! mass shouldn't be a scalar (it's a vector), 
+           ! but for physical structure they're all the same
+           WRITE(OP2) 78   ! the number of values we're going to write
+           WRITE(OP2) ((REAL(RB_MASS_BASIC(I,J), 4), J=1,6), I=1,6),              & ! (6,6) MO - 36
+                      ((REAL(TRANS(I,J), 4), J=1,3), I=1,3),                      & ! (3,3) S - 9
+                      ! mass should be (3,1) instead of (1,)
+                      ! CG should be (3,3) instead of (3,1)
+                      ! faking...
+                      REAL(MASS, 4), (REAL(XB(I), 4),I=1,3),                      & ! mass - cg
+                      REAL(MASS, 4), (REAL(XB(I), 4),I=1,3),                      & ! mass - cg
+                      REAL(MASS, 4), (REAL(XB(I), 4),I=1,3),                      & ! mass - cg - 12
+
+                      ((REAL(IS(I,J), 4), J=1,3), I=1,3),                         & ! (3,3) IS
+                      REAL(MODEL_IXX, 4), REAL(MODEL_IYY, 4), REAL(MODEL_IZZ, 4), & ! (3,)  IQ
+                      ((REAL(Q(I,J), 4), J=1,3), I=1,3)                             ! (3,3) Q - 21
+           !CALL WRITE_ITABLE(ITABLE)
+           !ITABLE = ITABLE - 1
+           CALL END_OP2_TABLE(ITABLE)
+           WRITE(ERR,2) ITABLE
+           WRITE(ERR,1) "WRITE_OPGWG_TABLE END"
+         ENDIF
+
+
          WRITE(F06,1008)
          WRITE(F06,1900)
+         
+         ! I(Q) - MOI1 is now principal MOI matrix
          DO I=1,3
-            WRITE(F06,1101) (MOI1(I,J),J=1,3)              ! MOI1 is now principal MOI matrix
-         ENDDO   
+            WRITE(F06,1101) (MOI1(I,J),J=1,3)
+         ENDDO
          WRITE(F06,1900)
          WRITE(F06,*)
          WRITE(F06,*)
@@ -505,7 +578,7 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
          WRITE(F06,1900)
          DO I=1,3
             WRITE(F06,1101) (Q(I,J),J=1,3)
-         ENDDO   
+         ENDDO
          WRITE(F06,1900)
          WRITE(F06,*)
          WRITE(F06,*)
@@ -605,6 +678,7 @@ userin:        IF ((WHICH(1:8) == 'OA MODEL') .OR. (WHICH(1:6) == 'USERIN')) THE
       APPROACH_CODE = ANALYSIS_CODE*10 + DEVICE_CODE
 
       ! 584 bytes
+      WRITE(OP2) 146
       WRITE(OP2) APPROACH_CODE, TABLE_CODE, REFERENCE_POINT, ISUBCASE, 0,   &
             0, 0, 0, 0, NUM_WIDE, &
             0, 0, 0, 0, 0, &
