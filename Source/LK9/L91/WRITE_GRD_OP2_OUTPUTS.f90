@@ -11,7 +11,7 @@
 ! the following conditions:                                                                              
                                                                                                          
 ! The above copyright notice and this permission notice shall be included in all copies or substantial   
-! portions of the Software and documentation.                                                                              
+! portions of the Software and documentation.                                                            
                                                                                                          
 ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS                                
 ! OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,                            
@@ -21,8 +21,8 @@
 ! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN                              
 ! THE SOFTWARE.                                                                                          
 ! _______________________________________________________________________________________________________
-                                                                                                        
-! End MIT license text.                                                                                      
+
+! End MIT license text.
  
       SUBROUTINE WRITE_GRD_OP2_OUTPUTS ( JSUB, NUM, WHAT, ITABLE, NEW_RESULT )
 !      Writes "plot" output for grid point related quantities:
@@ -83,7 +83,7 @@
 !      ENDIF
 
 ! **********************************************************************************************************************************
-!  Make sure that WHAT is a valid value
+      ! Make sure that WHAT is a valid value
       IF ((WHAT == 'ACCE') .OR. (WHAT == 'DISP') .OR. (WHAT == 'OLOAD') .OR. &
           (WHAT == 'SPCF') .OR. (WHAT == 'MPCF')) THEN
          CONTINUE
@@ -111,32 +111,10 @@
       CALL WRITE_ITABLE(ITABLE)
       ITABLE = ITABLE - 1
 
+
       EIGENVALUE = 0.0
       MODE = 0
-      IF (SOL_NAME(1:7) == 'STATICS') THEN
-        ANALYSIS_CODE = 1  ! statics
-      ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-        ANALYSIS_CODE = 1 ! statics
-        
-      ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-        ANALYSIS_CODE = 2 ! eigenvectors
-        EIGENVALUE = EIGEN_VAL(JSUB)
-        MODE = JSUB
-      ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-        ANALYSIS_CODE = 7 ! pre-buckling
-        EIGENVALUE = EIGEN_VAL(JSUB)
-        MODE = JSUB
-!      ELSE IF ???
-!        ANALYSIS_CODE = 5 ! frequency
-!      ELSE IF ???
-!        ANALYSIS_CODE = 6 ! transient
-!      ELSE IF ???
-!        ANALYSIS_CODE = 9 ! complex eigenvectors
-      ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
-        ANALYSIS_CODE = 10 ! nonlinear statics
-      ELSE
-        ANALYSIS_CODE = -1 ! error
-      ENDIF
+      CALL GET_ANALYSIS_CODE_FIELD5_FIELD6(JSUB, ANALYSIS_CODE, MODE, EIGENVALUE)
       ISUBCASE = SCNUM(JSUB)
       
       TITLEI = TITLE(INT_SC_NUM)
@@ -153,8 +131,8 @@
       ENDIF
 
       ITABLE = ITABLE - 1
-! Write accels, displ's, applied forces or SPC forces (also calc TOTALS for forces if that is being output)
-! TOTALS(J) is summation of G.P. values of applied forces, SPC forces, or MFC forces, for each of the J=1,6 components.
+      ! Write accels, displ's, applied forces or SPC forces (also calc TOTALS for forces if that is being output)
+      ! TOTALS(J) is summation of G.P. values of applied forces, SPC forces, or MFC forces, for each of the J=1,6 components.
       DEVICE_CODE = 1
 
       ! fill the G_OR_S array
@@ -224,14 +202,14 @@
         TABLE_CODE = 11
  
       ELSE IF (WHAT == 'OLOAD') THEN
-        TABLE_NAME = 'OPG1    '  ! OPGV1?
+        TABLE_NAME = 'OPG1    '  ! TODO: should this be OPGV1?
         TABLE_CODE = 2
 
       ELSE IF (WHAT == 'SPCF') THEN
         TABLE_NAME = 'OQGV1   '
         TABLE_CODE = 3
       ELSE IF (WHAT == 'MPCF') THEN
-        TABLE_NAME = 'OQGV1   '
+        TABLE_NAME = 'OQMG1   '   ! TODO: should this be OQGV1/39?
         TABLE_CODE = 39
 
       ELSE
@@ -268,3 +246,45 @@
          ENDIF
       ENDDO
       END SUBROUTINE GET_G_OR_S
+
+!==============================================================================
+      SUBROUTINE GET_ANALYSIS_CODE_FIELD5_FIELD6(JSUB, ANALYSIS_CODE, MODE, EIGENVALUE)
+      USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
+      USE IOUNT1, ONLY                :  ERR
+      USE SCONTR, ONLY                :  SOL_NAME
+      USE EIGEN_MATRICES_1 , ONLY     :  EIGEN_VAL
+
+      CHARACTER(LEN=128)                :: LABELI            ! Subcase label
+
+      INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
+      INTEGER(LONG), INTENT(INOUT)    :: ANALYSIS_CODE     ! flag for the solution type
+      INTEGER(LONG), INTENT(INOUT)    :: MODE              ! mode number for an eigenvector solution
+      REAL(DOUBLE), INTENT(INOUT)     :: EIGENVALUE        ! the eigenvalue for an eigenvector solution
+
+      IF (SOL_NAME(1:7) == 'STATICS') THEN
+        ANALYSIS_CODE = 1  ! statics
+      ELSE IF((SOL_NAME(1:5) == 'MODES') .OR. (SOL_NAME(1:12) == 'GEN CB MODEL')) THEN
+        ANALYSIS_CODE = 2 ! eigenvectors
+        EIGENVALUE = EIGEN_VAL(JSUB)
+        MODE = JSUB
+      ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
+        ANALYSIS_CODE = 1 ! statics
+        
+      ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
+        ANALYSIS_CODE = 7 ! pre-buckling
+        EIGENVALUE = EIGEN_VAL(JSUB)
+        MODE = JSUB
+!      ELSE IF ???
+!        ANALYSIS_CODE = 5 ! frequency
+!      ELSE IF ???
+!        ANALYSIS_CODE = 6 ! transient
+!      ELSE IF ???
+!        ANALYSIS_CODE = 9 ! complex eigenvectors
+      ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
+        ANALYSIS_CODE = 10 ! nonlinear statics
+      ELSE
+        ANALYSIS_CODE = -1 ! error
+ 99     FORMAT("*ERROR: ANALYSIS_CODE=-1; SOL_NAME =",A)
+        WRITE(ERR,99) SOL_NAME
+      ENDIF
+      END SUBROUTINE GET_ANALYSIS_CODE_FIELD5_FIELD6

@@ -308,11 +308,11 @@
                   ENDIF
 
                   EXIT
-
                ENDIF
 
                IF ((SOL_NAME(1:12) == 'GEN CB MODEL') .AND. (JVEC == 1) .AND. (IROW_FILE >= 1)) THEN
-                  DO J=1,OTMSKIP                           ! Write OTMSKIP blank separator lines
+                  ! Write OTMSKIP blank separator lines
+                  DO J=1,OTMSKIP
                      IROW_FILE = IROW_FILE + 1
                      WRITE(TXT_SPCF(IROW_FILE), 9199)
                   ENDDO
@@ -430,7 +430,7 @@
 ! Process MPC force requests
 
       ELSE IF (WHAT == 'MPCF') THEN
-                                                           ! Initialize the array for MPC forces for this solution vector
+         ! Initialize the array for MPC forces for this solution vector
          IROW_FILE = 0
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'MPC force'
@@ -439,7 +439,8 @@
          DO I=1,NDOFM
             QM_COL(I) = ZERO
          ENDDO
-                                                           ! Partition NG-set vectors from G-set
+
+         ! Partition NG-set vectors from G-set
          IF ((NTERM_HMN > 0) .OR. (NTERM_LMN > 0)) THEN
             CALL ALLOCATE_COL_VEC ( 'UN_COL', NDOFN, SUBR_NAME )
             CALL TDOF_COL_NUM ( 'N ', N_SET_COL )
@@ -457,14 +458,16 @@
             QMM_COL(I) = ZERO
          ENDDO
 
-         IF (NTERM_HMN > 0) THEN                           ! Get 1st portion of QM: HMN*UN
-
+         ! Get 1st portion of QM: HMN*UN
+         IF (NTERM_HMN > 0) THEN
             CALL MATMULT_SFF ( 'HMN', NDOFM, NDOFN, NTERM_HMN, SYM_HMN, I_HMN, J_HMN, HMN, 'UN', NDOFN, 1, UN_COL, 'Y',            &
                                   'QMK', ONE, QMK_COL )
          ENDIF
-                                                           ! Don't do the following for CB soln (vecs are CB vecs, NOT eigen vecs, 
-                                                           ! so no inertia effect is to be added for MPC forces due to CB vecs)
-         IF (NTERM_LMN > 0) THEN                           ! Get 1st portion of QM: LMN*UN
+
+         ! Don't do the following for CB soln (vecs are CB vecs, NOT eigen vecs, 
+         ! so no inertia effect is to be added for MPC forces due to CB vecs)
+         ! Get 1st portion of QM: LMN*UN
+         IF (NTERM_LMN > 0) THEN
             IF (SOL_NAME(1:5) == 'MODES') THEN
                CALL MATMULT_SFF ( 'LMN', NDOFM, NDOFN, NTERM_LMN, SYM_LMN, I_LMN, J_LMN, LMN, 'UN', NDOFN, 1, UN_COL, 'Y',         &
                                   'QMM', -EIGEN_VAL(JVEC), QMM_COL )
@@ -486,7 +489,8 @@
 
          CALL DEALLOCATE_COL_VEC ( 'UN_COL' )
 
-         DO I=1,NDOFM                                      ! Add (HMN*UN - PM) to get QM
+         ! Add (HMN*UN - PM) to get QM
+         DO I=1,NDOFM
             QM_COL(I) = QMK_COL(I) + QMM_COL(I) - PM_COL(I)
          ENDDO
 
@@ -522,7 +526,8 @@
             ENDIF
          ENDDO   
 
-         NUM  = 0                                          ! Put QGm into 2-d output array OGEL for this subcase (NDOFS x 6).
+         ! Put QGm into 2-d output array OGEL for this subcase (NDOFS x 6).
+         NUM = 0
          DO I=1,NGRID
             IB1 = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_MPCF_BIT))
             IB2 = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_MPCF_BIT))

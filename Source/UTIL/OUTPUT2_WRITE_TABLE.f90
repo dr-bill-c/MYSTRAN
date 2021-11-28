@@ -129,7 +129,7 @@
 !       statics
 !        FIELD5 = 1
 !        FIELD6 = 0
-        FIELD7 = 0
+        FIELD7 = 0.0
       ELSE IF(ANALYSIS_CODE == 2) THEN
 !       modes - real eigenvalues
         !FIELD5 = MODE             ! int

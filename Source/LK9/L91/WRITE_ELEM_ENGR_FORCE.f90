@@ -70,6 +70,8 @@
       CHARACTER(LEN=128)              :: TITLEI                 ! the model TITLE
       CHARACTER(LEN=128)              :: STITLEI                ! the subcase SUBTITLE
       CHARACTER(LEN=128)              :: LABELI                 ! the subcase LABEL
+      INTEGER(LONG)                   :: FIELD5_INT_MODE
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE
 
 !     op2 specific flags
       INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
@@ -78,6 +80,8 @@
       INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
       INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
       INTEGER(LONG)                   :: NELEMENTS
+      ! initialize
+      ANALYSIS_CODE = -1
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -97,36 +101,45 @@
       ONAME(1:) = ' '
       CALL GET_ELEM_ONAME ( ONAME )
 
-! Write output headers.
+      ! Write output headers.
+      ANALYSIS_CODE = -1
+      FIELD5_INT_MODE = 0
+      FIELD6_EIGENVALUE = 0.0
 
 headr:IF (IHDR == 'Y') THEN
 
-!--- Subcase num, TITLE, SUBT, LABEL:
+         !--- Subcase num, TITLE, SUBT, LABEL:
 
          WRITE(F06,*)
          WRITE(F06,*)
          ISUBCASE = SCNUM(JSUB)
          IF    (SOL_NAME(1:7) == 'STATICS') THEN
             ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
          ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
             ANALYSIS_CODE = 10
-            WRITE(F06,101) SCNUM(JSUB)                                  ;   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
+            FIELD5_INT_MODE = SCNUM(JSUB)
+            WRITE(F06,101) SCNUM(JSUB);   IF (DEBUG(200) > 0) WRITE(ANS,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
             ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
             ANALYSIS_CODE = 7
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
             ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
-
             IF ((JSUB <= NDOFR) .OR. (JSUB >= NDOFR+NVEC)) THEN 
                IF (JSUB <= NDOFR) THEN
                   BDY_DOF_NUM = JSUB
@@ -143,7 +156,6 @@ headr:IF (IHDR == 'Y') THEN
             ELSE
                WRITE(F06,103) JSUB, NUM_CB_DOFS, 'displacement', BDY_GRID, BDY_COMP
             ENDIF
-  
          ENDIF
 
          TITLEI = TITLE(INT_SC_NUM)
@@ -163,8 +175,7 @@ headr:IF (IHDR == 'Y') THEN
 
          WRITE(F06,*)
 
-!--- 1st 2 lines of element specific headers - general info on what type of output:
-
+         !--- 1st 2 lines of element specific headers - general info on what type of output:
          IF      (TYPE(1:3) == 'BAR') THEN
             IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
                WRITE(F06,302) FILL(1:33)
@@ -215,8 +226,7 @@ headr:IF (IHDR == 'Y') THEN
 
          ENDIF
 
-!--- Header lines describing columns of output for an element type:
-
+         !--- Header lines describing columns of output for an element type:
          IF      (TYPE(1:3) == 'BAR'  ) THEN
             WRITE(F06,1101) FILL(1: 0), FILL(1: 0)
 
@@ -241,9 +251,16 @@ headr:IF (IHDR == 'Y') THEN
 
       ENDIF headr
 
-! Write element force output
-  
+      ! Write element force output
       IF      (TYPE == 'BAR     ') THEN
+         ELEMENT_TYPE = 34
+         NUM_WIDE = 9  ! eid, bm1a, bm2a, bm1b, bm2b, ts1, ts2, af, trq
+         NVALUES = NUM_WIDE * NUM
+         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
+         WRITE(OP2) NVALUES
+         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(I,J), 4), J=1,8), I=1,NUM)
+
 
          DO I=1,NUM
             WRITE(F06,1102) FILL(1: 0), EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,8)
@@ -254,12 +271,11 @@ headr:IF (IHDR == 'Y') THEN
          IF (DEBUG(200) > 0) CALL WRITE_ANS ( 'BAR' )
 
       ELSE IF (TYPE(1:4) == 'ELAS') THEN                   ! Engr force for ELAS was put into OGEL(I,1)
-
 !          CALL GET_SPRING_OP2_ELEMENT_TYPE(ELEMENT_TYPE)
 !          NUM_WIDE = 2 ! eid, spring_force
 !          NVALUES = NUM_WIDE * NUM
-!          CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
-!                                 TITLEI, STITLEI, LABELI)
+!          CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+!                                 TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 !          WRITE(OP2) NVALUES
 !          WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, REAL(OGEL(I,1), 4), I=1,NUM)
 ! 
@@ -287,8 +303,8 @@ headr:IF (IHDR == 'Y') THEN
          ELEMENT_TYPE = 1
          NUM_WIDE = 3  ! eid, axial, torsion
          NVALUES = NUM_WIDE * NUM
-         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
-                                TITLEI, STITLEI, LABELI)
+         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
          ! TODO: why does fields 7/8 write out the axial and torsion?
          WRITE(OP2) NVALUES
@@ -318,8 +334,8 @@ headr:IF (IHDR == 'Y') THEN
          !  kick_force3, shear34, kick_force4, shear41,
          !
          NUM_WIDE = 17
-         !CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
-         !                       TITLEI, STITLEI, LABELI)
+         !CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+         !                       TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
          NVALUES = NUM * NUM_WIDE
          !WRITE(OP2) NVALUES
          ! write the CSHEAR force data
@@ -363,8 +379,8 @@ headr:IF (IHDR == 'Y') THEN
         ! [fx, fy, fxy,  mx,  my,  mxy, qx, qy]
          NUM_WIDE = 9
          NVALUES = NUM * NUM_WIDE
-         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
-                               TITLEI, STITLEI, LABELI)
+         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+                                TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
          WRITE(OP2) NVALUES
          WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, (REAL(OGEL(I,J),4),J=1,8), I=1,NUM)
 
@@ -381,8 +397,8 @@ headr:IF (IHDR == 'Y') THEN
          ELEMENT_TYPE = 102 ! CBUSH
          NUM_WIDE = 7       ! eid, tx, ty, tz, rx, ry, rz
          NVALUES = NUM * NUM_WIDE
-         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, &
-                               TITLEI, STITLEI, LABELI)
+         CALL WRITE_OEF3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ANALYSIS_CODE, ELEMENT_TYPE, NUM_WIDE, &
+                               TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
          WRITE(OP2) NVALUES
          WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,(REAL(OGEL(I,J),4),J=1,6), I=1,NUM)
 
@@ -532,19 +548,15 @@ headr:IF (IHDR == 'Y') THEN
             WRITE(ANS,*)
             WRITE(ANS,*)
             IF    ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
-
                WRITE(ANS,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-
             WRITE(F06,102) JSUB
 
             ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
                WRITE(ANS,102) JSUB
 
             ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
@@ -565,7 +577,7 @@ headr:IF (IHDR == 'Y') THEN
                ELSE
                   WRITE(ANS,103) JSUB, NUM_CB_DOFS, 'displacement', BDY_GRID, BDY_COMP
                ENDIF
-  
+
             ENDIF
 
             WRITE(ANS,*)
@@ -743,8 +755,7 @@ headr:IF (IHDR == 'Y') THEN
       INTEGER(LONG)                   :: II,JJ             ! DO loop indices or counters
 
 ! **********************************************************************************************************************************
-! Get MAX, MIN, ABS values
-
+      ! Get MAX, MIN, ABS values
       DO JJ=BEG_COL,END_COL
          MAX_ANS(JJ) = -MACH_LARGE_NUM
       ENDDO 

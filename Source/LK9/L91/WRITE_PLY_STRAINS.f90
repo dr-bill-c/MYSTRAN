@@ -102,7 +102,7 @@
 
       DO J=1,10
          ABS_ANS(J) = ZERO
-         MAX_ANS(J) = -MACH_LARGE_NUM 
+         MAX_ANS(J) = -MACH_LARGE_NUM
          MIN_ANS(J) = ZERO
       ENDDO 
 
@@ -111,16 +111,14 @@
       ONAME(1:) = ' '
       CALL GET_ELEM_ONAME ( ONAME )
 
-! Write output headers if this is not the first use of this subr.
-
+      ! Write output headers if this is not the first use of this subr.
       ANALYSIS_CODE = -1
       FIELD5_INT_MODE = 0
       FIELD6_EIGENVALUE = 0.0
 
       IF (IHDR == 'Y') THEN
 
-! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
-
+         ! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
          WRITE(F06,*)
          WRITE(F06,*)
          ISUBCASE = SCNUM(JSUB)
@@ -170,8 +168,7 @@
 
          ENDIF
 
-! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
-
+         ! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
          TITLEI = TITLE(INT_SC_NUM)
          STITLEI = STITLE(INT_SC_NUM)
          LABELI = LABEL(INT_SC_NUM)

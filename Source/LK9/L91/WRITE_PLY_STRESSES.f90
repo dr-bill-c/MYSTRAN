@@ -153,6 +153,9 @@
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
+            ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
+
             IF ((JSUB <= NDOFR) .OR. (JSUB >= NDOFR+NUM_CB_DOFS)) THEN 
                IF (JSUB <= NDOFR) THEN
                   BDY_DOF_NUM = JSUB
@@ -172,8 +175,7 @@
 
          ENDIF
 
-! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
-
+         ! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
          TITLEI = TITLE(INT_SC_NUM)
          STITLEI = STITLE(INT_SC_NUM)
          LABELI = LABEL(INT_SC_NUM)
@@ -191,8 +193,7 @@
 
          WRITE(F06,*)
 
-! -- F06 1st 2 header lines for stress output description
-
+         ! -- F06 1st 2 header lines for stress output description
          IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
             WRITE(F06,302) FILL(1: 0)
          ELSE
