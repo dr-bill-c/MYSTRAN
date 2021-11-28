@@ -120,6 +120,7 @@
       INTRINSIC IAND
       WRITE(ERR,9000) "OFP2 - SPC and MPC force"
  9000 FORMAT(' *DEBUG:    RUNNING=', A)
+ 9003 FORMAT(' *DEBUG:    ITABLE BAD=', i4)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -146,6 +147,8 @@
 
       NEW_RESULT = .TRUE.
       IF (WHAT == 'SPCF') THEN
+      WRITE(ERR,9000) "OFP2 - SPC"
+      WRITE(ERR,9003) ITABLE
 
          SPCF_MEFM_MPF = 'N'
          IF ((MEFFMASS_CALC == 'Y') .OR. (MPFACTOR_CALC == 'Y')) THEN
@@ -427,9 +430,20 @@
          CALL DEALLOCATE_COL_VEC ( 'QS_COL' )
 
 ! ---------------------------------------------------------------------------------------------------------------------------------
-! Process MPC force requests
+!     Process MPC force requests
 
       ELSE IF (WHAT == 'MPCF') THEN
+         WRITE(ERR,9000) "OFP2 - MPC"
+         !IF (.NOT. NEW_RESULT) THEN
+         !IF (NEW_RESULT .EQV. .FALSE.) THEN
+         !IF (NEW_RESULT .EQ. .FALSE.) THEN    ! bad
+         IF (ITABLE .NE. -1) THEN   ! not equal
+           ! cleanup op2
+           NEW_RESULT = .TRUE.
+           ITABLE = -1
+         ENDIF
+         WRITE(ERR,9003) ITABLE
+
          ! Initialize the array for MPC forces for this solution vector
          IROW_FILE = 0
          IROW_MAT  = 0
