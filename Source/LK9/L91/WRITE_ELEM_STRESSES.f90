@@ -534,7 +534,7 @@
 
             DO L=1,NUM_PTS-1
                K = K + 1
-               WRITE(ERR,4) I,K       
+               WRITE(ERR,4) I,K
                WRITE(F06,*)                                           ; IF (DEBUG(200) > 0) WRITE(ANS,*)
                IF (DABS(POLY_FIT_ERR(I+L)) >= 0.01D0) THEN
                   WRITE(F06,1405) FILL(1: 0), GID_OUT_ARRAY(I,L+1),(OGEL(K,J),J=1,10), POLY_FIT_ERR(I+L), POLY_FIT_ERR_INDEX(I+L)
@@ -989,8 +989,9 @@
       REAL(DOUBLE)                :: ABS_ANS(11)       ! Max ABS for output
       REAL(DOUBLE)                :: MAX_ANS(11)       ! Max for output
       REAL(DOUBLE)                :: MIN_ANS(11)       ! Min for output
-      INTEGER(LONG)               :: I, J, K = 0       ! DO loop indices
+      INTEGER(LONG)               :: I, J, K           ! DO loop indices
 
+      K = 0
       ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
       !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
       !]

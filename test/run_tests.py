@@ -1,3 +1,6 @@
+"""
+>>> python3 run_tests.py > junk.out
+"""
 import os
 import sys
 import subprocess
@@ -7,7 +10,6 @@ from mystran_f06_reader import read_f06, NotLinearStatics
 
 IS_WINDOWS = sys.platform == 'win32'
 
-x = 1
 def get_files_of_type(dirname: str, extension: str='.txt',
                       max_size: float=100., case_sensitive: bool=False) -> List[str]:
     """
@@ -38,8 +40,6 @@ def get_files_of_type(dirname: str, extension: str='.txt',
 
     for filenamei in filenames:
         filename = os.path.join(dirname, filenamei)
-        #if filename.endswith('DAT'):
-            #continue
 
         if os.path.isdir(filename):
             filenames2 += get_files_of_type(
@@ -78,6 +78,7 @@ def run_jobs(test_dirname: str):
     """
     mystran_exe = os.path.join('..', 'Binaries', 'mystran')
     if IS_WINDOWS:
+        mystran_exe = 'mystran'
         mystran_exe += '.exe'
     assert os.path.exists(mystran_exe), mystran_exe
     print(f'{mystran_exe!r} exists')
@@ -90,12 +91,13 @@ def run_jobs(test_dirname: str):
         test_dirname, extension='.dat', max_size=100.,
         case_sensitive=False)
     for bdf_filename in bdf_filenames:
-        if ('Archive' in bdf_filename or
-            'Combined' in bdf_filename):
+        if ('Archive' in bdf_filename
+            #or 'Combined' in bdf_filename
+            ):
             continue
 
-        if 'Static' in bdf_filename:
-            continue
+        #if 'Static' in bdf_filename:
+            #continue
         #if 'Eigen' in bdf_filename:
             #continue
 
@@ -138,33 +140,59 @@ def check_jobs(test_dirname):
     npassed = 0
     nfailures = 0
     nmissing = 0
+
+    ntotal_static = 0
+    ntotal_eigen = 0
+    nstatic = 0
+    neigen = 0
     for bdf_filename in bdf_filenames:
-        if 'Combined' in bdf_filename:
-            continue
+        #if 'Combined' in bdf_filename:
+            #continue
         base = os.path.splitext(bdf_filename)[0]
+        f06_filename = base + '.f06'
         op2_filename = base + '.op2'
         if not op2_filename:
             print(f'****missing {op2_filename}')
             nmissing += 1
             ntotal += 1
+            continue
 
         try:
             read_op2(op2_filename, debug=None)
             print(op2_filename)
             npassed += 1
+            if 'Static' in op2_filename:
+                nstatic += 1
+            if 'Eigen' in op2_filename:
+                neigen += 1
         except:
             print(f'*{op2_filename}')
             nfailures += 1
+
+        if 'Static' in op2_filename:
+            ntotal_static += 1
+            #try:
+                #read_f06(f06_filename)
+            #except:
+                #print(f'*{f06_filename}')
+        if 'Eigen' in op2_filename:
+            ntotal_eigen += 1
         ntotal += 1
+        sys.stdout.flush()
+        sys.stderr.flush()
     print(f'{npassed}/{ntotal}; nmissing={nmissing}; nfailed={nfailures}')
+    print(f'Static: {nstatic}/{ntotal_static}')
+    print(f'Eigen:  {neigen}/{ntotal_eigen}')
 
 def main():
     test_dirname = 'test_runs'
     if IS_WINDOWS:
+        run_jobs(test_dirname)
         check_jobs(test_dirname)
     else:
         run_jobs(test_dirname)
 
 if __name__ == '__main__':
+    #read_f06(r'D:\hd\mystran_november\mystran-op2-displacement-merge2\test\test_runs\Separated\Static\Banded\CurrentRuns\RODLOAD-MPC-FOR-SING-SB.f06')
     main()
 

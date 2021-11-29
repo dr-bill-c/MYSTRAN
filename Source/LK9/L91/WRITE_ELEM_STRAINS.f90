@@ -292,7 +292,7 @@
 
          ENDIF
 
-! -- F06 header lines describing strain columns
+         ! -- F06 header lines describing strain columns
 
          IF (TYPE(1:4) == 'ELAS') THEN
             WRITE(F06,1201) FILL(1:1), FILL(1:1)                      ; IF (DEBUG(200) > 0) WRITE(ANS,1201) FILL(1:16), FILL(1:16)
@@ -972,13 +972,14 @@
       REAL(DOUBLE)                :: ABS_ANS(11)       ! Max ABS for output
       REAL(DOUBLE)                :: MAX_ANS(11)       ! Max for output
       REAL(DOUBLE)                :: MIN_ANS(11)       ! Min for output
-      INTEGER(LONG)               :: I, J, K = 0       ! DO loop indices
+      INTEGER(LONG)               :: I, J, K           ! DO loop indices
 
       ! [eid, fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! upper
       !       fiber_dist/curvature, oxx, oyy, txy, angle, omax, omin, ovm/max_shear,   ! lower
       !]
       NVALUES = NUM * NUM_WIDE
       DEVICE_CODE = 1 ! plot
+      K = 0
 
  100  FORMAT("*DEBUG: WRITE_CTRIA3    ITABLE=",I8, "; NUM=",I8,"; NVALUES=",I8,"; NTOTAL=",I8)
 !101  FORMAT("*DEBUG: WRITE_CTRIA3    ITABLE=",I8," (should be -5, -7,...)")
