@@ -130,12 +130,11 @@
 
       FILL(1:) = ' '
 
-! Get element output name
- 
+      ! Get element output name
       ONAME(1:) = ' '
       CALL GET_ELEM_ONAME ( ONAME )
 
-! Write output headers if this is not the first use of this subr.
+      ! Write output headers if this is not the first use of this subr.
 
       ANALYSIS_CODE = -1
       FIELD5_INT_MODE = 0
@@ -145,7 +144,7 @@
          WRITE(F06,*)                                                   ;   IF (DEBUG(200) > 0) WRITE(ANS,*)
          WRITE(F06,*)                                                   ;   IF (DEBUG(200) > 0) WRITE(ANS,*)
 
-! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
+         ! -- F06 header: OUTPUT FOR SUBCASE, EIGENVECTOR or CRAIG-BAMPTON DOF
          ISUBCASE = SCNUM(JSUB)
          IF    (SOL_NAME(1:7) == 'STATICS') THEN
             ANALYSIS_CODE = 1
@@ -205,7 +204,7 @@
 
          ENDIF
 
-! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
+         ! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
          TITLEI = TITLE(INT_SC_NUM)
          STITLEI = STITLE(INT_SC_NUM)
          LABELI = LABEL(INT_SC_NUM)
@@ -223,8 +222,7 @@
 
          WRITE(F06,*)                                                ; IF (DEBUG(200) > 0) WRITE(ANS,*)
 
-! -- F06 1st 2 header lines for strain output description
-
+        ! -- F06 1st 2 header lines for strain output description
          IF (TYPE(1:4) == 'ELAS') THEN
             IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
                WRITE(F06,302) FILL(1: 20)                             ; IF (DEBUG(200) > 0) WRITE(ANS,302) FILL(1: 36)
@@ -293,7 +291,6 @@
          ENDIF
 
          ! -- F06 header lines describing strain columns
-
          IF (TYPE(1:4) == 'ELAS') THEN
             WRITE(F06,1201) FILL(1:1), FILL(1:1)                      ; IF (DEBUG(200) > 0) WRITE(ANS,1201) FILL(1:16), FILL(1:16)
 
@@ -336,8 +333,7 @@
 
       ENDIF
 
-! Write the element strain output
-  
+      ! Write the element strain output
       IF (TYPE(1:4) == 'ELAS') THEN
          CALL GET_SPRING_OP2_ELEMENT_TYPE(ELEMENT_TYPE)
 
@@ -625,7 +621,7 @@
                                 TITLEI, STITLEI, LABELI, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
 
          WRITE(OP2) NVALUES
-         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,(OGEL(I,J),J=1,6), I=1,NUM)
+         WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,(REAL(OGEL(I,J),4), J=1,6), I=1,NUM)
 
          DO I=1,NUM
             WRITE(F06,1802) EID_OUT_ARRAY(I,1),(OGEL(I,J),J=1,6)      ; IF (DEBUG(200) > 0) WRITE(ANS,1812) EID_OUT_ARRAY(I,1),    &

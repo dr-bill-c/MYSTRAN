@@ -96,6 +96,10 @@ def run_jobs(test_dirname: str):
             ):
             continue
 
+        base = os.path.splitext(bdf_filename)[0]
+        f06_filename = base + '.f06'
+        op2_filename = base + '.op2'
+
         #if 'Static' in bdf_filename:
             #continue
         #if 'Eigen' in bdf_filename:
@@ -107,6 +111,9 @@ def run_jobs(test_dirname: str):
         print(bdf_filename)
         return_code = call_mystran(mystran_exe, bdf_filename)
         print(return_code)
+
+        if not os.path.exists(op2_filename):
+            print(f'****missing {op2_filename}')
 
         #asdf
 
@@ -151,7 +158,7 @@ def check_jobs(test_dirname):
         base = os.path.splitext(bdf_filename)[0]
         f06_filename = base + '.f06'
         op2_filename = base + '.op2'
-        if not op2_filename:
+        if not os.path.exists(op2_filename):
             print(f'****missing {op2_filename}')
             nmissing += 1
             ntotal += 1
@@ -165,8 +172,9 @@ def check_jobs(test_dirname):
                 nstatic += 1
             if 'Eigen' in op2_filename:
                 neigen += 1
-        except:
+        except Exception as e:
             print(f'*{op2_filename}')
+            print(e)
             nfailures += 1
 
         if 'Static' in op2_filename:

@@ -136,12 +136,18 @@
       CHARACTER(LEN=128), INTENT(IN) :: TITLE              ! the model TITLE
       CHARACTER(LEN=128), INTENT(IN) :: SUBTITLE           ! the subcase SUBTITLE
       CHARACTER(LEN=128), INTENT(IN) :: LABEL              ! the subcase LABEL
+      CHARACTER(LEN=128) :: TITLE2                 ! the subcase TITLE
+      CHARACTER(LEN=128) :: SUBTITLE2              ! the subcase SUBTITLE
+      CHARACTER(LEN=128) :: LABEL2                 ! the subcase LABEL
 
       INTEGER(LONG), INTENT(IN) :: FIELD5_INT_MODE
       REAL(DOUBLE), INTENT(IN)  :: FIELD6_EIGENVALUE
       REAL(DOUBLE)              :: FIELD7
       INTEGER(LONG)             :: APPROACH_CODE
       INTEGER(LONG)             :: TABLE_CODE, LOAD_SET, THERMAL, ACOUSTIC_FLAG
+      TITLE2 = TITLE(1:100)
+      SUBTITLE2 = SUBTITLE(1:67)
+      LABEL2 = LABEL(1:100)
 
       CALL WRITE_ITABLE(ITABLE)  ! write the -3, -5, ... subtable header
  1    FORMAT("WRITE_OEF3: ITABLE_START=",I8)
@@ -180,7 +186,7 @@
             0, 0, THERMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
             0, 0, 0, 0, &
-            TITLE, SUBTITLE, LABEL
+            TITLE2, SUBTITLE2, LABEL2
 
       ITABLE = ITABLE - 1        ! flip it to -4, -6, ... so we don't have to do this later
  3    FORMAT("WRITE_OEF3: ITABLE_END=",I8)

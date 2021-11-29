@@ -72,13 +72,19 @@
       REAL(DOUBLE), INTENT(IN)         :: FIELD6
       REAL(DOUBLE)                     :: FIELD7
       LOGICAL, INTENT(INOUT)           :: NEW_RESULT
+      CHARACTER(LEN=128) :: TITLE2                 ! the subcase TITLE
+      CHARACTER(LEN=128) :: SUBTITLE2              ! the subcase SUBTITLE
+      CHARACTER(LEN=128) :: LABEL2                 ! the subcase LABEL
 
       INTEGER(LONG) :: THERMAL, SORT_CODE, &
         RANDOM_CODE, ACOUSTIC_FLAG, OCODE, &
         APPROACH_CODE, TCODE
-!      INTEGER(LONG) :: FIELD5, FIELD6, FIELD7
 
-      write(*,*) NEW_RESULT, itable
+      TITLE2 = TITLE(1:100)
+      SUBTITLE2 = SUBTITLE(1:67)
+      LABEL2 = LABEL(1:100)
+
+      WRITE(*,*) NEW_RESULT, itable
       IF(NEW_RESULT .AND. (ITABLE .NE. -3)) THEN
 !        header = [
 !          4, 146, 4,
@@ -180,7 +186,7 @@
           0, 0, THERMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, &
           0, 0, 0, 0, &
-          TITLE, SUBTITLE, LABEL
+          TITLE2, SUBTITLE2, LABEL2
 !      assert table3[22] == thermal
 !      print *, "finished OUGV1 table=3"
 
