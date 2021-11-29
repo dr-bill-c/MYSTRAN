@@ -146,8 +146,8 @@ def check_jobs(test_dirname):
     nstatic = 0
     neigen = 0
     for bdf_filename in bdf_filenames:
-        #if 'Combined' in bdf_filename:
-            #continue
+        if 'Combined' in bdf_filename:
+            continue
         base = os.path.splitext(bdf_filename)[0]
         f06_filename = base + '.f06'
         op2_filename = base + '.op2'
@@ -187,7 +187,7 @@ def check_jobs(test_dirname):
 def main():
     test_dirname = 'test_runs'
     if IS_WINDOWS:
-        run_jobs(test_dirname)
+        #run_jobs(test_dirname)
         check_jobs(test_dirname)
     else:
         run_jobs(test_dirname)

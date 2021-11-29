@@ -253,6 +253,7 @@
       USE IOUNT1, ONLY                :  ERR
       USE SCONTR, ONLY                :  SOL_NAME
       USE EIGEN_MATRICES_1 , ONLY     :  EIGEN_VAL
+      USE NONLINEAR_PARAMS, ONLY      :  LOAD_ISTEP
 
       CHARACTER(LEN=128)                :: LABELI            ! Subcase label
 
