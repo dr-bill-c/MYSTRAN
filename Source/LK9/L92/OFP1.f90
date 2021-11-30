@@ -116,7 +116,8 @@
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'Acceleration'
 
-         ACCE_ALL_SAME_CID = 'Y'                           ! Check if all grids, for which there will be output, have same coord sys
+         
+         ACCE_ALL_SAME_CID = 'Y'
          DO I=1,NGRID-1
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_ACCE_BIT))
             IF (IB > 0) THEN
@@ -127,7 +128,8 @@
            ENDIF
          ENDDO
 
-         NREQ = 0                                          ! Count the number of requests.
+         ! Count the number of requests.
+         NREQ = 0
          DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_ACCE_BIT))
             IF (IB > 0) THEN
@@ -179,7 +181,8 @@
 
                ENDIF
                IF ((SOL_NAME(1:12) == 'GEN CB MODEL') .AND. (JVEC == 1) .AND. (IROW_MAT >= 1)) THEN
-                  DO J=1,OTMSKIP                           ! Write OTMSKIP blank separator lines
+                  ! Write OTMSKIP blank separator lines
+                  DO J=1,OTMSKIP
                      IROW_FILE = IROW_FILE + 1
                      WRITE(TXT_ACCE(IROW_FILE), 9199)
                   ENDDO
@@ -189,14 +192,15 @@
 
 
 ! ---------------------------------------------------------------------------------------------------------------------------------
-! Process displacement output requests. 
+      ! Process displacement output requests.
 
       ELSE IF (WHAT == 'DISP') THEN
          IROW_FILE = 0
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'Displacement'
 
-         DISP_ALL_SAME_CID = 'Y'                           ! Check if all grids, for which there will be output, have same coord sys
+         ! Check if all grids, for which there will be output, have same coord sys
+         DISP_ALL_SAME_CID = 'Y'
          DO I=1,NGRID-1
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
@@ -207,7 +211,8 @@
            ENDIF
          ENDDO
 
-         NREQ = 0                                          ! Count the number of requests.
+         ! Count the number of requests.
+         NREQ = 0
          DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
@@ -215,9 +220,10 @@
             ENDIF
          ENDDO
 
+         ! Prepare OGEL so subr WRITE_GRD_PRT_OUTPUTS can output requested items
          NUM  = 0
          write(ERR,9002) WHAT, NGRID, NREQ, SC_OUT_REQ
-         DO I=1,NGRID                                      ! Prepare OGEL so subr WRITE_GRD_PRT_OUTPUTS can output requested items
+         DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
                NUM = NUM + 1
@@ -321,7 +327,6 @@
                ENDDO
 
                IF (NUM == NREQ) THEN
-
                   !IF ((OLOA_OUT(1:4) == 'PLOT') .OR. (OLOA_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
                   !ENDIF

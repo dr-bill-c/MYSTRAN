@@ -24,13 +24,12 @@
                                                                                                         
 ! End MIT license text.                                                                                      
  
-      SUBROUTINE WRITE_BAR ( NUM, FILL_F06, FILL_ANS )
- 
-! Routine for writing output to text files F06 and ANS for BAR element stresses. Up to 2 elements written per line of output.
-! Data is first written to character variables and then that character variable is output the F06 and ANS.
+      SUBROUTINE WRITE_BAR (NUM, FILL_F06, FILL_ANS, ISUBCASE, ITABLE,  &
+                            TITLE, SUBTITLE, LABEL,                     &
+                            FIELD5_INT_MODE, FIELD6_EIGENVALUE )
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06, OP2
       USE SCONTR, ONLY                :  BARTOR, BLNK_SUB_NAM, MOGEL
       USE TIMDAT, ONLY                :  TSEC
       USE SUBR_BEGEND_LEVELS, ONLY    :  WRITE_BAR_BEGEND
@@ -46,6 +45,13 @@
 
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_F06          ! Padding for output format
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_ANS          ! Padding for output format
+      INTEGER(LONG), INTENT(IN)       :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
+      CHARACTER(LEN=128), INTENT(IN)  :: TITLE             ! the model TITLE
+      CHARACTER(LEN=128), INTENT(IN)  :: SUBTITLE          ! the subcase SUBTITLE
+      CHARACTER(LEN=128), INTENT(IN)  :: LABEL             ! the subcase LABEL
+      INTEGER(LONG), INTENT(IN)       :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN)       :: FIELD6_EIGENVALUE
+
       CHARACTER(133*BYTE)             :: BLINE1A           ! Result of concatenating char. variables BOUT1, BMS1, BMSF1, BTOR to
 !                                                            make the 1st line of stress output for a CBAR with torsional stress 
       CHARACTER(133*BYTE)             :: BLINE1B           ! Result of concatenating char. variables BOUT1, BMS1, BMSF1, BMS2, BMSF2
@@ -70,6 +76,7 @@
       CHARACTER(  1*BYTE)             :: MSFLAG            ! If margin is negative, MSFLAG is an *
       CHARACTER(14*BYTE)              :: OGEL_CHAR(MOGEL)  ! Char representation of 1 row of OGEL outputs
  
+      INTEGER(LONG), INTENT(IN)       :: ISUBCASE          ! The subcase ID
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
       INTEGER(LONG)                   :: I,J               ! DO loop indices
       INTEGER(LONG)                   :: K                 ! Counter
@@ -78,6 +85,13 @@
       REAL(DOUBLE)                    :: ABS_ANS(16)       ! Max ABS for all grids output for each of the 6 disp components
       REAL(DOUBLE)                    :: MAX_ANS(16)       ! Max for all grids output for each of the 6 disp components
       REAL(DOUBLE)                    :: MIN_ANS(16)       ! Min for all grids output for each of the 6 disp components
+      ! op2
+      INTEGER(LONG)                   :: ELEMENT_TYPE = 34 ! CBAR-34; constant
+      INTEGER(LONG)                   :: NUM_WIDE = 16     ! number of fields for the element; constant
+      INTEGER(LONG)                   :: DEVICE_CODE = 1   ! PLOT; constant
+      INTEGER(LONG)                   :: STRESS_CODE
+      INTEGER(LONG)                   :: NVALUES           ! number of values in the op2 block
+      STRESS_CODE = 1
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -87,9 +101,29 @@
       ENDIF
 
 ! **********************************************************************************************************************************
+      ! Routine for writing output to text files F06 and ANS for BAR element stresses. Up to 2 elements written per line of output.
+      ! Data is first written to character variables and then that character variable is output the F06 and ANS.
+      ! op2_headers = ['s1a', 's2a', 's3a', 's4a', 'axial', 'smaxa', 'smina', 'MS_tension',
+      !                's1b', 's2b', 's3b', 's4b',          'smaxb', 'sminb', 'MS_compression']
+ 
+      NVALUES = NUM_WIDE * NUM
+      
+      !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
+      CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         0)
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                             TITLE, SUBTITLE, LABEL, FIELD5_INT_MODE, FIELD6_EIGENVALUE)
+
+      WRITE(OP2) NVALUES
+      !K = 2*I+1
+      !
+      ! TODO: this is likely not right, but it should be the right shape...
+      WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE,   &
+                  (REAL(OGEL(2*I-1,J), 4), J=1,8),     & ! s1a-smina; K = 2*I+1
+                  (REAL(OGEL(2*I,  J), 4), J=1,7),     & ! s1b-sminb; K = 2*I
+                  I=1,NUM)
+! ******************************
       K = 0
       DO I=1,NUM
- 
          BLINE1A(1:) = ' '
          BLINE1B(1:) = ' '
          BLINE2A(1:) = ' '
@@ -105,8 +139,7 @@
 
          BTOR(1:)    = ' '   
  
-! Write first line of output for one element to a temporary internal file
- 
+         ! Write first line of output for one element to a temporary internal file
          K = K + 1
          CALL WRT_REAL_TO_CHAR_VAR ( OGEL, MAXREQ, MOGEL, K, OGEL_CHAR )
          WRITE(BOUT1,9011) EID_OUT_ARRAY(I,1), (OGEL_CHAR(J),J=1,7)
@@ -126,8 +159,7 @@
             WRITE(BTOR, 9041) OGEL(K,9)
          ENDIF
 
-! Write second line of output for one element to a temporary internal file
- 
+        ! Write second line of output for one element to a temporary internal file
          K = K + 1
          CALL WRT_REAL_TO_CHAR_VAR ( OGEL, MAXREQ, MOGEL, K, OGEL_CHAR )
          WRITE(BOUT2,9012) (OGEL_CHAR(J),J=1,4), (OGEL_CHAR(J),J=6,7)
@@ -156,8 +188,7 @@
             WRITE(BMSF3,9032)
          ENDIF
 
-! Write the two lines of stress output for one element to F06
-
+         ! Write the two lines of stress output for one element to F06
          WRITE(F06,*)
          WRITE(ANS,*)
          IF (BARTOR == 'Y') THEN
@@ -182,9 +213,9 @@
 
          IF (DEBUG(200) > 0) THEN
          ENDIF
- 
-      ENDDO   
- 
+
+      ENDDO
+
       CALL GET_MAX_MIN_ABS ( 1, 8 )
       WRITE(F06,9108) (MAX_ANS_CHAR(J),J=1,7), MAX_ANS(8), (MAX_ANS_CHAR(J),J=9,15), MAX_ANS(16),                                  &
                       (MIN_ANS_CHAR(J),J=1,7), MIN_ANS(8), (MIN_ANS_CHAR(J),J=9,15), MIN_ANS(16),                                  &
