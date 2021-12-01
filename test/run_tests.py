@@ -91,14 +91,14 @@ def run_jobs(test_dirname: str):
         test_dirname, extension='.dat', max_size=100.,
         case_sensitive=False)
     for bdf_filename in bdf_filenames:
-        if ('Archive' in bdf_filename
+        #if ('Archive' in bdf_filename
             #or 'Combined' in bdf_filename
-            ):
-            continue
+            #):
+            #continue
 
-        base = os.path.splitext(bdf_filename)[0]
-        f06_filename = base + '.f06'
-        op2_filename = base + '.op2'
+        root = os.path.splitext(bdf_filename)[0]
+        f06_filename = root + '.f06'
+        op2_filename = root + '.op2'
 
         #if 'Static' in bdf_filename:
             #continue
@@ -121,12 +121,12 @@ def run_jobs(test_dirname: str):
         files = get_files_of_type(test_dirname, extension='.ans', max_size=100.,
                                   case_sensitive=False)
         for f06_filename in files:
-            if 'Static' in f06_filename:
-                continue
+            #if 'Static' in f06_filename:
+                #continue
             #if 'Eigen' in f06_filename:
                 #continue
-            if 'Combined' in f06_filename:
-                continue
+            #if 'Combined' in f06_filename:
+                #continue
 
             #try:
             print(f06_filename)
@@ -155,9 +155,10 @@ def check_jobs(test_dirname):
     for bdf_filename in bdf_filenames:
         if 'Combined' in bdf_filename:
             continue
-        base = os.path.splitext(bdf_filename)[0]
-        f06_filename = base + '.f06'
-        op2_filename = base + '.op2'
+        root = os.path.splitext(bdf_filename)[0]
+        base = os.path.basename(bdf_filename)[0]
+        f06_filename = root + '.f06'
+        op2_filename = root + '.op2'
         if not os.path.exists(op2_filename):
             print(f'****missing {op2_filename}')
             nmissing += 1
@@ -168,22 +169,22 @@ def check_jobs(test_dirname):
             read_op2(op2_filename, debug=None)
             print(op2_filename)
             npassed += 1
-            if 'Static' in op2_filename:
+            if base.startswith('S'):  # static, buckling
                 nstatic += 1
-            if 'Eigen' in op2_filename:
+            if base.startswith('E'):  # eigenvalue/modal
                 neigen += 1
         except Exception as e:
             print(f'*{op2_filename}')
             print(e)
             nfailures += 1
 
-        if 'Static' in op2_filename:
+        if base.startswith('S'):  # static, buckling
             ntotal_static += 1
             #try:
                 #read_f06(f06_filename)
             #except:
                 #print(f'*{f06_filename}')
-        if 'Eigen' in op2_filename:
+        if base.startswith('E'):  # eigenvalue/modal
             ntotal_eigen += 1
         ntotal += 1
         sys.stdout.flush()
@@ -193,9 +194,9 @@ def check_jobs(test_dirname):
     print(f'Eigen:  {neigen}/{ntotal_eigen}')
 
 def main():
-    test_dirname = 'test_runs'
+    test_dirname = os.path.join('../../examples/Benchmark_11_29_2021/DAT')
     if IS_WINDOWS:
-        #run_jobs(test_dirname)
+        run_jobs(test_dirname)
         check_jobs(test_dirname)
     else:
         run_jobs(test_dirname)
