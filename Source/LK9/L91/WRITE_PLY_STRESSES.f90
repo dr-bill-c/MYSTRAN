@@ -24,12 +24,12 @@
                                                                                                         
 ! End MIT license text.                                                                                      
   
-      SUBROUTINE WRITE_PLY_STRESSES ( JSUB, NUM, IHDR )
+      SUBROUTINE WRITE_PLY_STRESSES ( JSUB, NUM, IHDR, ETYPE, ITABLE )
   
 ! Writes blocks of element ply stresses for one subcase one element type for elements with PCOMP properties.
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
-      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06
+      USE IOUNT1, ONLY                :  WRT_ERR, WRT_LOG, ANS, ERR, F04, F06, OP2
       USE SCONTR, ONLY                :  BLNK_SUB_NAM, FATAL_ERR, BARTOR, INT_SC_NUM, LPCOMP_PLIES, NDOFR, NUM_CB_DOFS,            &
                                          SOL_NAME
       USE TIMDAT, ONLY                :  TSEC
@@ -53,6 +53,8 @@
   
       INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
+      CHARACTER(8*BYTE), INTENT(IN)   :: ETYPE             ! the name of the element
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! the op2 subtable number
       INTEGER(LONG)                   :: BDY_COMP          ! Component (1-6) for a boundary DOF in CB analyses
       INTEGER(LONG)                   :: BDY_GRID          ! Grid for a boundary DOF in CB analyses
       INTEGER(LONG)                   :: BDY_DOF_NUM       ! DOF number for BDY_GRID/BDY_COMP
@@ -63,7 +65,30 @@
       REAL(DOUBLE)                    :: MAX_ANS(10)       ! Max for all grids output for each of the 6 disp components
       REAL(DOUBLE)                    :: MIN_ANS(10)       ! Min for all grids output for each of the 6 disp components
 
+      ! table -3 info
+      INTEGER(LONG)                   :: ANALYSIS_CODE          ! static/modal/time/etc. flag
+      INTEGER(LONG)                   :: ELEMENT_TYPE           ! the OP2 flag for the element
+      INTEGER(LONG)                   :: STRESS_CODE            ! flag for op2
+      CHARACTER(LEN=128)              :: TITLEI                 ! the model TITLE
+      CHARACTER(LEN=128)              :: STITLEI                ! the subcase SUBTITLE
+      CHARACTER(LEN=128)              :: LABELI                 ! the subcase LABEL
+      INTEGER(LONG)                   :: FIELD5_INT_MODE
+      REAL(DOUBLE)                    :: FIELD6_EIGENVALUE
+
+!     op2 specific flags
+      INTEGER(LONG)                   :: DEVICE_CODE  ! PLOT, PRINT, PUNCH flag
+      INTEGER(LONG)                   :: NUM_WIDE     ! the number of "words" for an element
+      INTEGER(LONG)                   :: NVALUES      ! the number of "words" for all the elments
+      INTEGER(LONG)                   :: NTOTAL       ! the number of bytes for all NVALUES
+      INTEGER(LONG)                   :: ISUBCASE     ! the subcase ID
+
       INTRINSIC                       :: MAX, MIN, DABS
+
+! **********************************************************************************************************************************
+      ! initialize
+      ANALYSIS_CODE = -1
+      ELEMENT_TYPE = -1
+      DEVICE_CODE = 1
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -84,9 +109,15 @@
 ! Get element output name
  
       ONAME(1:) = ' '
+ 90   FORMAT("*DEBUG:   WRITE_PLY_STRESSES:  ELEM_ONAME=",A," ONAME=",A," NUM=",I8)
       CALL GET_ELEM_ONAME ( ONAME )
+      WRITE(ERR,90) ETYPE, ONAME, NUM
 
 ! Write output headers if this is not the first use of this subr.
+
+      ANALYSIS_CODE = -1
+      FIELD5_INT_MODE = 0
+      FIELD6_EIGENVALUE = 0.0
 
       IF (IHDR == 'Y') THEN
 
@@ -94,23 +125,36 @@
 
          WRITE(F06,*)
          WRITE(F06,*)
-         IF    ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
-
+         ISUBCASE = SCNUM(JSUB)
+         IF      (SOL_NAME(1:7) == 'STATICS') THEN
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
+            WRITE(F06,101) SCNUM(JSUB)
+         ELSE IF (SOL_NAME(1:8) == 'NLSTATIC') THEN
+            ANALYSIS_CODE = 10
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-
+            ANALYSIS_CODE = 1
+            FIELD5_INT_MODE = SCNUM(JSUB)
             WRITE(F06,101) SCNUM(JSUB)
 
          ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-
+            ANALYSIS_CODE = 7
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,101) JSUB
 
          ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
+            ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
+            ! FIELD6_EIGENVALUE = ????
             WRITE(F06,102) JSUB
 
          ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
+            ANALYSIS_CODE = 2
+            FIELD5_INT_MODE = JSUB
 
             IF ((JSUB <= NDOFR) .OR. (JSUB >= NDOFR+NUM_CB_DOFS)) THEN 
                IF (JSUB <= NDOFR) THEN
@@ -131,8 +175,10 @@
 
          ENDIF
 
-! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
-
+         ! -- F06 header for TITLE, SUBTITLE, LABEL (but only to F06)
+         TITLEI = TITLE(INT_SC_NUM)
+         STITLEI = STITLE(INT_SC_NUM)
+         LABELI = LABEL(INT_SC_NUM)
          IF (TITLE(INT_SC_NUM)(1:)  /= ' ') THEN
             WRITE(F06,201) TITLE(INT_SC_NUM)
          ENDIF
@@ -147,8 +193,7 @@
 
          WRITE(F06,*)
 
-! -- F06 1st 2 header lines for stress output description
-
+         ! -- F06 1st 2 header lines for stress output description
          IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
             WRITE(F06,302) FILL(1: 0)
          ELSE
@@ -176,19 +221,15 @@
             WRITE(ANS,*)
             WRITE(ANS,*)
             IF    ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
-
                WRITE(ANS,101) SCNUM(JSUB)
 
             ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 1)) THEN
-
                WRITE(ANS,101) SCNUM(JSUB)
 
             ELSE IF ((SOL_NAME(1:8) == 'BUCKLING') .AND. (LOAD_ISTEP == 2)) THEN
-
                WRITE(ANS,101) JSUB
 
             ELSE IF (SOL_NAME(1:5) == 'MODES') THEN
-
                WRITE(ANS,102) JSUB
 
             ELSE IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN   ! Write info on what CB DOF the output is for
@@ -242,7 +283,41 @@
       ENDIF
  
 ! Write the element stress output
-  
+      ! 95:  cquad4
+      ! 96:  cquad8
+      ! 97:  ctria3
+      ! 98:  ctria6
+      ! 232: cquadr
+      ! 233: ctriar
+      IF      (ETYPE == "QUAD4   ") THEN
+          ELEMENT_TYPE = 95
+      ELSE IF (ETYPE == "TRIA3   ") THEN
+          ELEMENT_TYPE = 97
+      ENDIF
+
+      ! op2 output
+      IF (STRE_OPT == 'VONMISES') THEN
+         ! von Mises
+         !CALL GET_STRESS_CODE(STRESS_CODE, IS_VON_MISES, IS_STRAIN, IS_FIBER_DISTANCE)
+         CALL GET_STRESS_CODE( STRESS_CODE, 1,            0,         1)
+      ELSE
+         ! max shear
+         CALL GET_STRESS_CODE( STRESS_CODE, 0,            0,         1)
+      ENDIF
+
+      ! elementi = [eid_device, layer, 
+      !             o1, o2, t12, t1z, t2z, angle, major, minor, ovm)
+      NUM_WIDE = 11
+      NVALUES = NUM * NUM_WIDE
+      CALL WRITE_OES3_STATIC(ITABLE, ISUBCASE, DEVICE_CODE, ELEMENT_TYPE, NUM_WIDE, STRESS_CODE, &
+                             TITLEI, STITLEI, LABELI, &
+                             FIELD5_INT_MODE, FIELD6_EIGENVALUE)
+
+      WRITE(OP2) NVALUES
+      ! TODO: dropping the failure theory
+      WRITE(OP2) (EID_OUT_ARRAY(I,1)*10+DEVICE_CODE, EID_OUT_ARRAY(I,2), (REAL(OGEL(I,J),4),J=1,9), I=1,NUM)
+
+      ! F06 output
       DO I=1,NUM
 
          IF (EID_OUT_ARRAY(I,2) == 1) THEN

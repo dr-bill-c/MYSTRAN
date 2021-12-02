@@ -24,7 +24,7 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      SUBROUTINE OFP1 ( JVEC, WHAT, SC_OUT_REQ, FEMAP_SET_ID, ITG, OT4_GROW )
+      SUBROUTINE OFP1 ( JVEC, WHAT, SC_OUT_REQ, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 
 ! Processes grid point accel, displ and applied force output requests for one subcase.
 
@@ -63,8 +63,10 @@
       INTEGER(LONG), INTENT(IN)       :: FEMAP_SET_ID      ! Set ID for FEMAP output
       INTEGER(LONG), INTENT(IN)       :: ITG               ! Unit number for text files for OTM row descriptors 
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
-      INTEGER(LONG), INTENT(IN)       :: SC_OUT_REQ        ! If > 0, then req1uests for WHAT are to be output
+      INTEGER(LONG), INTENT(IN)       :: SC_OUT_REQ        ! If > 0, then requests for WHAT are to be output
       INTEGER(LONG), INTENT(INOUT)    :: OT4_GROW          ! Row number in OT4 file for grid related OTM descriptors
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! 
+      LOGICAL, INTENT(INOUT)          :: NEW_RESULT        ! is this the first result of a table
       INTEGER(LONG)                   :: G_SET_COL         ! Col number in TDOF where the G-set DOF's exist
       INTEGER(LONG)                   :: GDOF              ! G-set DOF number
       INTEGER(LONG)                   :: I,J               ! DO loop indices
@@ -80,6 +82,8 @@
       INTEGER(LONG)                   :: TDOF_ROW          ! Row no. in array TDOF to find GDOF DOF number
 
       INTRINSIC IAND
+      WRITE(ERR,9000) "OFP1 - disp, accel and applied force output"
+ 9000 FORMAT(' *DEBUG:    RUNNING=', A)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -104,13 +108,16 @@
 ! ---------------------------------------------------------------------------------------------------------------------------------
 ! Process acceleration output requests for CB sol. 
 
+!      TODO: where is the velocity output?
+ 9002 FORMAT(" *DEBUG:      WHAT=",A,"; NGRID",I8, "; NREQ=",I8, "; SC_OUT_REQ=",I8)
       IF (WHAT == 'ACCE') THEN
 
          IROW_FILE = 0
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'Acceleration'
 
-         ACCE_ALL_SAME_CID = 'Y'                           ! Check if all grids, for which there will be output, have same coord sys
+         
+         ACCE_ALL_SAME_CID = 'Y'
          DO I=1,NGRID-1
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_ACCE_BIT))
             IF (IB > 0) THEN
@@ -121,7 +128,8 @@
            ENDIF
          ENDDO
 
-         NREQ = 0                                          ! Count the number of requests.
+         ! Count the number of requests.
+         NREQ = 0
          DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_ACCE_BIT))
             IF (IB > 0) THEN
@@ -130,6 +138,7 @@
          ENDDO
 
          NUM  = 0
+         write(ERR,9002) WHAT, NGRID, NREQ, SC_OUT_REQ
          DO I=1,NGRID                                      ! Prepare OGEL so subr WRITE_GRD_PRT_OUTPUTS can output requested items
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_ACCE_BIT))
             IF (IB > 0) THEN
@@ -155,6 +164,10 @@
                ENDDO
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
 
+                  !IF ((ACCE_OUT(1:4) == 'PLOT') .OR. (ACCE_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                  !ENDIF
+
                   IF ((ACCE_OUT(1:5) == 'PUNCH') .OR. (ACCE_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )
                   ENDIF
@@ -168,7 +181,8 @@
 
                ENDIF
                IF ((SOL_NAME(1:12) == 'GEN CB MODEL') .AND. (JVEC == 1) .AND. (IROW_MAT >= 1)) THEN
-                  DO J=1,OTMSKIP                           ! Write OTMSKIP blank separator lines
+                  ! Write OTMSKIP blank separator lines
+                  DO J=1,OTMSKIP
                      IROW_FILE = IROW_FILE + 1
                      WRITE(TXT_ACCE(IROW_FILE), 9199)
                   ENDDO
@@ -178,14 +192,15 @@
 
 
 ! ---------------------------------------------------------------------------------------------------------------------------------
-! Process displacement output requests. 
+      ! Process displacement output requests.
 
       ELSE IF (WHAT == 'DISP') THEN
          IROW_FILE = 0
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'Displacement'
 
-         DISP_ALL_SAME_CID = 'Y'                           ! Check if all grids, for which there will be output, have same coord sys
+         ! Check if all grids, for which there will be output, have same coord sys
+         DISP_ALL_SAME_CID = 'Y'
          DO I=1,NGRID-1
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
@@ -196,7 +211,8 @@
            ENDIF
          ENDDO
 
-         NREQ = 0                                          ! Count the number of requests.
+         ! Count the number of requests.
+         NREQ = 0
          DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
@@ -204,8 +220,10 @@
             ENDIF
          ENDDO
 
+         ! Prepare OGEL so subr WRITE_GRD_PRT_OUTPUTS can output requested items
          NUM  = 0
-         DO I=1,NGRID                                      ! Prepare OGEL so subr WRITE_GRD_PRT_OUTPUTS can output requested items
+         write(ERR,9002) WHAT, NGRID, NREQ, SC_OUT_REQ
+         DO I=1,NGRID
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_DISP_BIT))
             IF (IB > 0) THEN
                NUM = NUM + 1
@@ -230,6 +248,10 @@
                   ENDIF
                ENDDO
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
+
+                  !IF ((DISP_OUT(1:4) == 'PLOT') .OR. (DISP_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                  !ENDIF
 
                   IF ((DISP_OUT(1:5) == 'PUNCH') .OR. (DISP_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )
@@ -280,6 +302,7 @@
          ENDDO   
 
          NUM = 0
+         write(ERR,9002) WHAT, NGRID, NREQ, SC_OUT_REQ
          DO I=1,NGRID                                      ! 
             IB = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_OLOA_BIT))
             IF (IB > 0) THEN
@@ -304,6 +327,9 @@
                ENDDO
 
                IF (NUM == NREQ) THEN
+                  !IF ((OLOA_OUT(1:4) == 'PLOT') .OR. (OLOA_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                  !ENDIF
 
                   IF ((OLOA_OUT(1:5) == 'PUNCH') .OR. (OLOA_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )
@@ -339,8 +365,8 @@
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
-         WRITE(F04,9002) SUBR_NAME,TSEC
- 9002    FORMAT(1X,A,' END  ',F10.3)
+         WRITE(F04,9003) SUBR_NAME,TSEC
+ 9003    FORMAT(1X,A,' END  ',F10.3)
       ENDIF
 
       RETURN

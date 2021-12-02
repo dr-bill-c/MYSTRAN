@@ -270,14 +270,18 @@ grid_do: DO I=1,NGRID
   
       WRITE(SC1,12345,ADVANCE='NO') '    Write grid data to file                                                 ', CR13 
       DATA_SET_NAME = 'GRID, RGRID'
-      WRITE(L1B) DATA_SET_NAME   ;  WRITE(OP2) DATA_SET_NAME
-      WRITE(L1B) NGRID           ;  WRITE(OP2) NGRID
+      WRITE(L1B) DATA_SET_NAME
+!      WRITE(OP2) DATA_SET_NAME
+      WRITE(L1B) NGRID
+!      WRITE(OP2) NGRID
       DO I=1,NGRID
          DO J=1,MGRID
-            WRITE(L1B) GRID(I,J) ;  WRITE(OP2) GRID(I,J)
+            WRITE(L1B) GRID(I,J)
+!            WRITE(OP2) GRID(I,J)
          ENDDO   
          DO J=1,MRGRID
-            WRITE(L1B) RGRID(I,J);  WRITE(OP2) RGRID(I,J)
+            WRITE(L1B) RGRID(I,J)
+!            WRITE(OP2) RGRID(I,J)
          ENDDO   
       ENDDO   
  

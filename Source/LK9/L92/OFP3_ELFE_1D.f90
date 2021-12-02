@@ -84,11 +84,21 @@
       REAL(DOUBLE)                    :: DX,DY,DZ          ! Offset dist1
       REAL(DOUBLE)                    :: FORCES(12)        ! Forces at the grid points
       REAL(DOUBLE)                    :: LENGTH
+
+      ! OP2 parameters
+      INTEGER(LONG)                   :: ITABLE            ! the op2 subtable number
+      CHARACTER(8*BYTE)               :: TABLE_NAME        ! the op2 table name
+
       REAL(DOUBLE)                    :: TET(3,3)          ! Transpose of TE
       REAL(DOUBLE)                    :: TET_GA_GB(3,3)    ! Transpose of TE_GA_GB
  
       INTRINSIC IAND
   
+! **********************************************************************************************************************************
+!     Initialize
+      TABLE_NAME = "OEF ERR "
+      ITABLE = 0
+
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
@@ -358,7 +368,12 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
                      EID_OUT_ARRAY(NUM_ELEM,1) = EID
                      IF (NUM_ELEM == NELREQ(I)) THEN
                         CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                        CALL WRITE_ELEM_ENGR_FORCE ( JVEC, NUM_ELEM, IHDR )
+
+ 100                    FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                        WRITE(ERR,100) "F1",ETYPE(J),TABLE_NAME,ITABLE
+                        CALL SET_OEF_TABLE_NAME(ETYPE(J), TABLE_NAME, ITABLE)
+                        WRITE(ERR,100) "F2",ETYPE(J),TABLE_NAME,ITABLE
+                        CALL WRITE_ELEM_ENGR_FORCE ( JVEC, NUM_ELEM, IHDR, ITABLE )
                         EXIT
                      ENDIF
  
@@ -371,6 +386,11 @@ bar:                 IF (ETYPE(J)(1:3) == 'BAR') THEN
          ENDDO elems_2
  
       ENDDO reqs2
+ 10   FORMAT("*DEBUG:      OEF_END 1D:    TABLE_NAME",A)
+      WRITE(ERR,10) TABLE_NAME
+      IF ((TABLE_NAME .NE. "OEF ERR ") .AND. (ITABLE < 0)) THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
 
       IF ((POST /= 0) .AND. (ANY_ELFE_OUTPUT > 0)) THEN
 

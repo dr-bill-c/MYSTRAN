@@ -28,7 +28,9 @@
 
    INTERFACE
 
-      SUBROUTINE WRITE_BAR ( NUM, FILL_F06, FILL_ANS )
+      SUBROUTINE WRITE_BAR (NUM, FILL_F06, FILL_ANS, ISUBCASE, ITABLE,  &
+                            TITLE, SUBTITLE, LABEL,           &
+                            FIELD5_INT_MODE, FIELD6_EIGENVALUE )
 
  
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -45,7 +47,16 @@
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_F06          ! Padding for output format
       CHARACTER(LEN=*), INTENT(IN)    :: FILL_ANS          ! Padding for output format
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
+      INTEGER(LONG), INTENT(IN)       :: ISUBCASE          ! The subcase ID
+
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_BAR_BEGEND
+
+      INTEGER(LONG), INTENT(IN)       :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
+      CHARACTER(LEN=128), INTENT(IN)  :: TITLE             ! the model TITLE
+      CHARACTER(LEN=128), INTENT(IN)  :: SUBTITLE          ! the subcase SUBTITLE
+      CHARACTER(LEN=128), INTENT(IN)  :: LABEL             ! the subcase LABEL
+      INTEGER(LONG), INTENT(IN)       :: FIELD5_INT_MODE
+      REAL(DOUBLE),  INTENT(IN)       :: FIELD6_EIGENVALUE
  
       END SUBROUTINE WRITE_BAR
 

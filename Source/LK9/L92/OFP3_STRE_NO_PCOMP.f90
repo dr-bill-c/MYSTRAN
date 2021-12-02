@@ -62,6 +62,7 @@
       INTEGER(LONG), INTENT(IN)       :: ITE               ! Unit number for text files for OTM row descriptors 
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(INOUT)    :: OT4_EROW          ! Row number in OT4 file for elem related OTM descriptors
+      LOGICAL                         :: NEW_RESULT
       INTEGER(LONG)                   :: ELOUT_STRE        ! If > 0, there are STRESS   requests for some elems                
       INTEGER(LONG)                   :: I,J,K,L,M         ! DO loop indices
       INTEGER(LONG)                   :: IERROR    = 0     ! Local error count
@@ -94,9 +95,15 @@
                                                            ! Array of output stress values after surface fit
       REAL(DOUBLE)                    :: STRESS_OUT(9,MAX_STRESS_POINTS)
 
+      ! OP2 stuff
+      CHARACTER(8*BYTE)               :: TABLE_NAME   ! name of the op2 table name
+      INTEGER(LONG)                   :: ITABLE       ! the subtable
+
       INTRINSIC IAND
-  
+      ITABLE = 0
+      TABLE_NAME = "OES ERR "
 ! **********************************************************************************************************************************
+      !NEW_RESULT = .TRUE.
       IF (WRT_LOG >= SUBR_BEGEND) THEN
          CALL OURTIM
          WRITE(F04,9001) SUBR_NAME,TSEC
@@ -144,6 +151,7 @@
          ENDDO 
       ENDDO   
  
+! 101  FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE_INT=",I8,"; TABLE_NAME=",A)
 !xx   IROW_MAT = 0
 !xx   IROW_TXT = 0
       OT4_DESCRIPTOR = 'Element stress'
@@ -259,7 +267,11 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
                   IF (ETYPE(J)(1:5) /='USER1') THEN
                      IF (NUM_OGEL_ROWS == NELREQ(I)) THEN
                         CALL CHK_OGEL_ZEROS ( NUM_OGEL )
-                        CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I) )
+ 100                    FORMAT("*DEBUG:      ",A,"; ELEMENT_TYPE=",A,"; TABLE_NAME=",A,"; ITABLE=",I8)
+                        WRITE(ERR,100) "A",TYPE,TABLE_NAME,ITABLE
+                        CALL SET_OES_TABLE_NAME(TYPE, TABLE_NAME, ITABLE)
+                        WRITE(ERR,100) "B",TYPE,TABLE_NAME,ITABLE
+                        CALL WRITE_ELEM_STRESSES ( JVEC, NUM_OGEL_ROWS, IHDR, NUM_PTS(I), ITABLE )
                         EXIT
                      ENDIF
                   ENDIF
@@ -271,7 +283,11 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
          ENDDO elems_5
  
       ENDDO reqs5
- 
+
+      IF ((TABLE_NAME .NE. "OES ERR ") .AND. (ITABLE < 0)) THEN
+        CALL END_OP2_TABLE(ITABLE)
+      ENDIF
+!===========================
       IF ((POST /= 0) .AND. (ANY_STRE_OUTPUT > 0)) THEN
 
          NDUM = 0
@@ -552,7 +568,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
             CALL WRITE_FEMAP_STRE_VECS ( 'TRIA3   ', 'N', NUM_FROWS, FEMAP_SET_ID )
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
-
+                     
          NDUM = 0
          NUM_FROWS= 0                                      ! Write out QUAD4K stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCQUAD4K, 22, SUBR_NAME )
@@ -614,7 +630,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
             CALL WRITE_FEMAP_STRE_VECS ( 'QUAD4   ', 'N', NUM_FROWS, FEMAP_SET_ID )
          ENDIF
          CALL DEALLOCATE_FEMAP_DATA
-
+                     
          NDUM = 0
          NUM_FROWS= 0                                      ! Write out HEXA8 stresses
          CALL ALLOCATE_FEMAP_DATA ( 'FEMAP ELEM ARRAYS', NCHEXA8, 12, SUBR_NAME )
@@ -862,7 +878,6 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
 
  9201 FORMAT(' *ERROR  9201: DUE TO ABOVE LISTED ERRORS, CANNOT CALCULATE ',A,' REQUESTS FOR ',A,' ELEMENT ID = ',I8)
 
-
 ! ##################################################################################################################################
 
       CONTAINS
@@ -950,5 +965,7 @@ do_stress_pts:    DO M=1,NUM_PTS(I)
 ! **********************************************************************************************************************************
 
       END SUBROUTINE GET_STRESS_ITEM_DATA
+
+!====================================================================================================
 
       END SUBROUTINE OFP3_STRE_NO_PCOMP

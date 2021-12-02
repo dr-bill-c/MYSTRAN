@@ -24,7 +24,7 @@
                                                                                                         
 ! End MIT license text.                                                                                      
 
-      SUBROUTINE OFP2 ( JVEC, WHAT, SC_OUT_REQ, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW )
+      SUBROUTINE OFP2 ( JVEC, WHAT, SC_OUT_REQ, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
 
 ! Processes SPC and MPC force output requests for 1 subcase.
 
@@ -80,6 +80,8 @@
       INTEGER(LONG), INTENT(IN)       :: JVEC              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: SC_OUT_REQ        ! If > 0, then req1uests for WHAT are to be output
       INTEGER(LONG), INTENT(INOUT)    :: OT4_GROW          ! Row number in OT4 file for grid related OTM descriptors
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! 
+      LOGICAL, INTENT(INOUT)          :: NEW_RESULT        ! is this the first result of a table
       INTEGER(LONG)                   :: AGRID             ! An actual grid number
       INTEGER(LONG)                   :: G_SET_COL         ! Col number in TDOF where the G-set DOF's exist
       INTEGER(LONG)                   :: M_SET_COL         ! Col number in TDOF where the M-set DOF's exist
@@ -116,6 +118,9 @@
       REAL(DOUBLE)                    :: QSA_SUM(6)        ! Sum of all QS forces on AUTOSPC'd DOF's
 
       INTRINSIC IAND
+      WRITE(ERR,9000) "OFP2 - SPC and MPC force"
+ 9000 FORMAT(' *DEBUG:    RUNNING=', A)
+ 9003 FORMAT(' *DEBUG:    ITABLE BAD=', i4)
 
 ! **********************************************************************************************************************************
       IF (WRT_LOG >= SUBR_BEGEND) THEN
@@ -140,7 +145,10 @@
 ! ---------------------------------------------------------------------------------------------------------------------------------
 ! Process SPC force requests
 
+      NEW_RESULT = .TRUE.
       IF (WHAT == 'SPCF') THEN
+      WRITE(ERR,9000) "OFP2 - SPC"
+      WRITE(ERR,9003) ITABLE
 
          SPCF_MEFM_MPF = 'N'
          IF ((MEFFMASS_CALC == 'Y') .OR. (MPFACTOR_CALC == 'Y')) THEN
@@ -288,6 +296,11 @@
 
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
 
+                  !IF ((SPCF_OUT(1:4) == 'PLOT') .OR. (SPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                     NEW_RESULT = .FALSE.
+                  !ENDIF
+
                   IF ((SPCF_OUT(1:5) == 'PUNCH') .OR. (SPCF_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )
                   ENDIF
@@ -298,11 +311,11 @@
                   ENDIF
 
                   EXIT
-
                ENDIF
 
                IF ((SOL_NAME(1:12) == 'GEN CB MODEL') .AND. (JVEC == 1) .AND. (IROW_FILE >= 1)) THEN
-                  DO J=1,OTMSKIP                           ! Write OTMSKIP blank separator lines
+                  ! Write OTMSKIP blank separator lines
+                  DO J=1,OTMSKIP
                      IROW_FILE = IROW_FILE + 1
                      WRITE(TXT_SPCF(IROW_FILE), 9199)
                   ENDDO
@@ -417,10 +430,21 @@
          CALL DEALLOCATE_COL_VEC ( 'QS_COL' )
 
 ! ---------------------------------------------------------------------------------------------------------------------------------
-! Process MPC force requests
+!     Process MPC force requests
 
       ELSE IF (WHAT == 'MPCF') THEN
-                                                           ! Initialize the array for MPC forces for this solution vector
+         WRITE(ERR,9000) "OFP2 - MPC"
+         !IF (.NOT. NEW_RESULT) THEN
+         !IF (NEW_RESULT .EQV. .FALSE.) THEN
+         !IF (NEW_RESULT .EQ. .FALSE.) THEN    ! bad
+         IF (ITABLE .NE. -1) THEN   ! not equal
+           ! cleanup op2
+           NEW_RESULT = .TRUE.
+           ITABLE = -1
+         ENDIF
+         WRITE(ERR,9003) ITABLE
+
+         ! Initialize the array for MPC forces for this solution vector
          IROW_FILE = 0
          IROW_MAT  = 0
          OT4_DESCRIPTOR = 'MPC force'
@@ -429,7 +453,8 @@
          DO I=1,NDOFM
             QM_COL(I) = ZERO
          ENDDO
-                                                           ! Partition NG-set vectors from G-set
+
+         ! Partition NG-set vectors from G-set
          IF ((NTERM_HMN > 0) .OR. (NTERM_LMN > 0)) THEN
             CALL ALLOCATE_COL_VEC ( 'UN_COL', NDOFN, SUBR_NAME )
             CALL TDOF_COL_NUM ( 'N ', N_SET_COL )
@@ -447,14 +472,16 @@
             QMM_COL(I) = ZERO
          ENDDO
 
-         IF (NTERM_HMN > 0) THEN                           ! Get 1st portion of QM: HMN*UN
-
+         ! Get 1st portion of QM: HMN*UN
+         IF (NTERM_HMN > 0) THEN
             CALL MATMULT_SFF ( 'HMN', NDOFM, NDOFN, NTERM_HMN, SYM_HMN, I_HMN, J_HMN, HMN, 'UN', NDOFN, 1, UN_COL, 'Y',            &
                                   'QMK', ONE, QMK_COL )
          ENDIF
-                                                           ! Don't do the following for CB soln (vecs are CB vecs, NOT eigen vecs, 
-                                                           ! so no inertia effect is to be added for MPC forces due to CB vecs)
-         IF (NTERM_LMN > 0) THEN                           ! Get 1st portion of QM: LMN*UN
+
+         ! Don't do the following for CB soln (vecs are CB vecs, NOT eigen vecs, 
+         ! so no inertia effect is to be added for MPC forces due to CB vecs)
+         ! Get 1st portion of QM: LMN*UN
+         IF (NTERM_LMN > 0) THEN
             IF (SOL_NAME(1:5) == 'MODES') THEN
                CALL MATMULT_SFF ( 'LMN', NDOFM, NDOFN, NTERM_LMN, SYM_LMN, I_LMN, J_LMN, LMN, 'UN', NDOFN, 1, UN_COL, 'Y',         &
                                   'QMM', -EIGEN_VAL(JVEC), QMM_COL )
@@ -476,7 +503,8 @@
 
          CALL DEALLOCATE_COL_VEC ( 'UN_COL' )
 
-         DO I=1,NDOFM                                      ! Add (HMN*UN - PM) to get QM
+         ! Add (HMN*UN - PM) to get QM
+         DO I=1,NDOFM
             QM_COL(I) = QMK_COL(I) + QMM_COL(I) - PM_COL(I)
          ENDDO
 
@@ -512,7 +540,8 @@
             ENDIF
          ENDDO   
 
-         NUM  = 0                                          ! Put QGm into 2-d output array OGEL for this subcase (NDOFS x 6).
+         ! Put QGm into 2-d output array OGEL for this subcase (NDOFS x 6).
+         NUM = 0
          DO I=1,NGRID
             IB1 = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_MPCF_BIT))
             IB2 = IAND(GROUT(I,INT_SC_NUM),IBIT(GROUT_MPCF_BIT))
@@ -551,6 +580,11 @@
                ENDDO
 
                IF ((NUM == NREQ) .AND. (SC_OUT_REQ > 0)) THEN
+
+                  !IF ((MPCF_OUT(1:4) == 'PLOT') .OR. (MPCF_OUT(1:4) == 'BOTH')) THEN
+                     CALL WRITE_GRD_OP2_OUTPUTS ( JVEC, NUM, WHAT, ITABLE, NEW_RESULT )
+                     NEW_RESULT = .FALSE.
+                  !ENDIF
 
                   IF ((MPCF_OUT(1:5) == 'PUNCH') .OR. (MPCF_OUT(1:4) == 'BOTH')) THEN
                      CALL WRITE_GRD_PCH_OUTPUTS ( JVEC, NUM, WHAT )

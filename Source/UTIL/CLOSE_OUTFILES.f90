@@ -43,14 +43,7 @@
       CHARACTER(LEN=*), INTENT(IN)    :: PCH_CLOSE_STAT    ! Input value for close status for PCH
 
 ! **********************************************************************************************************************************
-      IF (BUG /= SC1) THEN
-         CALL FILE_CLOSE ( BUG, BUGFIL, BUG_CLOSE_STAT, 'Y' )
-      ENDIF
-
-      IF (ERR /= SC1) THEN
-         CALL FILE_CLOSE ( ERR, ERRFIL, ERR_CLOSE_STAT, 'Y' )
-      ENDIF
-
+      ! close standard output files first
       IF (F06 /= SC1) THEN
          CALL FILE_CLOSE ( F06, F06FIL, 'KEEP', 'Y' )
       ENDIF
@@ -64,11 +57,21 @@
       ENDIF
 
       IF (OP2 /= SC1) THEN
+         CALL END_OP2_TABLES()
          CALL FILE_CLOSE ( OP2, OP2FIL, OP2_CLOSE_STAT, 'Y' )
       ENDIF
 
       IF (PCH /= SC1) THEN
          CALL FILE_CLOSE ( PCH, PCHFIL, PCH_CLOSE_STAT, 'Y' )
+      ENDIF
+
+      ! close error/log files last
+      IF (BUG /= SC1) THEN
+         CALL FILE_CLOSE ( BUG, BUGFIL, BUG_CLOSE_STAT, 'Y' )
+      ENDIF
+
+      IF (ERR /= SC1) THEN
+         CALL FILE_CLOSE ( ERR, ERRFIL, ERR_CLOSE_STAT, 'Y' )
       ENDIF
 
 ! **********************************************************************************************************************************

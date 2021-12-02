@@ -28,7 +28,7 @@
 
    INTERFACE
 
-      SUBROUTINE WRITE_ELEM_ENGR_FORCE ( JSUB, NUM, IHDR )
+      SUBROUTINE WRITE_ELEM_ENGR_FORCE ( JSUB, NUM, IHDR, ITABLE )
 
   
       USE PENTIUM_II_KIND, ONLY       :  BYTE, LONG, DOUBLE
@@ -46,6 +46,7 @@
   
       INTEGER(LONG), INTENT(IN)       :: JSUB              ! Solution vector number
       INTEGER(LONG), INTENT(IN)       :: NUM               ! The number of rows of OGEL to write out
+      INTEGER(LONG), INTENT(INOUT)    :: ITABLE            ! the current op2 subtable, should be -3, -5, ...
       INTEGER(LONG), PARAMETER        :: SUBR_BEGEND = WRITE_ELEM_ENGR_FORCE_BEGEND
   
       END SUBROUTINE WRITE_ELEM_ENGR_FORCE

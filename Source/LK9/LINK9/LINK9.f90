@@ -162,6 +162,8 @@
       REAL(DOUBLE)                    :: EPS1              ! Small number to compare against zero
       REAL(DOUBLE)                    :: UGV               ! A G-set vector read from file L5A
       REAL(DOUBLE)                    :: PHIXGV            ! A G-set vector read from file L5B
+      INTEGER(LONG)                   :: ITABLE            ! 
+      LOGICAL                         :: NEW_RESULT        ! Is this a new result
 
       INTRINSIC                       :: IAND
  
@@ -590,6 +592,7 @@
 
       ENDIF
 
+!      CALL WRITE_OP2_GEOM()
 
 ! Open FEMAP neutral file for writing, if PARAM POST /= 0, and write FEMAP data block 100
 
@@ -810,12 +813,15 @@ j_do: DO JVEC=1,NUM_SOLNS
                                                            ! 10/01/14: Need BGRID for Femap displs to transform from global to basic
          CALL ALLOCATE_MODEL_STUF ( 'SINGLE ELEMENT ARRAYS', SUBR_NAME )
 
+        NEW_RESULT = .TRUE.
+        ITABLE = -1
          IF ((SC_ACCE_OUTPUT > 0) .OR. (POST /= 0)) THEN
             IF (SOL_NAME(1:12) == 'GEN CB MODEL') THEN
                CALL OURTIM
                MODNAM = 'PROCESS ACCEL OUTPUT REQUESTS,                    "'
                WRITE(SC1,9093) LINKNO,MODNAM,JVEC,HOUR,MINUTE,SEC,SFRAC
-               CALL OFP1 ( JVEC, 'ACCE', SC_ACCE_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW )
+               CALL OFP1 ( JVEC, 'ACCE', SC_ACCE_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
+!              NEW_RESULT = .FALSE.
             ELSE
                WARN_ERR = WARN_ERR + 1
                WRITE(ERR,9453)
@@ -831,11 +837,14 @@ j_do: DO JVEC=1,NUM_SOLNS
             CALL OURTIM
             MODNAM = 'PROCESS DISPL OUTPUT REQUESTS,                    "'
             WRITE(SC1,9093) LINKNO,MODNAM,JVEC,HOUR,MINUTE,SEC,SFRAC
-            CALL OFP1 ( JVEC, 'DISP', SC_DISP_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW )
+            CALL OFP1 ( JVEC, 'DISP', SC_DISP_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
+!           NEW_RESULT = .FALSE.
          ENDIF
+         !CALL END_OP2_TABLE(ITABLE)
 
-! Process applied load output requests
- 
+! Process applied load (OPG1) output requests
+         NEW_RESULT = .TRUE.
+         ITABLE = -1
          IF (PROC_PG_OUTPUT == 'Y') THEN
             IF ((SC_OLOA_OUTPUT > 0) .OR. (SC_GPFO_OUTPUT > 0) .OR. (POST /= 0)) THEN
                IF  ((SOL_NAME(1:7) == 'STATICS') .OR. (SOL_NAME(1:8) == 'BUCKLING') .OR. (SOL_NAME(1:8) == 'NLSTATIC')) THEN
@@ -843,14 +852,18 @@ j_do: DO JVEC=1,NUM_SOLNS
                   MODNAM = 'PROCESS APPLIED LOAD OUTPUT REQS,                 "'
                   WRITE(SC1,9093) LINKNO,MODNAM,JVEC,HOUR,MINUTE,SEC,SFRAC
                   CALL GET_SPARSE_CRS_COL ('PG_COL    ',JVEC      , NTERM_PG, NDOFG, NSUB, I_PG, J_PG, PG, ONE, PG_COL, NULL_COL)
-                  CALL OFP1 ( JVEC, 'OLOAD', SC_OLOA_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW )
+                  CALL OFP1 ( JVEC, 'OLOAD', SC_OLOA_OUTPUT, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
+!                 NEW_RESULT = .FALSE.
                ENDIF
             ENDIF
          ENDIF
+         !CALL END_OP2_TABLE(ITABLE)
 
 ! Calc SPC forces and process SPC force output requests, if there are any or if GP force balance, modal effective mass and/or 
 ! participation factor output is requested. Calc anyway if there are any DOF's in the SA (AUTOSPC) set
 
+        NEW_RESULT = .TRUE.
+        ITABLE = -1
          IF (SOL_NAME(1:5) == 'MODES') THEN
             IF (NDOFS == 0) THEN
                IF ((MEFFMASS_CALC == 'Y') .OR. (MPFACTOR_CALC == 'Y')) THEN
@@ -885,11 +898,13 @@ j_do: DO JVEC=1,NUM_SOLNS
             MODNAM = 'PROCESS SPC FORCE OUTPUT REQUESTS,                "'
             WRITE(SC1,9093) LINKNO,MODNAM,JVEC,HOUR,MINUTE,SEC,SFRAC
             CALL ALLOCATE_COL_VEC ( 'QGs_COL', NDOFG, SUBR_NAME )
-            CALL OFP2 ( JVEC, 'SPCF', SC_SPCF_OUTPUT, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW )
+           CALL OFP2 ( JVEC, 'SPCF', SC_SPCF_OUTPUT, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
+!           NEW_RESULT = .FALSE.
          ENDIF
 
 ! Process MPC force output requests, if there are any
 
+         NEW_RESULT = .TRUE.
          IF (NDOFM > 0) THEN
 
             IF ((SC_MPCF_OUTPUT > 0) .OR. (SC_GPFO_OUTPUT > 0) .OR. (POST /= 0)) THEN
@@ -908,15 +923,16 @@ j_do: DO JVEC=1,NUM_SOLNS
                MODNAM = 'PROCESS MPC FORCE OUTPUT REQUESTS,                "'
                WRITE(SC1,9093) LINKNO,MODNAM,JVEC,HOUR,MINUTE,SEC,SFRAC
                CALL ALLOCATE_COL_VEC ( 'QGm_COL', NDOFG, SUBR_NAME )
-               CALL OFP2 ( JVEC, 'MPCF', SC_MPCF_OUTPUT, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW )
-
+               CALL OFP2 ( JVEC, 'MPCF', SC_MPCF_OUTPUT, ZERO_GEN_STIFF, FEMAP_SET_ID, ITG, OT4_GROW, ITABLE, NEW_RESULT )
+!              NEW_RESULT = .FALSE.
             ENDIF
-
          ENDIF
+         !CALL END_OP2_TABLE(ITABLE)
 
 ! Process grid point force balance requests
 
 !zzzz    CALL ALLOCATE_MODEL_STUF ( 'SINGLE ELEMENT ARRAYS', SUBR_NAME ) ! 10/01/14: Move to above CALL OFP1. Need for Femap disp
+         NEW_RESULT = .TRUE.
          IF (SC_GPFO_OUTPUT > 0) THEN
             CALL ALLOCATE_COL_VEC ( 'FG_COL', NDOFG, SUBR_NAME )
                                                            ! Accel load is Mgg*Ug_ddot = -EIGEN_VAL*Mgg*Ug in eigen analyses.
@@ -1007,6 +1023,7 @@ j_do: DO JVEC=1,NUM_SOLNS
                ENDIF
             ENDIF
             CALL OFP3 ( JVEC, FEMAP_SET_ID, ITE, OT4_EROW )
+!           NEW_RESULT = .FALSE.
          ENDIF
          CALL DEALLOCATE_MODEL_STUF ( 'SINGLE ELEMENT ARRAYS' )
 
@@ -1200,7 +1217,7 @@ j_do: DO JVEC=1,NUM_SOLNS
 
       IF (NUM_OU4_REQUESTS > 0) THEN
          CALL OURTIM
-         MODNAM = 'WRITE OUTPUT4 NATRICES      '
+         MODNAM = 'WRITE OUTPUT4 MATRICES      '
          WRITE(SC1,9092) LINKNO,MODNAM,HOUR,MINUTE,SEC,SFRAC
          WRITE(F06,*)
          CALL OUTPUT4_PROC ( SUBR_NAME )

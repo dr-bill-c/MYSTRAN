@@ -113,6 +113,7 @@
       INTEGER(LONG)                   :: R_SET_DOF         ! Comp number in the R-set
       INTEGER(LONG)                   :: SETLKTK_DEF       ! Default value of SETLKTK
       INTEGER(LONG)                   :: SETLKTM_DEF       ! Default value of SETLKTM
+      INTEGER(LONG) :: POST
 
       REAL(DOUBLE)                    :: KGG_DIAG(NDOFG)   ! Diagonal of KGG (needed for equil check on RESTART)
       REAL(DOUBLE)                    :: KGG_MAX_DIAG      ! Max diag term from KGG (needed for equil check on RESTART)
@@ -121,6 +122,7 @@
    
 ! **********************************************************************************************************************************
       LINKNO = 0
+      POST = -1
 
 ! Initialize WRT_BUG
 
@@ -544,8 +546,10 @@ res14:IF (RESTART == 'N') THEN
 
          CALL FILE_OPEN ( L1B, LINK1B, OUNT, 'REPLACE', L1B_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
 
-         CALL FILE_OPEN ( OP2, OP2FIL, OUNT, 'REPLACE', OP2_MSG, 'WRITE_STIME', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
+         CALL FILE_OPEN ( OP2, OP2FIL, OUNT, 'REPLACE', OP2_MSG, 'NEITHER', 'UNFORMATTED', 'WRITE', 'REWIND', 'Y', 'N', 'Y' )
          OP2STAT = 'KEEP    '
+         CALL WRITE_OP2_HEADER(POST)
+         
 
 ! Element processing to convert external PID's to internal.
   
