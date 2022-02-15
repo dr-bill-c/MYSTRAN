@@ -39,8 +39,17 @@ if(NOT EXISTS ${SUPERLU_FN})
     STATUS
     "Downloading SuperLU ${SUPERLU_VERSION} source from ${SUPERLU_URL}..."
   )
-  file(DOWNLOAD ${SUPERLU_URL} ${SUPERLU_FN} TIMEOUT 60)
-  message(STATUS "Done downloading SuperLU.")
+  file(DOWNLOAD ${SUPERLU_URL} ${SUPERLU_FN} TIMEOUT 60 STATUS DOWNLOAD_STATUS)
+  # Check if download was successful.
+  list(GET DOWNLOAD_STATUS 0 STATUS_CODE)
+  list(GET DOWNLOAD_STATUS 1 ERROR_MESSAGE)
+  if(${STATUS_CODE} EQUAL 0)
+    message(STATUS "Done downloading SuperLU.")
+  else()
+    # Exit CMake if the download failed, printing the error message.
+    file(REMOVE ${SUPERLU_FN})
+    message(FATAL_ERROR "Error occurred during download of SuperLU: ${ERROR_MESSAGE}")
+  endif()
 endif()
 
 # extract superlu source
@@ -56,8 +65,17 @@ set(F2C_URL "https://www.netlib.org/${F2C_FN}")
 if(NOT EXISTS ${F2C_DIR})
   message(STATUS "Downloading libf2c source from ${F2C_URL}...")
   make_directory("${F2C_DIR}")
-  file(DOWNLOAD ${F2C_URL} ${F2C_FN} TIMEOUT 60)
-  message(STATUS "Done downloading libf2c.")
+  file(DOWNLOAD ${F2C_URL} ${F2C_FN} TIMEOUT 60 STATUS DOWNLOAD_STATUS)
+  # Check if download was successful.
+  list(GET DOWNLOAD_STATUS 0 STATUS_CODE)
+  list(GET DOWNLOAD_STATUS 1 ERROR_MESSAGE)
+  if(${STATUS_CODE} EQUAL 0)
+    message(STATUS "Done downloading libf2c.")
+  else()
+    # Exit CMake if the download failed, printing the error message.
+    file(REMOVE_RECURSE ${F2C_DIR})
+    message(FATAL_ERROR "Error occurred during download of libf2c: ${ERROR_MESSAGE}")
+  endif()
 endif()
 
 # extract libf2c source
