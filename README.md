@@ -2,12 +2,15 @@
 
 This fork may be still be useful because of the change log history, but the MYSTRAN project has been moved to
 [MYSTRAN_Solver](https://github.com/MYSTRANsolver/MYSTRANsolver)
+
+For additional questions, [Join our Forums](https://www.mystran.com/forums) or [Discord Server](https://discord.gg/BAdT6rJyFF)
+
 =======
 
 MYSTRAN
 =======
 
-MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
+MYSTRAN is an acronym for “My Structural Analysis” (https://www.mystran.com)
 
 
 ---
@@ -202,5 +205,5 @@ Congragulations! You have just installed MYSTRAN.
 - Contribute your MYSTRAN runs to the list of demonstration problems by posting on the forums, or in our discord channel below
 
 # Community
-- [Join our Forums](https://mystran.com/forums)
-- [Join our Discord Channel](https://discord.gg/BAdT6rJyFF)
+- [Join our Forums](https://www.mystran.com/forums)
+- [Join our Discord Server](https://discord.gg/BAdT6rJyFF)
