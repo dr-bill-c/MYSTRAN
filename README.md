@@ -1,3 +1,8 @@
+# NOTE: The main MYSTRAN Project is now [HERE](https://github.com/MYSTRANsolver/MYSTRAN)
+This fork may be still be useful because of the change log history, but the MYSTRAN project has been moved to
+[MYSTRAN_Solver](https://github.com/MYSTRANsolver/MYSTRANsolver)
+=======
+
 MYSTRAN
 =======
 
@@ -15,10 +20,6 @@ MYSTRAN is an acronym for “My Structural Analysis” (https://mystran.com)
 [Community](#community)
 
 ---
-# NOTE: The main MYSTRAN Project is now
-[HERE](https://github.com/MYSTRANsolver/MYSTRAN)
-This fork may be still be useful because of the change log history, but the MYSTRAN project has been moved to
-[MYSTRAN_Solver](https://github.com/MYSTRANsolver/MYSTRAN_Solver)
 
 
 # Introduction
