@@ -1,4 +1,5 @@
 # NOTE: The main MYSTRAN Project is now [HERE](https://github.com/MYSTRANsolver/MYSTRAN)
+
 This fork may be still be useful because of the change log history, but the MYSTRAN project has been moved to
 [MYSTRAN_Solver](https://github.com/MYSTRANsolver/MYSTRANsolver)
 =======
@@ -202,4 +203,4 @@ Congragulations! You have just installed MYSTRAN.
 
 # Community
 - [Join our Forums](https://mystran.com/forums)
-- [Join our Discord Channel on the Elmer Discord Server](https://discord.com/invite/fUJr75H)
+- [Join our Discord Channel](https://discord.gg/BAdT6rJyFF)
